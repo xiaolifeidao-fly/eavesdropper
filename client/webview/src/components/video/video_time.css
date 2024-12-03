@@ -1,0 +1,84 @@
+
+.time-slider {
+position: relative;
+}
+
+
+.slider {
+width: 100%;
+}
+
+.zoom_slider {
+position: relative;
+width: 30%;
+left: 30%;
+margin-top: 70px;
+}
+
+.marker {
+position: absolute;
+top: -30px;
+width: 4px; /* 宽度调整为竖条状 */
+height: 20px; /* 高度调整为竖条状 */
+background-color: #6495ED; /* 淡蓝色 */
+cursor: pointer;
+border: 1px solid;
+transform: translateX(-50%);
+}
+
+.marker-segment {
+    position: absolute;
+    height: 30px;
+    text-align: center;
+    cursor: pointer;
+    top: 50px;
+    transform: translateY(-50%);
+    transition: background-color 0.3s ease;
+    background-color: rgba(0, 123, 255, 0.5); /* 半透明蓝色 */
+    border: 1px solid rgba(0, 123, 255, 0.5);
+    border-radius: 10px;
+    margin: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+.marker-segment:hover {
+    background-color: rgba(0, 123, 255, 0.8);
+}
+
+.select {
+  position: absolute;
+  height: 30px;
+  text-align: center;
+  cursor: pointer;
+  top: 50px;
+  transform: translateY(-50%);
+  transition: background-color 0.3s ease;
+  background-color: #d4f5dc;
+  border: 1px solid #a3d7a6;
+  border-radius: 10px;
+  margin: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.time_range {
+    position: absolute;
+    top: -5px;
+    cursor: pointer;
+}
+    
+
+
+.marker:hover::before {
+content: attr(title);
+position: absolute;
+bottom: 100%;
+left: 50%;
+transform: translateX(-50%);
+padding: 4px;
+background-color: rgba(0, 0, 0, 0.8);
+color: #fff;
+border-radius: 4px;
+border: 1px solid #657c97;
+font-size: 14px;
+white-space: nowrap;
+}
