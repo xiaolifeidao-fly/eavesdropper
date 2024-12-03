@@ -1,0 +1,21 @@
+Name: main-api
+Host: 0.0.0.0
+Port: 8888
+MySQLConf:
+  OtcDB:
+    Username: "xianglong"
+    Password: "A4622511z3!"
+    Host: "rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com"
+    Port: "3306"
+    DbName: "eavesdropper"
+RedisConf:
+  Host: "r-bp1jjf4dd9lxzgm807pd.redis.rds.aliyuncs.com:6379"
+  Pass: "A4622511z3!"
+LogConf:
+  Path: "./logs"
+  Mode: "file" #console,file
+  KeepDays: 31
+  Level: "debug"
+  Stat: false
+XhsSvc:
+  Host: "http://pages.xiaohongshu.com"
