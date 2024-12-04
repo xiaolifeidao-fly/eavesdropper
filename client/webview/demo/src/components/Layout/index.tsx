@@ -1,15 +1,18 @@
 'use client';
 import React, { useState } from 'react';
-import { Layout, Button, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps } from 'antd';
+import { Layout, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps } from 'antd';
 import getNavList from './menu';
 import { useRouter } from 'next/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import {
     BellOutlined,
-
+    MoonOutlined,
+    SunOutlined,
+    TransactionOutlined
 } from '@ant-design/icons';
-
-import { getThemeBg } from '@utils/index';
-import './index_module.css';
+import { getThemeBg } from 'demo/src/utils';
+import { Link, pathnames, usePathname } from '../../navigation';
+import styles from './index.module.less';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -51,8 +54,14 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     token: { borderRadiusLG, colorTextBase, colorWarningText },
   } = theme.useToken();
 
+  const t = useTranslations('global');
+
+  const locale = useLocale();
+  const otherLocale:any = locale === 'en' ? ['zh', '中'] : ['en', 'En'];
+
   const router = useRouter();
-  const navList = getNavList();
+  const pathname = usePathname();
+  const navList = getNavList(t);
 
   const [curTheme, setCurTheme] = useState<boolean>(false);
   const toggleTheme = () => {
@@ -63,13 +72,6 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     router.push(row.key)
   }
 
-  const [collapsed, setCollapsed] = useState(false);
-
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
-
-
   return (
     <ConfigProvider
         theme={{
@@ -77,17 +79,19 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
         }}
     >
         <Layout style={{minHeight: "100vh"}}>
-            <Sider                 
+            <Sider
                 theme={curTheme ? "dark" : "light" }
-                collapsible 
-                collapsed={collapsed} 
-                onCollapse={(value) => setCollapsed(value)}
+                breakpoint="lg"
+                collapsedWidth="0"
+                onBreakpoint={(broken) => {
+                }}
+                onCollapse={(collapsed, type) => {
+                }}
             >
-                <span className={"logo"} style={getThemeBg(curTheme)}>淘宝客</span>
+                <span className={styles.logo} style={getThemeBg(curTheme)}>Next-Admin</span>
                 <Menu 
                     theme={curTheme ? "dark" : "light" }
-                    mode="inline"
-                    inlineCollapsed={collapsed}
+                    mode="inline" 
                     defaultSelectedKeys={[curActive]} 
                     items={navList} 
                     defaultOpenKeys={defaultOpen} 
@@ -96,14 +100,35 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
             </Sider>
             <Layout>
                 <Header style={{ padding: 0, ...getThemeBg(curTheme), display: 'flex' }}>
-                    <div className="rightControl">
-                        <span className="avatar" >
+                    <div className={styles.rightControl}>
+                        <span className={styles.group}>
+                            <Popover content={<div style={{width: '100%'}}><img src="/tech.png" /></div>} title="技术交流&分享">
+                                { t('technological exchanges') }
+                            </Popover>
                         </span>
-                        <span className="msg" >
+                        <span className={styles.group}>
+                            <Popover content={<div style={{width: '100%'}}><img width={180} src="/pay.png" /></div>} title="开源不易，支持作者">
+                            <TransactionOutlined style={{color: 'red'}} /> 赞赏作者
+                            </Popover>
+                        </span>
+                        <span className={styles.msg}>
                             <Badge dot>
                                 <BellOutlined />
                             </Badge>
                         </span>
+                        <Link href={pathname as any} locale={otherLocale[0]} className={styles.i18n} style={{color: colorTextBase}}>
+                            {otherLocale[1]}
+                        </Link>
+                        <span onClick={toggleTheme} className={styles.theme}>
+                            {
+                                !curTheme ? <SunOutlined style={{color: colorWarningText}} /> : <MoonOutlined />
+                            }
+                        </span>
+                        <div className={styles.avatar}>
+                        <Dropdown menu={{ items }} placement="bottomLeft" arrow>
+                            <Avatar style={{color: '#fff', backgroundColor: colorTextBase}}>Admin</Avatar>
+                        </Dropdown>
+                        </div>
                     </div>
                 </Header>
                 <Content style={{ margin: '24px 16px 0' }}>
@@ -119,6 +144,7 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
                     </div>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>
+                    Next-Admin ©{new Date().getFullYear()} Created by <a href="https://github.com/MrXujiang">徐小夕</a>
                 </Footer>
             </Layout>
         </Layout>

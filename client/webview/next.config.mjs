@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 import withAntdLess from 'next-plugin-antd-less';
-import createNextIntlPlugin from 'next-intl/plugin';
 
 const CORS_HEADERS = [
     { 
@@ -19,7 +18,7 @@ const CORS_HEADERS = [
       key: "Access-Control-Allow-Headers",
       value: "Content-Type, Authorization",
     },
-  ];
+];
 
 const nextConfig = {
     env: {
@@ -48,8 +47,6 @@ const nextConfig = {
           }
         ];
       },
+
 };
-
-const withNextIntl = createNextIntlPlugin()(nextConfig);
-
-export default withAntdLess(withNextIntl);
+export default withAntdLess(nextConfig);

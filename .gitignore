@@ -1,0 +1,22 @@
+.*
+!.gitignore
+!.dockerignore
+!.git/
+config/config.ini
+.vscode/
+env
+**/__pycache__
+**__pycache__
+/**/*.png
+tests
+dialog_data
+log
+# data
+*.pyc
+dist
+voice_data
+
+__debug**
+
+**/node_modules
+webview/.next

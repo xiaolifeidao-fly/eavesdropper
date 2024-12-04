@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "esnext",
+      "declaration": true,
+      "outDir": "./dist",
+      "baseUrl": "./",  
+      "paths": {
+        "@/*": ["./*"],
+        "@api/*": ["api/*"],
+        "@util/*": ["utils/*"],
+        "@model/*": ["model/*"]
+      }
+    },
+    "include": ["**/*"]
+  }
+  
