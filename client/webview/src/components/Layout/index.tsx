@@ -5,17 +5,11 @@ import getNavList from './menu';
 import { useRouter } from 'next/navigation';
 import {
     BellOutlined,
-    MoonOutlined,
-    SunOutlined,
-    TransactionOutlined,
-    MenuFoldOutlined,
-    MenuUnfoldOutlined
 
 } from '@ant-design/icons';
 
 import { getThemeBg } from '@utils/index';
 import './index_module.css';
-import Link from 'next/link';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -89,7 +83,7 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
                 collapsed={collapsed} 
                 onCollapse={(value) => setCollapsed(value)}
             >
-                <span className={"logo"} style={getThemeBg(curTheme)}>video</span>
+                <span className={"logo"} style={getThemeBg(curTheme)}>淘宝客</span>
                 <Menu 
                     theme={curTheme ? "dark" : "light" }
                     mode="inline"

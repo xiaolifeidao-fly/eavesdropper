@@ -13,7 +13,7 @@ import {
 
 } from '@ant-design/icons';
 
-import { getThemeBg } from '@/utils';
+import { getThemeBg } from '@utils/index';
 import './index_module.css';
 import Link from 'next/link';
 const { Header, Content, Footer, Sider } = Layout;
