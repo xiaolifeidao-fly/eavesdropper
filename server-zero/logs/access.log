@@ -7,3 +7,7 @@
 {"@timestamp":"2024-12-03T23:04:01.301+08:00","caller":"proc/shutdown.go:58","content":"Got signal 2, shutting down...","level":"info"}
 {"@timestamp":"2024-12-03T23:04:04.783+08:00","caller":"environment/env.go:36","content":"SqlConn initMysql","level":"info","mysqlConn":"xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8mb4&parseTime=True&loc=Local","readOnly":""}
 {"@timestamp":"2024-12-03T23:04:09.391+08:00","caller":"handler/loghandler.go:147","content":"[HTTP] 200 - GET /public/user/customer-query - 127.0.0.1:64686 - Apifox/1.0.0 (https://apifox.com)","duration":"790.2ms","level":"info","span":"313b42ae38093af7","trace":"f833fdbc0c425060e0e2f7efb6a31daf"}
+{"@timestamp":"2024-12-04T16:06:32.754+08:00","caller":"environment/env.go:36","content":"SqlConn initMysql","level":"info","mysqlConn":"xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8mb4&parseTime=True&loc=Local","readOnly":""}
+{"@timestamp":"2024-12-04T16:08:48.154+08:00","caller":"proc/shutdown.go:58","content":"Got signal 2, shutting down...","level":"info"}
+{"@timestamp":"2024-12-04T22:11:02.351+08:00","caller":"environment/env.go:36","content":"SqlConn initMysql","level":"info","mysqlConn":"xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8mb4&parseTime=True&loc=Local","readOnly":""}
+{"@timestamp":"2024-12-04T22:11:06.022+08:00","caller":"proc/shutdown.go:58","content":"Got signal 2, shutting down...","level":"info"}

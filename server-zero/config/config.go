@@ -19,8 +19,8 @@ type DatabaseST struct {
 type Config struct {
 	rest.RestConf
 	MySQLConf struct {
-		OtcDB         DatabaseST
-		OtcDBReadOnly DatabaseST `json:",optional"`
+		TaoTaoDB         DatabaseST
+		TaoTaoDBReadOnly DatabaseST `json:",optional"`
 	}
 	RedisConf redis.RedisConf
 	LogConf   logx.LogConf

@@ -13,20 +13,20 @@ import (
 )
 
 type ServiceContext struct {
-	Config     *config.Config
-	DbEnginOTC *gorm.DB
-	Redis      *redis.Redis
-	Svc        *SvcEnv
-	Domain     *DomainEnv
+	Config  *config.Config
+	DbEngin *gorm.DB
+	Redis   *redis.Redis
+	Svc     *SvcEnv
+	Domain  *DomainEnv
 }
 
 func NewServiceContext(c *config.Config) *ServiceContext {
-	config.Global = c
+	//config.Global = c
 	sc := &ServiceContext{Config: c}
-	sc.DbEnginOTC = initMysql(c.MySQLConf.OtcDB, c.MySQLConf.OtcDBReadOnly)
+	sc.DbEngin = initMysql(c.MySQLConf.TaoTaoDB, c.MySQLConf.TaoTaoDBReadOnly)
 	sc.Redis = redis.MustNewRedis(c.RedisConf)
-	sc.Svc = NewSvc(sc.Redis, sc.DbEnginOTC, *c)
-	sc.Domain = NewDomainEnv(sc.DbEnginOTC)
+	sc.Svc = NewSvc(sc.Redis, sc.DbEngin, *c)
+	sc.Domain = NewDomainEnv(sc.DbEngin)
 	return sc
 }
 
@@ -68,9 +68,9 @@ func sqlConnStr(mysqlConn config.DatabaseST) string {
 	mySQLConn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		username,
 		password,
-		c.MySQLConf.OtcDB.Host,
-		c.MySQLConf.OtcDB.Port,
-		c.MySQLConf.OtcDB.DbName,
+		c.MySQLConf.TaoTaoDB.Host,
+		c.MySQLConf.TaoTaoDB.Port,
+		c.MySQLConf.TaoTaoDB.DbName,
 	)
 	return mySQLConn
 }

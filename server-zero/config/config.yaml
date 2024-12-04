@@ -2,7 +2,7 @@ Name: main-api
 Host: 0.0.0.0
 Port: 8888
 MySQLConf:
-  OtcDB:
+  TaoTaoDB:
     Username: "xianglong"
     Password: "A4622511z3!"
     Host: "rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com"
