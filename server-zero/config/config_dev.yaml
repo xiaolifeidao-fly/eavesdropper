@@ -13,7 +13,7 @@ RedisConf:
   Pass: "A4622511z3!"
 LogConf:
   Path: "./logs"
-  Mode: "file" #console,file
+  Mode: "console" #console,file
   KeepDays: 31
   Level: "debug"
   Stat: false

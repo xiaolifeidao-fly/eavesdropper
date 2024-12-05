@@ -24,3 +24,5 @@ webview/.next
 
 .DS_Store
 **/.idea
+
+**/config.yaml
