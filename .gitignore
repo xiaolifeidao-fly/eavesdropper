@@ -21,4 +21,4 @@ __debug**
 **/node_modules
 webview/.next
 
-server-zero/.idea
+.DS_Store
