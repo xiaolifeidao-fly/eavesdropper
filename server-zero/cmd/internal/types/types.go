@@ -13,7 +13,7 @@ type CreateCustomerResp struct {
 }
 
 type CustomerListReq struct {
-	Name string `form:"name,optional"` // 账号
+	Name string `form:"name"` // 账号
 }
 
 type CustomerListResp struct {

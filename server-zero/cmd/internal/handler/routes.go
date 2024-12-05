@@ -41,6 +41,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/customer-query",
 					Handler: user.QueryCustomerHandler(serverCtx),
 				},
+				{
+					// 用户列表查询2
+					Method:  http.MethodGet,
+					Path:    "/customer-query2",
+					Handler: user.QueryCustomer2Handler(serverCtx),
+				},
+				{
+					// 用户列表查询3
+					Method:  http.MethodGet,
+					Path:    "/customer-query3",
+					Handler: user.QueryCustomer3Handler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithPrefix("/public/user"),
