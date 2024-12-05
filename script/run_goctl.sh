@@ -25,7 +25,7 @@ fi
 
 # 执行 goctl 命令
 echo "Running: goctl api go -api $API_FILE -dir $TARGET_DIR"
-goctl api go -api "$API_FILE" -dir "$TARGET_DIR"
+goctl api go -api "$API_FILE" -dir "$TARGET_DIR" -style go_zero
 
 # 检查命令执行状态
 if [ $? -eq 0 ]; then
