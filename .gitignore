@@ -20,3 +20,5 @@ __debug**
 
 **/node_modules
 webview/.next
+
+server-zero/.idea
