@@ -1,0 +1,37 @@
+// 权限登录相关接口
+
+type (
+	LoginReq {
+		Username string `json:"username"` // 用户名
+		Password string `json:"password"` // 密码
+	}
+
+	LoginResp {
+		ID uint64 `json:"id"` // 用户ID
+		Token string `json:"token"` // 登录token
+        ExpireAt string `json:"expireAt"` // 过期时间
+	}
+)
+
+@server (
+	group: auth
+	prefix: /v1/auth
+)
+service main-api {
+
+	@doc "登录"
+	@handler Login
+	post /login (LoginReq) returns (LoginResp)
+}
+
+@server (
+	group: auth
+	prefix: /v1/auth
+	middleware: Token
+)
+service main-api {
+
+	@doc "退出登录"
+	@handler Logout
+	post /logout () returns (string)
+}

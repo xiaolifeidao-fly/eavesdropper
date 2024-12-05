@@ -3,35 +3,13 @@
 
 package types
 
-type CreateCustomerReq struct {
-	Name     string `json:"name"`     // 账号
+type LoginReq struct {
+	Username string `json:"username"` // 用户名
 	Password string `json:"password"` // 密码
 }
 
-type CreateCustomerResp struct {
-	Result int `json:"result"` // 创建结果，1-创建成功；2-创建失败
-}
-
-type CustomerListReq struct {
-	Name string `form:"name"` // 账号
-}
-
-type CustomerListResp struct {
-	Result []*Item `json:"result"`
-}
-
-type Item struct {
-	Name      string `json:"name"`     // 账号
-	Password  string `json:"password"` // 密码
-	Active    int    `json:"active"`
-	CreatedAt int    `json:"createdAt"` // 创建时间
-	UpdatedAt int    `json:"updatedAt"` // 更新时间
-	CreatedBy string `json:"createdBy"` // 创建人
-	UpdatedBy string `json:"updatedBy"` // 更新人
-}
-
-type HealthReq struct {
-}
-
-type HealthResp struct {
+type LoginResp struct {
+	ID       uint64 `json:"id"`       // 用户ID
+	Token    string `json:"token"`    // 登录token
+	ExpireAt string `json:"expireAt"` // 过期时间
 }

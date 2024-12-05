@@ -6,8 +6,7 @@ package handler
 import (
 	"net/http"
 
-	health "server-zero/cmd/internal/handler/health"
-	user "server-zero/cmd/internal/handler/user"
+	auth "server-zero/cmd/internal/handler/auth"
 	"server-zero/cmd/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -17,44 +16,27 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// 健康检查
-				Method:  http.MethodGet,
-				Path:    "/health",
-				Handler: health.HealthHandler(serverCtx),
+				// 登录
+				Method:  http.MethodPost,
+				Path:    "/login",
+				Handler: auth.LoginHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/v1/auth"),
 	)
 
 	server.AddRoutes(
 		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.Sign, serverCtx.Token, serverCtx.Cors},
+			[]rest.Middleware{serverCtx.Token},
 			[]rest.Route{
 				{
-					// 创建用户
+					// 退出登录
 					Method:  http.MethodPost,
-					Path:    "/customer",
-					Handler: user.CreateCustomerHandler(serverCtx),
-				},
-				{
-					// 用户列表查询
-					Method:  http.MethodGet,
-					Path:    "/customer-query",
-					Handler: user.QueryCustomerHandler(serverCtx),
-				},
-				{
-					// 用户列表查询2
-					Method:  http.MethodGet,
-					Path:    "/customer-query2",
-					Handler: user.QueryCustomer2Handler(serverCtx),
-				},
-				{
-					// 用户列表查询3
-					Method:  http.MethodGet,
-					Path:    "/customer-query3",
-					Handler: user.QueryCustomer3Handler(serverCtx),
+					Path:    "/logout",
+					Handler: auth.LogoutHandler(serverCtx),
 				},
 			}...,
 		),
-		rest.WithPrefix("/public/user"),
+		rest.WithPrefix("/v1/auth"),
 	)
 }

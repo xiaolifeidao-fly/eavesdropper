@@ -1,1 +1,1 @@
-import "./api/server.api"
+import "./api/auth.api"

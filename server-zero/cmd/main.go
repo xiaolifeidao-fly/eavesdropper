@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/zeromicro/go-zero/core/logx"
 	"server-zero/config"
 	"server-zero/internal/environment"
+
+	"github.com/zeromicro/go-zero/core/logx"
 
 	"server-zero/cmd/internal/handler"
 	"server-zero/cmd/internal/svc"
