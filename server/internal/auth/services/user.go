@@ -1,10 +1,8 @@
 package services
 
 import (
-	"server/app/auth/common/constants"
 	"server/app/auth/common/errors"
 	"server/common"
-	"server/common/encryption"
 	"server/internal/auth/models"
 	"server/internal/auth/repositories"
 	"server/internal/auth/services/dto"
@@ -120,33 +118,6 @@ func PageUser(req *dto.UserPageReq, list *[]*dto.UserPageResp, count *int64) err
 		}
 		user.LastLoginAt = record.LoginTime
 	}
-
-	return nil
-}
-
-// ResetPassword
-// @Description 重置用户密码
-func ResetPassword(req *dto.UserResetPasswordReq, resp *string) error {
-	var err error
-	userRepository := repositories.NewUserRepository()
-
-	dbUser := &models.User{}
-	if err = userRepository.FindByID(req.ID, dbUser); err != nil {
-		return err
-	}
-
-	if dbUser.ID == 0 {
-		return errors.ErrUserNotFound
-	}
-
-	password := encryption.GeneratePassword(constants.UserPasswordLength)
-	req.ToUser(dbUser, password)
-
-	if err = userRepository.Update(dbUser); err != nil {
-		return err
-	}
-
-	*resp = password
 
 	return nil
 }

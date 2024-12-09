@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"server/app/auth/common/constants"
+	"server/app/auth/common/errors"
 	"server/common/middleware/jwtauth"
 	serverCommon "server/common/server/common"
 	"server/common/server/controller"
@@ -30,7 +31,7 @@ func Login(ctx *gin.Context) {
 	err := authController.Bind(&req, binding.JSON).Errors
 	if err != nil {
 		authController.Logger.Errorf("Login failed, with error is %v", err)
-		authController.Error(err.Error())
+		authController.Error(errors.ErrLoginFailed)
 		return
 	}
 
@@ -41,13 +42,26 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	if err = generateTokenAndSetCookie(ctx, loginUserID); err != nil {
+	var token string
+	if token, err = jwtauth.GenerateJwtToken(loginUserID); err != nil {
 		authController.Logger.Errorf("Login failed, with error is %v", err)
-		authController.Error(err.Error())
+		authController.Error(errors.ErrGenerateJwtToken)
 		return
 	}
 
-	authController.OK(constants.LoginSuccess)
+	var resp dto.LoginResp
+	resp.AccessToken = token
+
+	// 登录成功记录登录日志
+	var req2 dto.LoginRecordReq
+	req2.From(loginUserID, serverCommon.GetClientIP(ctx), "deviceID") // TODO: 获取设备ID
+	if err = services.RecordLoginLog(&req2); err != nil {
+		authController.Logger.Errorf("RecordLoginLog failed, with error is %v", err)
+		authController.Error(errors.ErrLoginRecord)
+		return
+	}
+
+	authController.OK(resp)
 }
 
 // GetLoginUser
@@ -73,23 +87,6 @@ func Logout(ctx *gin.Context) {
 	authController := NewAuthController(ctx)
 	clearTokenAndCookie(ctx)
 	authController.OK(constants.LogoutSuccess)
-}
-
-// generateTokenAndSetCookie 生成token并设置cookie
-func generateTokenAndSetCookie(c *gin.Context, loginUserID uint64) error {
-	var err error
-
-	// 生成token
-	var token string
-	if token, err = jwtauth.GenerateJwtToken(loginUserID); err != nil {
-		return err
-	}
-
-	// 设置cookie
-	maxAge := int(jwtauth.GetJwtAuthTimeout().Seconds())
-	c.SetCookie(serverCommon.AuthHeader, token, maxAge, "/", "", false, true)
-
-	return nil
 }
 
 // clearTokenAndCookie 清除token和cookie

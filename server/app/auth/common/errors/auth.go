@@ -1,8 +1,7 @@
 package errors
 
-import "errors"
-
 var (
-	ErrAuthPassword     = errors.New("密码错误")
-	ErrAuthPasswordSame = errors.New("新密码与旧密码相同")
+	ErrLoginFailed      = "登录失败"
+	ErrLoginRecord      = "登录日志记录失败"
+	ErrGenerateJwtToken = "生成JwtToken失败"
 )
