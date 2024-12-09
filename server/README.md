@@ -15,3 +15,11 @@ tag: select
 
 table: 表名
 column: 字段名
+
+tag: binding
+
+type:
+    required: 必填
+    json: 绑定json
+    form: 绑定表单
+    query: 绑定查询参数
