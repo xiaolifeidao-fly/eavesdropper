@@ -27,7 +27,10 @@ config:
     # 过期时间 7天 单位秒
     timeout: 604800
   cache:
+    # memory:
+    #   # 缓存前缀
+    #   prefix: test
     # 缓存类型 redis,memory
-    memory:
-      # 缓存前缀
-      prefix: test
+    redis:
+      addr: r-bp1jjf4dd9lxzgm807pd.redis.rds.aliyuncs.com:6379
+      password: A4622511z3!
