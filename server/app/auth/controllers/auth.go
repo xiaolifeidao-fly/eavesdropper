@@ -66,6 +66,15 @@ func GetLoginUser(ctx *gin.Context) {
 	authController.OK(resp)
 }
 
+// Logout
+// @Description 登出
+// @Router /auth/logout [post]
+func Logout(ctx *gin.Context) {
+	authController := NewAuthController(ctx)
+	clearTokenAndCookie(ctx)
+	authController.OK(constants.LogoutSuccess)
+}
+
 // generateTokenAndSetCookie 生成token并设置cookie
 func generateTokenAndSetCookie(c *gin.Context, loginUserID uint64) error {
 	var err error
@@ -81,4 +90,9 @@ func generateTokenAndSetCookie(c *gin.Context, loginUserID uint64) error {
 	c.SetCookie(serverCommon.AuthHeader, token, maxAge, "/", "", false, true)
 
 	return nil
+}
+
+// clearTokenAndCookie 清除token和cookie
+func clearTokenAndCookie(c *gin.Context) {
+	c.SetCookie(serverCommon.AuthHeader, "", -1, "/", "", false, true)
 }
