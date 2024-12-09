@@ -107,12 +107,12 @@ func GetUser(req *dto.UserGetReq, resp *dto.UserGetResp) error {
 func PageUser(req *dto.UserPageReq, list *[]*dto.UserPageResp, count *int64) error {
 	var err error
 	userRepository := repositories.NewUserRepository()
+	userLoginRecordRepository := repositories.NewUserLoginRecordRepository()
 
 	if err = userRepository.Page(&models.User{}, *req, req.Page, list, count); err != nil {
 		return err
 	}
 
-	userLoginRecordRepository := repositories.NewUserLoginRecordRepository()
 	for _, user := range *list {
 		record := &models.UserLoginRecord{}
 		if err = userLoginRecordRepository.FindLastByUserID(uint64(user.ID), record); err != nil {
