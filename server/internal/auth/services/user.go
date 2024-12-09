@@ -17,7 +17,7 @@ func AddUser(req *dto.UserAddReq, id *uint64) error {
 	userRepository := repositories.NewUserRepository()
 
 	dbUser := &models.User{}
-	if err = userRepository.FindUnscopedByAccount(req.Account, dbUser); err != nil {
+	if err = userRepository.FindByUsername(req.Username, dbUser); err != nil {
 		return err
 	}
 
