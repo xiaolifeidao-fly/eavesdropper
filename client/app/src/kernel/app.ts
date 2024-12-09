@@ -11,7 +11,7 @@ import * as urlFormat from 'url';
 
 async function createDefaultWindow() {
   // const url = `${getClientBaseUrl()}/clip`;
-  const mainWindow = await createWindow('main', '');
+  const mainWindow = await createWindow('main', 'http://localhost:8081/shop');
   setMainWindow(mainWindow);
 }
  

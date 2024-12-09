@@ -1,6 +1,5 @@
 'use client';
 import { Button, Form, FormProps, Input, Modal, Space, Spin, Table, TableProps, Tag, theme } from 'antd';
-import AvaForm from './AvaForm';
 import Layout from '@/components/layout';
 import { useEffect, useState } from 'react';
 import { getData } from '@api/shop/shop.test.api';
@@ -8,7 +7,12 @@ import { Shop } from '@model/shop/shop.test';
 
 import { EditOutlined, ExportOutlined, ScheduleOutlined, ScissorOutlined, UploadOutlined } from '@ant-design/icons';
 
-export default function Clip() {
+export default function Clip({
+    params: { id },
+  }: {
+    params: { id: number }
+  }) {
+  console.log(id);
   const { token } = theme.useToken();
 
   const listStyle: React.CSSProperties = {
@@ -126,9 +130,6 @@ export default function Clip() {
             </div>
         </main>
 
-        <Modal open={false} onCancel={()=>{}}>
-           <AvaForm/>
-        </Modal>
     </Layout>
     
   );
