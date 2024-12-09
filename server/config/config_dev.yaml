@@ -32,5 +32,6 @@ config:
     #   prefix: test
     # 缓存类型 redis,memory
     redis:
+      prefix: dev
       addr: r-bp1jjf4dd9lxzgm807pd.redis.rds.aliyuncs.com:6379
       password: A4622511z3!
