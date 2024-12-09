@@ -68,11 +68,11 @@ type UserPageReq struct {
 
 // UserPageResp 分页获取用户响应
 type UserPageResp struct {
-	ID        int       `json:"id" select:"table:auth_user;column:id"`
-	Uid       string    `json:"uid" select:"table:auth_user;column:uid"`
-	Nickname  string    `json:"nickname" select:"table:auth_user;column:nickname"`
-	Username  string    `json:"username" select:"table:auth_user;column:username"`
-	UpdatedAt base.Time `json:"updatedAt" select:"table:auth_user;column:updated_at"`
+	ID          int       `json:"id" select:"table:auth_user;column:id"`
+	Nickname    string    `json:"nickname" select:"table:auth_user;column:nickname"`
+	Username    string    `json:"username" select:"table:auth_user;column:username"`
+	LastLoginAt base.Time `json:"lastLoginAt" select:"-"`
+	UpdatedAt   base.Time `json:"updatedAt" select:"table:auth_user;column:updated_at"`
 }
 
 // UserResetPasswordReq 重置用户密码请求

@@ -124,7 +124,7 @@ func Page(ctx *gin.Context) {
 		return
 	}
 
-	list := make([]dto.UserPageResp, 0)
+	list := make([]*dto.UserPageResp, 0)
 	var count int64
 
 	if err = services.PageUser(&req, &list, &count); err != nil {
@@ -133,29 +133,6 @@ func Page(ctx *gin.Context) {
 		return
 	}
 	userController.OK(base.BuildPageResp(list, req.GetPageInfo(count)))
-}
-
-// ResetPassword
-// @Description 重置用户密码
-// @Router /users/{id}/reset-password [put]
-func ResetPassword(ctx *gin.Context) {
-	userController := NewUserController(ctx)
-	var req dto.UserResetPasswordReq
-
-	err := userController.Bind(&req, nil).Errors
-	if err != nil {
-		userController.Logger.Errorf("ResetPassword failed, with error is %v", err)
-		userController.Error(err.Error())
-		return
-	}
-
-	var resp string
-	if err = services.ResetPassword(&req, &resp); err != nil {
-		userController.Logger.Errorf("ResetPassword failed, with error is %v", err)
-		userController.Error(err.Error())
-		return
-	}
-	userController.OK(resp)
 }
 
 // GetList
