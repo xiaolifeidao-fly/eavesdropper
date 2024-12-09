@@ -1,9 +1,7 @@
 package controllers
 
 import (
-	"server/app/auth/common/constants"
 	"server/app/auth/common/errors"
-	"server/common/middleware/jwtauth"
 	serverCommon "server/common/server/common"
 	"server/common/server/controller"
 	"server/internal/auth/services"
@@ -31,33 +29,18 @@ func Login(ctx *gin.Context) {
 	err := authController.Bind(&req, binding.JSON).Errors
 	if err != nil {
 		authController.Logger.Errorf("Login failed, with error is %v", err)
-		authController.Error(errors.ErrLoginFailed)
+		authController.Error(errors.ErrLoginFailed.Error())
 		return
 	}
 
-	loginUserID := uint64(0)
-	if err = services.Login(&req, &loginUserID); err != nil {
-		authController.Logger.Errorf("Login failed, with error is %v", err)
-		authController.Error(err.Error())
-		return
-	}
-
-	var token string
-	if token, err = jwtauth.GenerateJwtToken(loginUserID); err != nil {
-		authController.Logger.Errorf("Login failed, with error is %v", err)
-		authController.Error(errors.ErrGenerateJwtToken)
-		return
-	}
+	// 获取客户端IP
+	req.LoginIP = serverCommon.GetClientIP(ctx)
+	req.DeviceID = "deviceID" // TODO: 获取设备ID
 
 	var resp dto.LoginResp
-	resp.AccessToken = token
-
-	// 登录成功记录登录日志
-	var req2 dto.LoginRecordReq
-	req2.From(loginUserID, serverCommon.GetClientIP(ctx), "deviceID") // TODO: 获取设备ID
-	if err = services.RecordLoginLog(&req2); err != nil {
-		authController.Logger.Errorf("RecordLoginLog failed, with error is %v", err)
-		authController.Error(errors.ErrLoginRecord)
+	if err = services.Login(&req, &resp); err != nil {
+		authController.Logger.Errorf("Login failed, with error is %v", err)
+		authController.Error(errors.ErrLoginFailed.Error())
 		return
 	}
 
@@ -74,7 +57,7 @@ func GetLoginUser(ctx *gin.Context) {
 	err := services.GetLoginUser(&resp)
 	if err != nil {
 		authController.Logger.Errorf("GetLoginUser failed, with error is %v", err)
-		authController.Error(err.Error())
+		authController.Error(errors.ErrGetLoginUserFailed.Error())
 		return
 	}
 	authController.OK(resp)
@@ -85,11 +68,12 @@ func GetLoginUser(ctx *gin.Context) {
 // @Router /auth/logout [post]
 func Logout(ctx *gin.Context) {
 	authController := NewAuthController(ctx)
-	clearTokenAndCookie(ctx)
-	authController.OK(constants.LogoutSuccess)
-}
 
-// clearTokenAndCookie 清除token和cookie
-func clearTokenAndCookie(c *gin.Context) {
-	c.SetCookie(serverCommon.AuthHeader, "", -1, "/", "", false, true)
+	if err := services.Logout(); err != nil {
+		authController.Logger.Errorf("Logout failed, with error is %v", err)
+		authController.Error(errors.ErrLogoutFailed.Error())
+		return
+	}
+
+	authController.OK(errors.ErrLogoutSuccess.Error())
 }

@@ -29,9 +29,20 @@ func JwtAuth() gin.HandlerFunc {
 			return
 		}
 
+		userID, ok := data.(float64)
+		if !ok {
+			response.Error(c, serverCommon.TokenError)
+			return
+		}
+
+		if !serverCommon.CheckTokenCache(uint64(userID), accessToken) {
+			response.Error(c, serverCommon.TokenError)
+			return
+		}
+
 		// 设置登录用户
 		gContext := common.GetContext()
-		gContext.Set(common.LoginUserIDKey, data)
+		gContext.Set(common.LoginUserIDKey, userID)
 
 		c.Next()
 	}

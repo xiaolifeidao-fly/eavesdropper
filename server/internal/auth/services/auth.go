@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"server/common"
-	"server/common/encryption"
+	"server/common/middleware/jwtauth"
+	serverCommon "server/common/server/common"
 	"server/internal/auth/common/constants"
 	"server/internal/auth/common/errors"
 	"server/internal/auth/models"
@@ -12,15 +13,9 @@ import (
 	"server/internal/auth/services/dto"
 )
 
-const (
-	LoginUserCacheKey = constants.LoginUserCacheKey
-	LoginUserCacheTTL = constants.LoginUserCacheTTL
-)
-
-func Login(req *dto.LoginReq, loginUserID *uint64) error {
+func Login(req *dto.LoginReq, resp *dto.LoginResp) error {
 	var err error
 	userRepository := repositories.NewUserRepository()
-	userPasswordRepository := repositories.NewUserPasswordRepository()
 
 	dbUser := &models.User{}
 	if err = userRepository.FindByUsername(req.Username, dbUser); err != nil {
@@ -31,30 +26,40 @@ func Login(req *dto.LoginReq, loginUserID *uint64) error {
 		return errors.ErrUserNotFound
 	}
 
-	userPassword := &models.UserPassword{}
-	if err = userPasswordRepository.FindByUserID(dbUser.ID, userPassword); err != nil {
+	// 验证密码
+	if err = CheckUserPassword(dbUser.ID, req.Password); err != nil {
 		return err
 	}
 
-	// 验证密码
-	if err = checkPassword(req.Password, userPassword.Password); err != nil {
-		return errors.ErrAuthPassword
+	// 生成JwtToken
+	if resp.AccessToken, err = generateJwtToken(dbUser.ID); err != nil {
+		return err
 	}
 
-	// 将数据库用户转换为登录用户
-	*loginUserID = dbUser.ID
+	// 登录成功记录登录日志
+	if err = loginReqSaveLoginLog(dbUser.ID, req); err != nil {
+		serverCommon.ClearTokenCache(dbUser.ID)
+		return err
+	}
 
 	return nil
 }
 
-// checkPassword
-// @Description 验证密码
-func checkPassword(inputPassword, dbPassword string) error {
-	// TODO 验证密码
-	if encryption.Encryption(inputPassword, dbPassword) != dbPassword {
-		return nil
+// generateJwtToken
+// @Description 生成JwtToken
+func generateJwtToken(userID uint64) (string, error) {
+	var err error
+	var token string
+
+	if token, err = jwtauth.GenerateJwtToken(userID); err != nil {
+		return "", err
 	}
-	return nil
+
+	if err = serverCommon.SetTokenCache(userID, token); err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
 
 // GetLoginUser
@@ -100,7 +105,7 @@ func getLoginUserFromCache(loginUserID uint64, resp *dto.LoginUserResp) error {
 	var err error
 
 	cacheAdapter := common.Runtime.GetCacheAdapter()
-	cacheKey := fmt.Sprintf(LoginUserCacheKey, loginUserID)
+	cacheKey := fmt.Sprintf(constants.LoginUserCacheKey, loginUserID)
 
 	var cacheData string
 	if cacheData, err = cacheAdapter.Get(cacheKey); err != nil {
@@ -124,29 +129,47 @@ func cacheLoginUser(loginUserID uint64, resp *dto.LoginUserResp) error {
 	var err error
 
 	cacheAdapter := common.Runtime.GetCacheAdapter()
-	cacheKey := fmt.Sprintf(LoginUserCacheKey, loginUserID)
+	cacheKey := fmt.Sprintf(constants.LoginUserCacheKey, loginUserID)
 
 	cacheData, err := json.Marshal(resp)
 	if err != nil {
 		return err
 	}
 
-	if err = cacheAdapter.Set(cacheKey, cacheData, int(LoginUserCacheTTL.Seconds())); err != nil {
+	cacheTTL := int(constants.LoginUserCacheTTL.Seconds())
+	if err = cacheAdapter.Set(cacheKey, cacheData, cacheTTL); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// RecordLoginLog
-// @Description 登录成功记录登录日志
-func RecordLoginLog(req *dto.LoginRecordReq) error {
+// clearLoginUserCache
+// @Description 清除登录用户缓存
+func clearLoginUserCache(loginUserID uint64) error {
 	var err error
-	userLoginRecordRepository := repositories.NewUserLoginRecordRepository()
 
-	userLoginRecord := &models.UserLoginRecord{}
-	req.ToUserLoginRecord(userLoginRecord)
-	if err = userLoginRecordRepository.Create(userLoginRecord); err != nil {
+	cacheAdapter := common.Runtime.GetCacheAdapter()
+	cacheKey := fmt.Sprintf(constants.LoginUserCacheKey, loginUserID)
+
+	if err = cacheAdapter.Del(cacheKey); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Logout
+// @Description 登出
+func Logout() error {
+	var err error
+
+	loginUserID := common.GetLoginUserID()
+	if err = serverCommon.ClearTokenCache(loginUserID); err != nil {
+		return err
+	}
+
+	if err = clearLoginUserCache(loginUserID); err != nil {
 		return err
 	}
 

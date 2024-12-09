@@ -1,8 +1,10 @@
 package constants
 
-import "time"
+import (
+	"time"
+)
 
 const (
 	LoginUserCacheKey = "user:%d"          // 登录用户缓存key
-	LoginUserCacheTTL = 7 * 24 * time.Hour // 登录用户缓存过期时间
+	LoginUserCacheTTL = 1 * 24 * time.Hour // 登录用户缓存过期时间
 )
