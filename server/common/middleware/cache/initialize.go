@@ -12,15 +12,24 @@ import (
 var CacheConfig = new(Cache)
 
 type Cache struct {
+	Redis  *Redis  `json:"redis"`
 	Memory *Memory `json:"memory"`
 }
 
 // Setup 初始化缓存 构造cache 顺序 redis > memory
 func Setup() {
+	var err error
+
 	var cacheAdapter storage.AdapterCache
-	if CacheConfig.Memory != nil {
+	if CacheConfig.Redis != nil {
+		cacheAdapter, err = cache.NewRedis(GetRedisClient(), CacheConfig.Redis.Prefix, CacheConfig.Redis.GetOptions())
+	} else if CacheConfig.Memory != nil {
 		memory := CacheConfig.Memory
 		cacheAdapter = cache.NewMemory(memory.Prefix)
+	}
+
+	if err != nil {
+		panic(err)
 	}
 
 	common.Runtime.SetCacheAdapter(cacheAdapter)
