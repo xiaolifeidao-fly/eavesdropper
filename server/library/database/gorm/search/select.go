@@ -55,19 +55,24 @@ func ResolveSelect(q interface{}, g *GormSelect) {
 	qValue := reflect.ValueOf(q)
 
 	var elemType reflect.Type
-	// 确保输入是指向 slice 的指针
+
+	// 如果是指针，则取指针指向的类型
 	if qType.Kind() == reflect.Ptr {
-		if qValue.Elem().Kind() == reflect.Slice {
+		if qValue.Elem().Kind() == reflect.Slice { // 如果是指针并且指向的是切片，则取切片元素的类型
 			elemType = qValue.Elem().Type().Elem()
+			if elemType.Kind() == reflect.Ptr {
+				elemType = elemType.Elem()
+			}
 		} else {
+			elemType = qType.Elem() // 如果是指针并且指向的不是切片，则取指针指向的类型
+		}
+	} else if qType.Kind() == reflect.Slice { // 如果输入是一个切片，则取切片元素的类型
+		if qType.Elem().Kind() == reflect.Ptr {
+			elemType = qType.Elem().Elem()
+		} else if qType.Elem().Kind() == reflect.Struct {
 			elemType = qType.Elem()
 		}
-	} else if qType.Kind() == reflect.Slice && qType.Elem().Kind() == reflect.Struct {
-		// 输入是一个切片
-		elemType = qType.Elem()
-	}
-
-	if qType.Kind() == reflect.Struct {
+	} else if qType.Kind() == reflect.Struct {
 		elemType = qType
 	}
 
