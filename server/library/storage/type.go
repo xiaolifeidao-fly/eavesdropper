@@ -14,4 +14,5 @@ type AdapterCache interface {
 	Decrease(key string) error
 	Expire(key string, dur time.Duration) error
 	GetExpire(key string) (int64, error)
+	BuildKey(key string) string
 }

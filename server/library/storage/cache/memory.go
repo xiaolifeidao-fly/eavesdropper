@@ -31,7 +31,7 @@ func NewMemory(prefix string) *Memory {
 	return cache
 }
 
-func (m *Memory) buildKey(key string) string {
+func (m *Memory) BuildKey(key string) string {
 	return m.prefix + "_" + key
 }
 
@@ -43,7 +43,7 @@ func (m *Memory) connect() {
 }
 
 func (m *Memory) Get(key string) (string, error) {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	v, err := m.getItem(key)
 	if err != nil || v == nil {
@@ -53,7 +53,7 @@ func (m *Memory) Get(key string) (string, error) {
 }
 
 func (m *Memory) getItem(key string) (*item, error) {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	var err error
 	i, ok := m.items.Load(key)
@@ -77,7 +77,7 @@ func (m *Memory) getItem(key string) (*item, error) {
 }
 
 func (m *Memory) Set(key string, val interface{}, expire int) error {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	s, err := cast.ToStringE(val)
 	if err != nil {
@@ -91,27 +91,27 @@ func (m *Memory) Set(key string, val interface{}, expire int) error {
 }
 
 func (m *Memory) setItem(key string, item *item) error {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	m.items.Store(key, item)
 	return nil
 }
 
 func (m *Memory) Del(key string) error {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	return m.del(key)
 }
 
 func (m *Memory) del(key string) error {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	m.items.Delete(key)
 	return nil
 }
 
 func (m *Memory) HashGet(hk, key string) (string, error) {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	v, err := m.getItem(hk + key)
 	if err != nil || v == nil {
@@ -121,25 +121,25 @@ func (m *Memory) HashGet(hk, key string) (string, error) {
 }
 
 func (m *Memory) HashDel(hk, key string) error {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	return m.del(hk + key)
 }
 
 func (m *Memory) Increase(key string) error {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	return m.calculate(key, 1)
 }
 
 func (m *Memory) Decrease(key string) error {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	return m.calculate(key, -1)
 }
 
 func (m *Memory) calculate(key string, num int) error {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	m.mutex.RLock()
 	defer m.mutex.RUnlock()
@@ -163,7 +163,7 @@ func (m *Memory) calculate(key string, num int) error {
 }
 
 func (m *Memory) Expire(key string, dur time.Duration) error {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	m.mutex.RLock()
 	defer m.mutex.RUnlock()
@@ -180,7 +180,7 @@ func (m *Memory) Expire(key string, dur time.Duration) error {
 }
 
 func (m *Memory) GetExpire(key string) (int64, error) {
-	key = m.buildKey(key)
+	key = m.BuildKey(key)
 
 	v, err := m.getItem(key)
 	if err != nil {
