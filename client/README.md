@@ -6,7 +6,7 @@
 │   └── utils (相关常用工具代码)
 ├── tsconfig.json
 └── package.json
-环境安装 : npm install
+环境安装 : pnpm install
 
 ```
 
@@ -29,9 +29,9 @@ client/app
 ├── package.sh
 └── package.json
 
-环境安装 : npm install
+环境安装 : pnpm install
 
-开发启动 : npm run dev
+开发启动 : pnpm run dev
 
 ```
 
@@ -51,8 +51,8 @@ nextjs + react + antd
 ├── package.sh
 └── package.json
 
-环境安装 : npm install
-开发启动 : npm run dev
+环境安装 : pnpm install
+开发启动 : pnpm run dev
 
 ```
 
