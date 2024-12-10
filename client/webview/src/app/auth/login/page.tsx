@@ -7,10 +7,12 @@ import Image from 'next/image';
 import { encryptRSA } from '@utils/auth'
 
 import styles from './index.module.less';
+import CaptchaInput from './CaptchaInput';
 
 type FieldType = {
   username?: string;
   password?: string;
+  captcha?: string;
 };
 
 const mode = ['登录', '注册'];
@@ -21,6 +23,8 @@ export default function Home() {
   const router = useRouter();
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values: any) => {
+    console.log('onFinish', values);
+
     // 登录
     if (curMode === mode[0]) {
       const { username, password } = values;
@@ -61,6 +65,13 @@ export default function Home() {
         rules={[{ required: true, message: '请输入密码' }]}
       >
         <Input.Password size='large' placeholder='请输入密码' variant="filled" />
+      </Form.Item>
+
+      <Form.Item<FieldType>
+        name="captcha"
+        rules={[{ required: true, message: '请输入验证码' }]}
+      >
+        <CaptchaInput />
       </Form.Item>
 
       <Form.Item wrapperCol={{ span: 24 }}>
