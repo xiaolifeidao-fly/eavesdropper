@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, useCallback } from 'react';
-import { Input, Image } from 'antd';
-// import Image from 'next/image';
+import { Input, Button } from 'antd';
+import Image from 'next/image';
 
 import { getCaptcha as getCaptchaApi } from './api';
 
@@ -26,6 +26,8 @@ const getCaptcha = async () => {
 
 export default function CaptchaInput({ value = {}, onChange }: CaptchaInputProps) {
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const [captchaId, setCaptchaId] = useState<string>('');
   const [imageData, setImageData] = useState<string>('');
   const [captchaValue, setCaptchaValue] = useState<string>('');
@@ -33,18 +35,17 @@ export default function CaptchaInput({ value = {}, onChange }: CaptchaInputProps
   const setCaptchaInfo = (data: any) => {
     const { id, image } = data;
 
+    setIsLoading(false);
     setCaptchaId(id);
     setImageData(image);
     triggerChange({ captchaId: id }); // 更新唯一标识
   }
 
   useEffect(() => {
-    console.log('useEffect');
-
-    getCaptcha().then((data: any) => {
-      setCaptchaInfo(data);
-    })
-  }, []);
+    if (imageData) {
+      setIsLoading(false); // 当有图片数据时，表示加载完成
+    }
+  }, [imageData]);
 
   // 触发改变
   const triggerChange = useCallback((changedValue: { captchaId?: string; captchaValue?: string }) => {
@@ -71,16 +72,33 @@ export default function CaptchaInput({ value = {}, onChange }: CaptchaInputProps
 
   return (
     <span style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-      <Input
-        placeholder='请输入验证码'
-        onChange={onChangeInput}
-        style={{ marginRight: 5, padding: '6.5px 11px 6.5px 11px', verticalAlign: 'middle' }} />
-      <Image
-        style={{ height: '35px', verticalAlign: 'middle', padding: '0px 0px 0px 0px' }}
-        src={imageData}
-        alt="captcha"
-        onClick={onClickImage}
-      />
+      <div style={{ width: '75%', paddingRight: '5px' }}>
+        <Input
+          placeholder='请输入验证码'
+          onChange={onChangeInput}
+          style={{ width: '100%', padding: '6.5px 11px', verticalAlign: 'middle' }} />
+      </div>
+      <div style={{ width: '25%', display: 'flex' }}>
+        {isLoading ?
+          (
+            <Button
+              style={{ width: '100%' }}
+              onClick={onClickImage}
+            >
+              加载验证码
+            </Button>
+          ) : (
+            <Image
+              style={{ verticalAlign: 'middle', width: '100%' }}
+              src={imageData ? `data:image/png;base64,${imageData}` : '/bg.svg'}
+              width={100}
+              height={35}
+              alt="captcha"
+              onClick={onClickImage}
+            />
+          )
+        }
+      </div>
     </span>
   );
 }
