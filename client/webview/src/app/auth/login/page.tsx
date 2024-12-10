@@ -2,8 +2,9 @@
 import { Button, Form, Input, Segmented, type FormProps } from 'antd';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { loginApi } from './api';
+import { loginApi } from './api'
 import Image from 'next/image';
+import { encryptRSA } from '@utils/auth'
 
 import styles from './index.module.less';
 
@@ -23,10 +24,13 @@ export default function Home() {
     // 登录
     if (curMode === mode[0]) {
       const { username, password } = values;
-      loginApi(username, password).then(res => {
+
+      // 加密密码
+      const encodedPassword = encryptRSA(password);
+
+      loginApi(username, encodedPassword).then(res => {
         // login logic
         // router.push('/dashboard');
-        console.log('loginApi success');
       })
       return
     }
