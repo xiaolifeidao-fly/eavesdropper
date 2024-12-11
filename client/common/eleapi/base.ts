@@ -8,43 +8,38 @@ export const Protocols = {
 
 export function InvokeType(invokeType : string) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-      // 使用 Reflect 存储装饰器的属性（description）
       Reflect.defineMetadata('invokeType', invokeType, target, propertyKey);
   };
 }
 
-// export function Log(target: any, propertyName: string, descriptor: PropertyDescriptor) {
-//   // 保存原始方法引用
-//   const originalMethod = descriptor.value;
-
-//   // 修改方法的实现
-//   descriptor.value = function(...args: any[]) {
-//     console.log(`Calling method ${propertyName} with arguments: ${JSON.stringify(args)}`);
-//     const result = originalMethod.apply(this, args);
-//     console.log(`Method ${propertyName} returned: ${result}`);
-//     return result;
-//   };
-// }
 
 abstract class ElectronApi {
 
-   apiName: string;
+  apiName: string;
 
-   event : any;
+  event : any;
 
-   constructor() {
-     this.apiName = this.getApiName()
-   }
+  constructor() {
+    this.apiName = this.getApiName()
+  }
+  
+  getNamespace(): any {
+    return undefined;
+  }
 
-   getEvent(){
-     return this.event
-   }
+  getEvent(){
+    return this.event
+  }
 
-   setEvent(event: any){
-     this.event = event
-   }
+  setEvent(event: any){
+    this.event = event
+  }
 
   getApiName(): string{
+    const namespace = this.getNamespace();
+    if(namespace){
+       return namespace + "_" +this.constructor.name;
+    }
     return this.constructor.name;
   }
 
