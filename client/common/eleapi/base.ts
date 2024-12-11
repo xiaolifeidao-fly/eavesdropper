@@ -44,7 +44,9 @@ abstract class ElectronApi {
      this.event = event
    }
 
-   abstract getApiName(): string;
+  getApiName(): string{
+    return this.constructor.name;
+  }
 
    send(key : string, ...args: any[]): void{
       const channel = `${this.getApiName()}.${key}`;
