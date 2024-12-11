@@ -8,7 +8,7 @@
       "paths": {
         "@/*": ["./*"],
         "@api/*": ["api/*"],
-        "@util/*": ["utils/*"],
+        "@utils/*": ["utils/*"],
         "@model/*": ["model/*"]
       }
     },

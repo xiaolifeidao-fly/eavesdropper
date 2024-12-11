@@ -1,4 +1,4 @@
-import { instance } from "@util/axios"
+import { instance } from "@utils/axios"
 import { LoginReq, LoginResp } from "@model/auth/auth"
 
 // login 登录
