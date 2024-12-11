@@ -22,7 +22,8 @@ function rejectHttpError(message: string, code?: any): Promise<never> {
 
 const instance: AxiosInstance = axios.create({
   timeout: 60000,
-  baseURL: `/${process.env.API_PREFIX}${process.env.NEXT_PUBLIC_BASE_URL}`,
+  baseURL: '',
+  // baseURL: `/${process.env.API_PREFIX}${process.env.NEXT_PUBLIC_BASE_URL}`,
   withCredentials: true,
   headers: {
     // todo: 全局存储loginUser
@@ -34,9 +35,9 @@ instance.interceptors.response.use(
   (response: AxiosResponse) => {
     let result = response.data;
 
-    if (result.code !== 1) {
+    if (!result.success) {
       return rejectHttpError(
-        result.error || result.message || result.msg || '请求异常！',
+        result.error || result.message || result.errorMessage || '请求异常！',
         result.code,
       );
     }

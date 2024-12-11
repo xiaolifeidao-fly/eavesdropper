@@ -6,8 +6,8 @@ import { createProxyMiddleware } from "http-proxy-middleware";
 
 require('dotenv').config();
 
-const prefix = process.env.REACT_APP_URL_PREFIX;
-const target = process.env.REACT_APP_SERVER_TARGET;
+const prefix = process.env.NEXT_PUBLIC_APP_URL_PREFIX;
+const target = process.env.NEXT_PUBLIC_SERVER_TARGET;
 // Next.js API 路由处理函数
 export default async function handler(req, res) {
   console.log("request url:",req.url);
