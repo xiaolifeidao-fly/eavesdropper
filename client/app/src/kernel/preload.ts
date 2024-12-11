@@ -1,6 +1,35 @@
 
-// const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
+
+
+
+// @ts-ignore
+// import { TestApi } from "@elapi/test";
+
+// const apiInstance = new TestApi();
+
+// // 定义一个类型，将暴露给渲染进程的 API 类型化
+// type ExposedApi = {
+//     [K in keyof TestApi]: TestApi[K] extends (...args: infer Args) => infer Return
+//         ? (...args: Args) => Return
+//         : never;
+// };
+
+// // 动态构建暴露的 API
+// const exposedApi: Partial<ExposedApi> = {};
+
+// Object.getOwnPropertyNames(TestApi.prototype)
+//     .filter((key) => key !== 'constructor') // 排除构造函数
+//     .forEach((methodName) => {
+//         const method = (apiInstance as any)[methodName];
+//         if (typeof method === 'function') {
+//             exposedApi[methodName as keyof ExposedApi] = method.bind(apiInstance);
+//         }
+//     });
+
+// // 使用 contextBridge 暴露 API
+// contextBridge.exposeInMainWorld('api', exposedApi as ExposedApi);
 
 
 

@@ -3,12 +3,12 @@
       "module": "commonjs",
       "target": "esnext",
       "declaration": true,
-      "outDir": "./dist",
       "baseUrl": "./",  
       "paths": {
         "@/*": ["./*"],
         "@api/*": ["api/*"],
         "@utils/*": ["utils/*"],
+        "@eleapi/*": ["eleapi/*"],
         "@model/*": ["model/*"]
       }
     },
