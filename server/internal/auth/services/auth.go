@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"server/common"
+	"server/common/captcha"
 	"server/common/middleware/jwtauth"
 	serverCommon "server/common/server/common"
 	"server/internal/auth/common/constants"
@@ -13,6 +14,8 @@ import (
 	"server/internal/auth/services/dto"
 )
 
+// Login
+// @Description 登录
 func Login(req *dto.LoginReq, resp *dto.LoginResp) error {
 	var err error
 	userRepository := repositories.NewUserRepository()
@@ -39,6 +42,31 @@ func Login(req *dto.LoginReq, resp *dto.LoginResp) error {
 	// 登录成功记录登录日志
 	if err = loginReqSaveLoginLog(dbUser.ID, req); err != nil {
 		serverCommon.ClearTokenCache(dbUser.ID)
+		return err
+	}
+
+	return nil
+}
+
+// CheckLoginCaptcha
+// @Description 验证登录验证码
+func CheckLoginCaptcha(captchaID, captcha string) error {
+	var err error
+
+	cacheAdapter := common.Runtime.GetCacheAdapter()
+	cacheKey := fmt.Sprintf(constants.LoginCaptchaCacheKey, captchaID)
+
+	var cacheData string
+	if cacheData, err = cacheAdapter.Get(cacheKey); err != nil {
+		return err
+	}
+
+	if cacheData != captcha {
+		return errors.ErrLoginCaptcha
+	}
+
+	// 清除验证码缓存
+	if err = cacheAdapter.Del(cacheKey); err != nil {
 		return err
 	}
 
@@ -172,6 +200,30 @@ func Logout() error {
 	if err = clearLoginUserCache(loginUserID); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+// GetLoginCaptcha
+// @Description 获取登录验证码
+func GetLoginCaptcha(resp *dto.LoginCaptchaResp) error {
+	var err error
+
+	var captchaResult captcha.Captcha
+	if captchaResult, err = captcha.GenerateStringCaptcha(); err != nil {
+		return err
+	}
+
+	// 缓存验证码值
+	cacheAdapter := common.Runtime.GetCacheAdapter()
+	cacheKey := fmt.Sprintf(constants.LoginCaptchaCacheKey, captchaResult.CaptchaID)
+	cacheTTL := int(constants.LoginCaptchaCacheTTL.Seconds())
+	if err = cacheAdapter.Set(cacheKey, []byte(captchaResult.CaptchaCode), cacheTTL); err != nil {
+		return err
+	}
+
+	resp.CaptchaID = captchaResult.CaptchaID
+	resp.CaptchaImg = captchaResult.CaptchaImg
 
 	return nil
 }

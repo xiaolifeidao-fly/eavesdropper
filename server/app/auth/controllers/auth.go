@@ -33,6 +33,13 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
+	// 验证登录验证码
+	if err = services.CheckLoginCaptcha(req.CaptchaID, req.Captcha); err != nil {
+		authController.Logger.Errorf("CheckLoginCaptcha failed, with error is %v", err)
+		authController.Error(err.Error())
+		return
+	}
+
 	// 获取客户端IP
 	req.LoginIP = serverCommon.GetClientIP(ctx)
 	req.DeviceID = "deviceID" // TODO: 获取设备ID
@@ -76,4 +83,20 @@ func Logout(ctx *gin.Context) {
 	}
 
 	authController.OK(errors.ErrLogoutSuccess.Error())
+}
+
+// GetLoginCaptcha
+// @Description 获取登录验证码
+// @Router /auth/login/captcha [get]
+func GetLoginCaptcha(ctx *gin.Context) {
+	authController := NewAuthController(ctx)
+
+	var resp dto.LoginCaptchaResp
+	if err := services.GetLoginCaptcha(&resp); err != nil {
+		authController.Logger.Errorf("GetLoginCaptcha failed, with error is %v", err)
+		authController.Error(errors.ErrGetLoginCaptchaFailed.Error())
+		return
+	}
+
+	authController.OK(resp)
 }
