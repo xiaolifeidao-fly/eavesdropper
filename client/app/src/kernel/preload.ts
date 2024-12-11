@@ -5,7 +5,7 @@ import log from 'electron-log';
 import { ElectronApi, Protocols } from '@eleapi/base';
 import { TestApi } from '@eleapi/test';
  // 定义一个类型，将暴露给渲染进程的 API 类型化
- type ExposedApi = {
+type ExposedApi = {
   [K in keyof ElectronApi]: ElectronApi[K] extends (...args: infer Args) => infer Return
     ? (...args: Args) => Promise<Return>
     : never;

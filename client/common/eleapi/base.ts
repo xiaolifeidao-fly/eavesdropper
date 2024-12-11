@@ -35,22 +35,30 @@ abstract class ElectronApi {
     this.event = event
   }
 
-  getApiName(): string{
-    const namespace = this.getNamespace();
-    if(namespace){
-       return namespace + "_" +this.constructor.name;
-    }
-    return this.constructor.name;
+  getApiNameSuffix(): string{
+    return "Impl";
   }
 
-   send(key : string, ...args: any[]): void{
-      const channel = `${this.getApiName()}.${key}`;
-      this.sendMessage(channel, ...args)
-   }
+  getApiName(): string{
+    const namespace = this.getNamespace();
+    let constructorName = this.constructor.name;
+    if(!constructorName.endsWith(this.getApiNameSuffix())){
+       constructorName = constructorName + this.getApiNameSuffix();
+    }
+    if(namespace){
+       return namespace + "_" +constructorName;
+    }
+    return constructorName;
+  }
 
-   sendMessage(channel: string, ...args: any[]): void{
-      this.getEvent().sender.send(channel, args);
-   }
+  send(key : string, ...args: any[]): void{
+    const channel = `${this.getApiName()}.${key}`;
+    this.sendMessage(channel, ...args)
+  }
+
+  sendMessage(channel: string, ...args: any[]): void{
+    this.getEvent().sender.send(channel, args);
+  }
     
 }
 
