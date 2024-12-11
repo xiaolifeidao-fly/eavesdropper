@@ -14,6 +14,8 @@ const searchLabels = [
   }
 ]
 
+
+
 export default function UserManage() {
 
   const [tableData, setTableData] = useState<DataType[]>([]);
@@ -22,14 +24,7 @@ export default function UserManage() {
     <Layout curActive='/auth/user'>
       <main className={styles.userWrap}>
         <div className={styles.content}>
-          <div>
-            
-          </div>
-          <AvaForm setTableData={setTableData}/>
-          <div style={{ listStyle: 'none' }}>
-            <h3>用户列表</h3>
-            <Table columns={columns} dataSource={tableData} pagination={{ pageSize: 5 }} scroll={{ x: 1000 }} />
-          </div>
+          
         </div>
       </main>
     </Layout>
