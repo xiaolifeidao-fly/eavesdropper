@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店铺管理</title>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus/dist/index.css" />
+    <!-- 引入 Vue 3 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
+    <!-- 引入 Element Plus -->
+    <script src="https://cdn.jsdelivr.net/npm/element-plus"></script>
+    <!-- 引入 Element Plus 图标 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@element-plus/icons-vue@2.0.10/dist/index.css" />
+    <style>
+        .shop-container {
+            padding: 20px;
+        }
+        .header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .table-container {
+            margin-top: 20px;
+        }
+        .operation-column {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="shop-container">
+            <div class="header">
+                <h2>店铺管理</h2>
+                <el-button type="primary" @click="handleAdd">
+                    一键同步
+                </el-button>
+            </div>
+
+            <div class="table-container">
+                <el-table :data="shopList" border style="width: 100%">
+                    <el-table-column prop="resourceAccount" label="所属资源账号" width="200">
+                    </el-table-column>
+                    <el-table-column prop="shopName" label="店铺名称" width="300">
+                    </el-table-column>
+                    <el-table-column prop="remark" label="备注" width="300">
+                    </el-table-column>
+                    <el-table-column label="操作" width="200">
+                        <template #default="scope">
+                            <div class="operation-column">
+                                <el-button 
+                                    type="primary" 
+                                    size="small" 
+                                    @click="handleSync(scope.row)"
+                                >
+                                    同步
+                                </el-button>
+                                <el-button 
+                                    type="danger" 
+                                    size="small" 
+                                    @click="handleDelete(scope.row)"
+                                >
+                                    删除
+                                </el-button>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+
+            <!-- 添加/编辑店铺对话框 -->
+            <el-dialog
+                v-model="dialogVisible"
+                :title="dialogType === 'add' ? '添加店铺' : '编辑店铺'"
+                width="500px"
+            >
+                <el-form :model="shopForm" label-width="120px">
+                    <el-form-item label="所属资源账号">
+                        <el-select v-model="shopForm.resourceAccount" placeholder="请选择资源账号" multiple>
+                            <el-option
+                                v-for="item in resourceAccounts"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                            />
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <template #footer>
+                    <span class="dialog-footer">
+                        <el-button @click="dialogVisible = false">取消</el-button>
+                        <el-button @click="dialogVisible = false">修改</el-button>(只修改备注)
+                        <el-button type="primary" @click="handleSubmit">一键同步</el-button>
+                    </span>
+                </template>
+            </el-dialog>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, reactive } = Vue;
+
+        const app = createApp({
+            setup() {
+                const shopList = ref([
+                    { id: 1, resourceAccount: '资源账号1', shopName: '测试店铺1', remark: '备注1' },
+                    { id: 2, resourceAccount: '资源账号2', shopName: '测试店铺2', remark: '备注2' },
+                ]);
+
+                const resourceAccounts = ref([
+                    { value: '资源账号1', label: '资源账号1' },
+                    { value: '资源账号2', label: '资源账号2' },
+                ]);
+
+                const dialogVisible = ref(false);
+                const dialogType = ref('add');
+                const shopForm = reactive({
+                    resourceAccount: '',
+                    shopName: '',
+                    remark: '',
+                });
+
+                const handleAdd = () => {
+                    dialogType.value = 'add';
+                    shopForm.resourceAccount = '';
+                    shopForm.shopName = '';
+                    shopForm.remark = '';
+                    dialogVisible.value = true;
+                };
+
+                const handleSync = (row) => {
+                    ElementPlus.ElMessage.success(`正在同步店铺：${row.shopName}`);
+                    // 这里添加同步逻辑
+                };
+
+                const handleDelete = (row) => {
+                    ElementPlus.ElMessageBox.confirm(
+                        `确定要删除店铺 ${row.shopName} 吗？`,
+                        '警告',
+                        {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning',
+                        }
+                    ).then(() => {
+                        // 这里添加删除逻辑
+                        shopList.value = shopList.value.filter(item => item.id !== row.id);
+                        ElementPlus.ElMessage.success('删除成功');
+                    }).catch(() => {});
+                };
+
+                const handleSubmit = () => {
+                    if (!shopForm.resourceAccount || !shopForm.shopName) {
+                        ElementPlus.ElMessage.warning('请填写完整信息');
+                        return;
+                    }
+
+                    if (dialogType.value === 'add') {
+                        // 这里添加新增逻辑
+                        const newShop = {
+                            id: Date.now(),
+                            resourceAccount: shopForm.resourceAccount,
+                            shopName: shopForm.shopName,
+                            remark: shopForm.remark,
+                        };
+                        shopList.value.push(newShop);
+                    }
+
+                    dialogVisible.value = false;
+                    ElementPlus.ElMessage.success(dialogType.value === 'add' ? '添加成功' : '编辑成功');
+                };
+                
+                return {
+                    shopList,
+                    resourceAccounts,
+                    dialogVisible,
+                    dialogType,
+                    shopForm,
+                    handleAdd,
+                    handleSync,
+                    handleDelete,
+                    handleSubmit,
+                };
+            },
+        });
+
+        app.use(ElementPlus);
+        app.mount('#app');
+    </script>
+</body>
+</html>
