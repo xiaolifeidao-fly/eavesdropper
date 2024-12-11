@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Layout, Button, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps } from 'antd';
-import getNavList from './menu';
+import getNavList from '@/components/Layout/menu';
 import { useRouter } from 'next/navigation';
 import {
     BellOutlined,
