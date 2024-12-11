@@ -22,7 +22,7 @@ func Login(req *dto.LoginReq, resp *dto.LoginResp) error {
 	userRepository := repositories.NewUserRepository()
 
 	dbUser := &models.User{}
-	if err = userRepository.FindByUsername(req.Username, dbUser); err != nil {
+	if err = userRepository.FindByMobile(req.Mobile, dbUser); err != nil {
 		return err
 	}
 

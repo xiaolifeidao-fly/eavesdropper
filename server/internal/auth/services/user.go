@@ -15,7 +15,7 @@ func AddUser(req *dto.UserAddReq, id *uint64) error {
 	userRepository := repositories.NewUserRepository()
 
 	dbUser := &models.User{}
-	if err = userRepository.FindByUsername(req.Username, dbUser); err != nil {
+	if err = userRepository.FindByMobile(req.Mobile, dbUser); err != nil {
 		return err
 	}
 

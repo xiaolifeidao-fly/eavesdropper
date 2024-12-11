@@ -8,7 +8,7 @@ import (
 
 // LoginReq 登录请求
 type LoginReq struct {
-	Username  string `json:"username" binding:"required"`
+	Mobile    string `json:"mobile" binding:"required"`
 	Password  string `json:"password" binding:"required"`
 	CaptchaID string `json:"captchaId" binding:"required"`
 	Captcha   string `json:"captcha" binding:"required"`
@@ -35,13 +35,12 @@ type LoginResp struct {
 type LoginUserResp struct {
 	ID       uint64 `json:"id"`
 	Nickname string `json:"nickname"`
-	Username string `json:"username"`
+	Mobile   string `json:"mobile"`
 }
 
 func (resp *LoginUserResp) FromUser(dbUser *models.User) {
 	resp.ID = dbUser.ID
 	resp.Nickname = dbUser.Nickname
-	resp.Username = dbUser.Username
 }
 
 // LoginCaptchaResp 登录验证码响应

@@ -9,14 +9,13 @@ import (
 // UserAddReq 添加用户请求
 type UserAddReq struct {
 	Nickname string `json:"nickname" validate:"required"`
-	Username string `json:"username" validate:"required"`
+	Mobile   string `json:"mobile" validate:"required"`
 }
 
 func (r *UserAddReq) ToUser(user *models.User) {
 	loginUserId := common.GetLoginUserID()
 
 	user.Nickname = r.Nickname
-	user.Username = r.Username
 	user.CreatedBy = loginUserId
 	user.UpdatedBy = loginUserId
 }
