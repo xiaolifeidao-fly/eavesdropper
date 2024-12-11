@@ -1,3 +1,6 @@
 package constants
 
-const ()
+const (
+	UserExists   = "用户已存在"
+	UserNotFound = "用户不存在"
+)

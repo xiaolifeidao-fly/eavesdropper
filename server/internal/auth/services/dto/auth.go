@@ -2,13 +2,14 @@ package dto
 
 import (
 	"server/common/base"
+	"server/common/captcha"
 	"server/internal/auth/models"
 	"time"
 )
 
 // LoginReq 登录请求
 type LoginReq struct {
-	Username  string `json:"username" binding:"required"`
+	Mobile    string `json:"mobile" binding:"required"`
 	Password  string `json:"password" binding:"required"`
 	CaptchaID string `json:"captchaId" binding:"required"`
 	Captcha   string `json:"captcha" binding:"required"`
@@ -35,17 +36,37 @@ type LoginResp struct {
 type LoginUserResp struct {
 	ID       uint64 `json:"id"`
 	Nickname string `json:"nickname"`
-	Username string `json:"username"`
+	Mobile   string `json:"mobile"`
 }
 
 func (resp *LoginUserResp) FromUser(dbUser *models.User) {
 	resp.ID = dbUser.ID
 	resp.Nickname = dbUser.Nickname
-	resp.Username = dbUser.Username
 }
 
-// LoginCaptchaResp 登录验证码响应
-type LoginCaptchaResp struct {
+// CaptchaResp 验证码响应
+type CaptchaResp struct {
 	CaptchaID  string `json:"captchaId"`
 	CaptchaImg string `json:"captchaImg"`
+}
+
+// FromCaptcha 从captcha.Captcha转换为CaptchaResp
+func (captchaResp *CaptchaResp) FromCaptcha(captcha captcha.Captcha) {
+	captchaResp.CaptchaID = captcha.CaptchaID
+	captchaResp.CaptchaImg = captcha.CaptchaImg
+}
+
+// RegisterReq 注册请求
+type RegisterReq struct {
+	Nickname  string `json:"nickname" binding:"required"`
+	Mobile    string `json:"mobile" binding:"required"`
+	Password  string `json:"password" binding:"required"`
+	CaptchaID string `json:"captchaId" binding:"required"`
+	Captcha   string `json:"captcha" binding:"required"`
+}
+
+// ToUser 转换为User
+func (req *RegisterReq) ToUser(dbUser *models.User) {
+	dbUser.Nickname = req.Nickname
+	dbUser.Mobile = req.Mobile
 }

@@ -15,14 +15,6 @@ func NewUserRepository(dbs ...*gorm.DB) *User {
 	return &User{Repository: *base.NewRepository[*models.User](dbs...)}
 }
 
-func (r *User) FindByUsername(username string, entity *models.User) error {
-	return r.DB.Debug().Where("username = ?", username).Find(entity).Error
-}
-
-func (r *User) FindUnscopedByUsername(username string, entity *models.User) error {
-	return r.DB.Debug().Unscoped().Where("username = ?", username).Find(entity).Error
-}
-
 func (r *User) FindByMobile(mobile string, entity *models.User) error {
 	return r.DB.Debug().Where("mobile = ?", mobile).Find(entity).Error
 }

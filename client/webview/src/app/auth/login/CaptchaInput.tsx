@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect, useCallback } from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button, message } from 'antd';
 import Image from 'next/image';
 
 import { getLoginCaptcha } from '@api/auth/auth.api';
@@ -17,16 +17,17 @@ interface CaptchaInputProps {
 
 // 获取验证码
 const getCaptcha = async () => {
-  const { data } = await getLoginCaptcha();
+  const { captchaId, captchaImg } = await getLoginCaptcha();
   return {
-    id: data.captchaId,
-    image: data.captchaImg,
+    id: captchaId,
+    image: captchaImg.substring('data:image/png;base64,'.length),
   };
 }
 
 export default function CaptchaInput({ value = {}, onChange }: CaptchaInputProps) {
 
   const [isLoading, setIsLoading] = useState(true);
+  const [lastClickTime, setLastClickTime] = useState<number>(0);
 
   const [captchaId, setCaptchaId] = useState<string>('');
   const [imageData, setImageData] = useState<string>('');
@@ -65,6 +66,13 @@ export default function CaptchaInput({ value = {}, onChange }: CaptchaInputProps
 
   // 刷新验证码
   const onClickImage = () => {
+    const now = Date.now();
+    if (now - lastClickTime < 5 * 1000) { // 设置5秒间隔
+      message.warning('操作过于频繁，请稍后重试。');
+      return;
+    }
+    setLastClickTime(now);
+
     getCaptcha().then((data: any) => {
       setCaptchaInfo(data);
     })

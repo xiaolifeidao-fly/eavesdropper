@@ -11,6 +11,41 @@ func TestMd5(t *testing.T) {
 	t.Log(Md5(Md5("admin")))
 }
 
+func TestEncryptionPassword(t *testing.T) {
+	secret := "dwnqY8"
+	password := "katana"
+
+	passwordMd2 := Md5(Md5(password))
+	encryptedPassword := Encryption(secret, passwordMd2)
+
+	t.Log(encryptedPassword)
+}
+
+func TestEncryptAES(t *testing.T) {
+	// 测试用的密钥（32 字节）
+	key := []byte("oerlis32baeeslkmnehssphrase12341")
+
+	// 测试数据
+	plainText := []byte("katana")
+	fmt.Println("Original Data:", string(plainText))
+
+	// 加密
+	encrypted, err := EncryptAES(plainText, key)
+	if err != nil {
+		fmt.Println("Error encrypting:", err)
+		return
+	}
+	fmt.Println("Encrypted:", encrypted)
+
+	// 解密
+	decrypted, err := DecryptAES(encrypted, key)
+	if err != nil {
+		fmt.Println("Error decrypting:", err)
+		return
+	}
+	fmt.Println("Decrypted:", string(decrypted))
+}
+
 // 加载公钥文件
 func loadPrivateKey(path string) (string, error) {
 	data, err := ioutil.ReadFile(path)

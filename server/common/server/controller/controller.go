@@ -2,6 +2,8 @@ package controller
 
 import (
 	"fmt"
+
+	"server/common/errors"
 	"server/common/server/common"
 	"server/common/server/response"
 	"server/library/logger"
@@ -32,8 +34,12 @@ func (c *Controller) AddError(err error) {
 }
 
 // Error 通常错误数据处理
-func (c *Controller) Error(msg string) {
-	response.Error(c.Context, msg)
+func (c *Controller) Error(err error) {
+	errMessage := err.Error()
+	if _, ok := err.(*errors.Error); !ok {
+		errMessage = "系统错误"
+	}
+	response.Error(c.Context, errMessage)
 }
 
 // OK 通常成功数据处理

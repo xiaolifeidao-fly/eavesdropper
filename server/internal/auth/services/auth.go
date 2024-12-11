@@ -2,17 +2,20 @@ package services
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+
 	"server/common"
 	"server/common/captcha"
 	"server/common/middleware/application"
 	"server/common/middleware/jwtauth"
 	serverCommon "server/common/server/common"
 	"server/internal/auth/common/constants"
-	"server/internal/auth/common/errors"
 	"server/internal/auth/models"
 	"server/internal/auth/repositories"
 	"server/internal/auth/services/dto"
+
+	"gorm.io/gorm"
 )
 
 // Login
@@ -22,12 +25,12 @@ func Login(req *dto.LoginReq, resp *dto.LoginResp) error {
 	userRepository := repositories.NewUserRepository()
 
 	dbUser := &models.User{}
-	if err = userRepository.FindByUsername(req.Username, dbUser); err != nil {
+	if err = userRepository.FindByMobile(req.Mobile, dbUser); err != nil {
 		return err
 	}
 
 	if dbUser.ID == 0 {
-		return errors.ErrUserNotFound
+		return errors.New(constants.UserNotFound)
 	}
 
 	// 验证密码
@@ -49,13 +52,13 @@ func Login(req *dto.LoginReq, resp *dto.LoginResp) error {
 	return nil
 }
 
-// CheckLoginCaptcha
-// @Description 验证登录验证码
-func CheckLoginCaptcha(captchaID, captcha string) error {
+// CheckCaptcha
+// @Description 验证验证码
+func CheckCaptcha(captchaID, captcha string) error {
 	var err error
 
 	cacheAdapter := common.Runtime.GetCacheAdapter()
-	cacheKey := fmt.Sprintf(constants.LoginCaptchaCacheKey, captchaID)
+	cacheKey := fmt.Sprintf(constants.AuthCaptchaCacheKey, captchaID)
 
 	var cacheData string
 	if cacheData, err = cacheAdapter.Get(cacheKey); err != nil {
@@ -63,7 +66,7 @@ func CheckLoginCaptcha(captchaID, captcha string) error {
 	}
 
 	if cacheData != captcha {
-		return errors.ErrLoginCaptcha
+		return errors.New(constants.AuthCaptcha)
 	}
 
 	// 清除验证码缓存
@@ -102,7 +105,7 @@ func GetLoginUser(resp *dto.LoginUserResp) error {
 	// 从缓存中获取登录用户信息
 	if err = getLoginUserFromCache(loginUserID, resp); err != nil {
 		logger.Errorf("GetLoginUser failed, with error is %v", err)
-		return errors.ErrAuthCache
+		return errors.New(constants.AuthCaptcha)
 	}
 
 	if resp.ID != 0 {
@@ -122,7 +125,7 @@ func GetLoginUser(resp *dto.LoginUserResp) error {
 	// 将登录用户信息缓存到redis中
 	if err = cacheLoginUser(loginUserID, resp); err != nil {
 		logger.Errorf("CacheLoginUser failed, with error is %v", err)
-		return errors.ErrAuthCache
+		return errors.New(constants.AuthCaptcha)
 	}
 
 	return nil
@@ -205,9 +208,9 @@ func Logout() error {
 	return nil
 }
 
-// GetLoginCaptcha
-// @Description 获取登录验证码
-func GetLoginCaptcha(resp *dto.LoginCaptchaResp) error {
+// GetCaptcha
+// @Description 获取验证码
+func GetCaptcha(resp *dto.CaptchaResp) error {
 	var err error
 	logger := common.GetLogger()
 
@@ -218,18 +221,78 @@ func GetLoginCaptcha(resp *dto.LoginCaptchaResp) error {
 
 	// 缓存验证码值
 	cacheAdapter := common.Runtime.GetCacheAdapter()
-	cacheKey := fmt.Sprintf(constants.LoginCaptchaCacheKey, captchaResult.CaptchaID)
-	cacheTTL := int(constants.LoginCaptchaCacheTTL.Seconds())
+	cacheKey := fmt.Sprintf(constants.AuthCaptchaCacheKey, captchaResult.CaptchaID)
+	cacheTTL := int(constants.AuthCaptchaCacheTTL.Seconds())
 	if err = cacheAdapter.Set(cacheKey, []byte(captchaResult.CaptchaCode), cacheTTL); err != nil {
 		return err
 	}
 
 	if application.ApplicationConfig.Mode == "dev" {
-		logger.Infof("GetLoginCaptcha success, with captchaCode is %s", captchaResult.CaptchaCode)
+		logger.Infof("GetCaptcha success, with captchaCode is %s", captchaResult.CaptchaCode)
 	}
 
-	resp.CaptchaID = captchaResult.CaptchaID
-	resp.CaptchaImg = captchaResult.CaptchaImg
+	resp.FromCaptcha(captchaResult)
+
+	return nil
+}
+
+// Register
+// @Description 注册
+func Register(req *dto.RegisterReq) error {
+	var err error
+
+	userRepository := repositories.NewUserRepository()
+
+	dbUser := &models.User{}
+	if err = userRepository.FindByMobile(req.Mobile, dbUser); err != nil {
+		return err
+	}
+
+	if dbUser.ID > 0 {
+		return errors.New(constants.UserExists)
+	}
+
+	req.ToUser(dbUser)
+
+	// 事务管理
+	if err = userRepository.DB.Transaction(func(tx *gorm.DB) error {
+		userRepository := repositories.NewUserRepository(tx)
+		if err = userRepository.Create(dbUser); err != nil {
+			return err
+		}
+
+		userID := dbUser.ID
+
+		dbUser.UpdatedBy = userID
+		dbUser.CreatedBy = userID
+		if err = userRepository.Update(dbUser); err != nil {
+			return err
+		}
+
+		var encryptedPassword string
+		if encryptedPassword, err = encryptPassword(req.Password); err != nil {
+			return err
+		}
+
+		var oriPassword string
+		if oriPassword, err = encryptOriPassword(req.Password); err != nil {
+			return err
+		}
+
+		userPasswordRepository := repositories.NewUserPasswordRepository(tx)
+		userPassword := &models.UserPassword{
+			UserID:      userID,
+			Password:    encryptedPassword,
+			OriPassword: oriPassword,
+		}
+		if err = userPasswordRepository.Create(userPassword); err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return err
+	}
 
 	return nil
 }

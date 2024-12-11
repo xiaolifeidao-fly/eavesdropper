@@ -1,8 +1,10 @@
 package services
 
 import (
-	"server/app/auth/common/errors"
+	"errors"
+
 	"server/common"
+	"server/internal/auth/common/constants"
 	"server/internal/auth/models"
 	"server/internal/auth/repositories"
 	"server/internal/auth/services/dto"
@@ -15,13 +17,13 @@ func AddUser(req *dto.UserAddReq, id *uint64) error {
 	userRepository := repositories.NewUserRepository()
 
 	dbUser := &models.User{}
-	if err = userRepository.FindByUsername(req.Username, dbUser); err != nil {
+	if err = userRepository.FindByMobile(req.Mobile, dbUser); err != nil {
 		return err
 	}
 
 	// 用户已存在
 	if dbUser.ID > 0 {
-		return errors.ErrUserExists
+		return errors.New(constants.UserExists)
 	}
 
 	req.ToUser(dbUser)
@@ -45,7 +47,7 @@ func DeleteUser(req *dto.UserDeleteReq) error {
 	}
 
 	if dbUser.ID == 0 {
-		return errors.ErrUserNotFound
+		return errors.New(constants.UserNotFound)
 	}
 
 	req.ToUser(dbUser)
@@ -68,7 +70,7 @@ func UpdateUser(req *dto.UserUpdateReq) error {
 	}
 
 	if dbUser.ID == 0 {
-		return errors.ErrUserNotFound
+		return errors.New(constants.UserNotFound)
 	}
 
 	loginUserId := common.GetLoginUserID()
@@ -92,7 +94,7 @@ func GetUser(req *dto.UserGetReq, resp *dto.UserGetResp) error {
 	}
 
 	if dbUser.ID == 0 {
-		return errors.ErrUserNotFound
+		return errors.New(constants.UserNotFound)
 	}
 
 	resp.FromUser(dbUser)
