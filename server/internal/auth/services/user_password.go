@@ -1,10 +1,11 @@
 package services
 
 import (
+	"errors"
+
 	"server/common/encryption"
 	"server/internal/auth/common"
 	"server/internal/auth/common/constants"
-	"server/internal/auth/common/errors"
 	"server/internal/auth/models"
 	"server/internal/auth/repositories"
 )
@@ -40,7 +41,7 @@ func checkPassword(inputPassword, dbPassword string) error {
 	inputPassword = encryptPassword(inputPassword)
 
 	if inputPassword != dbPassword {
-		return errors.ErrPasswordIncorrect
+		return errors.New(constants.PasswordIncorrect)
 	}
 
 	return nil
@@ -52,4 +53,26 @@ func encryptPassword(password string) string {
 	passwordMd2 := encryption.Md5(encryption.Md5(password))
 	encryptedPassword := encryption.Encryption(constants.PasswordSecret, passwordMd2)
 	return encryptedPassword
+}
+
+// encryptOriPassword
+// @Description 加密原始密码
+func encryptOriPassword(password string) string {
+	secret := encryption.HexStringToBytes(constants.OriPasswordSecret)
+	encryptedPassword, err := encryption.EncryptAES([]byte(password), secret)
+	if err != nil {
+		return ""
+	}
+	return encryption.KeyToHexString(encryptedPassword)
+}
+
+// decryptOriPassword
+// @Description 解密原始密码
+func decryptOriPassword(password string) (string, error) {
+	secret := encryption.HexStringToBytes(constants.OriPasswordSecret)
+	decryptedPassword, err := encryption.DecryptAES(encryption.HexStringToBytes(password), secret)
+	if err != nil {
+		return "", err
+	}
+	return string(decryptedPassword), nil
 }

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"server/app/auth/common/errors"
+	"server/common/middleware/application"
 	serverCommon "server/common/server/common"
 	"server/common/server/controller"
 	"server/internal/auth/services"
@@ -9,6 +9,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+)
+
+const (
+	LogoutSuccess   = "登出成功"
+	RegisterSuccess = "注册成功"
 )
 
 type Auth struct {
@@ -29,15 +34,17 @@ func Login(ctx *gin.Context) {
 	err := authController.Bind(&req, binding.JSON).Errors
 	if err != nil {
 		authController.Logger.Errorf("Login failed, with error is %v", err)
-		authController.Error(errors.ErrLoginFailed.Error())
+		authController.Error(err)
 		return
 	}
 
 	// 验证登录验证码
-	if err = services.CheckLoginCaptcha(req.CaptchaID, req.Captcha); err != nil {
-		authController.Logger.Errorf("CheckLoginCaptcha failed, with error is %v", err)
-		authController.Error(err.Error())
-		return
+	if application.ApplicationConfig.Mode != "dev" {
+		if err = services.CheckCaptcha(req.CaptchaID, req.Captcha); err != nil {
+			authController.Logger.Errorf("CheckCaptcha failed, with error is %v", err)
+			authController.Error(err)
+			return
+		}
 	}
 
 	// 获取客户端IP
@@ -47,7 +54,55 @@ func Login(ctx *gin.Context) {
 	var resp dto.LoginResp
 	if err = services.Login(&req, &resp); err != nil {
 		authController.Logger.Errorf("Login failed, with error is %v", err)
-		authController.Error(errors.ErrLoginFailed.Error())
+		authController.Error(err)
+		return
+	}
+
+	authController.OK(resp)
+}
+
+// Register
+// @Description 注册
+// @Router /auth/register [post]
+func Register(ctx *gin.Context) {
+	authController := NewAuthController(ctx)
+
+	var req dto.RegisterReq
+	err := authController.Bind(&req, binding.JSON).Errors
+	if err != nil {
+		authController.Logger.Errorf("Register failed, with error is %v", err)
+		authController.Error(err)
+		return
+	}
+
+	// 验证登录验证码
+	if application.ApplicationConfig.Mode != "dev" {
+		if err = services.CheckCaptcha(req.CaptchaID, req.Captcha); err != nil {
+			authController.Logger.Errorf("CheckCaptcha failed, with error is %v", err)
+			authController.Error(err)
+			return
+		}
+	}
+
+	if err = services.Register(&req); err != nil {
+		authController.Logger.Errorf("Register failed, with error is %v", err)
+		authController.Error(err)
+		return
+	}
+
+	authController.OK(RegisterSuccess)
+}
+
+// GetCaptcha
+// @Description 获取验证码
+// @Router /auth/captcha [get]
+func GetCaptcha(ctx *gin.Context) {
+	authController := NewAuthController(ctx)
+
+	var resp dto.CaptchaResp
+	if err := services.GetCaptcha(&resp); err != nil {
+		authController.Logger.Errorf("GetCaptcha failed, with error is %v", err)
+		authController.Error(err)
 		return
 	}
 
@@ -64,7 +119,7 @@ func GetLoginUser(ctx *gin.Context) {
 	err := services.GetLoginUser(&resp)
 	if err != nil {
 		authController.Logger.Errorf("GetLoginUser failed, with error is %v", err)
-		authController.Error(errors.ErrGetLoginUserFailed.Error())
+		authController.Error(err)
 		return
 	}
 	authController.OK(resp)
@@ -78,25 +133,9 @@ func Logout(ctx *gin.Context) {
 
 	if err := services.Logout(); err != nil {
 		authController.Logger.Errorf("Logout failed, with error is %v", err)
-		authController.Error(errors.ErrLogoutFailed.Error())
+		authController.Error(err)
 		return
 	}
 
-	authController.OK(errors.ErrLogoutSuccess.Error())
-}
-
-// GetLoginCaptcha
-// @Description 获取登录验证码
-// @Router /auth/login/captcha [get]
-func GetLoginCaptcha(ctx *gin.Context) {
-	authController := NewAuthController(ctx)
-
-	var resp dto.LoginCaptchaResp
-	if err := services.GetLoginCaptcha(&resp); err != nil {
-		authController.Logger.Errorf("GetLoginCaptcha failed, with error is %v", err)
-		authController.Error(errors.ErrGetLoginCaptchaFailed.Error())
-		return
-	}
-
-	authController.OK(resp)
+	authController.OK(LogoutSuccess)
 }

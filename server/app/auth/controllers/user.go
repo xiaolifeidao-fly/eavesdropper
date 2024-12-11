@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"server/app/auth/common/constants"
 	"server/common/base"
 	"server/common/server/controller"
 	"server/internal/auth/services"
@@ -9,6 +8,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+)
+
+const (
+	UserDeleteSuccess = "删除用户成功"
+	UserUpdateSuccess = "更新用户成功"
 )
 
 type User struct {
@@ -29,14 +33,14 @@ func Add(ctx *gin.Context) {
 	err := userController.Bind(&req, binding.JSON).Errors
 	if err != nil {
 		userController.Logger.Errorf("Add failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 
 	id := uint64(0)
 	if err = services.AddUser(&req, &id); err != nil {
 		userController.Logger.Errorf("Add failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 	userController.OK(id)
@@ -52,16 +56,16 @@ func Delete(ctx *gin.Context) {
 	err := userController.Bind(&req, nil).Errors
 	if err != nil {
 		userController.Logger.Errorf("Delete failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 
 	if err = services.DeleteUser(&req); err != nil {
 		userController.Logger.Errorf("Delete failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
-	userController.OK(constants.UserDeleteSuccess)
+	userController.OK(UserDeleteSuccess)
 }
 
 // Update
@@ -74,17 +78,17 @@ func Update(ctx *gin.Context) {
 	err := userController.Bind(&req, nil, binding.JSON).Errors
 	if err != nil {
 		userController.Logger.Errorf("Update failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 
 	if err = services.UpdateUser(&req); err != nil {
 		userController.Logger.Errorf("Update failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 
-	userController.OK(constants.UserUpdateSuccess)
+	userController.OK(UserUpdateSuccess)
 }
 
 // Get
@@ -97,14 +101,14 @@ func Get(ctx *gin.Context) {
 	err := userController.Bind(&req, nil).Errors
 	if err != nil {
 		userController.Logger.Errorf("Get failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 
 	resp := dto.UserGetResp{}
 	if err = services.GetUser(&req, &resp); err != nil {
 		userController.Logger.Errorf("Get failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 	userController.OK(resp)
@@ -120,7 +124,7 @@ func Page(ctx *gin.Context) {
 	err := userController.Bind(&req, binding.Form).Errors
 	if err != nil {
 		userController.Logger.Errorf("Page failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 
@@ -129,7 +133,7 @@ func Page(ctx *gin.Context) {
 
 	if err = services.PageUser(&req, &list, &count); err != nil {
 		userController.Logger.Errorf("Page failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 	userController.OK(base.BuildPageResp(list, req.GetPageInfo(count)))
@@ -145,14 +149,14 @@ func GetList(ctx *gin.Context) {
 	err := userController.Bind(&req, binding.Form).Errors
 	if err != nil {
 		userController.Logger.Errorf("GetList failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 
 	list := make([]dto.UserGetListResp, 0)
 	if err = services.GetUserList(&req, &list); err != nil {
 		userController.Logger.Errorf("GetList failed, with error is %v", err)
-		userController.Error(err.Error())
+		userController.Error(err)
 		return
 	}
 	userController.OK(list)
