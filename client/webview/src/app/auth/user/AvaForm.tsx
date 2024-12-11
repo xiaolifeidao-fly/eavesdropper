@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { DownOutlined } from '@ant-design/icons';
 
 import { userPage } from '@api/auth/user.api'
+import { UserPageResp } from '@model/auth/user';
+import { DataType } from './column';
 
 const searchLabels = [
   {
@@ -12,7 +14,7 @@ const searchLabels = [
   }
 ]
 
-const AdvancedSearchForm = () => {
+const AdvancedSearchForm = ({ setTableData }: { setTableData: (data: DataType[]) => void }) => {
   const [form] = Form.useForm();
   const [expand, setExpand] = useState(false);
 
@@ -44,7 +46,18 @@ const AdvancedSearchForm = () => {
   const onFinish = (values: any) => {
     const { mobile } = values;
     userPage({mobile, current: 1, pageSize: 10}).then(res => {
-      console.log(res);
+      if (res.data) {
+        const data: DataType[] = [];
+        res.data.forEach((item: UserPageResp) => {
+          data.push({
+            key: item.id.toString(),
+            nickname: item.nickname,
+            mobile: item.mobile,
+            lastLoginTime: item.lastLoginAt,
+          })
+        })
+        setTableData(data);
+      }
     })
   };
 

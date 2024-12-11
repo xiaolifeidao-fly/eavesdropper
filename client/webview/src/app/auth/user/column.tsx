@@ -1,6 +1,6 @@
 import { Space, Tag, type TableProps } from 'antd';
 
-interface DataType {
+export interface DataType {
   key: string;
   nickname: string;
   mobile: string;
@@ -45,42 +45,6 @@ const columns: TableProps<DataType>['columns'] = [
 ];
 
 const data: DataType[] = [
-  {
-    key: '1',
-    nickname: '徐小夕',
-    mobile: '13800138000',
-    lastLoginTime: '2024-01-01 10:00:00',
-  },
-  {
-    key: '2',
-    nickname: '张三',
-    mobile: '13800138001',
-    lastLoginTime: '2024-01-01 10:00:00',
-  },
-  {
-    key: '3',
-    nickname: '李四',
-    mobile: '13800138002',
-    lastLoginTime: '2024-01-01 10:00:00',
-  },
-  {
-    key: '4',
-    nickname: '王五',
-    mobile: '13800138003',
-    lastLoginTime: '2024-01-01 10:00:00',
-  },
-  {
-    key: '5',
-    nickname: '赵六',
-    mobile: '13800138004',
-    lastLoginTime: '2024-01-01 10:00:00',
-  },
-  {
-    key: '6',
-    nickname: '孙七',
-    mobile: '13800138005',
-    lastLoginTime: '2024-01-01 10:00:00',
-  },
 ];
 
 export {
