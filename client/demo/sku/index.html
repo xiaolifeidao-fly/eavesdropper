@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品管理系统</title>
+    <!-- 引入Element Plus样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <!-- 引入Vue 3和Element Plus -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/element-plus"></script>
+    <style>
+        .container {
+            padding: 20px;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .search-form {
+            margin-bottom: 20px;
+        }
+        .operation-column {
+            display: flex;
+            gap: 10px;
+        }
+        .upload-demo {
+            margin: 20px 0;
+        }
+        .progress-box {
+            margin-top: 20px;
+        }
+        .mt-20 {
+            margin-top: 20px;
+        }
+        .progress-container {
+            padding: 20px;
+        }
+        .progress-info {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .progress-detail {
+            margin-top: 20px;
+        }
+        .publish-summary {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <!-- 头部搜索区域 -->
+            <div class="search-form">
+                <el-form :inline="true" :model="searchForm">
+                    <el-form-item label="资源账号">
+                        <el-input v-model="searchForm.account" placeholder="请输入资源账号"></el-input>
+                    </el-form-item>
+                    <el-form-item label="店铺名称">
+                        <el-input v-model="searchForm.shopName" placeholder="请输入店铺名称"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="handleSearch">搜索</el-button>
+                        <el-button type="primary" @click="showPublishDialog">发布商品</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+
+            <!-- 商品列表 -->
+            <el-table :data="tableData" style="width: 100%">
+                <el-table-column prop="account" label="所属资源账号" width="180"></el-table-column>
+                <el-table-column prop="shopName" label="店铺名称" width="180"></el-table-column>
+                <el-table-column prop="productName" label="商品名称"></el-table-column>
+                <el-table-column prop="publishTime" label="发布时间" width="180"></el-table-column>
+                <el-table-column prop="status" label="发布状态" width="100">
+                    <template #default="scope">
+                        <el-tag :type="scope.row.status === '已发布' ? 'success' : 'warning'">
+                            {{ scope.row.status }}
+                        </el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="150">
+                    <template #default="scope">
+                        <div class="operation-column">
+                            <el-button size="small" type="primary" @click="handlePublish(scope.row)">发布</el-button>
+                            <el-button size="small" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <!-- 发布商品对话框 -->
+            <el-dialog v-model="dialogVisible" title="发布商品" width="60%">
+                <el-steps :active="activeStep" finish-status="success" align-center>
+                    <el-step title="步骤 1" description="导入链接"></el-step>
+                    <el-step title="步骤 2" description="发布进度"></el-step>
+                    <el-step title="步骤 3" description="发布确认"></el-step>
+                </el-steps>
+
+                <!-- 步骤1：导入选项 -->
+                <div v-if="activeStep === 0">
+                    <el-tabs v-model="activeTab" class="mt-20">
+                        <!-- Excel导入选项 -->
+                        <el-tab-pane label="Excel导入" name="excel">
+                            <el-upload
+                                class="upload-demo"
+                                drag
+                                action="#"
+                                :auto-upload="false"
+                                :on-change="handleExcelUpload">
+                                <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+                                <div class="el-upload__text">
+                                    将Excel文件拖到此处，或<em>点击上传</em>
+                                </div>
+                            </el-upload>
+                        </el-tab-pane>
+                        
+                        <!-- 链接导入选项 -->
+                        <el-tab-pane label="链接导入" name="link">
+                            <el-input
+                                type="textarea"
+                                v-model="productLinks"
+                                rows="4"
+                                placeholder="请输入商品链接，每行一个">
+                            </el-input>
+                        </el-tab-pane>
+                    </el-tabs>
+                </div>
+
+                <!-- 步骤2：发布进度 -->
+                <div v-if="activeStep === 1" class="progress-container">
+                    <div class="progress-info">
+                        <p>正在发布商品，请稍候...</p>
+                        <p>已处理: {{ processedCount }}/{{ totalCount }}</p>
+                    </div>
+                    <el-progress :percentage="publishProgress" :format="format"></el-progress>
+                    <div class="progress-detail">
+                        <el-table :data="progressDetails" height="200" style="width: 100%">
+                            <el-table-column prop="productName" label="商品名称"></el-table-column>
+                            <el-table-column prop="status" label="状态" width="100">
+                                <template #default="scope">
+                                    <el-tag :type="scope.row.status === '成功' ? 'success' : 'danger'">
+                                        {{ scope.row.status }}
+                                    </el-tag>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="message" label="详情"></el-table-column>
+                        </el-table>
+                    </div>
+                </div>
+
+                <!-- 步骤3：发布确认 -->
+                <div v-if="activeStep === 2" class="publish-summary">
+                    <el-result
+                        :icon="publishSummary.success ? 'success' : 'warning'"
+                        :title="publishSummary.title"
+                        :sub-title="publishSummary.subTitle">
+                        <template #extra>
+                            <el-table :data="publishSummary.details" style="width: 100%">
+                                <el-table-column prop="type" label="类型"></el-table-column>
+                                <el-table-column prop="count" label="数量"></el-table-column>
+                            </el-table>
+                        </template>
+                    </el-result>
+                </div>
+
+                <!-- 对话框底部按钮 -->
+                <template #footer>
+                    <span class="dialog-footer">
+                        <el-button @click="dialogVisible = false" v-if="activeStep === 0 || activeStep === 2">取消</el-button>
+                        <el-button type="primary" @click="handleNext" v-if="activeStep === 0">
+                            下一步
+                        </el-button>
+                        <el-button type="primary" @click="handleConfirmPublish" v-if="activeStep === 2">
+                            确认发布
+                        </el-button>
+                    </span>
+                </template>
+            </el-dialog>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, reactive } = Vue
+
+        createApp({
+            setup() {
+                // 搜索表单数据
+                const searchForm = reactive({
+                    account: '',
+                    shopName: ''
+                })
+
+                // 表格数据
+                const tableData = ref([
+                    {
+                        account: 'account1',
+                        shopName: '示例店铺1',
+                        productName: '商品1',
+                        publishTime: '2024-03-20 10:00:00',
+                        status: '已发布'
+                    },
+                    {
+                        account: 'account2',
+                        shopName: '示例店铺2',
+                        productName: '商品2',
+                        publishTime: '2024-03-20 11:00:00',
+                        status: '未发布'
+                    }
+                ])
+
+                // 对话框相关数据
+                const dialogVisible = ref(false)
+                const activeTab = ref('excel')
+                const productLinks = ref('')
+                const publishing = ref(false)
+                const publishProgress = ref(0)
+                const activeStep = ref(0)
+                const processedCount = ref(0)
+                const totalCount = ref(0)
+                const progressDetails = ref([])
+                const publishSummary = ref({
+                    success: true,
+                    title: '',
+                    subTitle: '',
+                    details: []
+                })
+
+                // 搜索方法
+                const handleSearch = () => {
+                    console.log('搜索条件：', searchForm)
+                    // 实现搜索逻辑
+                }
+
+                // 显示发布对话框
+                const showPublishDialog = () => {
+                    dialogVisible.value = true
+                }
+
+                // 处理Excel上传
+                const handleExcelUpload = (file) => {
+                    console.log('上传的文件：', file)
+                    // 实现Excel处理逻辑
+                }
+
+                // 处理下一步
+                const handleNext = () => {
+                    if (activeTab.value === 'excel' && !uploadedFile.value) {
+                        ElMessage.warning('请先上传Excel文件')
+                        return
+                    }
+                    if (activeTab.value === 'link' && !productLinks.value.trim()) {
+                        ElMessage.warning('请输入商品链接')
+                        return
+                    }
+
+                    activeStep.value++
+                    if (activeStep.value === 1) {
+                        startPublishProcess()
+                    }
+                }
+
+                // 开始发布流程
+                const startPublishProcess = () => {
+                    publishing.value = true
+                    publishProgress.value = 0
+                    processedCount.value = 0
+                    totalCount.value = 10 // 示例数量，实际应该根据导入的数据计算
+
+                    // 模拟发布进度
+                    const timer = setInterval(() => {
+                        if (publishProgress.value < 100) {
+                            publishProgress.value += 10
+                            processedCount.value = Math.floor(publishProgress.value / 10)
+                            // 添加进度详情
+                            progressDetails.value.push({
+                                productName: `商品${processedCount.value}`,
+                                status: Math.random() > 0.2 ? '成功' : '失败',
+                                message: '处理完成'
+                            })
+                        } else {
+                            clearInterval(timer)
+                            setTimeout(() => {
+                                activeStep.value++
+                                prepareSummary()
+                            }, 1000)
+                        }
+                    }, 800)
+                }
+
+                // 准备发布总结
+                const prepareSummary = () => {
+                    const successCount = progressDetails.value.filter(item => item.status === '成功').length
+                    const failCount = progressDetails.value.length - successCount
+
+                    publishSummary.value = {
+                        success: failCount === 0,
+                        title: failCount === 0 ? '商品发布预处理完成' : '商品发布预处理完成（部分失败）',
+                        subTitle: `共处理 ${progressDetails.value.length} 个商品`,
+                        details: [
+                            { type: '发布成功', count: successCount },
+                            { type: '发布失败', count: failCount }
+                        ]
+                    }
+                }
+
+                // 确认发布
+                const handleConfirmPublish = () => {
+                    ElMessage.success('商品发布成功')
+                    dialogVisible.value = false
+                    activeStep.value = 0 // 重置步骤
+                    // 重置其他相关数据
+                    progressDetails.value = []
+                    publishProgress.value = 0
+                    processedCount.value = 0
+                    totalCount.value = 0
+                }
+
+                // 进度条格式化
+                const format = (percentage) => {
+                    return percentage === 100 ? '完成' : `${percentage}%`
+                }
+
+                // 发布单个商品
+                const handlePublish = (row) => {
+                    console.log('发布商品：', row)
+                    ElMessage.success('开始发布商品')
+                }
+
+                // 删除商品
+                const handleDelete = (row) => {
+                    ElMessageBox.confirm('确认删除该商品吗？', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        console.log('删除商品：', row)
+                        ElMessage.success('删除成功')
+                    }).catch(() => {})
+                }
+
+                return {
+                    searchForm,
+                    tableData,
+                    dialogVisible,
+                    activeTab,
+                    productLinks,
+                    publishing,
+                    publishProgress,
+                    activeStep,
+                    processedCount,
+                    totalCount,
+                    progressDetails,
+                    publishSummary,
+                    handleSearch,
+                    showPublishDialog,
+                    handleExcelUpload,
+                    handleNext,
+                    handleConfirmPublish,
+                    format,
+                    handlePublish,
+                    handleDelete
+                }
+            }
+        }).use(ElementPlus).mount('#app')
+    </script>
+</body>
+</html>
