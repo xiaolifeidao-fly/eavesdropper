@@ -17,10 +17,10 @@ interface CaptchaInputProps {
 
 // 获取验证码
 const getCaptcha = async () => {
-  const { data } = await getLoginCaptcha();
+  const { captchaId, captchaImg } = await getLoginCaptcha();
   return {
-    id: data.captchaId,
-    image: data.captchaImg,
+    id: captchaId,
+    image: captchaImg.substring('data:image/png;base64,'.length),
   };
 }
 

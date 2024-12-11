@@ -1,5 +1,5 @@
 'use client'
-import { Button, Form, Input, Segmented, type FormProps } from 'antd';
+import { Button, Form, Input, Segmented, type FormProps, message } from 'antd';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -35,11 +35,15 @@ export default function Home() {
       login({
         username,
         password: encodedPassword,
-        captcha: values.captcha,
-        captchaId: values.captchaId
+        captcha: values.captcha.captchaValue,
+        captchaId: values.captcha.captchaId
       }).then(res => {
         // login logic
         // router.push('/dashboard');
+        console.log(res);
+
+        message.success('登录成功');
+
       })
 
       return
