@@ -22,29 +22,28 @@ func TestEncryptionPassword(t *testing.T) {
 }
 
 func TestEncryptAES(t *testing.T) {
-	secret, err := GenerateAESKey()
+	// 测试用的密钥（32 字节）
+	key := []byte("oerlis32baeeslkmnehssphrase12341")
+
+	// 测试数据
+	plainText := []byte("katana")
+	fmt.Println("Original Data:", string(plainText))
+
+	// 加密
+	encrypted, err := EncryptAES(plainText, key)
 	if err != nil {
-		t.Log(err)
+		fmt.Println("Error encrypting:", err)
+		return
 	}
-	t.Log(KeyToHexString(secret)) // b4cca6b3c547a17062d01562fbcddb2a3445166d450382660403785a0c6ffeed
+	fmt.Println("Encrypted:", encrypted)
 
-	secret = HexStringToBytes("b4cca6b3c547a17062d01562fbcddb2a3445166d450382660403785a0c6ffeed")
-
-	password := "katana"
-	encryptedPassword, err := EncryptAES([]byte(password), secret)
+	// 解密
+	decrypted, err := DecryptAES(encrypted, key)
 	if err != nil {
-		t.Log(err)
+		fmt.Println("Error decrypting:", err)
+		return
 	}
-	t.Log(KeyToHexString(encryptedPassword))
-
-	// 85c4bc78b123f8038dff00480c2cab7edb66f0d81b6318771c42d86cbdb82629ae0f
-	encryptedPassword = HexStringToBytes("85c4bc78b123f8038dff00480c2cab7edb66f0d81b6318771c42d86cbdb82629ae0f")
-
-	decryptedPassword, err := DecryptAES(encryptedPassword, secret)
-	if err != nil {
-		t.Log(err)
-	}
-	t.Log(string(decryptedPassword))
+	fmt.Println("Decrypted:", string(decrypted))
 }
 
 // 加载公钥文件

@@ -269,11 +269,21 @@ func Register(req *dto.RegisterReq) error {
 			return err
 		}
 
+		var encryptedPassword string
+		if encryptedPassword, err = encryptPassword(req.Password); err != nil {
+			return err
+		}
+
+		var oriPassword string
+		if oriPassword, err = encryptOriPassword(req.Password); err != nil {
+			return err
+		}
+
 		userPasswordRepository := repositories.NewUserPasswordRepository(tx)
 		userPassword := &models.UserPassword{
 			UserID:      userID,
-			Password:    encryptPassword(req.Password),
-			OriPassword: encryptOriPassword(req.Password),
+			Password:    encryptedPassword,
+			OriPassword: oriPassword,
 		}
 		if err = userPasswordRepository.Create(userPassword); err != nil {
 			return err

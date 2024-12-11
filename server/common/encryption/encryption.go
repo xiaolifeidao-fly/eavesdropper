@@ -1,13 +1,16 @@
 package encryption
 
 import (
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/hmac"
 	"crypto/md5"
+	"crypto/rand"
 	cryptoRand "crypto/rand"
 	"crypto/sha1"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"errors"
 	"io"
@@ -41,58 +44,92 @@ func Hmac(k, v string) string {
 	return hex.EncodeToString(mac.Sum(nil))
 }
 
+// 固定数据长度
+const fixedDataLength = 64 // 明文数据固定填充到 64 字节
+
+// 填充数据到固定长度
+func pad(data []byte, blockSize int) []byte {
+	padding := blockSize - len(data)%blockSize
+	padText := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(data, padText...)
+}
+
+// 移除填充
+func unpad(data []byte) ([]byte, error) {
+	length := len(data)
+	if length == 0 {
+		return nil, errors.New("data is empty")
+	}
+	padding := int(data[length-1])
+	if padding > length || padding <= 0 {
+		return nil, errors.New("invalid padding")
+	}
+	return data[:length-padding], nil
+}
+
 // EncryptAES 加密数据
-func EncryptAES(data, key []byte) ([]byte, error) {
+func EncryptAES(data, key []byte) (string, error) {
+	if len(key) != 32 {
+		return "", errors.New("key must be 32 bytes for AES-256")
+	}
+
+	// 填充数据到固定长度
+	data = pad(data, fixedDataLength)
+
+	// 创建 AES 块
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	// AES-GCM需要一个Nonce
-	nonce := make([]byte, 12)
-	if _, err := io.ReadFull(cryptoRand.Reader, nonce); err != nil {
-		return nil, err
+	// 随机生成 IV
+	ciphertext := make([]byte, aes.BlockSize+len(data))
+	iv := ciphertext[:aes.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return "", err
 	}
 
-	aesGCM, err := cipher.NewGCM(block)
-	if err != nil {
-		return nil, err
-	}
+	// 加密
+	mode := cipher.NewCBCEncrypter(block, iv)
+	mode.CryptBlocks(ciphertext[aes.BlockSize:], data)
 
-	encrypted := aesGCM.Seal(nil, nonce, data, nil)
-
-	// 返回初始化向量和加密数据
-	result := make([]byte, len(nonce)+len(encrypted))
-	copy(result[:len(nonce)], nonce)
-	copy(result[len(nonce):], encrypted)
-	return result, nil
+	// 返回 Base64 编码的密文
+	return base64.StdEncoding.EncodeToString(ciphertext), nil
 }
 
 // DecryptAES 解密数据
-func DecryptAES(encryptedData []byte, key []byte) ([]byte, error) {
+func DecryptAES(encrypted string, key []byte) ([]byte, error) {
+	if len(key) != 32 {
+		return nil, errors.New("key must be 32 bytes for AES-256")
+	}
+
+	// 解码 Base64
+	ciphertext, err := base64.StdEncoding.DecodeString(encrypted)
+	if err != nil {
+		return nil, err
+	}
+
+	// 创建 AES 块
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(encryptedData) < 12 {
+	// 验证长度
+	if len(ciphertext) < aes.BlockSize {
 		return nil, errors.New("ciphertext too short")
 	}
 
-	nonce := encryptedData[:12]
-	data := encryptedData[12:]
+	// 提取 IV
+	iv := ciphertext[:aes.BlockSize]
+	ciphertext = ciphertext[aes.BlockSize:]
 
-	aesGCM, err := cipher.NewGCM(block)
-	if err != nil {
-		return nil, err
-	}
+	// 解密
+	mode := cipher.NewCBCDecrypter(block, iv)
+	mode.CryptBlocks(ciphertext, ciphertext)
 
-	decrypted, err := aesGCM.Open(nil, nonce, data, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return decrypted, nil
+	// 移除填充并返回明文
+	return unpad(ciphertext)
 }
 
 // GenerateAESKey 生成AES加密密钥

@@ -32,15 +32,14 @@ func CheckUserPassword(userID uint64, password string) error {
 // @Description 验证密码
 func checkPassword(inputPassword, dbPassword string) error {
 	var err error
-	// 解密密码
-	if inputPassword, err = encryption.DecryptRSA(inputPassword, common.GetPrivateKey()); err != nil {
+
+	// 加密密码
+	var encryptedPassword string
+	if encryptedPassword, err = encryptPassword(inputPassword); err != nil {
 		return err
 	}
 
-	// 加密密码
-	inputPassword = encryptPassword(inputPassword)
-
-	if inputPassword != dbPassword {
+	if encryptedPassword != dbPassword {
 		return errors.New(constants.PasswordIncorrect)
 	}
 
@@ -49,28 +48,42 @@ func checkPassword(inputPassword, dbPassword string) error {
 
 // encryptPassword
 // @Description 不可逆加密密码
-func encryptPassword(password string) string {
-	passwordMd2 := encryption.Md5(encryption.Md5(password))
+func encryptPassword(inputPassword string) (string, error) {
+	var err error
+
+	// 解密密码
+	var decryptedPassword string
+	if decryptedPassword, err = encryption.DecryptRSA(inputPassword, common.GetPrivateKey()); err != nil {
+		return "", err
+	}
+
+	passwordMd2 := encryption.Md5(encryption.Md5(decryptedPassword))
 	encryptedPassword := encryption.Encryption(constants.PasswordSecret, passwordMd2)
-	return encryptedPassword
+	return encryptedPassword, nil
 }
 
 // encryptOriPassword
 // @Description 加密原始密码
-func encryptOriPassword(password string) string {
-	secret := encryption.HexStringToBytes(constants.OriPasswordSecret)
-	encryptedPassword, err := encryption.EncryptAES([]byte(password), secret)
-	if err != nil {
-		return ""
+func encryptOriPassword(inputPassword string) (string, error) {
+	var err error
+
+	if inputPassword, err = encryption.DecryptRSA(inputPassword, common.GetPrivateKey()); err != nil {
+		return "", err
 	}
-	return encryption.KeyToHexString(encryptedPassword)
+
+	secret := []byte(constants.OriPasswordSecret)
+	encrypted, err := encryption.EncryptAES([]byte(inputPassword), secret)
+	if err != nil {
+		return "", err
+	}
+	return encrypted, nil
 }
 
 // decryptOriPassword
 // @Description 解密原始密码
 func decryptOriPassword(password string) (string, error) {
-	secret := encryption.HexStringToBytes(constants.OriPasswordSecret)
-	decryptedPassword, err := encryption.DecryptAES(encryption.HexStringToBytes(password), secret)
+	secret := []byte(constants.OriPasswordSecret)
+	decryptedPassword, err := encryption.DecryptAES(password, secret)
 	if err != nil {
 		return "", err
 	}
