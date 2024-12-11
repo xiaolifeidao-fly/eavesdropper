@@ -1,5 +1,5 @@
-import { getDataList, getPage, instance } from "@util/axios"
-import { Shop } from "@model/shop/shop.test"
+import { getDataList, getPage, instance } from "@utils/axios"
+import { Shop } from "@model/shop/shop"
 
 
 

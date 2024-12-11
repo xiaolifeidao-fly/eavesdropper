@@ -10,7 +10,6 @@
     "skipLibCheck": true  ,                             
     "outDir": "./dist",
     "types": ["node", "electron"],
-    "rootDir": "./src",
     "baseUrl": "./",
     "paths": {
       "@/*": [
@@ -24,8 +23,11 @@
       ],
       "@model/*": [
         "../common/model/*"
+      ],
+      "@elapi/*": [
+        "./common/eleapi/*"
       ]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*","../common/utils/**/*"]
 }

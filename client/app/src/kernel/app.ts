@@ -8,7 +8,10 @@ import { mainWindow, setMainWindow } from './windows';
 
 
 import * as urlFormat from 'url';
+import log from 'electron-log';
 
+
+log.info("app load")
 async function createDefaultWindow() {
   // const url = `${getClientBaseUrl()}/clip`;
   const mainWindow = await createWindow('main', 'http://localhost:8081/shop');
