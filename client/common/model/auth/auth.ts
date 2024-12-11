@@ -50,10 +50,12 @@ export class LoginUserResp {
   constructor(
     public id: number,
     public nickname: string,
-    public mobile: string
+    public mobile: string,
+    public loginAt: string
   ) {
     this.id = id
     this.nickname = nickname
     this.mobile = mobile
+    this.loginAt = loginAt
   }
 }

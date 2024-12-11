@@ -34,14 +34,16 @@ type LoginResp struct {
 
 // LoginUserResp 登录用户信息
 type LoginUserResp struct {
-	ID       uint64 `json:"id"`
-	Nickname string `json:"nickname"`
-	Mobile   string `json:"mobile"`
+	ID       uint64    `json:"id"`
+	Nickname string    `json:"nickname"`
+	Mobile   string    `json:"mobile"`
+	LoginAt  base.Time `json:"loginAt"`
 }
 
 func (resp *LoginUserResp) FromUser(dbUser *models.User) {
 	resp.ID = dbUser.ID
 	resp.Nickname = dbUser.Nickname
+	resp.Mobile = dbUser.Mobile
 }
 
 // CaptchaResp 验证码响应

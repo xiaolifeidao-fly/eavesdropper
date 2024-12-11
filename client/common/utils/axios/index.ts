@@ -27,7 +27,7 @@ const instance: AxiosInstance = axios.create({
   withCredentials: true,
   headers: {
     // todo: 全局存储loginUser
-    loginUser: ""
+    Authorization: ""
   }
 });
 

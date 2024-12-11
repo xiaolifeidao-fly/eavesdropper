@@ -39,12 +39,14 @@ export default function Home() {
         captcha: values.captcha.captchaValue,
         captchaId: values.captcha.captchaId
       }).then(res => {
-        // login logic
-        // router.push('/dashboard');
-        console.log(res);
-
         message.success('登录成功');
+        
+        // 存储登录信息
+        const accessToken = res.accessToken;
+        // localStorage.setItem('accessToken', accessToken);
 
+        // router.push('/shop');
+        router.push('/dashboard');
       })
 
       return

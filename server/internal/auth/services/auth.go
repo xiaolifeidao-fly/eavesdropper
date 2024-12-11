@@ -22,33 +22,35 @@ import (
 // @Description 登录
 func Login(req *dto.LoginReq, resp *dto.LoginResp) error {
 	var err error
-	userRepository := repositories.NewUserRepository()
 
 	dbUser := &models.User{}
-	if err = userRepository.FindByMobile(req.Mobile, dbUser); err != nil {
+	if err = getUserByMobile(req.Mobile, dbUser); err != nil {
 		return err
 	}
 
-	if dbUser.ID == 0 {
+	userID := dbUser.ID
+
+	if userID == 0 {
 		return errors.New(constants.UserNotFound)
 	}
 
 	// 验证密码
-	if err = CheckUserPassword(dbUser.ID, req.Password); err != nil {
+	if err = CheckUserPassword(userID, req.Password); err != nil {
 		return err
 	}
 
 	// 生成JwtToken
-	if resp.AccessToken, err = generateJwtToken(dbUser.ID); err != nil {
+	if resp.AccessToken, err = generateJwtToken(userID); err != nil {
 		return err
 	}
 
 	// 登录成功记录登录日志
-	if err = loginReqSaveLoginLog(dbUser.ID, req); err != nil {
-		serverCommon.ClearTokenCache(dbUser.ID)
+	if err = loginReqSaveLoginLog(userID, req); err != nil {
+		serverCommon.ClearTokenCache(userID)
 		return err
 	}
 
+	clearLoginUserCache(userID) // 清除登录用户缓存
 	return nil
 }
 
@@ -121,6 +123,10 @@ func GetLoginUser(resp *dto.LoginUserResp) error {
 
 	// 将数据库用户转换为登录用户
 	resp.FromUser(dbUser)
+	// 获取用户最后一次登录时间
+	if resp.LoginAt, err = getLastLoginTime(loginUserID); err != nil {
+		return err
+	}
 
 	// 将登录用户信息缓存到redis中
 	if err = cacheLoginUser(loginUserID, resp); err != nil {
@@ -241,10 +247,8 @@ func GetCaptcha(resp *dto.CaptchaResp) error {
 func Register(req *dto.RegisterReq) error {
 	var err error
 
-	userRepository := repositories.NewUserRepository()
-
 	dbUser := &models.User{}
-	if err = userRepository.FindByMobile(req.Mobile, dbUser); err != nil {
+	if err = getUserByMobile(req.Mobile, dbUser); err != nil {
 		return err
 	}
 
@@ -255,14 +259,13 @@ func Register(req *dto.RegisterReq) error {
 	req.ToUser(dbUser)
 
 	// 事务管理
-	if err = userRepository.DB.Transaction(func(tx *gorm.DB) error {
+	if err = common.GetDB().Transaction(func(tx *gorm.DB) error {
 		userRepository := repositories.NewUserRepository(tx)
 		if err = userRepository.Create(dbUser); err != nil {
 			return err
 		}
 
 		userID := dbUser.ID
-
 		dbUser.UpdatedBy = userID
 		dbUser.CreatedBy = userID
 		if err = userRepository.Update(dbUser); err != nil {

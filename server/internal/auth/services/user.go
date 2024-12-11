@@ -136,3 +136,14 @@ func GetUserList(req *dto.UserGetListReq, list *[]dto.UserGetListResp) error {
 
 	return nil
 }
+
+// getUserByMobile
+// @Description 获取用户
+func getUserByMobile(mobile string, user *models.User) error {
+	var err error
+	userRepository := repositories.NewUserRepository()
+	if err = userRepository.FindByMobile(mobile, user); err != nil {
+		return err
+	}
+	return nil
+}

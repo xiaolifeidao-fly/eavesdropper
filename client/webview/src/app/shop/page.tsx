@@ -1,7 +1,7 @@
 'use client';
 import { Button, Form, FormProps, Input, Modal, Space, Spin, Table, TableProps, Tag, theme } from 'antd';
 import AvaForm from './AvaForm';
-import Layout from '@/components/layout';
+import Layout from '@/components/Layout';
 import { useEffect, useState } from 'react';
 import { getData } from '@api/shop/shop.test.api';
 import { Shop } from '@model/shop/shop';
