@@ -1,12 +1,12 @@
 // 登录请求
 export class LoginReq {
   constructor(
-    public username: string,
+    public mobile: string,
     public password: string,
     public captcha: string,
     public captchaId: string
   ) {
-    this.username = username
+    this.mobile = mobile
     this.password = password
     this.captcha = captcha
     this.captchaId = captchaId
@@ -22,10 +22,10 @@ export class LoginResp {
 
 // 登录用户信息
 export class LoginUserResp {
-  constructor(public id: number, public nickname: string, public username: string) {
+  constructor(public id: number, public nickname: string, public mobile: string) {
     this.id = id
     this.nickname = nickname
-    this.username = username
+    this.mobile = mobile
   }
 }
 

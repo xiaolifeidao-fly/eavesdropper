@@ -10,7 +10,7 @@ import styles from './index.module.less';
 import CaptchaInput from './CaptchaInput';
 
 type FieldType = {
-  username?: string;
+  mobile?: string;
   password?: string;
   captcha?: string;
 };
@@ -27,13 +27,13 @@ export default function Home() {
 
     // 登录
     if (curMode === mode[0]) {
-      const { username, password } = values;
+      const { mobile, password } = values;
 
       // 加密密码
       const encodedPassword = encryptRSA(password);
 
       login({
-        username,
+        mobile,
         password: encodedPassword,
         captcha: values.captcha.captchaValue,
         captchaId: values.captcha.captchaId
@@ -59,15 +59,15 @@ export default function Home() {
   const LoginForm = () => (
     <>
       <Form.Item<FieldType>
-        name="username"
+        name="mobile"
         rules={[
           {
             required: true,
-            message: '请输入账号',
+            message: '请输入手机号',
           },
         ]}
       >
-        <Input placeholder='请输入账号' size='large' variant="filled" />
+        <Input placeholder='请输入手机号' size='large' variant="filled" />
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -97,15 +97,15 @@ export default function Home() {
   const RegisterForm = () => (
     <>
       <Form.Item<FieldType>
-        name="username"
+        name="mobile"
         rules={[
           {
             required: true,
-            message: '请输入账号',
+            message: '请输入手机号',
           },
         ]}
       >
-        <Input placeholder='请输入账号' size='large' variant="filled" />
+        <Input placeholder='请输入手机号' size='large' variant="filled" />
       </Form.Item>
 
       <Form.Item<FieldType>
