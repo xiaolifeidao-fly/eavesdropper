@@ -11,6 +11,42 @@ func TestMd5(t *testing.T) {
 	t.Log(Md5(Md5("admin")))
 }
 
+func TestEncryptionPassword(t *testing.T) {
+	secret := "dwnqY8"
+	password := "katana"
+
+	passwordMd2 := Md5(Md5(password))
+	encryptedPassword := Encryption(secret, passwordMd2)
+
+	t.Log(encryptedPassword)
+}
+
+func TestEncryptAES(t *testing.T) {
+	secret, err := GenerateAESKey()
+	if err != nil {
+		t.Log(err)
+	}
+	t.Log(KeyToHexString(secret)) // b4cca6b3c547a17062d01562fbcddb2a3445166d450382660403785a0c6ffeed
+
+	secret = HexStringToBytes("b4cca6b3c547a17062d01562fbcddb2a3445166d450382660403785a0c6ffeed")
+
+	password := "katana"
+	encryptedPassword, err := EncryptAES([]byte(password), secret)
+	if err != nil {
+		t.Log(err)
+	}
+	t.Log(KeyToHexString(encryptedPassword))
+
+	// 85c4bc78b123f8038dff00480c2cab7edb66f0d81b6318771c42d86cbdb82629ae0f
+	encryptedPassword = HexStringToBytes("85c4bc78b123f8038dff00480c2cab7edb66f0d81b6318771c42d86cbdb82629ae0f")
+
+	decryptedPassword, err := DecryptAES(encryptedPassword, secret)
+	if err != nil {
+		t.Log(err)
+	}
+	t.Log(string(decryptedPassword))
+}
+
 // 加载公钥文件
 func loadPrivateKey(path string) (string, error) {
 	data, err := ioutil.ReadFile(path)

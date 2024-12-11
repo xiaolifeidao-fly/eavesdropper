@@ -5,6 +5,8 @@ import (
 )
 
 const (
+	PasswordSecret = "dwnqY8" // 随机字符数字
+
 	LoginUserCacheKey = "user:%d"          // 登录用户缓存key
 	LoginUserCacheTTL = 1 * 24 * time.Hour // 登录用户缓存过期时间
 
