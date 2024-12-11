@@ -22,10 +22,9 @@ import (
 // @Description 登录
 func Login(req *dto.LoginReq, resp *dto.LoginResp) error {
 	var err error
-	userRepository := repositories.NewUserRepository()
 
 	dbUser := &models.User{}
-	if err = userRepository.FindByMobile(req.Mobile, dbUser); err != nil {
+	if err = getUserByMobile(req.Mobile, dbUser); err != nil {
 		return err
 	}
 
@@ -248,10 +247,8 @@ func GetCaptcha(resp *dto.CaptchaResp) error {
 func Register(req *dto.RegisterReq) error {
 	var err error
 
-	userRepository := repositories.NewUserRepository()
-
 	dbUser := &models.User{}
-	if err = userRepository.FindByMobile(req.Mobile, dbUser); err != nil {
+	if err = getUserByMobile(req.Mobile, dbUser); err != nil {
 		return err
 	}
 
@@ -262,14 +259,13 @@ func Register(req *dto.RegisterReq) error {
 	req.ToUser(dbUser)
 
 	// 事务管理
-	if err = userRepository.DB.Transaction(func(tx *gorm.DB) error {
+	if err = common.GetDB().Transaction(func(tx *gorm.DB) error {
 		userRepository := repositories.NewUserRepository(tx)
 		if err = userRepository.Create(dbUser); err != nil {
 			return err
 		}
 
 		userID := dbUser.ID
-
 		dbUser.UpdatedBy = userID
 		dbUser.CreatedBy = userID
 		if err = userRepository.Update(dbUser); err != nil {
