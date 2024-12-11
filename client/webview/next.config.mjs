@@ -25,6 +25,7 @@ const nextConfig = {
       "JWT_SECRET": "next-admin",
       "BASE_API_URL": "/api"
     },
+    reactStrictMode: false,
     async headers() {
         // 跨域配置
         return [

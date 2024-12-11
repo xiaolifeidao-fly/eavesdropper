@@ -26,6 +26,9 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.4.7
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -652,6 +655,9 @@ packages:
 
   rbush@3.0.1:
     resolution: {integrity: sha512-XRaVO0YecOpEuIvbhbpTrZgoiI6xBlz6hnlr6EHhd+0x9ase6EmeN+hdwwUaJvLcsFFQ8iWVF1GAK1yB0BWi0w==}
+
+  reflect-metadata@0.2.2:
+    resolution: {integrity: sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==}
 
   reflect.getprototypeof@1.0.8:
     resolution: {integrity: sha512-B5dj6usc5dkk8uFliwjwDHM8To5/QwdKz9JcBZ8Ic4G1f0YmeeJTtE/ZTdgRFPAfxZFiUaPhZ1Jcs4qeagItGQ==}
@@ -1591,6 +1597,8 @@ snapshots:
   rbush@3.0.1:
     dependencies:
       quickselect: 2.0.0
+
+  reflect-metadata@0.2.2: {}
 
   reflect.getprototypeof@1.0.8:
     dependencies:

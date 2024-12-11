@@ -1,4 +1,4 @@
-import { ElectronApi } from "@eleapi/base";
+import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
 
 
 
@@ -7,8 +7,18 @@ export class TestApi extends ElectronApi {
         return "testApi"
     }
 
+    @InvokeType(Protocols.INVOKE)
     test(text: string, num: number) {
-        return text + num
+        //@ts-ignore
+        return window[this.getApiName()].test(text, num)
+    }
+
+    @InvokeType(Protocols.TRRIGER)
+    onTest(callback: (data: string) => void) {
+        //@ts-ignore
+        window[this.getApiName()].onTest(async (data:string)=>{
+            callback(data);
+        });
     }
 
 
