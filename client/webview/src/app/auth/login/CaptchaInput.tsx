@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Input, Button } from 'antd';
 import Image from 'next/image';
 
-import { getCaptcha as getCaptchaApi } from './api';
+import { getLoginCaptcha } from '@api/auth/auth.api';
 
 interface CaptchaInputValue {
   captchaId?: string; // 唯一标识
@@ -17,10 +17,10 @@ interface CaptchaInputProps {
 
 // 获取验证码
 const getCaptcha = async () => {
-  const image = getCaptchaApi();
+  const { data } = await getLoginCaptcha();
   return {
-    id: '123',
-    image: image,
+    id: data.captchaId,
+    image: data.captchaImg,
   };
 }
 
