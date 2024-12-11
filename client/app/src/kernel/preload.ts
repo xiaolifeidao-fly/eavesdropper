@@ -50,7 +50,7 @@ function registerApi(cls: { new(...args: any[]): ElectronApi }){
 }
 
 try{
-  registerApi(TestApi)
+  registerApi(TestApi);
 }catch(e){
   log.error(e)
 }

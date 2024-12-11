@@ -94,15 +94,20 @@ export default function Clip() {
 
   useEffect(()=>{
        const testApi = new TestApi();
-       const result = testApi.test("test", 1);
-       console.log("window.testApi " , result)
-
-       testApi.onTest((data)=>{
-          console.log("onTest data ", data)
-       })
+       test();
        handlePageChange(initPageInfo.pageIndex, initPageInfo.pageSize);
   },[]);
 
+
+  async function test(){
+    const testApi = new TestApi();
+    const result = await testApi.test("test", 1);
+    console.log("window.testApi " , result)
+
+    testApi.onTest((data)=>{
+      console.log("onTest data ", data)
+    })
+  }
 
 
   type FieldType = {
