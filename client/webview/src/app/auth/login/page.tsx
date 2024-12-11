@@ -4,12 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-import { login } from '@api/auth/auth.api'
+import { login, register } from '@api/auth/auth.api'
 import { encryptRSA } from '@utils/auth'
 import styles from './index.module.less';
 import CaptchaInput from './CaptchaInput';
 
 type FieldType = {
+  nickname?: string;
   mobile?: string;
   password?: string;
   captcha?: string;
@@ -51,7 +52,29 @@ export default function Home() {
 
     // 注册
     if (curMode === mode[1]) {
-      console.log('registerApi', values);
+
+      const { nickname, mobile, password } = values;
+
+      // 加密密码
+      const encodedPassword = encryptRSA(password);
+
+      register({
+        nickname,
+        mobile,
+        password: encodedPassword,
+        captcha: values.captcha.captchaValue,
+        captchaId: values.captcha.captchaId
+      }).then(res => {
+        // 填充登录表单
+        form.setFieldsValue({
+          mobile: mobile,
+          password: password,
+        })
+
+        setCurMode(mode[0]);
+
+        message.success(res);
+      })
     }
   };
 
@@ -92,10 +115,21 @@ export default function Home() {
     </>
   );
 
-
   // 注册表单
   const RegisterForm = () => (
     <>
+      <Form.Item<FieldType>
+        name="nickname"
+        rules={[
+          {
+            required: true,
+            message: '请输入昵称',
+          },
+        ]}
+      >
+        <Input placeholder='请输入昵称' size='large' variant="filled" />
+      </Form.Item>
+
       <Form.Item<FieldType>
         name="mobile"
         rules={[
@@ -113,6 +147,13 @@ export default function Home() {
         rules={[{ required: true, message: '请输入密码' }]}
       >
         <Input.Password size='large' placeholder='请输入密码' variant="filled" />
+      </Form.Item>
+
+      <Form.Item<FieldType>
+        name="captcha"
+        rules={[{ required: true, message: '请输入验证码' }]}
+      >
+        <CaptchaInput />
       </Form.Item>
 
       <Form.Item wrapperCol={{ span: 24 }}>
@@ -138,7 +179,7 @@ export default function Home() {
         <div className={styles.innerContent}>
           <h1>欢迎登录 TaoTao 中后台管理系统</h1>
           <Segmented<string>
-            options={mode.map(item => ({ label: item, value: item, disabled: item === mode[1] }))} // 注册按钮禁用
+            options={mode.map(item => ({ label: item, value: item }))} // 注册按钮禁用
             size="large"
             onChange={(value) => {
               setCurMode(value);
