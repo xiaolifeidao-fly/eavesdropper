@@ -2,10 +2,10 @@
 import { Button, Form, Input, Segmented, type FormProps } from 'antd';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { loginApi } from './api'
 import Image from 'next/image';
-import { encryptRSA } from '@utils/auth'
 
+import { login } from '@api/auth/auth.api'
+import { encryptRSA } from '@utils/auth'
 import styles from './index.module.less';
 import CaptchaInput from './CaptchaInput';
 
@@ -32,10 +32,16 @@ export default function Home() {
       // 加密密码
       const encodedPassword = encryptRSA(password);
 
-      loginApi(username, encodedPassword).then(res => {
+      login({
+        username,
+        password: encodedPassword,
+        captcha: values.captcha,
+        captchaId: values.captchaId
+      }).then(res => {
         // login logic
         // router.push('/dashboard');
       })
+
       return
     }
 

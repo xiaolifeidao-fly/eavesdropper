@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"server/common"
 	"server/common/captcha"
+	"server/common/middleware/application"
 	"server/common/middleware/jwtauth"
 	serverCommon "server/common/server/common"
 	"server/internal/auth/common/constants"
@@ -208,6 +209,7 @@ func Logout() error {
 // @Description 获取登录验证码
 func GetLoginCaptcha(resp *dto.LoginCaptchaResp) error {
 	var err error
+	logger := common.GetLogger()
 
 	var captchaResult captcha.Captcha
 	if captchaResult, err = captcha.GenerateStringCaptcha(); err != nil {
@@ -220,6 +222,10 @@ func GetLoginCaptcha(resp *dto.LoginCaptchaResp) error {
 	cacheTTL := int(constants.LoginCaptchaCacheTTL.Seconds())
 	if err = cacheAdapter.Set(cacheKey, []byte(captchaResult.CaptchaCode), cacheTTL); err != nil {
 		return err
+	}
+
+	if application.ApplicationConfig.Mode == "dev" {
+		logger.Infof("GetLoginCaptcha success, with captchaCode is %s", captchaResult.CaptchaCode)
 	}
 
 	resp.CaptchaID = captchaResult.CaptchaID
