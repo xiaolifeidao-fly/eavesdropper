@@ -6,9 +6,8 @@ import * as dotenv from 'dotenv';
 dotenv.config(); // 加载 .env 文件中的环境变量
 import { mainWindow, setMainWindow } from './windows';
 
-
-import * as urlFormat from 'url';
 import log from 'electron-log';
+import { registerRpc } from './register/rpc';
 
 
 log.info("app load")
@@ -40,7 +39,7 @@ export async function createWindow(windowId : string, url : string) {
   windowInstance.loadURL(url); // 假设NestJS服务运行在本地3000端口
 
   // 打开开发者工具
-  // windowInstance.webContents.openDevTools();
+  windowInstance.webContents.openDevTools();
   //@ts-ignore
   windowInstance.webContents.windowId = windowId;
   return windowInstance;
@@ -57,13 +56,11 @@ function registerFileProtocol(){
   });
 }
 
-function registerIpc(){
-}
 
 export const start = () => {
   
     app.on('ready', async ()=> {
-      registerIpc();
+      registerRpc();
       registerFileProtocol();
       await createDefaultWindow();
       // registerSessionInterceptor('targetWindow', session.defaultSession);

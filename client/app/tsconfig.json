@@ -5,14 +5,16 @@
     "module": "CommonJS",    
     "lib": ["es2015"],
     "esModuleInterop": true,                            
-    "forceConsistentCasingInFileNames": true,         
+    "forceConsistentCasingInFileNames": true,     
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "strict": true,                                     
     "skipLibCheck": true  ,                             
     "outDir": "./dist",
     "types": ["node", "electron"],
     "baseUrl": "./",
     "paths": {
-      "@/*": [
+      "@src/*": [
         "./src/*"
       ],
       "@api/*": [
@@ -24,8 +26,8 @@
       "@model/*": [
         "../common/model/*"
       ],
-      "@elapi/*": [
-        "./common/eleapi/*"
+      "@eleapi/*": [
+        "../common/eleapi/*"
       ]
     }
   },

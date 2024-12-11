@@ -4,7 +4,8 @@ import AvaForm from './AvaForm';
 import Layout from '@/components/Layout';
 import { useEffect, useState } from 'react';
 import { getData } from '@api/shop/shop.test.api';
-import { Shop } from '@model/shop/shop.test';
+import { Shop } from '@model/shop/shop';
+import { TestApi } from '@eleapi/test';
 
 import { EditOutlined, ExportOutlined, ScheduleOutlined, ScissorOutlined, UploadOutlined } from '@ant-design/icons';
 
@@ -92,6 +93,13 @@ export default function Clip() {
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   useEffect(()=>{
+       const testApi = new TestApi();
+       const result = testApi.test("test", 1);
+       console.log("window.testApi " , result)
+
+       testApi.onTest((data)=>{
+          console.log("onTest data ", data)
+       })
        handlePageChange(initPageInfo.pageIndex, initPageInfo.pageSize);
   },[]);
 
