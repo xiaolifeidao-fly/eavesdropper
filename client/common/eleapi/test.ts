@@ -1,9 +1,8 @@
 import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
 
 
-
 export class TestApi extends ElectronApi {
-    
+
     @InvokeType(Protocols.INVOKE)
     test(text: string, num: number) {
         //@ts-ignore
