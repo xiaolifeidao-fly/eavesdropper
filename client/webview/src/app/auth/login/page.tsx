@@ -40,6 +40,10 @@ export default function Home() {
         captchaId: values.captcha.captchaId
       }).then(res => {
         message.success('登录成功');
+        
+        // 存储登录信息
+        const accessToken = res.accessToken;
+        // localStorage.setItem('accessToken', accessToken);
 
         // router.push('/shop');
         router.push('/dashboard');

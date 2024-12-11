@@ -58,8 +58,7 @@ func (r *UserGetResp) FromUser(user *models.User) {
 
 // UserPageReq 分页获取用户请求
 type UserPageReq struct {
-	Nickname  string      `form:"nickname" search:"type:sLike;table:auth_user;column:nickname"`
-	Username  string      `form:"username" search:"type:eq;table:auth_user;column:username"`
+	Mobile    string      `form:"mobile" search:"type:eq;table:auth_user;column:mobile"`
 	_         string      `search:"type:order;table:auth_user;column:id;default:desc"`
 	_         interface{} `search:"type:isNull;table:auth_user;column:deleted_at"`
 	base.Page `search:"-"`
@@ -69,7 +68,7 @@ type UserPageReq struct {
 type UserPageResp struct {
 	ID          int       `json:"id" select:"table:auth_user;column:id"`
 	Nickname    string    `json:"nickname" select:"table:auth_user;column:nickname"`
-	Username    string    `json:"username" select:"table:auth_user;column:username"`
+	Mobile      string    `json:"mobile" select:"table:auth_user;column:mobile"`
 	LastLoginAt base.Time `json:"lastLoginAt" select:"-"`
 	UpdatedAt   base.Time `json:"updatedAt" select:"table:auth_user;column:updated_at"`
 }

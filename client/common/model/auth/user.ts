@@ -1,3 +1,16 @@
+// 用户分页请求
+export class UserPageReq {
+  constructor(
+    public mobile: string,
+    public current: number,
+    public pageSize: number
+  ) {
+    this.mobile = mobile
+    this.current = current
+    this.pageSize = pageSize
+  }
+}
+
 // 用户分页响应
 export class UserPageResp {
   constructor(
@@ -5,12 +18,12 @@ export class UserPageResp {
     public lastLoginAt: string,
     public nickname: string,
     public updatedAt: string,
-    public username: string
+    public mobile: string
   ) {
     this.id = id
     this.lastLoginAt = lastLoginAt
     this.nickname = nickname
     this.updatedAt = updatedAt
-    this.username = username
+    this.mobile = mobile
   }
 }
