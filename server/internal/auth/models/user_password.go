@@ -1,9 +1,9 @@
 package models
 
-import "server/common/base"
+import "server/common/middleware/database"
 
 type UserPassword struct {
-	base.Model
+	database.BaseEntity
 	UserID      uint64 `json:"userId"`      // 用户ID
 	Password    string `json:"password"`    // 密码
 	OriPassword string `json:"oriPassword"` // 原始密码

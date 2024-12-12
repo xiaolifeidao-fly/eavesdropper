@@ -1,8 +1,6 @@
 package routers
 
 import (
-	"server/app/auth/controllers"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,13 +9,13 @@ func init() {
 }
 
 func registerUserRouter(router *gin.RouterGroup) {
-	r := router.Group("/users")
+	// r := router.Group("/users")
 	{
 		// r.Use(middleware.JwtAuth()).POST("", controllers.Add)
 		// r.Use(middleware.JwtAuth()).DELETE("/:id", controllers.Delete)
 		// r.Use(middleware.JwtAuth()).PUT("/:id", controllers.Update)
 		// r.Use(middleware.JwtAuth()).GET("/:id", controllers.Get)
-		r.GET("/page", controllers.Page)
+		// r.GET("/page", controllers.Page)
 		// r.Use(middleware.JwtAuth()).GET("/list", controllers.GetList)
 	}
 }

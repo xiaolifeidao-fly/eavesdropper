@@ -1,9 +1,9 @@
 package models
 
-import "server/common/base"
+import "server/common/middleware/database"
 
 type User struct {
-	base.Model
+	database.BaseEntity
 	Nickname string `json:"nickname"` // 用户名称
 	Mobile   string `json:"mobile"`   // 手机号,唯一
 }

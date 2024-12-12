@@ -54,6 +54,8 @@ func Setup() {
 		common.Runtime.SetDb(k, db)
 		log.Infof("%s connect success !", k)
 	}
+
+	RepositoryInit() // 初始化Repository
 }
 
 func SimpleSetupDatabase(host string, c *Database) (*gorm.DB, error) {

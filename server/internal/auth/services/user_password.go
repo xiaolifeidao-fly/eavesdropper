@@ -1,91 +1,81 @@
 package services
 
-import (
-	"errors"
+// // CheckUserPassword
+// // @Description 验证密码
+// func CheckUserPassword(userID uint64, password string) error {
+// 	var err error
+// 	userPasswordRepository := repositories.NewUserPasswordRepository()
 
-	"server/common/encryption"
-	"server/internal/auth/common"
-	"server/internal/auth/common/constants"
-	"server/internal/auth/models"
-	"server/internal/auth/repositories"
-)
+// 	userPassword := &models.UserPassword{}
+// 	if err = userPasswordRepository.FindByUserID(userID, userPassword); err != nil {
+// 		return err
+// 	}
 
-// CheckUserPassword
-// @Description 验证密码
-func CheckUserPassword(userID uint64, password string) error {
-	var err error
-	userPasswordRepository := repositories.NewUserPasswordRepository()
+// 	if err = checkPassword(password, userPassword.Password); err != nil {
+// 		return err
+// 	}
 
-	userPassword := &models.UserPassword{}
-	if err = userPasswordRepository.FindByUserID(userID, userPassword); err != nil {
-		return err
-	}
+// 	return nil
+// }
 
-	if err = checkPassword(password, userPassword.Password); err != nil {
-		return err
-	}
+// // checkPassword
+// // @Description 验证密码
+// func checkPassword(inputPassword, dbPassword string) error {
+// 	var err error
 
-	return nil
-}
+// 	// 加密密码
+// 	var encryptedPassword string
+// 	if encryptedPassword, err = encryptPassword(inputPassword); err != nil {
+// 		return err
+// 	}
 
-// checkPassword
-// @Description 验证密码
-func checkPassword(inputPassword, dbPassword string) error {
-	var err error
+// 	if encryptedPassword != dbPassword {
+// 		return errors.New(constants.PasswordIncorrect)
+// 	}
 
-	// 加密密码
-	var encryptedPassword string
-	if encryptedPassword, err = encryptPassword(inputPassword); err != nil {
-		return err
-	}
+// 	return nil
+// }
 
-	if encryptedPassword != dbPassword {
-		return errors.New(constants.PasswordIncorrect)
-	}
+// // encryptPassword
+// // @Description 不可逆加密密码
+// func encryptPassword(inputPassword string) (string, error) {
+// 	var err error
 
-	return nil
-}
+// 	// 解密密码
+// 	var decryptedPassword string
+// 	if decryptedPassword, err = encryption.DecryptRSA(inputPassword, common.GetPrivateKey()); err != nil {
+// 		return "", err
+// 	}
 
-// encryptPassword
-// @Description 不可逆加密密码
-func encryptPassword(inputPassword string) (string, error) {
-	var err error
+// 	passwordMd2 := encryption.Md5(encryption.Md5(decryptedPassword))
+// 	encryptedPassword := encryption.Encryption(constants.PasswordSecret, passwordMd2)
+// 	return encryptedPassword, nil
+// }
 
-	// 解密密码
-	var decryptedPassword string
-	if decryptedPassword, err = encryption.DecryptRSA(inputPassword, common.GetPrivateKey()); err != nil {
-		return "", err
-	}
+// // encryptOriPassword
+// // @Description 加密原始密码
+// func encryptOriPassword(inputPassword string) (string, error) {
+// 	var err error
 
-	passwordMd2 := encryption.Md5(encryption.Md5(decryptedPassword))
-	encryptedPassword := encryption.Encryption(constants.PasswordSecret, passwordMd2)
-	return encryptedPassword, nil
-}
+// 	if inputPassword, err = encryption.DecryptRSA(inputPassword, common.GetPrivateKey()); err != nil {
+// 		return "", err
+// 	}
 
-// encryptOriPassword
-// @Description 加密原始密码
-func encryptOriPassword(inputPassword string) (string, error) {
-	var err error
+// 	secret := []byte(constants.OriPasswordSecret)
+// 	encrypted, err := encryption.EncryptAES([]byte(inputPassword), secret)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return encrypted, nil
+// }
 
-	if inputPassword, err = encryption.DecryptRSA(inputPassword, common.GetPrivateKey()); err != nil {
-		return "", err
-	}
-
-	secret := []byte(constants.OriPasswordSecret)
-	encrypted, err := encryption.EncryptAES([]byte(inputPassword), secret)
-	if err != nil {
-		return "", err
-	}
-	return encrypted, nil
-}
-
-// decryptOriPassword
-// @Description 解密原始密码
-func decryptOriPassword(password string) (string, error) {
-	secret := []byte(constants.OriPasswordSecret)
-	decryptedPassword, err := encryption.DecryptAES(password, secret)
-	if err != nil {
-		return "", err
-	}
-	return string(decryptedPassword), nil
-}
+// // decryptOriPassword
+// // @Description 解密原始密码
+// func decryptOriPassword(password string) (string, error) {
+// 	secret := []byte(constants.OriPasswordSecret)
+// 	decryptedPassword, err := encryption.DecryptAES(password, secret)
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return string(decryptedPassword), nil
+// }

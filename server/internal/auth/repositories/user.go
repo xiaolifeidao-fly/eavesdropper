@@ -1,24 +1,16 @@
 package repositories
 
 import (
-	"server/common/base"
+	"server/common/middleware/database"
 	"server/internal/auth/models"
-
-	"gorm.io/gorm"
 )
 
-type User struct {
-	base.Repository[*models.User]
+var UserRepository = database.NewRepository[userRepository]()
+
+type userRepository struct {
+	database.Repository[*models.User]
 }
 
-func NewUserRepository(dbs ...*gorm.DB) *User {
-	return &User{Repository: *base.NewRepository[*models.User](dbs...)}
-}
-
-func (r *User) FindByMobile(mobile string, entity *models.User) error {
-	return r.DB.Debug().Where("mobile = ?", mobile).Find(entity).Error
-}
-
-func (r *User) FindUnscopedByMobile(mobile string, entity *models.User) error {
-	return r.DB.Debug().Unscoped().Where("mobile = ?", mobile).Find(entity).Error
+func (r *userRepository) FindByMobile(mobile string) (*models.User, error) {
+	return r.GetOne("select * from auth_user where mobile = ?", mobile)
 }
