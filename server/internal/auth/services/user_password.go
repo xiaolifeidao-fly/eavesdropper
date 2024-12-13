@@ -1,81 +1,123 @@
 package services
 
-// // CheckUserPassword
-// // @Description 验证密码
-// func CheckUserPassword(userID uint64, password string) error {
-// 	var err error
-// 	userPasswordRepository := repositories.NewUserPasswordRepository()
+import (
+	"errors"
 
-// 	userPassword := &models.UserPassword{}
-// 	if err = userPasswordRepository.FindByUserID(userID, userPassword); err != nil {
-// 		return err
-// 	}
+	"server/common/encryption"
+	"server/common/logger"
+	"server/common/middleware/database"
+	authCommon "server/internal/auth/common"
+	"server/internal/auth/models"
+	"server/internal/auth/repositories"
+	"server/internal/auth/services/dto"
+)
 
-// 	if err = checkPassword(password, userPassword.Password); err != nil {
-// 		return err
-// 	}
+const (
+	PasswordSecret    = "dwnqY8"                           // 加密密码密钥
+	OriPasswordSecret = "oerlis32baeeslkmnehssphrase12341" // 原始密码密钥
+)
 
-// 	return nil
-// }
+// CreateUserPassword 创建用户密码
+func CreateUserPassword(userPasswordDTO *dto.UserPasswordDTO) (*dto.UserPasswordDTO, error) {
+	var err error
+	userPasswordRepository := repositories.UserPasswordRepository
 
-// // checkPassword
-// // @Description 验证密码
-// func checkPassword(inputPassword, dbPassword string) error {
-// 	var err error
+	userPassword := database.ToPO[models.UserPassword](userPasswordDTO)
+	if _, err = userPasswordRepository.Create(userPassword); err != nil {
+		return nil, errors.New("数据库操作失败")
+	}
 
-// 	// 加密密码
-// 	var encryptedPassword string
-// 	if encryptedPassword, err = encryptPassword(inputPassword); err != nil {
-// 		return err
-// 	}
+	userPasswordDTO = database.ToDTO[dto.UserPasswordDTO](userPassword)
+	return userPasswordDTO, nil
+}
 
-// 	if encryptedPassword != dbPassword {
-// 		return errors.New(constants.PasswordIncorrect)
-// 	}
+// UpdateUserPassword 更新用户密码
+func UpdateUserPassword(userPasswordDTO *dto.UserPasswordDTO) (*dto.UserPasswordDTO, error) {
+	var err error
+	userPasswordRepository := repositories.UserPasswordRepository
 
-// 	return nil
-// }
+	userPassword := database.ToPO[models.UserPassword](userPasswordDTO)
+	if userPassword, err = userPasswordRepository.SaveOrUpdate(userPassword); err != nil {
+		return nil, errors.New("数据库操作失败")
+	}
 
-// // encryptPassword
-// // @Description 不可逆加密密码
-// func encryptPassword(inputPassword string) (string, error) {
-// 	var err error
+	userPasswordDTO = database.ToDTO[dto.UserPasswordDTO](userPassword)
+	return userPasswordDTO, nil
+}
 
-// 	// 解密密码
-// 	var decryptedPassword string
-// 	if decryptedPassword, err = encryption.DecryptRSA(inputPassword, common.GetPrivateKey()); err != nil {
-// 		return "", err
-// 	}
+// GetUserPasswordByUserID 根据用户ID获取用户密码
+func GetUserPasswordByUserID(userID uint64) (*dto.UserPasswordDTO, error) {
+	var err error
+	userPasswordRepository := repositories.UserPasswordRepository
 
-// 	passwordMd2 := encryption.Md5(encryption.Md5(decryptedPassword))
-// 	encryptedPassword := encryption.Encryption(constants.PasswordSecret, passwordMd2)
-// 	return encryptedPassword, nil
-// }
+	userPassword, err := userPasswordRepository.FindByUserID(userID)
+	if err != nil {
+		return nil, errors.New("数据库操作失败")
+	}
 
-// // encryptOriPassword
-// // @Description 加密原始密码
-// func encryptOriPassword(inputPassword string) (string, error) {
-// 	var err error
+	userPasswordDTO := database.ToDTO[dto.UserPasswordDTO](userPassword)
+	return userPasswordDTO, nil
+}
 
-// 	if inputPassword, err = encryption.DecryptRSA(inputPassword, common.GetPrivateKey()); err != nil {
-// 		return "", err
-// 	}
+func EncryptPassword(inputPassword string) (string, string, error) {
+	var err error
+	encryptPassword, err := encryptPassword(inputPassword)
+	if err != nil {
+		return "", "", err
+	}
 
-// 	secret := []byte(constants.OriPasswordSecret)
-// 	encrypted, err := encryption.EncryptAES([]byte(inputPassword), secret)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return encrypted, nil
-// }
+	encryptOriPassword, err := encryptOriPassword(inputPassword)
+	if err != nil {
+		return "", "", err
+	}
 
-// // decryptOriPassword
-// // @Description 解密原始密码
-// func decryptOriPassword(password string) (string, error) {
-// 	secret := []byte(constants.OriPasswordSecret)
-// 	decryptedPassword, err := encryption.DecryptAES(password, secret)
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return string(decryptedPassword), nil
-// }
+	return encryptPassword, encryptOriPassword, nil
+}
+
+// encryptPassword
+// @Description 不可逆加密密码
+func encryptPassword(inputPassword string) (string, error) {
+	var err error
+
+	// 解密密码
+	if inputPassword, err = encryption.DecryptRSA(inputPassword, authCommon.GetPrivateKey()); err != nil {
+		logger.Errorf("EncryptPassword failed, with error is %v", err)
+		return "", errors.New("系统错误")
+	}
+
+	passwordMd2 := encryption.Md5(encryption.Md5(inputPassword))
+	encryptedPassword := encryption.Encryption(PasswordSecret, passwordMd2)
+	return encryptedPassword, nil
+}
+
+// encryptOriPassword
+// @Description 加密原始密码
+func encryptOriPassword(inputPassword string) (string, error) {
+	var err error
+
+	if inputPassword, err = encryption.DecryptRSA(inputPassword, authCommon.GetPrivateKey()); err != nil {
+		logger.Errorf("encryptOriPassword failed, with error is %v", err)
+		return "", errors.New("系统错误")
+	}
+
+	secret := []byte(OriPasswordSecret)
+	encrypted, err := encryption.EncryptAES([]byte(inputPassword), secret)
+	if err != nil {
+		return "", err
+	}
+	return encrypted, nil
+}
+
+// decryptOriPassword
+// @Description 解密原始密码
+func decryptOriPassword(password string) (string, error) {
+	var err error
+
+	secret := []byte(OriPasswordSecret)
+	decryptedPassword, err := encryption.DecryptAES(password, secret)
+	if err != nil {
+		logger.Errorf("decryptOriPassword failed, with error is %v", err)
+		return "", errors.New("系统错误")
+	}
+	return string(decryptedPassword), nil
+}

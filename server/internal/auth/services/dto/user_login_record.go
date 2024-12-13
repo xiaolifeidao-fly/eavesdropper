@@ -1,18 +1,14 @@
-package models
+package dto
 
 import (
 	"server/common/base"
-	"server/common/middleware/database"
+	"server/common/base/dto"
 )
 
-type UserLoginRecord struct {
-	database.BaseEntity
+type UserLoginRecordDTO struct {
+	dto.BaseDTO
 	UserID        uint64    `json:"userId"`
 	LoginTime     base.Time `json:"loginTime"`
 	LoginIP       string    `json:"loginIp"`
 	LoginDeviceID string    `json:"loginDeviceId"` // 登录设备ID
-}
-
-func (u *UserLoginRecord) TableName() string {
-	return "auth_user_login_record"
 }

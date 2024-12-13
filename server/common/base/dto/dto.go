@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"server/common/base/time"
+	"server/common/base"
 )
 
 type DTO interface {
@@ -10,11 +10,11 @@ type DTO interface {
 
 type BaseDTO struct {
 	ID        uint64    `json:"id"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	CreatedAt base.Time `json:"createdAt"`
+	UpdatedAt base.Time `json:"updatedAt"`
 	CreatedBy uint64    `json:"createdBy"`
 	UpdatedBy uint64    `json:"updatedBy"`
-	DeleteAt  time.Time `json:"deleteAt"`
+	DeleteAt  base.Time `json:"deleteAt"`
 }
 
 func (dto *BaseDTO) GetID() uint64 {

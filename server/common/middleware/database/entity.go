@@ -1,7 +1,7 @@
 package database
 
 import (
-	"server/common/base/time"
+	"server/common/base"
 
 	"gorm.io/gorm"
 )
@@ -15,8 +15,8 @@ type BaseEntity struct {
 	ID        uint64         `json:"id"`
 	CreatedBy uint64         `json:"createdBy"`
 	UpdatedBy uint64         `json:"updatedBy"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
+	CreatedAt base.Time      `json:"createdAt"`
+	UpdatedAt base.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `json:"-"`
 }
 
@@ -26,9 +26,9 @@ func (e *BaseEntity) TableName() string {
 
 func (e *BaseEntity) Init() {
 	if e.CreatedAt.IsZero() {
-		e.CreatedAt = time.Now()
+		e.CreatedAt = base.Now()
 	}
 	if e.UpdatedAt.IsZero() {
-		e.UpdatedAt = time.Now()
+		e.UpdatedAt = base.Now()
 	}
 }

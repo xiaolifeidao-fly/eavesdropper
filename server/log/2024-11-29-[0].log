@@ -1,0 +1,155 @@
+[lodge-server] 2024-11-29 10:20:54.597	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 10:20:54.609	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 10:20:54.609	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 10:20:54.609	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 10:20:54.609	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 10:23:59.932	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 10:23:59.934	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 10:23:59.935	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 10:23:59.935	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 10:23:59.935	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 10:35:26.513	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 10:35:26.516	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 10:35:26.516	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 10:35:26.516	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+server/server.go:97-11-29 10:35:26.516	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 10:36:21.834	WARN	controller/controller.go:103	request body is not present anymore. 	{"x-request-id": "f85c5946-6211-435f-b272-b3c6b5ef3eb0"}
+[lodge-server] 2024-11-29 10:36:21.835	ERROR	controllers/user.go:29	UserController.Add failed, with error is [Name] 不能为空;[Account] 不能为空	{"x-request-id": "f85c5946-6211-435f-b272-b3c6b5ef3eb0"}
+[lodge-server] 2024-11-29 10:36:21.835	INFO	middleware/logger.go:59		{"clientIP": "127.0.0.1", "method": "POST", "uri": "/api/users", "x-request-id": "f85c5946-6211-435f-b272-b3c6b5ef3eb0", "statusCode": 200, "latencyTime": "0.943ms"}
+[lodge-server] 2024-11-29 10:37:53.980	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 10:37:53.981	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 10:37:53.982	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 10:37:53.982	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 10:37:53.982	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 10:38:03.983	INFO	middleware/logger.go:59		{"statusCode": 200, "latencyTime": "0.925ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/a"statusCode": 200, "latencyTime": "0.925ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/users", "x-request-id": "472420f7-5cfe-43e5-bd67-d89fbed7b22d"-id": "472420f7-5cfe-43e5-bd67-d89fbed7b22d"}
+[lodge-server] 2024-11-29 10:38:03.983	INFO	middleware/logger.go:59		{"statusCode": 200, "latencyTime": "0.925ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/users", "x-request-id": "472420f7-5cfe-43e5-bd67-d89fbed7b22d"}
+"statusCode": 200, "latencyTime": "0.523ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/users", "x-request-id": "0b3cf884-dc94-4f99-8383-8bf1b4e17fc9"-id": "0b3cf884-dc94-4f99-8383-8bf1b4e17fc9"}
+[lodge-server] 2024-11-29 10:43:38.209	INFO	middleware/logger.go:59		{"statusCode": 200, "latencyTime": "0.523ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/users", "x-request-id": "0b3cf884-dc94-4f99-8383-8bf1b4e17fc9"}
+[lodge-server] 2024-11-29 10:43:56.709	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 10:43:56.711	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 10:43:56.711	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 10:43:56.711	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 10:43:56.711	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 10:44:06.308	INFO	middleware/logger.go:59		{"uri": "/api/users", "statusCode": 200, "latencyTime": "0.781ms", "x-request-id": "1adf5414-4c06-441c-bd8a-120d727635c6", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-29 11:31:32.401	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 11:31:32.404	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 11:31:32.404	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 11:31:32.404	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 11:31:32.405	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+"x-request-id": "8fff9e74-6c60-4486-be90-891447caa8a1"5.12/callbacks.go:134	[31;1m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [35;1mrecord not found [0m[33m[23.336ms] [34;1m[rows:0][0m SELECT * FROM `auth_user` WHERE account = '石秀英' AND `auth_user`.`deleted_at` IS NULL ORDER BY `auth_user`.`id` LIMIT 1
+"statusCode": 200, "latencyTime": "24.205ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login", "x-request-id": "8fff9e74-6c60-4486-be90-891447caa8a1"-891447caa8a1"}
+[lodge-server] 2024-11-29 11:33:06.487	INFO	middleware/logger.go:59		{"statusCode": 200, "latencyTime": "24.205ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login", "x-request-id": "8fff9e74-6c60-4486-be90-891447caa8a1"}
+[lodge-server] 2024-11-29 11:36:31.893	INFO	middleware/logger.go:59		{"uri": "/api/auth/register", "x-request-id": "96b6ac7f-ae8e-462c-b768-91482b97e8a7", "statusCode": 200, "latencyTime": "0.018ms", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-29 11:40:46.157	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 11:40:46.159	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 11:40:46.159	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 11:40:46.159	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 11:40:46.159	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 11:40:49.557	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[3.055ms] [34;1m[rows:0][0m SELECT * FROM `auth_user` WHERE account = 'katana' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 11:40:49.557	INFO	middleware/logger.go:59		{"uri": "/api/auth/register", "x-request-id": "6f11b3d5-3846-4c2e-877e-a50f293f6270", "statusCode": 200, "latencyTime": "4.444ms", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-29 11:59:56.296	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 11:59:56.297	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 11:59:56.297	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 11:59:56.297	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 11:59:56.297	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 12:01:15.394	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 12:01:15.395	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 12:01:15.396	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 12:01:15.396	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 12:01:15.396	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 12:01:19.247	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[2.266ms] [34;1m[rows:0][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 12:01:19.261	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/common/base/repository.go:15 [0m[33m[12.801ms] [34;1m[rows:1][0m INSERT INTO `auth_user` (`created_by`,`updated_by`,`created_at`,`updated_at`,`deleted_at`,`uid`,`name`,`account`,`password`,`secret`) VALUES (0,0,'2024-11-29 12:01:19.248','2024-11-29 12:01:19.248',NULL,'325152678602604544','admin','admin','3126808213238c418d8e8c1fc4d0d6c76a462d63','t2CrNa')
+[lodge-server] 2024-11-29 12:01:19.261	INFO	middleware/logger.go:59		{"latencyTime": "16.936ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/register", "x-request-id": "40a7c0a5-34b8-4d61-b1ce-93cec43b58e2", "statusCode": 200}
+[lodge-server] 2024-11-29 14:09:41.929	INFO	middleware/logger.go:59		{"statusCode": 200, "x-request-id": "b6826fbb-58c9-4a5e-b639-0b1c7339c2ef", "latencyTime": "5.414ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/register"}
+nt = 'admin' AND `auth_user`.`deleted_at` IS NULL
+"statusCode": 200, "x-request-id": "b6826fbb-58c9-4a5e-b639-0b1c7339c2ef", "latencyTime": "5.414ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/register"-0b1c7339c2ef"}
+[lodge-server] 2024-11-29 14:09:41.929	INFO	middleware/logger.go:59		{"statusCode": 200, "x-request-id": "b6826fbb-58c9-4a5e-b639-0b1c7339c2ef", "latencyTime": "5.414ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/register"}
+"latencyTime": "1.955ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login", "x-request-id": "c8523ed7-badb-42f3-bc91-e5af3e3b3720", "statusCode": 200[0m[33m[1.535ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 14:11:49.861	INFO	middleware/logger.go:59		{"latencyTime": "1.955ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login", "x-request-id": "c8523ed7-badb-42f3-bc91-e5af3e3b3720", "statusCode": 200}
+[lodge-server] 2024-11-29 14:16:56.719	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 14:16:56.721	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 14:16:56.721	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 14:16:56.721	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 14:16:56.722	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 14:24:42.445	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 14:24:42.446	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 14:24:42.446	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 14:24:42.446	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 14:24:42.447	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+"x-request-id": "fe29457c-bf91-4ef7-996d-5dcd9d0c9662", "statusCode": 200, "latencyTime": "3.698ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login"[0m[33m[2.936ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 14:26:25.398	INFO	middleware/logger.go:59		{"x-request-id": "fe29457c-bf91-4ef7-996d-5dcd9d0c9662", "statusCode": 200, "latencyTime": "3.698ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login"}
+[lodge-server] 2024-11-29 14:26:52.092	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 14:26:52.094	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 14:26:52.094	INFO	server/server.go:95	Server dev run success
+server/server.go:97-11-29 14:26:52.094	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 14:26:52.094	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+"statusCode": 200, "latencyTime": "3.622ms", "clientIP": "127.0.0.1", "method": "POST", "x-request-id": "4a32310c-db97-4e5d-a89a-023f966f32f3", "uri": "/api/auth/login"[0m[33m[2.142ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 14:26:57.683	INFO	middleware/logger.go:59		{"statusCode": 200, "latencyTime": "3.622ms", "clientIP": "127.0.0.1", "method": "POST", "x-request-id": "4a32310c-db97-4e5d-a89a-023f966f32f3", "uri": "/api/auth/login"}
+[lodge-server] 2024-11-29 15:17:40.273	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 15:17:40.276	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 15:17:40.276	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 15:17:40.276	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 15:17:40.276	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 15:17:47.007	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[3.130ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 15:17:47.008	INFO	middleware/logger.go:59		{"method": "POST", "uri": "/api/auth/login", "statusCode": 200, "x-request-id": "7e2bdbc6-d534-4cae-93e4-baeccc3eb498", "latencyTime": "3.889ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-29 17:16:00.840	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 17:16:00.842	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 17:16:00.842	INFO	server/server.go:95	Server dev run success
+server/server.go:97-11-29 17:16:00.842	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 17:16:00.843	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 17:17:46.285	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 17:17:46.286	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 17:17:46.287	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 17:17:46.287	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 17:17:46.287	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 17:18:00.122	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[4.252ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 17:18:00.122	INFO	middleware/logger.go:59		{"clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login", "x-request-id": "a8b3bffc-4915-4f5b-99c1-92cfafcb6885", "statusCode": 200, "latencyTime": "4.907ms"}
+[lodge-server] 2024-11-29 17:18:49.974	INFO	middleware/logger.go:59		{"uri": "/api/auth/logout", "statusCode": 401, "x-request-id": "711199fd-7adb-4381-ab6b-d81265e2a563", "latencyTime": "0.024ms", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-29 17:19:14.803	INFO	middleware/logger.go:59		{"latencyTime": "8800.671ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/logout", "x-request-id": "8c01aed8-a838-4c80-9008-aa4d7c12f2d6", "statusCode": 401}
+[lodge-server] 2024-11-29 17:21:42.038	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 17:21:42.048	INFO	server/server.go:96	Local:   http://localhost:server/server.go:96-11-29 17:21:42.048	INFO	server/server.go:95	Server dev run success
+server/server.go:97-11-29 17:21:42.048	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 17:21:42.048	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 17:21:50.340	INFO	middleware/logger.go:59		{"method": "POST", "uri": "/api/auth/logout", "statusCode": 200, "latencyTime": "0.341ms", "x-request-id": "a73f1321-862e-435e-bf21-2b2c2e1c3385", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-29 17:22:44.307	INFO	middleware/logger.go:59		{"latencyTime": "0.185ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/logout", "x-request-id": "16068f46-9afb-4652-b4f8-d4aaf1e6ebf7", "statusCode": 200}
+server/server.go:97-11-29 17:41:17.652	INFO	server/server.go:96	Local:   http://localhost:8081 
+1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+server/server.go:97-11-29 17:41:17.652	INFO	server/server.go:96	Local:   http://localhost:[lodge-server] 2024-11-29 17:41:17.653	INFO	server/server.go:97	Network: http://172.18.server/server.go:97-11-29 17:41:17.652	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 17:41:17.653	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+"x-request-id": "db07c6cb-323b-4e90-baad-116dee17348d"5.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[2.024ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+"x-request-id": "db07c6cb-323b-4e90-baad-116dee17348d", "method": "POST", "uri": "/api/auth/login", "statusCode": 200, "latencyTime": "3.475ms", "clientIP": "127.0.0.1"aad-116dee17348d"}
+[lodge-server] 2024-11-29 17:41:26.967	INFO	middleware/logger.go:59		{"x-request-id": "db07c6cb-323b-4e90-baad-116dee17348d", "method": "POST", "uri": "/api/auth/login", "statusCode": 200, "latencyTime": "3.475ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-29 18:00:39.871	INFO	middleware/logger.go:59		{"uri": "/api/auth/login", "x-request-id": "1ae2d0ef-1826-4401-badd-b7757e1e5664", "statusCode": 200, "latencyTime": "1.711ms", "clientIP": "127.0.0.1", "method": "POST"}
+count = 'admin' AND `auth_user`.`deleted_at` IS NULL
+"uri": "/api/auth/login", "x-request-id": "1ae2d0ef-1826-4401-badd-b7757e1e5664", "statusCode": 200, "latencyTime": "1.711ms", "clientIP": "127.0.0.1", "method": "POST"add-b7757e1e5664"}
+[lodge-server] 2024-11-29 18:00:39.871	INFO	middleware/logger.go:59		{"uri": "/api/auth/login", "x-request-id": "1ae2d0ef-1826-4401-badd-b7757e1e5664", "statusCode": 200, "latencyTime": "1.711ms", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-29 18:01:06.030	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[1.152ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 18:01:42.208	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 18:01:42.210	INFO	database/initialize.go:55	* connect success !
+server/server.go:95-11-29 18:02:16.677	INFO	database/initialize.go:55	* connect success !
+27.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 18:02:16.678	INFO	server/server.go:96	Local:   http://localhost:[lodge-server] 2024-11-29 18:02:16.678	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 18:02:16.678	INFO	server/server.go:97	Network: http://172.18.[lodge-server] 2024-11-29 18:02:16.678	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+[lodge-server] 2024-11-29 18:02:26.378	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 18:02:26.379	INFO	database/initialize.go:55	* connect success !
+[lodge-server] 2024-11-29 18:03:27.330	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 18:03:27.332	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 18:03:27.332	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 18:03:27.332	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+server/server.go:97-11-29 18:03:27.332	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 18:03:32.517	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[2.995ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 18:03:36.471	ERROR	controllers/auth.go:46	AuthController.Login failed, with error is 签名方法无效	{"x-request-id": "2a0518aa-5d65-482f-85de-89c9e393ebe3"}
+[lodge-server] 2024-11-29 18:03:36.472	INFO	middleware/logger.go:59		{"clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login", "statusCode": 200, "x-request-id": "2a0518aa-5d65-482f-85de-89c9e393ebe3", "latencyTime": "3958.126ms"}
+[lodge-server] 2024-11-29 18:03:45.582	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[1.986ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 18:04:50.917	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-29 18:04:50.918	INFO	database/initialize.go:55	* connect success !
+server/server.go:96-11-29 18:04:50.919	INFO	server/server.go:95	Server dev run success
+[lodge-server] 2024-11-29 18:04:50.919	INFO	server/server.go:97	Network: http://172.18.104.124:8081 
+server/server.go:97-11-29 18:04:50.919	INFO	server/server.go:96	Local:   http://localhost:8081 
+[lodge-server] 2024-11-29 18:04:53.897	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[1.734ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 18:04:53.897	INFO	middleware/logger.go:59		{"x-request-id": "d1b468fa-cabf-479e-9e49-16271e197077", "uri": "/api/auth/login", "statusCode": 200, "latencyTime": "3.353ms", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-29 18:05:54.951	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[0.751ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 18:05:54.951	INFO	middleware/logger.go:59		{"method": "POST", "uri": "/api/auth/login", "statusCode": 200, "x-request-id": "b9732a5b-33ba-422a-93e3-1f27efe84ac3", "latencyTime": "1.06ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-29 18:06:02.638	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/lodge/lodge-server/app/auth/repositories/user.go:19 [0m[33m[1.129ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE account = 'admin' AND `auth_user`.`deleted_at` IS NULL
+[lodge-server] 2024-11-29 18:06:02.638	INFO	middleware/logger.go:59		{"method": "POST", "uri": "/api/auth/login", "statusCode": 200, "latencyTime": "1.592ms", "x-request-id": "1ca24b9c-ad91-4ed9-b743-dfa2ed64e300", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-29 18:06:05.470	INFO	middleware/logger.go:59		{"method": "POST", "uri": "/api/auth/logout", "statusCode": 200, "latencyTime": "0.156ms", "clientIP": "127.0.0.1", "x-request-id": "3c57cad1-3e8b-4531-ad0f-cbab5710f956"}

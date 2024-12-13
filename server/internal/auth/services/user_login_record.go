@@ -1,30 +1,41 @@
 package services
 
-// // getLastLoginTime
-// // @Description 获取用户最后一次登录时间
-// func getLastLoginTime(loginUserID uint64) (base.Time, error) {
-// 	var err error
+import (
+	"errors"
+	"server/common/logger"
+	"server/common/middleware/database"
+	"server/internal/auth/models"
+	"server/internal/auth/repositories"
+	"server/internal/auth/services/dto"
+)
 
-// 	userLoginRecordRepository := repositories.NewUserLoginRecordRepository()
-// 	userLoginRecord := &models.UserLoginRecord{}
-// 	if err = userLoginRecordRepository.FindLastByUserID(loginUserID, userLoginRecord); err != nil {
-// 		return base.Time{}, err
-// 	}
+// CreateUserLoginRecord
+// @Description 创建用户登录记录
+func CreateUserLoginRecord(userLoginRecordDTO *dto.UserLoginRecordDTO) (*dto.UserLoginRecordDTO, error) {
+	var err error
+	userLoginRecordRepository := repositories.UserLoginRecordRepository
 
-// 	return userLoginRecord.LoginTime, nil
-// }
+	userLoginRecord := database.ToPO[models.UserLoginRecord](userLoginRecordDTO)
+	if _, err = userLoginRecordRepository.Create(userLoginRecord); err != nil {
+		logger.Errorf("CreateUserLoginRecord failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
 
-// // loginReqSaveLoginLog
-// // @Description 登录成功记录登录日志
-// func loginReqSaveLoginLog(loginUserID uint64, req *dto.LoginReq) error {
-// 	var err error
-// 	userLoginRecordRepository := repositories.NewUserLoginRecordRepository()
+	userLoginRecordDTO = database.ToDTO[dto.UserLoginRecordDTO](userLoginRecord)
+	return userLoginRecordDTO, nil
+}
 
-// 	userLoginRecord := &models.UserLoginRecord{}
-// 	req.ToUserLoginRecord(loginUserID, userLoginRecord)
-// 	if err = userLoginRecordRepository.Create(userLoginRecord); err != nil {
-// 		return err
-// 	}
+// GetLastUserLoginRecord
+// @Description 获取用户最后一次登录记录
+func GetLastUserLoginRecord(userID uint64) (*dto.UserLoginRecordDTO, error) {
+	var err error
+	userLoginRecordRepository := repositories.UserLoginRecordRepository
 
-// 	return nil
-// }
+	userLoginRecord, err := userLoginRecordRepository.FindLastByUserID(userID)
+	if err != nil {
+		logger.Errorf("GetLastUserLoginRecord failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+
+	return database.ToDTO[dto.UserLoginRecordDTO](userLoginRecord), nil
+}

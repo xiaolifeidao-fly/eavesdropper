@@ -10,7 +10,7 @@ env
 /**/*.png
 tests
 dialog_data
-log
+# log
 **/logs
 # data
 *.pyc

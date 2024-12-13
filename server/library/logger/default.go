@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	dlog "server/library/logger/debug/log"
+	dlog "server/library/logger/debug/log_record"
 )
 
 func init() {

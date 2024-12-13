@@ -29,8 +29,6 @@ import (
 type Server struct {
 	// 配置文件路径
 	ConfigPath string
-	// 日志输出路径
-	LogPath string
 }
 
 var (
@@ -52,7 +50,6 @@ var AppRouters = make([]func(g *gin.RouterGroup), 0)
 
 func init() {
 	StartCmd.PersistentFlags().StringVarP(&cmd.ConfigPath, "config", "c", "config/config.yaml", "使用提供的配置文件启动服务器")
-	StartCmd.PersistentFlags().StringVarP(&cmd.LogPath, "log", "l", "log", "日志文件输出路径")
 
 	AppRouters = append(AppRouters, authRoutes.LoadRouter)
 }

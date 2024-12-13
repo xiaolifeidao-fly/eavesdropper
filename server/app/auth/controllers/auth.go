@@ -1,10 +1,9 @@
 package controllers
 
 import (
-	"errors"
 	"server/app/auth/vo"
+	"server/common"
 	"server/common/converter"
-	"server/common/middleware/application"
 	serverCommon "server/common/server/common"
 	"server/common/server/controller"
 	"server/internal/auth/services"
@@ -15,8 +14,8 @@ import (
 )
 
 const (
-	LogoutSuccess   = "登出成功"
 	RegisterSuccess = "注册成功"
+	LogoutSuccess   = "登出成功"
 )
 
 type Auth struct {
@@ -37,30 +36,24 @@ func Login(ctx *gin.Context) {
 	err := authController.Bind(&req, binding.JSON).Errors
 	if err != nil {
 		authController.Logger.Errorf("Login failed, with error is %v", err)
-		authController.Error(err)
+		authController.Error("系统错误")
 		return
 	}
 
-	// 验证登录验证码
-	if application.ApplicationConfig.Mode != "dev" {
-		if err = services.CheckCaptcha(req.CaptchaID, req.Captcha); err != nil {
-			authController.Logger.Errorf("CheckCaptcha failed, with error is %v", err)
-			authController.Error(err)
-			return
-		}
+	// 获取客户端IP
+	loginDTO := converter.ToDTO[dto.LoginDTO](&req)
+	loginDTO.LoginIP = serverCommon.GetClientIP(ctx)
+	loginDTO.LoginDeviceID = "deviceID" // TODO: 获取设备ID
+
+	var loginToken string
+	if loginToken, err = services.Login(loginDTO); err != nil {
+		authController.Logger.Errorf("Login failed, with error is %v", err)
+		authController.Error(err.Error())
+		return
 	}
 
-	// 获取客户端IP
-	req.LoginIP = serverCommon.GetClientIP(ctx)
-	req.DeviceID = "deviceID" // TODO: 获取设备ID
-
 	var resp vo.LoginResp
-	// if err = services.Login(&req, &resp); err != nil {
-	// 	authController.Logger.Errorf("Login failed, with error is %v", err)
-	// 	authController.Error(err)
-	// 	return
-	// }
-
+	resp.AccessToken = loginToken
 	authController.OK(resp)
 }
 
@@ -74,38 +67,16 @@ func Register(ctx *gin.Context) {
 	err := authController.Bind(&req, binding.JSON).Errors
 	if err != nil {
 		authController.Logger.Errorf("Register failed, with error is %v", err)
-		authController.Error(err)
+		authController.Error("系统错误")
 		return
 	}
 
-	// 验证登录验证码
-	if application.ApplicationConfig.Mode != "dev" {
-		if err = services.CheckCaptcha(req.CaptchaID, req.Captcha); err != nil {
-			authController.Logger.Errorf("CheckCaptcha failed, with error is %v", err)
-			authController.Error(err)
-			return
-		}
-	}
-
-	// 查询用户是否存在
-	var userDTO *dto.UserDTO
-	userDTO, err = services.GetUserByMobile(req.Mobile)
-	if err != nil {
-		authController.Logger.Errorf("GetUserByMobile failed, with error is %v", err)
-		authController.Error(err)
+	registerDTO := converter.ToDTO[dto.RegisterDTO](&req)
+	if err = services.Register(registerDTO); err != nil {
+		authController.Logger.Errorf("Register failed, with error is %v", err)
+		authController.Error(err.Error())
 		return
 	}
-
-	if userDTO != nil && userDTO.ID > 0 {
-		authController.Error(errors.New("用户已存在"))
-		return
-	}
-
-	// if err = services.Register(&req); err != nil {
-	// 	authController.Logger.Errorf("Register failed, with error is %v", err)
-	// 	authController.Error(err)
-	// 	return
-	// }
 
 	authController.OK(RegisterSuccess)
 }
@@ -119,13 +90,11 @@ func GetCaptcha(ctx *gin.Context) {
 	captchaDTO, err := services.GetCaptcha()
 	if err != nil {
 		authController.Logger.Errorf("GetCaptcha failed, with error is %v", err)
-		authController.Error(err)
+		authController.Error(err.Error())
 		return
 	}
 
-	// var resp vo.CaptchaResp
-	// converter.Copy(&resp, &captchaDTO)
-	resp := converter.ToVO[vo.CaptchaResp](&captchaDTO)
+	resp := converter.ToVO[vo.CaptchaResp](captchaDTO)
 	authController.OK(resp)
 }
 
@@ -135,13 +104,16 @@ func GetCaptcha(ctx *gin.Context) {
 func GetLoginUser(ctx *gin.Context) {
 	authController := NewAuthController(ctx)
 
+	userID := common.GetLoginUserID()
+	userLoginInfoDTO, err := services.GetLoginUser(userID)
+	if err != nil {
+		authController.Logger.Errorf("GetLoginUser failed, with error is %v", err)
+		authController.Error(err.Error())
+		return
+	}
+
 	var resp vo.LoginUserResp
-	// err := services.GetLoginUser(&resp)
-	// if err != nil {
-	// 	authController.Logger.Errorf("GetLoginUser failed, with error is %v", err)
-	// 	authController.Error(err)
-	// 	return
-	// }
+	converter.Copy(&resp, userLoginInfoDTO)
 	authController.OK(resp)
 }
 
@@ -151,11 +123,12 @@ func GetLoginUser(ctx *gin.Context) {
 func Logout(ctx *gin.Context) {
 	authController := NewAuthController(ctx)
 
-	// if err := services.Logout(); err != nil {
-	// 	authController.Logger.Errorf("Logout failed, with error is %v", err)
-	// 	authController.Error(err)
-	// 	return
-	// }
+	userID := common.GetLoginUserID()
+	if err := services.Logout(userID); err != nil {
+		authController.Logger.Errorf("Logout failed, with error is %v", err)
+		authController.Error(err.Error())
+		return
+	}
 
 	authController.OK(LogoutSuccess)
 }

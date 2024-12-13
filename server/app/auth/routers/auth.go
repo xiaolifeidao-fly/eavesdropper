@@ -17,7 +17,7 @@ func registerAuthRouter(router *gin.RouterGroup) {
 		r.POST("/login", controllers.Login)
 		r.POST("/register", controllers.Register)
 		r.GET("/captcha", controllers.GetCaptcha)
-		r.Use(middleware.JwtAuth()).GET("/login-user", controllers.GetLoginUser)
-		r.Use(middleware.JwtAuth()).POST("/logout", controllers.Logout)
+		r.Use(middleware.Authorization()).GET("/login-user", controllers.GetLoginUser)
+		r.Use(middleware.Authorization()).POST("/logout", controllers.Logout)
 	}
 }

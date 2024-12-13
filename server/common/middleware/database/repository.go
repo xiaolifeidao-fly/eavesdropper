@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"server/common/base/page"
 	"server/library/database/gorm/search"
 
@@ -8,11 +9,11 @@ import (
 )
 
 type BaseRepository[T Entity] interface {
-	FindById(id uint) (T, error)
+	FindById(id uint64) (T, error)
 	FindAll() ([]T, error)
 	Create(entity T) (T, error)
 	SaveOrUpdate(entity T) (T, error)
-	Delete(id uint) error
+	Delete(id uint64) error
 	GetOne(sql string, values ...interface{}) (T, error)
 	GetList(sql string, values ...interface{}) ([]T, error)
 	Execute(sql string, params map[string]interface{}) error
@@ -32,9 +33,6 @@ func (r *Repository[T]) GetOne(sql string, values ...interface{}) (T, error) {
 	var repoValue *T = new(T)
 	err := r.Db.Raw(sql, values).Scan(&repoValue).Error
 	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return *repoValue, err
-		}
 		return *repoValue, err
 	}
 	return *repoValue, nil
@@ -44,7 +42,7 @@ func (r *Repository[T]) GetOne(sql string, values ...interface{}) (T, error) {
 func (r *Repository[T]) GetList(sql string, values ...interface{}) ([]T, error) {
 	var entities []T
 	err := r.Db.Raw(sql, values).Find(&entities).Error
-	if err == gorm.ErrRecordNotFound {
+	if err != nil {
 		return []T{}, err
 	}
 	return entities, nil
@@ -59,7 +57,10 @@ func (r *Repository[T]) Execute(sql string, params map[string]interface{}) error
 func (r *Repository[T]) FindById(id uint64) (T, error) {
 	var entity T
 	err := r.Db.First(&entity, id).Error
-	if err == gorm.ErrRecordNotFound {
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return entity, nil
+		}
 		return entity, err
 	}
 	return entity, nil
@@ -72,8 +73,7 @@ func (r *Repository[T]) FindAll() ([]T, error) {
 	if result.Error != nil {
 		return []T{}, result.Error
 	}
-	return entities, result.Error
-
+	return entities, nil
 }
 
 // Create 创建

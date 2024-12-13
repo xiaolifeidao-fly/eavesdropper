@@ -1,4 +1,4 @@
-package time
+package base
 
 import (
 	"database/sql/driver"

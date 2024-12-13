@@ -1,0 +1,15 @@
+[lodge-server] 2024-12-08 19:41:42.971	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-12-08 19:41:42.982	INFO	database/initialize.go:55	* connect success !
+server/server.go:10012-08 19:41:42.982	INFO	server/server.go:99	Server dev run success
+[lodge-server] 2024-12-08 19:41:42.982	INFO	server/server.go:101	Network: http://192.168.0.103:8081 
+server/server.go:10112-08 19:41:42.982	INFO	server/server.go:100	Local:   http://localhost:8081 
+[lodge-server] 2024-12-08 19:52:56.677	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/lodge_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-12-08 19:52:56.678	INFO	database/initialize.go:55	* connect success !
+server/server.go:98-12-08 19:52:56.678	INFO	server/server.go:97	Server dev run success
+[lodge-server] 2024-12-08 19:52:56.678	INFO	server/server.go:98	Local:   http://localhost:8081 
+[lodge-server] 2024-12-08 19:52:56.678	INFO	server/server.go:99	Network: http://192.168.0.103:8081 
+[lodge-server] 2024-12-08 19:58:31.707	INFO	database/initialize.go:60	* => xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-12-08 19:58:31.828	INFO	database/initialize.go:55	* connect success !
+server/server.go:98-12-08 19:58:31.829	INFO	server/server.go:97	Server dev run success
+[lodge-server] 2024-12-08 19:58:31.829	INFO	server/server.go:98	Local:   http://localhost:8081 
+[lodge-server] 2024-12-08 19:58:31.829	INFO	server/server.go:99	Network: http://192.168.0.103:8081 

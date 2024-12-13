@@ -1,0 +1,235 @@
+[lodge-server] 2024-11-13 11:27:28.552	INFO	server/server.go:54	lodge-server start success
+[lodge-server] 2024-11-13 15:35:19.772	INFO	database/initialize.go:57	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:35:19.774	INFO	database/initialize.go:52	* connect success !
+server/server.go:89-11-13 15:35:19.775	INFO	server/server.go:88	Server run at:
+[lodge-server] 2024-11-13 15:35:19.775	INFO	server/server.go:89	Local:   http://localhost:0/ 
+[lodge-server] 2024-11-13 15:35:19.775	INFO	server/server.go:90	Network: http://172.18.104.124:0/ 
+[lodge-server] 2024-11-13 15:37:23.422	INFO	database/initialize.go:57	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:37:23.424	INFO	database/initialize.go:52	* connect success !
+server/server.go:89-11-13 15:37:23.424	INFO	server/server.go:88	Server run at:
+[lodge-server] 2024-11-13 15:37:23.424	INFO	server/server.go:89	Local:   http://localhost:0/ 
+[lodge-server] 2024-11-13 15:37:23.424	INFO	server/server.go:90	Network: http://172.18.104.124:0/ 
+[lodge-server] 2024-11-13 15:39:02.939	INFO	database/initialize.go:57	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:39:02.941	INFO	database/initialize.go:52	* connect success !
+server/server.go:89-11-13 15:39:02.941	INFO	server/server.go:88	Server run at:
+[lodge-server] 2024-11-13 15:39:02.941	INFO	server/server.go:89	Local:   http://localhost:8080/ 
+[lodge-server] 2024-11-13 15:39:02.941	INFO	server/server.go:90	Network: http://172.18.104.124:8080/ 
+[lodge-server] 2024-11-13 15:40:40.890	INFO	database/initialize.go:57	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:40:40.891	INFO	database/initialize.go:52	* connect success !
+[lodge-server] 2024-11-13 15:40:40.891	INFO	server/server.go:89	Local:   http://localhost:8080/ 
+[lodge-server] 2024-11-13 15:40:40.891	INFO	server/server.go:90	Network: http://172.18.104.124:8080/ 
+[lodge-server] 2024-11-13 15:41:29.127	INFO	database/initialize.go:57	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:41:29.128	INFO	database/initialize.go:52	* connect success !
+server/server.go:89-11-13 15:41:29.129	INFO	server/server.go:88	Server run...
+[lodge-server] 2024-11-13 15:41:29.129	INFO	server/server.go:89	Local:   http://localhost:8080/ 
+[lodge-server] 2024-11-13 15:41:29.129	INFO	server/server.go:90	Network: http://172.18.104.124:8080/ 
+[lodge-server] 2024-11-13 15:43:30.523	INFO	database/initialize.go:57	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:43:30.525	INFO	database/initialize.go:52	* connect success !
+[lodge-server] 2024-11-13 15:43:30.525	INFO	server/server.go:89	Local:   http://localhost:8080 
+server/server.go:89-11-13 15:43:30.525	INFO	server/server.go:88	Server dev run success
+[lodge-server] 2024-11-13 15:43:30.525	INFO	server/server.go:90	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 15:44:22.438	INFO	database/initialize.go:57	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:44:22.440	INFO	database/initialize.go:52	* connect success !
+server/server.go:89-11-13 15:44:22.440	INFO	server/server.go:88	Server dev run success
+server/server.go:90-11-13 15:44:22.440	INFO	server/server.go:89	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 15:44:22.440	INFO	server/server.go:90	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 15:47:43.479	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:48:31.500	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:48:31.501	INFO	database/initialize.go:55	* connect success !
+server/server.go:89-11-13 15:48:31.501	INFO	server/server.go:88	Server dev run success
+[lodge-server] 2024-11-13 15:48:31.501	INFO	server/server.go:89	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 15:48:31.502	INFO	server/server.go:90	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 15:52:59.927	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:52:59.928	INFO	database/initialize.go:55	* connect success !
+[lodge-server] 2024-11-13 15:52:59.928	INFO	server/server.go:90	Network: http://172.18.server/server.go:90-11-13 15:52:59.928	INFO	server/server.go:89	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 15:52:59.928	INFO	server/server.go:90	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 15:53:01.771	INFO	middleware/logger.go:89		{"latencyTime": "0.001ms", "clientIP": "::1", "method": "GET", "x-request-id": "74bf5e0b-951b-4d50-ac39-1598d34a57c1", "uri": "/", "statusCode": 404}
+[lodge-server] 2024-11-13 15:53:01.791	INFO	middleware/logger.go:89		{"latencyTime": "0ms", "clientIP": "::1", "method": "GET", "uri": "/favicon.ico", "statusCode": 404, "x-request-id": "89aad88b-5589-48a9-9176-62694fc9f069"}
+[lodge-server] 2024-11-13 15:54:34.936	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 15:54:34.937	INFO	database/initialize.go:55	* connect success !
+server/server.go:89-11-13 15:54:34.937	INFO	server/server.go:88	Server dev run success
+[lodge-server] 2024-11-13 15:54:34.937	INFO	server/server.go:89	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 15:54:34.937	INFO	server/server.go:90	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 16:27:42.727	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 16:27:42.728	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 16:27:42.729	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 16:27:42.729	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 16:27:42.729	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 16:28:55.197	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 16:28:55.199	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 16:28:55.199	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 16:28:55.199	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 16:28:55.199	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 16:29:10.649	INFO	middleware/logger.go:60		{"latencyTime": "0ms", "clientIP": "127.0.0.1", "method": "GET", "x-request-id": "c0d612c8-7eff-4083-b901-e58fa0394d08", "uri": "/api/customer/1", "statusCode": 404}
+[lodge-server] 2024-11-13 16:29:39.675	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 16:29:39.677	INFO	database/initialize.go:55	* connect success !
+[lodge-server] 2024-11-13 16:29:39.677	INFO	server/server.go:93	Network: http://172.18.[lodge-server] 2024-11-13 16:29:39.677	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+server/server.go:93-11-13 16:29:39.677	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 16:29:50.622	INFO	middleware/logger.go:60		{"method": "GET", "uri": "/api/customers/1", "statusCode": 404, "x-request-id": "59985601-1f0c-4a89-8e65-5e0bfb670daa", "latencyTime": "0.001ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-13 16:30:10.818	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 16:30:10.820	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 16:30:10.820	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 16:30:10.820	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+server/server.go:93-11-13 16:30:10.820	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 16:30:14.754	ERROR	controller/customer.go:24	UserApi.Add failed, with error is Key: 'AddCustomer.Name' Error:Field validation for 'Name' failed on the 'required' tag	{"x-request-id": "d8e3b423-6c50-43ba-9c46-cef98107f94c"}
+[lodge-server] 2024-11-13 16:30:14.755	INFO	middleware/logger.go:60		{"clientIP": "127.0.0.1", "method": "GET", "uri": "/api/customers/1", "x-request-id": "d8e3b423-6c50-43ba-9c46-cef98107f94c", "statusCode": 200, "latencyTime": "0.309ms"}
+[lodge-server] 2024-11-13 16:30:39.769	INFO	middleware/logger.go:60		{"method": "GET", "uri": "/api/customers/1", "x-request-id": "064c0ba4-7227-4c78-a00e-95234f263d79", "statusCode": 200, "latencyTime": "0.131ms", "c"method": "GET", "uri": "/api/customers/1", "x-request-id": "064c0ba4-7227-4c78-a00e-95234f263d79", "statusCode": 200, "latencyTime": "0.131ms", "clientIP": "127.0.0.1"d on the 'required' tag; Key: 'AddCustomer.Name' Error:Field validation for 'Name' failed on the 'required' tag	{"x-request-id": "064c0ba4-7227-4c78-a00e-95234f263d79"}
+[lodge-server] 2024-11-13 16:30:39.769	INFO	middleware/logger.go:60		{"method": "GET", "uri": "/api/customers/1", "x-request-id": "064c0ba4-7227-4c78-a00e-95234f263d79", "statusCode": 200, "latencyTime": "0.131ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-13 16:31:02.221	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 16:31:02.223	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 16:31:02.223	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 16:31:02.223	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 16:31:02.223	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 16:31:05.703	ERROR	controller/customer.go:24	UserApi.Add failed, with error is Key: 'AddCustomer.Name' Error:Field validation for 'Name' failed on the 'required' tag	{"x-request-id": "5c6216c1-c22e-48f2-8d52-38d1c032418e"}
+[lodge-server] 2024-11-13 16:31:05.703	INFO	middleware/logger.go:60		{"method": "POST", "uri": "/api/customers/1", "x-request-id": "5c6216c1-c22e-48f2-8d52-38d1c032418e", "statusCode": 200, "latencyTime": "0.893ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-13 16:32:48.768	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 16:32:48.769	INFO	database/initialize.go:55	* connect success !
+[lodge-server] 2024-11-13 16:32:48.770	INFO	server/server.go:93	Network: http://172.18.[lodge-server] 2024-11-13 16:32:48.770	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+server/server.go:93-11-13 16:32:48.769	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 16:32:50.813	INFO	middleware/logger.go:60		{"clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1", "x-request-id": "2e5f5bf2-7d7e-4798-a02a-4edfd8da4219", "statusCode": 200, "latencyTime": "0.702ms"}
+[lodge-server] 2024-11-13 16:50:04.951	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 16:50:04.954	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 16:50:04.954	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 16:50:04.954	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 16:50:04.954	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 16:50:11.822	INFO	middleware/logger.go:60		{"x-request-id": "8baa5442-f27c-4fc4-b501-d9cc50e151f4", "statusCode": 200, "latencyTime": "0.625ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1"}
+[lodge-server] 2024-11-13 16:50:32.220	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 16:50:32.222	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 16:50:32.222	INFO	server/server.go:91	Server dev run success
+server/server.go:93-11-13 16:50:32.223	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 16:50:32.223	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 16:50:39.270	INFO	middleware/logger.go:60		{"x-request-id": "ecd13a6a-9a4b-49b8-92f0-36a724020bdb", "method": "POST", "uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.408ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-13 16:52:48.301	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 16:52:48.303	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 16:52:48.303	INFO	server/server.go:91	Server dev run success
+server/server.go:93-11-13 16:52:48.303	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 16:52:48.303	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 16:52:53.779	INFO	middleware/logger.go:60		{"x-request-id": "2ad2bd28-ebe6-41fb-a1d6-ed999b55085a", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.982ms"}
+[lodge-server] 2024-11-13 16:55:59.782	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 16:55:59.783	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 16:55:59.784	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 16:55:59.784	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+server/server.go:93-11-13 16:55:59.784	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 16:56:03.738	INFO	middleware/logger.go:60		{"method": "POST", "x-request-id": "311c3835-1efe-4e6d-9d4b-7af2aed0ad63", "uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.706ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-13 16:56:05.965	INFO	middleware/logger.go:60		{"method": "POST", "uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.172ms", "x-request-id": "b0005d4a-7284-423b-b9f8-912c44bfa30a", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-13 16:56:06.723	INFO	middleware/logger.go:60		{"method": "POST", "uri": "/api/customers/1", "x-request-id": "59e5fe56-b87f-44ab-b9dc-bb5a3628b75d", "statusCode": 200, "latencyTime": "0.134ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-13 16:56:07.046	INFO	middleware/logger.go:60		{"uri": "/api/customers/1", "x-request-id": "c693cc87-1db8-4d5b-b63f-d2e23761e1d2", "statusCode": 200, "latencyTime": "0.17ms", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-13 16:56:08.045	INFO	middleware/logger.go:60		{"clientIP": "127.0.0.1", "x-request-id": "9924248f-82cc-46b8-880f-227b2f026a2d", "method": "POST", "uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.04ms"}
+[lodge-server] 2024-11-13 17:01:56.484	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 17:01:56.486	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 17:01:56.486	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 17:01:56.486	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 17:01:56.486	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 17:02:03.277	INFO	middleware/logger.go:60		{"method": "POST", "uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.21ms", "x-request-id": "d92f2924-c680-4132-afa1-76bc894b4f60", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-13 17:02:04.189	INFO	middleware/logger.go:60		{"latencyTime": "0.17ms", "x-request-id": "51382774-f5f5-4ea3-a2d6-198fc8d37707", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1", "statusCode": 200}
+[lodge-server] 2024-11-13 17:02:05.048	INFO	middleware/logger.go:60		{"uri": "/api/customers/1", "x-request-id": "9dc4d5e3-8c76-4402-b36c-ddd49a83135e", "statusCode": 200, "latencyTime": "0.206ms", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-13 17:02:13.148	INFO	middleware/logger.go:60		{"clientIP": "127.0.0.1", "method": "POST", "x-request-id": "851fe9bc-489d-41ec-bf5e-a9cc88d6f3e1", "uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.051ms"}
+[lodge-server] 2024-11-13 17:02:14.017	INFO	middleware/logger.go:60		{"method": "POST", "uri": "/api/customers/1", "x-request-id": "416a2b7a-1e2d-4342-ae70-9b9ff1042614", "statusCode": 200, "latencyTime": "0.124ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-13 17:02:14.888	INFO	middleware/logger.go:60		{"latencyTime": "0.072ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1", "x-request-id": "874dca6a-e8b7-4146-81cb-083a1a34b8f8", "statusCode": 200}
+[lodge-server] 2024-11-13 17:02:15.685	INFO	middleware/logger.go:60		{"statusCode": 200, "latencyTime": "0.122ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1", "x-request-id": "efc4c78e-8095-4233-816c-038e8b55f490"}
+[lodge-server] 2024-11-13 17:02:36.367	INFO	middleware/logger.go:60		{"uri": "/api/customers/1", "x-request-id": "ec04c2dd-f6da-4c72-b81e-d8326fcabf49", "statusCode": 200, "latencyTime": "0.457ms", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-13 17:02:40.113	INFO	middleware/logger.go:60		{"method": "POST", "uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.173ms", "clientIP": "127.0.0.1", "x-request-id": "2a06c7ef-9efe-41c0-af77-5ceac3dfcc42"}
+[lodge-server] 2024-11-13 17:02:44.962	INFO	middleware/logger.go:60		{"uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.381ms", "clientIP": "127.0.0.1", "method": "POST", "x-request-id": "b6363ce3-3a02-457a-9621-c6a0dcd30ab3"}
+[lodge-server] 2024-11-13 17:02:54.798	INFO	middleware/logger.go:60		{"statusCode": 200, "x-request-id": "ac0d9d59-3788-4dd2-a849-1e7cc60958cd", "latencyTime": "0.075ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1"}
+[lodge-server] 2024-11-13 17:05:24.379	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 17:05:24.381	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 17:05:24.381	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 17:05:24.381	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+server/server.go:93-11-13 17:05:24.381	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 17:05:26.163	INFO	controller/customer.go:37	goroutineID: 41	{"x-request-id": "3f501bf1-e7ed-4e22-96fe-c47bf10a5390"}
+[lodge-server] 2024-11-13 17:05:26.163	INFO	middleware/logger.go:60		{"method": "POST", "uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.38ms", "clientIP": "127.0.0.1", "x-request-id": "3f501bf1-e7ed-4e22-96fe-c47bf10a5390"}
+[lodge-server] 2024-11-13 17:12:11.131	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 17:12:11.132	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 17:12:11.132	INFO	server/server.go:91	Server dev run success
+server/server.go:93-11-13 17:12:11.133	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 17:12:11.133	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 17:12:14.454	INFO	controller/customer.go:37	goroutineID: 42	{"x-request-id": "d75b9320-6dce-46a2-a8f4-c2dc753fee21"}
+[lodge-server] 2024-11-13 17:12:14.454	INFO	middleware/logger.go:60		{"uri": "/api/customers/1", "statusCode": 200, "x-request-id": "d75b9320-6dce-46a2-a8f4-c2dc753fee21", "latencyTime": "0.553ms", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-13 17:39:22.655	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 17:39:22.657	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 17:39:22.657	INFO	server/server.go:91	Server dev run success
+server/server.go:93-11-13 17:39:22.657	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 17:39:22.657	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+"latencyTime": "0.95ms", "clientIP": "127.0.0.1", "method": "POST", "x-request-id": "8e740835-8f26-4761-a038-5ba342266c33", "uri": "/api/custom[lodge-server] 2024-11-13 17:39:34.692	INFO	middleware/logger.go:59		{"latencyTime": "0.95ms", "clientIP": "127.0.0.1", "method": "POST", "x-request-id": "8e740835-8f26-4761-a038-5ba342266c33", "uri": "/api/customers/1", "statusCode": 200}
+"uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.1ms", "clientIP": "127.0.0.1", "method": "POST", "x-request-id": "fa46a659-d5a0-4f05-9440-aaaf6a978b33"aaaf6a978b33"}
+[lodge-server] 2024-11-13 17:39:42.940	INFO	middleware/logger.go:59		{"uri": "/api/customers/1", "statusCode": 200, "latencyTime": "0.1ms", "clientIP": "127.0.0.1", "method": "POST", "x-request-id": "fa46a659-d5a0-4f05-9440-aaaf6a978b33"}
+[lodge-server] 2024-11-13 17:40:22.107	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 17:40:22.109	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 17:40:22.109	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 17:40:22.109	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 17:40:22.109	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+"clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1", "statusCode": 200, "x-request-id": "b90b4d77-9423-4e04-81ec-417f52123e33", "latencyTime": "1.808ms"7f52123e33"}
+[lodge-server] 2024-11-13 17:40:31.574	INFO	middleware/logger.go:59		{"clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1", "statusCode": 200, "x-request-id": "b90b4d77-9423-4e04-81ec-417f52123e33", "latencyTime": "1.808ms"}
+[lodge-server] 2024-11-13 17:40:36.698	ERROR	controller/customer.go:30	UserApi.Add failed, with error is [Name] 不能为空	{"x-request-id": "ee56dca2-b353-4ca7-a52c-b8dbcfa223b4"}
+[lodge-server] 2024-11-13 17:40:36.698	INFO	middleware/logger.go:59		{"clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1", "statusCode": 200, "x-request-id": "ee56dca2-b353-4ca7-a52c-b8dbcfa223b4", "latencyTime": "0.185ms"}
+[lodge-server] 2024-11-13 17:40:41.645	ERROR	controller/customer.go:30	UserApi.Add failed, with error is [Name] 不能为空	{"x-request-id": "57bceb30-ac3f-4317-b73c-74dfa064e487"}
+[lodge-server] 2024-11-13 17:40:41.645	INFO	middleware/logger.go:59		{"latencyTime": "0.183ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1", "x-request-id": "57bceb30-ac3f-4317-b73c-74dfa064e487", "statusCode": 200}
+"uri": "/api/customers/1", "x-request-id": "025ddd1c-c1ea-407d-b526-eb3364f80e6e", "statusCode": 200, "latencyTime": "0.255ms", "clientIP": "127.0.0.1", "method": "POST"3364f80e6e"}
+[lodge-server] 2024-11-13 17:41:01.150	INFO	middleware/logger.go:59		{"uri": "/api/customers/1", "x-request-id": "025ddd1c-c1ea-407d-b526-eb3364f80e6e", "statusCode": 200, "latencyTime": "0.255ms", "clientIP": "127.0.0.1", "method": "POST"}
+[lodge-server] 2024-11-13 17:41:13.524	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 17:41:13.525	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 17:41:13.525	INFO	server/server.go:91	Server dev run success
+server/server.go:93-11-13 17:41:13.525	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 17:41:13.526	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 17:41:17.549	INFO	controller/customer.go:37	goroutineID: 50	{"x-request-id": "faa6f8f0-d202-4de5-b03a-ddf03d957c17"}
+[lodge-server] 2024-11-13 17:41:17.549	INFO	middleware/logger.go:59		{"uri": "/api/customers/1", "statusCode": 200, "latencyTime": "1.211ms", "clientIP": "127.0.0.1", "x-request-id": "faa6f8f0-d202-4de5-b03a-ddf03d957c17", "method": "POST"}
+[lodge-server] 2024-11-13 17:41:34.448	INFO	controller/customer.go:37	goroutineID: 50	{"x-request-id": "4eb61d77-1a88-460c-a6cc-abd0daa33048"}
+[lodge-server] 2024-11-13 17:41:37.712	INFO	middleware/logger.go:59		{"latencyTime": "3264.035ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/1", "x-request-id": "4eb61d77-1a88-460c-a6cc-abd0daa33048", "statusCode": 200}
+[lodge-server] 2024-11-13 17:59:07.631	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 17:59:07.633	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 17:59:07.633	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 17:59:07.633	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 17:59:07.634	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 17:59:23.792	INFO	middleware/logger.go:59		{"x-request-id": "a4600164-321f-473b-9c91-de5f065105c4", "statusCode": 404, "latencyTime": "0.008ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/two/1"}
+[lodge-server] 2024-11-13 17:59:33.330	INFO	middleware/logger.go:59		{"clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/v2/1", "x-request-id": "8ea38181-436b-46f0-92d8-d5f2b4bc0b8e", "statusCode": 200, "latencyTime": "0.18ms"}
+[lodge-server] 2024-11-13 17:59:56.903	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 17:59:56.904	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 17:59:56.904	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 17:59:56.904	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 17:59:56.905	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+[lodge-server] 2024-11-13 17:59:58.242	INFO	middleware/logger.go:59		{"latencyTime": "0.706ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/v2/1", "x-request-id": "59007e7a-781c-4547-85ed-e4c72c2e65f5", "statusCode": 200}
+[lodge-server] 2024-11-13 18:00:00.714	INFO	middleware/logger.go:59		{"latencyTime": "0.068ms", "clientIP": "127.0.0.1", "x-request-id": "b8078f6c-9c45-4a7b-8080-077743421586", "method": "POST", "uri": "/api/customers/v2/1", "statusCode": 200}
+[lodge-server] 2024-11-13 18:09:16.505	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+server/server.go:91-11-13 18:09:16.507	INFO	database/initialize.go:55	* connect success !
+[lodge-server] 2024-11-13 18:09:16.507	INFO	server/server.go:92	Local:   http://localhost:8080 
+server/server.go:92-11-13 18:09:16.507	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 18:09:16.507	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+controller/customer.go:17 18:09:25.321	INFO	middleware/context.go:17	goroutine context0x1400040c0c0
+[lodge-server] 2024-11-13 18:09:25.322	INFO	controller/customer.go:17	goroutine context0x1400040c140
+[lodge-server] 2024-11-13 18:09:25.323	INFO	middleware/logger.go:59		{"statusCode": 200, "latencyTime": "0.746ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/v2/1", "x-request-id": "b9f54a96-009d-4f0c-81b0-941ffb529352"}
+[lodge-server] 2024-11-13 18:10:13.155	INFO	middleware/context.go:17	goroutine context0x1400038e0a0
+[lodge-server] 2024-11-13 18:10:25.474	INFO	controller/customer.go:17	goroutine context0x1400038e120
+[lodge-server] 2024-11-13 18:10:25.475	INFO	middleware/logger.go:59		{"statusCode": 200, "latencyTime": "12319.261ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/v2/1", "x-request-id": "f61aa77a-3e6d-4dbd-8089-c8600975c592"}
+[lodge-server] 2024-11-13 18:11:55.665	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 18:11:55.667	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 18:11:55.668	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 18:11:55.668	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 18:11:55.668	INFO	server/server.go:93	Network: http://172.18.104.124:8080 
+middleware/context.go:203 18:12:03.064	INFO	middleware/context.go:16	goroutine context0x140003360b0
+[lodge-server] 2024-11-13 18:12:03.065	INFO	middleware/context.go:20	goroutine context0x140003360b0
+[lodge-server] 2024-11-13 18:12:43.943	INFO	controller/customer.go:17	goroutine context0x14000336160
+[lodge-server] 2024-11-13 18:12:43.944	INFO	middleware/logger.go:59		{"method": "POST", "uri": "/api/customers/v2/1", "x-request-id": "c723aab9-47e9-43d3-b943-51c38ea15a3b", "statusCode": 200, "latencyTime": "40878.12ms", "clientIP": "127.0.0.1"}
+[lodge-server] 2024-11-13 21:01:37.073	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 21:01:37.076	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 21:01:37.076	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 21:01:37.076	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 21:01:37.076	INFO	server/server.go:93	Network: http://192.168.0.104:8080 
+[lodge-server] 2024-11-13 21:01:40.419	INFO	middleware/context.go:24	goroutine valuetome
+40000b00d0
+[lodge-server] 2024-11-13 21:01:40.419	INFO	controller/customer.go:17	goroutine context0x140000b01b0controller/customer.go:17 21:01:40.419	INFO	middleware/context.go:24	goroutine valuetome
+[lodge-server] 2024-11-13 21:01:40.419	INFO	controller/customer.go:17	goroutine context0x140000b01b0
+[lodge-server] 2024-11-13 21:01:40.420	INFO	middleware/logger.go:59		{"statusCode": 200, "latencyTime": "0.639ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/customers/v2/1", "x-request-id": "da23a2c9-06c3-4a04-a317-970f639993ae"}
+[lodge-server] 2024-11-13 21:04:01.328	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 21:04:01.330	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 21:04:01.330	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 21:04:01.330	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 21:04:01.330	INFO	server/server.go:93	Network: http://192.168.0.104:8080 
+[lodge-server] 2024-11-13 21:04:05.062	INFO	database/initialize.go:60	* => root:root@tcp(127.0.0.1:3306)/aris_test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[lodge-server] 2024-11-13 21:04:05.064	INFO	database/initialize.go:55	* connect success !
+server/server.go:92-11-13 21:04:05.064	INFO	server/server.go:91	Server dev run success
+[lodge-server] 2024-11-13 21:04:05.064	INFO	server/server.go:92	Local:   http://localhost:8080 
+[lodge-server] 2024-11-13 21:04:05.064	INFO	server/server.go:93	Network: http://192.168.0.104:8080 
+middleware/context.go:233 21:04:41.884	INFO	middleware/context.go:19	goroutine context0x14000308040
+[lodge-server] 2024-11-13 21:04:41.885	INFO	controller/customer.go:18	goroutine value tomcontroller/customer.go:18 21:04:41.885	INFO	controller/customer.go:17	goroutine context0x14000308120controller/customer.go:18 21:04:41.885	INFO	controller/customer.go:17	goroutine context0x14000308120
+[lodge-server] 2024-11-13 21:04:41.885	INFO	controller/customer.go:18	goroutine value tome
+[lodge-server] 2024-11-13 21:04:41.886	INFO	middleware/logger.go:59		{"uri": "/api/customers/v2/1", "x-request-id": "c78512a6-8e78-4731-9957-da2520365278", "statusCode": 200, "latencyTime": "0.753ms", "clientIP": "127.0.0.1", "method": "POST"}

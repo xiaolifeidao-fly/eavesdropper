@@ -36,5 +36,5 @@ func GetLoginUserID() uint64 {
 		return 0
 	}
 
-	return uint64(data.(float64))
+	return data.(uint64)
 }

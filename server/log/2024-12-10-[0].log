@@ -1,0 +1,50 @@
+[eavesdropper] 2024-12-10 22:37:07.447	INFO	database/initialize.go:60	* => xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[eavesdropper] 2024-12-10 22:37:07.573	INFO	database/initialize.go:55	* connect success !
+server/server.go:98-12-10 22:37:07.732	INFO	server/server.go:97	Server dev run success
+[eavesdropper] 2024-12-10 22:37:07.732	INFO	server/server.go:98	Local:   http://localhost:8080 
+[eavesdropper] 2024-12-10 22:37:07.733	INFO	server/server.go:99	Network: http://192.168.0.105:8080 
+[eavesdropper] 2024-12-10 22:42:04.512	INFO	database/initialize.go:60	* => xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[eavesdropper] 2024-12-10 22:42:04.625	INFO	database/initialize.go:55	* connect success !
+server/server.go:98-12-10 22:42:04.739	INFO	server/server.go:97	Server dev run success
+[eavesdropper] 2024-12-10 22:42:04.743	INFO	server/server.go:98	Local:   http://localhost:8080 
+[eavesdropper] 2024-12-10 22:42:04.748	INFO	server/server.go:99	Network: http://192.168.0.105:8080 
+[eavesdropper] 2024-12-10 22:42:10.240	INFO	database/initialize.go:60	* => xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[eavesdropper] 2024-12-10 22:42:10.312	INFO	database/initialize.go:55	* connect success !
+server/server.go:98-12-10 22:42:10.385	INFO	server/server.go:97	Server dev run success
+[eavesdropper] 2024-12-10 22:42:10.385	INFO	server/server.go:98	Local:   http://localhost:8080 
+[eavesdropper] 2024-12-10 22:42:10.385	INFO	server/server.go:99	Network: http://192.168.0.105:8080 
+[eavesdropper] 2024-12-10 22:42:38.997	INFO	database/initialize.go:60	* => xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[eavesdropper] 2024-12-10 22:42:39.059	INFO	database/initialize.go:55	* connect success !
+server/server.go:98-12-10 22:42:39.126	INFO	server/server.go:97	Server dev run success
+server/server.go:99-12-10 22:42:39.126	INFO	server/server.go:98	Local:   http://localhost:8080 
+[eavesdropper] 2024-12-10 22:42:39.126	INFO	server/server.go:99	Network: http://192.168.0.105:8080 
+[eavesdropper] 2024-12-10 22:42:54.393	INFO	middleware/logger.go:71		{"latencyTime": "8370.145ms", "clientIP": "127.0.0.1", "method": "GET", "uri": "/api/auth/login/captcha", "x-request-id": "6f1abe04-73d4-4146-bcb6-86735b552445", "statusCode": 200}
+[eavesdropper] 2024-12-10 22:43:18.048	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/taotao/eavesdropper/server/internal/auth/repositories/user.go:19 [0m[33m[23.039ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE username = 'katana' AND `auth_user`.`deleted_at` IS NULL
+[eavesdropper] 2024-12-10 22:43:18.089	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/taotao/eavesdropper/server/internal/auth/repositories/user_password.go:19 [0m[33m[25.820ms] [34;1m[rows:1][0m SELECT * FROM `auth_user_password` WHERE user_id = 1 AND `auth_user_password`.`deleted_at` IS NULL
+[eavesdropper] 2024-12-10 22:43:18.142	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/taotao/eavesdropper/server/common/base/repository.go:33 [0m[33m[39.539ms] [34;1m[rows:1][0m INSERT INTO `auth_user_login_record` (`created_by`,`updated_by`,`created_at`,`updated_at`,`deleted_at`,`user_id`,`login_time`,`login_ip`,`login_device_id`) VALUES (1,1,'2024-12-10 22:43:18.113','2024-12-10 22:43:18.113',NULL,1,'2024-12-10 22:43:18.102','127.0.0.1','deviceID')
+[eavesdropper] 2024-12-10 22:43:18.143	INFO	middleware/logger.go:71		{"x-request-id": "53d9a66d-639e-44b4-87f4-d16ce60eb366", "statusCode": 200, "latencyTime": "118.116ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login"}
+[eavesdropper] 2024-12-10 22:43:21.737	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/taotao/eavesdropper/server/internal/auth/repositories/user.go:19 [0m[33m[25.755ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE username = 'katana' AND `auth_user`.`deleted_at` IS NULL
+[eavesdropper] 2024-12-10 22:43:21.750	ERROR	controllers/auth.go:42	Login failed, with error is 验证码错误	{"x-request-id": "7a070d8a-6ccc-4b46-bdd0-e4239acc0014"}
+[eavesdropper] 2024-12-10 22:43:21.750	INFO	middleware/logger.go:71		{"clientIP": "127.0.0.1", "x-request-id": "7a070d8a-6ccc-4b46-bdd0-e4239acc0014", "method": "POST", "uri": "/api/auth/login", "statusCode": 200, "latencyTime": "39.276ms"}
+[eavesdropper] 2024-12-10 22:44:32.794	INFO	database/initialize.go:60	* => xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[eavesdropper] 2024-12-10 22:44:32.875	INFO	database/initialize.go:55	* connect success !
+server/server.go:98-12-10 22:44:32.980	INFO	server/server.go:97	Server dev run success
+server/server.go:99-12-10 22:44:32.980	INFO	server/server.go:98	Local:   http://localhost:8080 
+[eavesdropper] 2024-12-10 22:44:32.980	INFO	server/server.go:99	Network: http://192.168.0.105:8080 
+"latencyTime": "15.94ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login", "statusCode": 200, "x-request-id": "ac6188b2-ab41-4dc9-90d0-84cc0f6126d9"cc0f6126d9"}
+[eavesdropper] 2024-12-10 22:44:38.280	INFO	middleware/logger.go:71		{"latencyTime": "15.94ms", "clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login", "statusCode": 200, "x-request-id": "ac6188b2-ab41-4dc9-90d0-84cc0f6126d9"}
+[eavesdropper] 2024-12-10 22:44:43.956	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/taotao/eavesdropper/server/internal/auth/repositories/user.go:19 [0m[33m[26.428ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE username = 'katana' AND `auth_user`.`deleted_at` IS NULL
+[eavesdropper] 2024-12-10 22:44:43.975	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/taotao/eavesdropper/server/internal/auth/repositories/user_password.go:19 [0m[33m[19.238ms] [34;1m[rows:1][0m SELECT * FROM `auth_user_password` WHERE user_id = 1 AND `auth_user_password`.`deleted_at` IS NULL
+[eavesdropper] 2024-12-10 22:44:44.028	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/taotao/eavesdropper/server/common/base/repository.go:33 [0m[33m[36.500ms] [34;1m[rows:1][0m INSERT INTO `auth_user_login_record` (`created_by`,`updated_by`,`created_at`,`updated_at`,`deleted_at`,`user_id`,`login_time`,`login_ip`,`login_device_id`) VALUES (1,1,'2024-12-10 22:44:44.001','2024-12-10 22:44:44.001',NULL,1,'2024-12-10 22:44:43.991','127.0.0.1','deviceID')
+[eavesdropper] 2024-12-10 22:44:44.028	INFO	middleware/logger.go:71		{"uri": "/api/auth/login", "x-request-id": "45c9d8d4-a30c-4534-8bdd-b938a1c17d77", "statusCode": 200, "latencyTime": "113.073ms", "clientIP": "127.0.0.1", "method": "POST"}
+[eavesdropper] 2024-12-10 22:45:02.138	INFO	database/initialize.go:60	* => xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
+[eavesdropper] 2024-12-10 22:45:02.206	INFO	database/initialize.go:55	* connect success !
+server/server.go:98-12-10 22:45:02.287	INFO	server/server.go:97	Server dev run success
+server/server.go:99-12-10 22:45:02.287	INFO	server/server.go:98	Local:   http://localhost:8080 
+[eavesdropper] 2024-12-10 22:45:02.287	INFO	server/server.go:99	Network: http://192.168.0.105:8080 
+[eavesdropper] 2024-12-10 22:45:06.537	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/taotao/eavesdropper/server/internal/auth/repositories/user.go:19 [0m[33m[25.224ms] [34;1m[rows:1][0m SELECT * FROM `auth_user` WHERE username = 'katana' AND `auth_user`.`deleted_at` IS NULL
+[eavesdropper] 2024-12-10 22:45:06.562	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/taotao/eavesdropper/server/internal/auth/repositories/user_password.go:19 [0m[33m[24.392ms] [34;1m[rows:1][0m SELECT * FROM `auth_user_password` WHERE user_id = 1 AND `auth_user_password`.`deleted_at` IS NULL
+[eavesdropper] 2024-12-10 22:45:06.626	DEBUG	gorm@v1.25.12/callbacks.go:134	[32m/Users/dxt/Desktop/katana/project/taotao/eavesdropper/server/common/base/repository.go:33 [0m[33m[47.238ms] [34;1m[rows:1][0m INSERT INTO `auth_user_login_record` (`created_by`,`updated_by`,`created_at`,`updated_at`,`deleted_at`,`user_id`,`login_time`,`login_ip`,`login_device_id`) VALUES (1,1,'2024-12-10 22:45:06.591','2024-12-10 22:45:06.591',NULL,1,'2024-12-10 22:45:06.578','127.0.0.1','deviceID')
+[eavesdropper] 2024-12-10 22:45:06.626	INFO	middleware/logger.go:71		{"clientIP": "127.0.0.1", "method": "POST", "uri": "/api/auth/login", "x-request-id": "7fbd8ce6-35db-44e0-bef1-08c7dbea3fa5", "statusCode": 200, "latencyTime": "153.203ms"}
+[eavesdropper] 2024-12-10 22:45:07.643	ERROR	controllers/auth.go:38	CheckLoginCaptcha failed, with error is 验证码错误	{"x-request-id": "ddd72ec1-b6fa-4a54-9fe3-cac60ea9e176"}
+[eavesdropper] 2024-12-10 22:45:07.643	INFO	middleware/logger.go:71		{"uri": "/api/auth/login", "statusCode": 200, "x-request-id": "ddd72ec1-b6fa-4a54-9fe3-cac60ea9e176", "latencyTime": "15.233ms", "clientIP": "127.0.0.1", "method": "POST"}
