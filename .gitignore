@@ -22,7 +22,7 @@ __debug**
 **/node_modules
 webview/.next
 
-.DS_Store
+**/.DS_Store
 **/.idea
 
 **/config.yaml
