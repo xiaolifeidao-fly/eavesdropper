@@ -1,9 +1,9 @@
 // 用户分页请求
 export class UserPageReq {
   constructor(
-    public mobile: string,
     public current: number,
-    public pageSize: number
+    public pageSize: number,
+    public mobile?: string,
   ) {
     this.mobile = mobile
     this.current = current

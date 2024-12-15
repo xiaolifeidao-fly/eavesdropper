@@ -6,11 +6,14 @@ import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-comp
 import Layout from '@/components/Layout';
 import styles from './index.module.less';
 
+import { userPage as userPageApi } from '@api/auth/user.api';
+
 type DataType = {
   id: number;
   nickname: string;
   mobile: string;
-  lastLoginTime: string;
+  lastLoginAt: string;
+  updatedAt: string;
 }
 
 const columns: ProColumns<DataType>[] = [
@@ -19,6 +22,7 @@ const columns: ProColumns<DataType>[] = [
     dataIndex: 'nickname',
     search: false,
     align: 'center',
+    width: 150,
   },
   {
     title: '手机号',
@@ -27,16 +31,17 @@ const columns: ProColumns<DataType>[] = [
   },
   {
     title: '最后登录时间',
-    dataIndex: 'lastLoginTime',
+    dataIndex: 'lastLoginAt',
     search: false,
     align: 'center',
+    width: 200,
   },
   {
     title: '操作',
     key: 'option',
     valueType: 'option',
     align: 'center',
-    width: 100,
+    width: 150,
     render: (_, record) => [
       <Button key="edit" type="link" style={{ paddingRight: 0 }} disabled>编辑</Button>,
       <Button key="delete" type="link" style={{ paddingLeft: 0 }} disabled>删除</Button>,
@@ -65,19 +70,19 @@ export default function UserManage() {
               </Button>,
             ]}
             request={async (params) => {
-              console.log(params);
+              const { data, pageInfo } = await userPageApi({
+                ...params,
+                current: params.current ?? 1,
+                pageSize: params.pageSize ?? 10,
+              })
               return {
-                data: [{
-                  id: 1,
-                  nickname: '张三',
-                  mobile: '13800138000',
-                  lastLoginTime: '2024-01-01 10:00:00',
-                }],
+                data: data,
                 success: true,
+                total: pageInfo.total,
               };
             }}
             pagination={{
-              pageSize: 10,
+              pageSize: 2,
               onChange: (page) => console.log(page),
             }}
           />
