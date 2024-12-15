@@ -10,8 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
     <!-- 引入 Element Plus -->
     <script src="https://cdn.jsdelivr.net/npm/element-plus"></script>
-    <!-- 引入 Element Plus 图标 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@element-plus/icons-vue@2.0.10/dist/index.css" />
     <style>
         .user-container {
             padding: 20px;
@@ -36,163 +34,50 @@
         <div class="user-container">
             <div class="header">
                 <h2>用户管理</h2>
-                <el-input v-model="searchMobile" placeholder="搜索手机号" style="width: 200px; margin-right: 10px;"></el-input>
-                <el-button type="primary" @click="handleAdd">
-                    添加用户
+                <el-button type="primary" @click="exportData" disabled>
+                    导出数据
                 </el-button>
             </div>
 
             <div class="table-container">
-                <el-table :data="filteredUserList" border style="width: 100%">
-                    <el-table-column prop="username" label="用户名" width="200">
+                <el-table :data="userList" border style="width: 100%">
+                    <el-table-column prop="nickname" label="用户名" width="150" align="center">
                     </el-table-column>
-                    <el-table-column prop="mobile" label="手机号" width="200">
+                    <el-table-column prop="mobile" label="手机号" align="center">
                     </el-table-column>
-                    <el-table-column prop="lastLoginTime" label="最后登录时间" width="300">
+                    <el-table-column prop="lastLoginAt" label="最后登录时间" width="200" align="center">
                     </el-table-column>
-                    <el-table-column label="操作" width="200">
+                    <el-table-column label="操作" width="150" align="center">
                         <template #default="scope">
                             <div class="operation-column">
-                                <el-button 
-                                    type="primary" 
-                                    size="small" 
-                                    @click="handleEdit(scope.row)"
-                                >
-                                    编辑
-                                </el-button>
-                                <el-button 
-                                    type="danger" 
-                                    size="small" 
-                                    @click="handleDelete(scope.row)"
-                                >
-                                    删除
-                                </el-button>
+                                <el-button type="text" size="small" disabled>编辑</el-button>
+                                <el-button type="text" size="small" disabled>删除</el-button>
                             </div>
                         </template>
                     </el-table-column>
                 </el-table>
             </div>
-
-            <!-- 添加/编辑用户对话框 -->
-            <el-dialog
-                v-model="dialogVisible"
-                :title="dialogType === 'add' ? '添加用户' : '编辑用户'"
-                width="500px"
-            >
-                <el-form :model="userForm" label-width="120px">
-                    <el-form-item label="用户名">
-                        <el-input v-model="userForm.username" placeholder="请输入用户名"></el-input>
-                    </el-form-item>
-                    <el-form-item label="手机号">
-                        <el-input v-model="userForm.mobile" placeholder="请输入手机号"></el-input>
-                    </el-form-item>
-                    <el-form-item label="最后登录时间">
-                        <el-input v-model="userForm.lastLoginTime" placeholder="请输入最后登录时间"></el-input>
-                    </el-form-item>
-                </el-form>
-                <template #footer>
-                    <span class="dialog-footer">
-                        <el-button @click="dialogVisible = false">取消</el-button>
-                        <el-button type="primary" @click="handleSubmit">保存</el-button>
-                    </span>
-                </template>
-            </el-dialog>
         </div>
     </div>
 
     <script>
-        const { createApp, ref, reactive, computed } = Vue;
+        const { createApp, ref } = Vue;
 
         const app = createApp({
             setup() {
                 const userList = ref([
-                    { id: 1, username: '用户1', mobile: '12345678901', lastLoginTime: '2023-10-01 10:00:00' },
-                    { id: 2, username: '用户2', mobile: '09876543210', lastLoginTime: '2023-10-02 11:00:00' },
+                    { id: 1, nickname: '用户1', mobile: '12345678901', lastLoginAt: '2023-10-01 10:00:00' },
+                    { id: 2, nickname: '用户2', mobile: '09876543210', lastLoginAt: '2023-10-02 11:00:00' },
                 ]);
 
-                const searchMobile = ref('');
-                const dialogVisible = ref(false);
-                const dialogType = ref('add');
-                const userForm = reactive({
-                    username: '',
-                    mobile: '',
-                    lastLoginTime: '',
-                });
-
-                const filteredUserList = computed(() => {
-                    if (!searchMobile.value) {
-                        return userList.value;
-                    }
-                    return userList.value.filter(user => user.mobile.includes(searchMobile.value));
-                });
-
-                const handleAdd = () => {
-                    dialogType.value = 'add';
-                    userForm.username = '';
-                    userForm.mobile = '';
-                    userForm.lastLoginTime = '';
-                    dialogVisible.value = true;
+                const exportData = () => {
+                    // 导出数据逻辑
+                    console.log('导出数据');
                 };
 
-                const handleEdit = (row) => {
-                    dialogType.value = 'edit';
-                    userForm.username = row.username;
-                    userForm.mobile = row.mobile;
-                    userForm.lastLoginTime = row.lastLoginTime;
-                    dialogVisible.value = true;
-                };
-
-                const handleDelete = (row) => {
-                    ElementPlus.ElMessageBox.confirm(
-                        `确定要删除用户 ${row.username} 吗？`,
-                        '警告',
-                        {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'warning',
-                        }
-                    ).then(() => {
-                        userList.value = userList.value.filter(item => item.id !== row.id);
-                        ElementPlus.ElMessage.success('删除成功');
-                    }).catch(() => {});
-                };
-
-                const handleSubmit = () => {
-                    if (!userForm.username || !userForm.mobile || !userForm.lastLoginTime) {
-                        ElementPlus.ElMessage.warning('请填写完整信息');
-                        return;
-                    }
-
-                    if (dialogType.value === 'add') {
-                        const newUser = {
-                            id: Date.now(),
-                            username: userForm.username,
-                            mobile: userForm.mobile,
-                            lastLoginTime: userForm.lastLoginTime,
-                        };
-                        userList.value.push(newUser);
-                    } else {
-                        const index = userList.value.findIndex(user => user.username === userForm.username);
-                        if (index !== -1) {
-                            userList.value[index] = { ...userList.value[index], ...userForm };
-                        }
-                    }
-
-                    dialogVisible.value = false;
-                    ElementPlus.ElMessage.success(dialogType.value === 'add' ? '添加成功' : '编辑成功');
-                };
-                
                 return {
                     userList,
-                    searchMobile,
-                    filteredUserList,
-                    dialogVisible,
-                    dialogType,
-                    userForm,
-                    handleAdd,
-                    handleEdit,
-                    handleDelete,
-                    handleSubmit,
+                    exportData,
                 };
             },
         });
