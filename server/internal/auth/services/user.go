@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"server/common/base/page"
 	"server/common/converter"
 	"server/common/logger"
 	"server/common/middleware/database"
@@ -10,6 +11,7 @@ import (
 	"server/internal/auth/services/dto"
 )
 
+// GetUserInfo 获取用户信息
 func GetUserInfo(userID uint64) (*dto.UserInfoDTO, error) {
 	userDTO, err := GetUserByID(userID)
 	if err != nil {
@@ -20,6 +22,39 @@ func GetUserInfo(userID uint64) (*dto.UserInfoDTO, error) {
 	converter.Copy(&userInfoDTO, &userDTO)
 
 	return &userInfoDTO, nil
+}
+
+// PageUser 分页获取用户
+func PageUser(param *dto.UserPageParamDTO) (*page.Page, error) {
+	var err error
+	userRepository := repositories.UserRepository
+
+	var count = int64(0)
+	var pageData = make([]*dto.UserPageDTO, 0)
+	if err = userRepository.Page(&models.User{}, *param, param.Query, &pageData, &count); err != nil {
+		return nil, err
+	}
+
+	if count <= 0 {
+		return page.BuildEmptyPage(param.ToPageInfo(count)), nil
+	}
+
+	// 组装用户其他信息
+	for _, user := range pageData {
+		getUserOtherInfo(user)
+	}
+
+	pageDTO := page.BuildPage(param.ToPageInfo(count), pageData)
+
+	return pageDTO, nil
+}
+
+func getUserOtherInfo(user *dto.UserPageDTO) {
+	userLoginRecordDTO, err := GetLastUserLoginRecord(user.ID)
+	if err != nil {
+		return
+	}
+	user.LastLoginAt = userLoginRecordDTO.LoginTime
 }
 
 // CreateUser 创建用户

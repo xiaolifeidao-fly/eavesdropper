@@ -114,7 +114,7 @@ func (r *Repository[T]) Delete(id uint64) error {
 func (r *Repository[T]) Page(entity T, queryParam interface{}, query page.Query, list interface{}, count *int64) error {
 	var err error
 
-	db := r.Db.Model(entity).Debug()
+	db := r.Db.Model(entity).Debug().Unscoped()
 
 	if err = db.Scopes(r.buildCondition(queryParam, true)).Count(count).Error; err != nil {
 		return err
