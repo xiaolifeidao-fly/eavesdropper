@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { LoginUserResp, LoginReq, RegisterReq } from '@model/auth/auth';
-import { login as loginApi, register as registerApi, getLoginUserInfo as getLoginUserInfoApi } from '@api/auth/auth.api'
+import { login as loginApi, register as registerApi, getLoginUserInfo as getLoginUserInfoApi, logout as logoutApi } from '@api/auth/auth.api'
 import { encryptRSA } from '@utils/auth'
 import { instance } from '@utils/axios'
 
@@ -13,7 +13,7 @@ interface AuthContextType {
   user: LoginUserResp | null;
   login: (loginReq: LoginReq) => Promise<void>;
   register: (registerReq: RegisterReq) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const REQUEST_HEADER_TOKEN = 'Authorization'
@@ -79,10 +79,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   }
 
   // logout 退出登录逻辑
-  const logout = () => {
-    localStorage.removeItem(REQUEST_HEADER_TOKEN)
-    setLoginToken(null);
-    setUser(null);
+  const logout = async () => {
+    const resp = await logoutApi();
+    if (resp) {
+      localStorage.removeItem(REQUEST_HEADER_TOKEN)
+      setLoginToken(null);
+      setUser(null);
+    }
   }
 
   return <AuthContext.Provider value={{ loginToken, user, login, register, logout }}>

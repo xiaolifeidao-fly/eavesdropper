@@ -82,8 +82,7 @@ export default function UserManage() {
               };
             }}
             pagination={{
-              pageSize: 2,
-              onChange: (page) => console.log(page),
+              pageSize: 10,
             }}
           />
         </div>
