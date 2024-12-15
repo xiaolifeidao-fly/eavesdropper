@@ -1,13 +1,12 @@
 'use client'
 import { Button, Form, Input, Segmented, type FormProps, message } from 'antd';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-import { login, register } from '@api/auth/auth.api'
-import { encryptRSA } from '@utils/auth'
 import styles from './index.module.less';
 import CaptchaInput from './CaptchaInput';
+import { useAuth } from '@/context/AuthContext';
 
 type FieldType = {
   nickname?: string;
@@ -20,35 +19,36 @@ const mode = ['登录', '注册'];
 
 export default function Home() {
   const [curMode, setCurMode] = useState(mode[0]);
+  const { login, register, loginToken } = useAuth();
+  const hasCheckedAuth = useRef(false);
+
   const [form] = Form.useForm();
   const router = useRouter();
 
-  const onFinish: FormProps<FieldType>["onFinish"] = (values: any) => {
-    console.log('onFinish', values);
+  useEffect(() => {
+    if (hasCheckedAuth.current) return;
+    hasCheckedAuth.current = true;
+    if (loginToken) {
+      router.push("/dashboard");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
+  const onFinish: FormProps<FieldType>["onFinish"] = async (values: any) => {
     // 登录
     if (curMode === mode[0]) {
       const { mobile, password } = values;
 
-      // 加密密码
-      const encodedPassword = encryptRSA(password);
-
-      login({
-        mobile,
-        password: encodedPassword,
+      const loginReq = {
+        mobile: mobile,
+        password: password,
         captcha: values.captcha.captchaValue,
         captchaId: values.captcha.captchaId
-      }).then(res => {
-        message.success('登录成功');
-        
-        // 存储登录信息
-        const accessToken = res.accessToken;
-        // localStorage.setItem('accessToken', accessToken);
+      }
+      await login(loginReq)
 
-        // router.push('/shop');
-        router.push('/dashboard');
-      })
-
+      message.success("登录成功");
+      router.push("/dashboard");
       return
     }
 
@@ -57,26 +57,17 @@ export default function Home() {
 
       const { nickname, mobile, password } = values;
 
-      // 加密密码
-      const encodedPassword = encryptRSA(password);
-
-      register({
+      const registerReq = {
         nickname,
         mobile,
-        password: encodedPassword,
+        password: password,
         captcha: values.captcha.captchaValue,
         captchaId: values.captcha.captchaId
-      }).then(res => {
-        // 填充登录表单
-        form.setFieldsValue({
-          mobile: mobile,
-          password: password,
-        })
+      }
 
-        setCurMode(mode[0]);
-
-        message.success(res);
-      })
+      await register(registerReq);
+      setCurMode(mode[0]);
+      message.success("注册成功");
     }
   };
 

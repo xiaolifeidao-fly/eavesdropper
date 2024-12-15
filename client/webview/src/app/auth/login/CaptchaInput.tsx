@@ -4,6 +4,7 @@ import { Input, Button, message } from 'antd';
 import Image from 'next/image';
 
 import { getLoginCaptcha } from '@api/auth/auth.api';
+import { CaptchaResp } from '@model/auth/auth'
 
 interface CaptchaInputValue {
   captchaId?: string; // 唯一标识
@@ -65,7 +66,7 @@ export default function CaptchaInput({ value = {}, onChange }: CaptchaInputProps
   }
 
   // 刷新验证码
-  const onClickImage = () => {
+  const onClickImage = async () => {
     const now = Date.now();
     if (now - lastClickTime < 5 * 1000) { // 设置5秒间隔
       message.warning('操作过于频繁，请稍后重试。');
@@ -73,9 +74,8 @@ export default function CaptchaInput({ value = {}, onChange }: CaptchaInputProps
     }
     setLastClickTime(now);
 
-    getCaptcha().then((data: any) => {
-      setCaptchaInfo(data);
-    })
+    const data = await getCaptcha();
+    setCaptchaInfo(data);
   };
 
   return (

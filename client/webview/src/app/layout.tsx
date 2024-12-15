@@ -1,17 +1,18 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 type Props = {
   children: React.ReactNode;
-  params: {locale: string};
+  params: { locale: string };
 };
 
 export async function generateMetadata({
-  params: {locale}
+  params: { locale }
 }: Omit<Props, 'children'>): Promise<Metadata> {
 
   return {
@@ -21,13 +22,17 @@ export async function generateMetadata({
   };
 }
 
-export default function BasicLayout({children, params: {locale}}: Readonly<Props>) {
+export default function BasicLayout({ children, params: { locale } }: Readonly<Props>) {
   return (
     <html lang={locale}>
       <head>
       </head>
       <body className={inter.className}>
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

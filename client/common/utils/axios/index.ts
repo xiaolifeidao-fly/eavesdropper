@@ -1,5 +1,7 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { plainToClass,plainToInstance } from 'class-transformer';
+
+const REQUEST_HEADER_TOKEN = 'Authorization'
 
 // 定义一个 HttpError 类，扩展自 Error
 class HttpError extends Error {
@@ -25,20 +27,36 @@ const instance: AxiosInstance = axios.create({
   baseURL: '',
   // baseURL: `/${process.env.API_PREFIX}${process.env.NEXT_PUBLIC_BASE_URL}`,
   withCredentials: true,
-  headers: {
-    // todo: 全局存储loginUser
-    Authorization: ""
-  }
+  // 登录成功后，设置请求头 Authorization
+  // headers: {
+  //   Authorization: ""
+  // },
 });
 
+// 前端请求拦截器
+instance.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+
+    // 添加请求头 Authorization
+    const token = localStorage.getItem(REQUEST_HEADER_TOKEN);
+    if (token) {
+      config.headers[REQUEST_HEADER_TOKEN] = token;
+    }
+    return config;
+  },
+);
+
+// 后端响应拦截器
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     let result = response.data;
 
     if (!result.success) {
+      console.log(result);
+
       return rejectHttpError(
         result.error || result.message || result.errorMessage || '请求异常！',
-        result.code,
+        500
       );
     }
     return result.data;

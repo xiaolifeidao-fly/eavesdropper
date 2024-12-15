@@ -56,6 +56,5 @@ export class LoginUserResp {
     this.id = id
     this.nickname = nickname
     this.mobile = mobile
-    this.loginAt = loginAt
   }
 }
