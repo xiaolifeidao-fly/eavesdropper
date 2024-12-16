@@ -14,8 +14,8 @@ func init() {
 func registerUserRouter(router *gin.RouterGroup) {
 	r := router.Group("/users")
 	{
-		// r.Use(middleware.JwtAuth()).POST("", controllers.Add)
-		// r.Use(middleware.JwtAuth()).DELETE("/:id", controllers.Delete)
+		r.Use(middleware.Authorization()).POST("", controllers.AddUser)
+		r.Use(middleware.Authorization()).DELETE("/:id", controllers.DeleteUser)
 		// r.Use(middleware.JwtAuth()).PUT("/:id", controllers.Update)
 		// r.Use(middleware.JwtAuth()).GET("/:id", controllers.Get)
 		r.Use(middleware.Authorization()).GET("/page", controllers.Page)

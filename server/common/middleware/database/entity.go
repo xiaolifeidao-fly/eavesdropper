@@ -2,6 +2,7 @@ package database
 
 import (
 	"server/common/base"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -30,5 +31,12 @@ func (e *BaseEntity) Init() {
 	}
 	if e.UpdatedAt.IsZero() {
 		e.UpdatedAt = base.Now()
+	}
+}
+
+func (e *BaseEntity) Delete() {
+	e.DeletedAt = gorm.DeletedAt{
+		Time:  time.Now(),
+		Valid: true,
 	}
 }

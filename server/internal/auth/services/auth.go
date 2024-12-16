@@ -6,12 +6,11 @@ import (
 	"fmt"
 
 	"server/common"
-	"server/common/base"
 	"server/common/captcha"
-	"server/common/converter"
 	"server/common/logger"
 	"server/common/middleware/application"
 	"server/common/server/middleware"
+	"server/internal/auth/services/converter"
 	"server/internal/auth/services/dto"
 	"time"
 )
@@ -54,9 +53,10 @@ func Login(loginDTO *dto.LoginDTO) (string, error) {
 // @Description 验证登录
 func checkLogin(loginDTO *dto.LoginDTO) (*dto.UserDTO, error) {
 	var err error
+
 	// 查询用户是否存在
-	userDTO, err := GetUserByMobile(loginDTO.Mobile)
-	if err != nil {
+	var userDTO *dto.UserDTO
+	if userDTO, err = getUserByMobile(loginDTO.Mobile); err != nil {
 		return nil, err
 	}
 	if userDTO == nil || userDTO.ID == 0 {
@@ -64,8 +64,8 @@ func checkLogin(loginDTO *dto.LoginDTO) (*dto.UserDTO, error) {
 	}
 
 	// 查询用户密码
-	userPasswordDTO, err := GetUserPasswordByUserID(userDTO.ID)
-	if err != nil {
+	var userPasswordDTO *dto.UserPasswordDTO
+	if userPasswordDTO, err = getUserPasswordByUserID(userDTO.ID); err != nil {
 		return nil, err
 	}
 	if userPasswordDTO == nil || userPasswordDTO.ID == 0 {
@@ -85,38 +85,12 @@ func checkLogin(loginDTO *dto.LoginDTO) (*dto.UserDTO, error) {
 	return userDTO, nil
 }
 
-// checkPassword
-// @Description 验证密码
-func checkPassword(inputPassword, dbPassword string) error {
-	var err error
-
-	// 加密密码
-	var encryptedPassword string
-	if encryptedPassword, err = encryptPassword(inputPassword); err != nil {
-		return err
-	}
-
-	if encryptedPassword != dbPassword {
-		return errors.New("密码错误")
-	}
-
-	return nil
-}
-
 // saveUserLoginRecord
 // @Description 保存登录记录
 func saveUserLoginRecord(loginDTO *dto.LoginDTO, userDTO *dto.UserDTO) error {
 	var err error
 
-	userLoginRecordDTO := &dto.UserLoginRecordDTO{}
-	converter.Copy(&userLoginRecordDTO, &loginDTO)
-	userLoginRecordDTO.UserID = userDTO.ID
-	userLoginRecordDTO.LoginTime = base.Now()
-	userLoginRecordDTO.LoginIP = loginDTO.LoginIP
-	userLoginRecordDTO.LoginDeviceID = loginDTO.LoginDeviceID
-	userLoginRecordDTO.CreatedBy = userDTO.ID
-	userLoginRecordDTO.UpdatedBy = userDTO.ID
-
+	userLoginRecordDTO := converter.UserDTOLoginDTOToUserLoginRecordDTO(userDTO, loginDTO)
 	if _, err = CreateUserLoginRecord(userLoginRecordDTO); err != nil {
 		return err
 	}
@@ -148,8 +122,8 @@ func checkRegister(registerDTO *dto.RegisterDTO) error {
 	var err error
 
 	// 查询用户是否存在
-	userDTO, err := GetUserByMobile(registerDTO.Mobile)
-	if err != nil {
+	var userDTO *dto.UserDTO
+	if userDTO, err = getUserByMobile(registerDTO.Mobile); err != nil {
 		return err
 	}
 	if userDTO != nil && userDTO.ID > 0 {
@@ -169,30 +143,15 @@ func checkRegister(registerDTO *dto.RegisterDTO) error {
 func registerUser(registerDTO *dto.RegisterDTO) error {
 	var err error
 
-	userDTO := converter.ToDTO[dto.UserDTO](registerDTO)
-	if userDTO, err = CreateUser(userDTO); err != nil {
+	var userDTO *dto.UserDTO
+	userAddDTO := converter.RegisterDTOToUserAddDTO(registerDTO)
+	if userDTO, err = CreateUser(userAddDTO); err != nil {
 		return err
 	}
+
 	userDTO.CreatedBy = userDTO.ID
 	userDTO.UpdatedBy = userDTO.ID
-	if _, err = UpdateUser(userDTO); err != nil {
-		return err
-	}
-
-	userPasswordDTO := dto.UserPasswordDTO{}
-	userPasswordDTO.UserID = userDTO.ID
-
-	password := registerDTO.Password
-	encryptPassword, encryptOriPassword, err := EncryptPassword(password)
-	if err != nil {
-		return err
-	}
-	userPasswordDTO.Password = encryptPassword
-	userPasswordDTO.OriPassword = encryptOriPassword
-	userPasswordDTO.CreatedBy = userDTO.ID
-	userPasswordDTO.UpdatedBy = userDTO.ID
-
-	if _, err = CreateUserPassword(&userPasswordDTO); err != nil {
+	if _, err = updateUser(userDTO); err != nil {
 		return err
 	}
 
@@ -250,9 +209,8 @@ func GetCaptcha() (*dto.CaptchaDTO, error) {
 		logger.Infof("GetCaptcha success, with captchaCode is %s", captchaResult.CaptchaCode)
 	}
 
-	var captchaDTO dto.CaptchaDTO
-	converter.Copy(&captchaDTO, &captchaResult)
-	return &captchaDTO, nil
+	captchaDTO := converter.CaptchaResultToCaptchaDTO(&captchaResult)
+	return captchaDTO, nil
 }
 
 // GetLoginUser
@@ -292,8 +250,7 @@ func getLoginUser(userID uint64) (*dto.UserLoginInfoDTO, error) {
 		return nil, err
 	}
 
-	userLoginInfoDTO := &dto.UserLoginInfoDTO{}
-	converter.Copy(userLoginInfoDTO, &userInfoDTO)
+	userLoginInfoDTO := converter.ConverterUserLoginInfoDTO(userInfoDTO)
 
 	// 查询用户最后一次登录记录
 	userLoginRecordDTO, err := GetLastUserLoginRecord(userID)

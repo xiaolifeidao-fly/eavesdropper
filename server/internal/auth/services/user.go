@@ -2,26 +2,75 @@ package services
 
 import (
 	"errors"
+	"server/common"
 	"server/common/base/page"
-	"server/common/converter"
 	"server/common/logger"
 	"server/common/middleware/database"
 	"server/internal/auth/models"
 	"server/internal/auth/repositories"
+	"server/internal/auth/services/converter"
 	"server/internal/auth/services/dto"
 )
 
-// GetUserInfo 获取用户信息
-func GetUserInfo(userID uint64) (*dto.UserInfoDTO, error) {
-	userDTO, err := GetUserByID(userID)
-	if err != nil {
+// CreateUser 创建用户
+func CreateUser(userAddDTO *dto.UserAddDTO) (*dto.UserDTO, error) {
+	var err error
+
+	// 检查用户是否已存在
+	var userDTO *dto.UserDTO
+	if userDTO, err = getUserByMobile(userAddDTO.Mobile); err != nil {
+		return nil, err
+	}
+	if userDTO.ID > 0 {
+		return nil, errors.New("用户已存在")
+	}
+
+	// 创建用户
+	userDTO = converter.UserAddDTOToUserDTO(userAddDTO)
+	if userDTO, err = saveUser(userDTO); err != nil {
 		return nil, err
 	}
 
-	userInfoDTO := dto.UserInfoDTO{}
-	converter.Copy(&userInfoDTO, &userDTO)
+	// 保存用户密码
+	userPasswordDTO := converter.ConverterUserPasswordDTO(userDTO.ID, userAddDTO.Password)
+	if _, err = CreateUserPassword(userPasswordDTO); err != nil {
+		return nil, err
+	}
 
-	return &userInfoDTO, nil
+	return userDTO, nil
+}
+
+// DeleteUser 删除用户
+func DeleteUser(userID uint64) error {
+	var err error
+
+	var userDTO *dto.UserDTO
+	if userDTO, err = getUserByID(userID); err != nil {
+		return err
+	}
+	if userDTO.ID <= 0 {
+		return errors.New("用户不存在")
+	}
+
+	userDTO.UpdatedBy = common.GetLoginUserID()
+	if err = deleteUser(userDTO); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetUserInfo 获取用户信息
+func GetUserInfo(userID uint64) (*dto.UserInfoDTO, error) {
+	var err error
+
+	var userDTO *dto.UserDTO
+	if userDTO, err = getUserByID(userID); err != nil {
+		return nil, err
+	}
+
+	userInfoDTO := converter.ConverterUserInfoDTO(userDTO)
+	return userInfoDTO, nil
 }
 
 // PageUser 分页获取用户
@@ -57,8 +106,8 @@ func getUserOtherInfo(user *dto.UserPageDTO) {
 	user.LastLoginAt = userLoginRecordDTO.LoginTime
 }
 
-// CreateUser 创建用户
-func CreateUser(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
+// saveUser 保存用户
+func saveUser(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
 	var err error
 	userRepository := repositories.UserRepository
 
@@ -72,8 +121,23 @@ func CreateUser(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
 	return userDTO, nil
 }
 
-// UpdateUser 更新用户
-func UpdateUser(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
+// deleteUser 删除用户
+func deleteUser(userDTO *dto.UserDTO) error {
+	var err error
+	userRepository := repositories.UserRepository
+
+	user := database.ToPO[models.User](userDTO)
+	user.Delete()
+	if _, err = userRepository.SaveOrUpdate(user); err != nil {
+		logger.Errorf("DeleteUser failed, with error is %v", err)
+		return errors.New("数据库操作失败")
+	}
+
+	return nil
+}
+
+// updateUser 更新用户
+func updateUser(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
 	var err error
 	userRepository := repositories.UserRepository
 
@@ -87,8 +151,8 @@ func UpdateUser(userDTO *dto.UserDTO) (*dto.UserDTO, error) {
 	return userDTO, nil
 }
 
-// GetUserByID 根据ID获取用户
-func GetUserByID(userID uint64) (*dto.UserDTO, error) {
+// getUserByID 根据ID获取用户
+func getUserByID(userID uint64) (*dto.UserDTO, error) {
 	var err error
 	userRepository := repositories.UserRepository
 
@@ -101,8 +165,8 @@ func GetUserByID(userID uint64) (*dto.UserDTO, error) {
 	return userDTO, nil
 }
 
-// GetUserByMobile 根据手机号获取用户
-func GetUserByMobile(mobile string) (*dto.UserDTO, error) {
+// getUserByMobile 根据手机号获取用户
+func getUserByMobile(mobile string) (*dto.UserDTO, error) {
 	var err error
 	userRepository := repositories.UserRepository
 

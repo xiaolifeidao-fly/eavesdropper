@@ -20,6 +20,13 @@ type UserInfoDTO struct {
 	Mobile   string `json:"mobile"`
 }
 
+// UserAddDTO 用户添加
+type UserAddDTO struct {
+	Nickname string `json:"nickname"`
+	Mobile   string `json:"mobile"`
+	Password string `json:"password"`
+}
+
 // UserPageParamDTO 用户分页参数
 type UserPageParamDTO struct {
 	page.Query `search:"-"`

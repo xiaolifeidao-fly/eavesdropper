@@ -12,12 +12,64 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
+const (
+	DeleteUserSuccess = "删除用户成功"
+)
+
 type User struct {
 	controller.Controller
 }
 
 func NewUserController(ctx *gin.Context) *User {
 	return &User{Controller: *controller.NewController(ctx)}
+}
+
+// AddUser
+// @Description 添加用户
+// @Router /users [post]
+func AddUser(ctx *gin.Context) {
+	userController := NewUserController(ctx)
+
+	var req vo.UserAddReq
+	err := userController.Bind(&req, binding.JSON).Errors
+	if err != nil {
+		userController.Logger.Errorf("Add failed, with error is %v", err)
+		userController.Error("系统错误")
+		return
+	}
+
+	var userDTO *dto.UserDTO
+	userAddDTO := converter.ToDTO[dto.UserAddDTO](&req)
+	if userDTO, err = services.CreateUser(userAddDTO); err != nil {
+		userController.Logger.Errorf("Add failed, with error is %v", err)
+		userController.Error(err.Error())
+		return
+	}
+
+	userController.OK(userDTO.ID)
+}
+
+// DeleteUser
+// @Description 删除用户
+// @Router /users/:id [delete]
+func DeleteUser(ctx *gin.Context) {
+	userController := NewUserController(ctx)
+
+	var req vo.DeleteUserReq
+	err := userController.Bind(&req, nil).Errors
+	if err != nil {
+		userController.Logger.Errorf("Delete failed, with error is %v", err)
+		userController.Error("系统错误")
+		return
+	}
+
+	if err = services.DeleteUser(req.ID); err != nil {
+		userController.Logger.Errorf("Delete failed, with error is %v", err)
+		userController.Error(err.Error())
+		return
+	}
+
+	userController.OK(DeleteUserSuccess)
 }
 
 // Page

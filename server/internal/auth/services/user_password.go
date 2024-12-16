@@ -17,22 +17,34 @@ const (
 	OriPasswordSecret = "oerlis32baeeslkmnehssphrase12341" // 原始密码密钥
 )
 
-// CreateUserPassword 创建用户密码
 func CreateUserPassword(userPasswordDTO *dto.UserPasswordDTO) (*dto.UserPasswordDTO, error) {
 	var err error
-	userPasswordRepository := repositories.UserPasswordRepository
 
-	userPassword := database.ToPO[models.UserPassword](userPasswordDTO)
-	if _, err = userPasswordRepository.Create(userPassword); err != nil {
-		return nil, errors.New("数据库操作失败")
+	password := userPasswordDTO.Password
+
+	// 解密密码
+	if password, err = encryption.DecryptRSA(password, authCommon.GetPrivateKey()); err != nil {
+		logger.Errorf("DecryptRSA failed, with error is %v", err)
+		return nil, errors.New("系统错误")
 	}
 
-	userPasswordDTO = database.ToDTO[dto.UserPasswordDTO](userPassword)
+	encryptPassword := encryptPassword(password)            // 不可逆加密密码
+	encryptOriPassword, err := encryptOriPassword(password) // 加密原始密码
+	if err != nil {
+		return nil, err
+	}
+
+	userPasswordDTO.Password = encryptPassword
+	userPasswordDTO.OriPassword = encryptOriPassword
+	if userPasswordDTO, err = saveUserPassword(userPasswordDTO); err != nil {
+		return nil, err
+	}
+
 	return userPasswordDTO, nil
 }
 
-// UpdateUserPassword 更新用户密码
-func UpdateUserPassword(userPasswordDTO *dto.UserPasswordDTO) (*dto.UserPasswordDTO, error) {
+// saveUserPassword 保存用户密码
+func saveUserPassword(userPasswordDTO *dto.UserPasswordDTO) (*dto.UserPasswordDTO, error) {
 	var err error
 	userPasswordRepository := repositories.UserPasswordRepository
 
@@ -45,8 +57,22 @@ func UpdateUserPassword(userPasswordDTO *dto.UserPasswordDTO) (*dto.UserPassword
 	return userPasswordDTO, nil
 }
 
-// GetUserPasswordByUserID 根据用户ID获取用户密码
-func GetUserPasswordByUserID(userID uint64) (*dto.UserPasswordDTO, error) {
+// updateUserPassword 更新用户密码
+func updateUserPassword(userPasswordDTO *dto.UserPasswordDTO) (*dto.UserPasswordDTO, error) {
+	var err error
+	userPasswordRepository := repositories.UserPasswordRepository
+
+	userPassword := database.ToPO[models.UserPassword](userPasswordDTO)
+	if userPassword, err = userPasswordRepository.SaveOrUpdate(userPassword); err != nil {
+		return nil, errors.New("数据库操作失败")
+	}
+
+	userPasswordDTO = database.ToDTO[dto.UserPasswordDTO](userPassword)
+	return userPasswordDTO, nil
+}
+
+// getUserPasswordByUserID 根据用户ID获取用户密码
+func getUserPasswordByUserID(userID uint64) (*dto.UserPasswordDTO, error) {
 	var err error
 	userPasswordRepository := repositories.UserPasswordRepository
 
@@ -59,46 +85,39 @@ func GetUserPasswordByUserID(userID uint64) (*dto.UserPasswordDTO, error) {
 	return userPasswordDTO, nil
 }
 
-func EncryptPassword(inputPassword string) (string, string, error) {
-	var err error
-	encryptPassword, err := encryptPassword(inputPassword)
-	if err != nil {
-		return "", "", err
-	}
-
-	encryptOriPassword, err := encryptOriPassword(inputPassword)
-	if err != nil {
-		return "", "", err
-	}
-
-	return encryptPassword, encryptOriPassword, nil
-}
-
-// encryptPassword
-// @Description 不可逆加密密码
-func encryptPassword(inputPassword string) (string, error) {
+// checkPassword
+// @Description 验证密码
+func checkPassword(inputPassword, dbPassword string) error {
 	var err error
 
 	// 解密密码
 	if inputPassword, err = encryption.DecryptRSA(inputPassword, authCommon.GetPrivateKey()); err != nil {
-		logger.Errorf("EncryptPassword failed, with error is %v", err)
-		return "", errors.New("系统错误")
+		logger.Errorf("DecryptRSA failed, with error is %v", err)
+		return errors.New("系统错误")
 	}
 
+	// 加密密码
+	encryptedPassword := encryptPassword(inputPassword)
+
+	if encryptedPassword != dbPassword {
+		return errors.New("密码错误")
+	}
+
+	return nil
+}
+
+// encryptPassword
+// @Description 不可逆加密密码
+func encryptPassword(inputPassword string) string {
 	passwordMd2 := encryption.Md5(encryption.Md5(inputPassword))
 	encryptedPassword := encryption.Encryption(PasswordSecret, passwordMd2)
-	return encryptedPassword, nil
+	return encryptedPassword
 }
 
 // encryptOriPassword
 // @Description 加密原始密码
 func encryptOriPassword(inputPassword string) (string, error) {
 	var err error
-
-	if inputPassword, err = encryption.DecryptRSA(inputPassword, authCommon.GetPrivateKey()); err != nil {
-		logger.Errorf("encryptOriPassword failed, with error is %v", err)
-		return "", errors.New("系统错误")
-	}
 
 	secret := []byte(OriPasswordSecret)
 	encrypted, err := encryption.EncryptAES([]byte(inputPassword), secret)

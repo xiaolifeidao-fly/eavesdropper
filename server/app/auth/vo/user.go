@@ -6,6 +6,20 @@ import (
 	"server/common/base/vo"
 )
 
+// UserAddReq 用户添加请求
+type UserAddReq struct {
+	vo.BaseVO
+	Mobile   string `json:"mobile" binding:"required"`
+	Nickname string `json:"nickname" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+// DeleteUserReq 删除用户请求
+type DeleteUserReq struct {
+	vo.BaseVO
+	ID uint64 `uri:"id" binding:"required"`
+}
+
 // UserPageReq 用户分页请求
 type UserPageReq struct {
 	page.Query
