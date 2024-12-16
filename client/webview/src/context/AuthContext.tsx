@@ -3,17 +3,25 @@ import dynamic from "next/dynamic";
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { LoginUserResp, LoginReq, RegisterReq } from '@model/auth/auth';
+import { LoginReq, RegisterReq } from '@model/auth/auth';
 import { login as loginApi, register as registerApi, getLoginUserInfo as getLoginUserInfoApi, logout as logoutApi } from '@api/auth/auth.api'
 import { encryptRSA } from '@utils/auth'
 import { instance } from '@utils/axios'
 
+export type UserInfo = {
+  id: number,
+  nickname: string,
+  mobile: string,
+  loginAt: string
+}
+
 interface AuthContextType {
   loginToken: string | null;
-  user: LoginUserResp | null;
+  user: UserInfo | null;
   login: (loginReq: LoginReq) => Promise<void>;
   register: (registerReq: RegisterReq) => Promise<void>;
   logout: () => Promise<void>;
+  clearUserLogin: () => void;
 }
 
 const REQUEST_HEADER_TOKEN = 'Authorization'
@@ -21,7 +29,7 @@ const REQUEST_HEADER_TOKEN = 'Authorization'
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<LoginUserResp | null>(null);
+  const [user, setUser] = useState<UserInfo | null>(null);
   const [loginToken, setLoginToken] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem(REQUEST_HEADER_TOKEN);
@@ -86,12 +94,17 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       console.error(error);
     }
 
+    clearUserLogin();
+  }
+
+  // 清除用户登录信息
+  const clearUserLogin = () => {
     localStorage.removeItem(REQUEST_HEADER_TOKEN)
     setLoginToken(null);
     setUser(null);
   }
 
-  return <AuthContext.Provider value={{ loginToken, user, login, register, logout }}>
+  return <AuthContext.Provider value={{ loginToken, user, login, register, logout, clearUserLogin }}>
     {children}
   </AuthContext.Provider>
 }

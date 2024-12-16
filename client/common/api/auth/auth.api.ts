@@ -1,7 +1,7 @@
 import { plainToClass } from 'class-transformer'
 
 import { instance } from '@utils/axios'
-import { LoginReq, LoginResp, CaptchaResp, RegisterReq, LoginUserResp } from '@model/auth/auth'
+import { LoginReq, LoginResp, CaptchaResp, RegisterReq, LoginUserResp, UpdateAuthUserReq, ModifyAuthUserPasswordReq } from '@model/auth/auth'
 
 // login 登录
 export const login = async (req: LoginReq) => {
@@ -33,3 +33,14 @@ export const logout = async () => {
   return plainToClass(String, result)
 }
 
+// 更新个人信息
+export const updateAuthUserInfo = async (req: UpdateAuthUserReq) => {
+  const result = await instance.put('/api/auth/user-info', req)
+  return plainToClass(String, result)
+}
+
+// 修改密码
+export const modifyAuthUserPassword = async (req: ModifyAuthUserPasswordReq) => {
+  const result = await instance.put('/api/auth/modify-password', req)
+  return plainToClass(String, result)
+}
