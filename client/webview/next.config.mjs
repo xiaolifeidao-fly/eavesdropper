@@ -43,11 +43,10 @@ const nextConfig = {
               headers: CORS_HEADERS
             },
           {
-            source: "/specific", // 为特定路径的请求添加 CORS HTTP Headers,
+            source: "/specific", // 为特��路径的请求添加 CORS HTTP Headers,
             headers: CORS_HEADERS
           }
         ];
-      },
-
+      }
 };
 export default withAntdLess(nextConfig);

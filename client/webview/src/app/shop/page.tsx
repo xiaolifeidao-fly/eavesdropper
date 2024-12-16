@@ -3,11 +3,12 @@ import { Button, Form, FormProps, Input, Modal, Space, Spin, Table, TableProps, 
 import AvaForm from './AvaForm';
 import Layout from '@/components/Layout';
 import { useEffect, useState } from 'react';
-import { getData } from '@api/shop/shop.test.api';
+import { getData } from '@api/shop/shop.api';
 import { Shop } from '@model/shop/shop';
-import { TestApi } from '@eleapi/test';
+import { ShopApi } from '@eleapi/shop/shop';
 
 import { EditOutlined, ExportOutlined, ScheduleOutlined, ScissorOutlined, UploadOutlined } from '@ant-design/icons';
+import { MbLoginApi } from '@eleapi/login/mb.login';
 
 export default function Clip() {
   const { token } = theme.useToken();
@@ -93,20 +94,20 @@ export default function Clip() {
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   useEffect(()=>{
-       const testApi = new TestApi();
-       test();
        handlePageChange(initPageInfo.pageIndex, initPageInfo.pageSize);
   },[]);
 
 
-  async function test(){
-    const testApi = new TestApi();
-    const result = await testApi.test("test", 1);
-    console.log("window.testApi " , result)
+  async function getShopInfo(){
+    const shopApi = new ShopApi();
+    const result = await shopApi.findMbShopInfo("https://item.taobao.com/item.htm?id=862817545814&time=1734319603010");
+    console.log("window.shopApi1 " , JSON.parse(result.data))
+  }
 
-    testApi.onTest((data)=>{
-      console.log("onTest data ", data)
-    })
+  async function login(){
+    const mbLoginApi = new MbLoginApi();
+    const result = await mbLoginApi.login("https://login.taobao.com/member/login.jhtml");
+    console.log("window.shopApi1 " , result);
   }
 
 
@@ -120,6 +121,8 @@ export default function Clip() {
     <Layout curActive='/clip'>
         <main >
             <div >
+                <Button onClick={getShopInfo}>获取店铺信息</Button>
+                <Button onClick={login}>登录</Button>
                 <div style={listStyle}>
                       <Table 
                           columns={columns} 

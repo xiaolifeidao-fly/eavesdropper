@@ -26,3 +26,5 @@ webview/.next
 **/.idea
 
 **/config.yaml
+
+client/resource/**/*
