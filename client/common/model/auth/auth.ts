@@ -58,3 +58,25 @@ export class LoginUserResp {
     this.mobile = mobile
   }
 }
+
+// 更新个人信息请求
+export class UpdateAuthUserReq {
+  constructor(
+    public nickname: string,
+    public mobile: string,
+  ) {
+    this.nickname = nickname
+    this.mobile = mobile
+  }
+}
+
+// 修改密码请求
+export class ModifyAuthUserPasswordReq {
+  constructor(
+    public oldPassword: string,
+    public newPassword: string
+  ) {
+    this.oldPassword = oldPassword
+    this.newPassword = newPassword
+  }
+}

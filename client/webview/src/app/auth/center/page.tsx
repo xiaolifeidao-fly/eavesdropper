@@ -4,25 +4,37 @@ import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 
 import Layout from '@/components/Layout';
-import UserInfo from './UserInfo';
+import UserProfile from './UserProfile';
 import UserPassword from './UserPasswrod';
-const items: TabsProps['items'] = [
-  {
-    key: 'user-info',
-    label: '用户信息',
-    children: <UserInfo />,
-  },
-  {
-    key: 'user-password',
-    label: '修改密码',
-    children: <UserPassword />,
-  }
-];
+import { useAuth } from '@/context/AuthContext';
+import { UserInfo } from '@/context/AuthContext';
 
 export default function UserCenter() {
+
+  const { user } = useAuth();
+
+  const items = (user: UserInfo | null) => {
+    if (!user) {
+      return [];
+    }
+
+    return [
+      {
+        key: 'user-info',
+        label: '用户信息',
+        children: <UserProfile nickname={user.nickname} mobile={user.mobile} />,
+      },
+      {
+        key: 'user-password',
+        label: '修改密码',
+        children: <UserPassword />,
+      }
+    ];
+  };
+
   return (
     <Layout curActive='/auth/center'>
-      <Tabs defaultActiveKey="user-info" items={items} />
+      <Tabs defaultActiveKey="user-info" items={items(user)} />
     </Layout>
   );
 }
