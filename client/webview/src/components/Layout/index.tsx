@@ -38,9 +38,21 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     router.push('/auth/login');
   }
 
+  const handleUserCenter = () => {
+    
+  }
+
   const items: MenuProps['items'] = [
     {
       key: '1',
+      label: (
+        <a target="_blank" rel="noopener noreferrer" onClick={handleUserCenter}>
+          个人中心
+        </a>
+      ),
+    },
+    {
+      key: '2',
       label: (
         <a target="_blank" rel="noopener noreferrer" onClick={handleLogout}>
           退出登录
