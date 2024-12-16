@@ -40,3 +40,8 @@ type UserLoginInfoDTO struct {
 	Mobile   string    `json:"mobile"`
 	LoginAt  base.Time `json:"loginAt"`
 }
+
+// AuthUserUpdateDTO 用户更新
+type AuthUserUpdateDTO struct {
+	Nickname string `json:"nickname"`
+}

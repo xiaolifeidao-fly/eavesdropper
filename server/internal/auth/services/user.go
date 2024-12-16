@@ -60,6 +60,40 @@ func DeleteUser(userID uint64) error {
 	return nil
 }
 
+// UpdateUser 更新用户
+func UpdateUser(userUpdateDTO *dto.UserUpdateDTO) error {
+	var err error
+
+	var userDTO *dto.UserDTO
+	if userDTO, err = getUserByID(userUpdateDTO.ID); err != nil {
+		return err
+	}
+
+	userDTO.Nickname = userUpdateDTO.Nickname
+	userDTO.UpdatedBy = common.GetLoginUserID()
+
+	if _, err = updateUser(userDTO); err != nil {
+		return err
+	}
+
+	// 清除缓存
+	if err = clearLoginUserCache(userDTO.ID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetUserByID 根据ID获取用户
+func GetUserByID(userID uint64) (*dto.UserDTO, error) {
+	return getUserByID(userID)
+}
+
+// GetUserByMobile 根据手机号获取用户
+func GetUserByMobile(mobile string) (*dto.UserDTO, error) {
+	return getUserByMobile(mobile)
+}
+
 // GetUserInfo 获取用户信息
 func GetUserInfo(userID uint64) (*dto.UserInfoDTO, error) {
 	var err error
@@ -69,7 +103,14 @@ func GetUserInfo(userID uint64) (*dto.UserInfoDTO, error) {
 		return nil, err
 	}
 
+	var userLoginRecordDTO *dto.UserLoginRecordDTO
+	if userLoginRecordDTO, err = GetLastUserLoginRecord(userID); err != nil {
+		return nil, err
+	}
+
 	userInfoDTO := converter.ConverterUserInfoDTO(userDTO)
+	userInfoDTO.LastLoginAt = userLoginRecordDTO.LoginTime
+
 	return userInfoDTO, nil
 }
 

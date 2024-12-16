@@ -19,5 +19,7 @@ func registerAuthRouter(router *gin.RouterGroup) {
 		r.GET("/captcha", controllers.GetCaptcha)
 		r.Use(middleware.Authorization()).GET("/login-user", controllers.GetLoginUser)
 		r.Use(middleware.Authorization()).POST("/logout", controllers.Logout)
+		r.Use(middleware.Authorization()).PUT("/user-info", controllers.UpdateAuthUserInfo)
+		r.Use(middleware.Authorization()).PUT("/modify-password", controllers.ModifyAuthUserPassword)
 	}
 }

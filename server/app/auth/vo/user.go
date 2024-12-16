@@ -20,6 +20,28 @@ type DeleteUserReq struct {
 	ID uint64 `uri:"id" binding:"required"`
 }
 
+// UserUpdateReq 更新用户请求
+type UserUpdateReq struct {
+	vo.BaseVO
+	ID       uint64 `uri:"id" binding:"required"`
+	Nickname string `json:"nickname" binding:"required"`
+}
+
+// GetUserReq 获取用户请求
+type GetUserReq struct {
+	vo.BaseVO
+	ID uint64 `uri:"id" binding:"required"`
+}
+
+// GetUserInfoResp 获取用户信息响应
+type GetUserInfoResp struct {
+	ID          uint64    `json:"id"`
+	Nickname    string    `json:"nickname"`
+	Mobile      string    `json:"mobile"`
+	LastLoginAt base.Time `json:"lastLoginAt"`
+	UpdatedAt   base.Time `json:"updatedAt"`
+}
+
 // UserPageReq 用户分页请求
 type UserPageReq struct {
 	page.Query

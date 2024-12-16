@@ -54,12 +54,17 @@ func (c *Controller) Bind(d interface{}, bindings ...binding.Binding) *Controlle
 		} else {
 			err = c.Context.ShouldBindWith(d, bindings[i])
 		}
-		if err != nil && err.Error() == "EOF" {
-			c.Logger.Warn("request body is not present anymore. ")
-			err = nil
-			continue
-		}
 		if err != nil {
+			if err.Error() == "EOF" {
+				c.Logger.Warn("request body is not present anymore. ")
+				err = nil
+				continue
+			}
+			if bindings[i] == nil {
+				c.Logger.Warn("request body is not present anymore. ")
+				err = nil
+				continue
+			}
 			c.AddError(err)
 			break
 		}

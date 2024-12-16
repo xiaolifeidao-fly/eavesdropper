@@ -14,8 +14,10 @@ import (
 )
 
 const (
-	RegisterSuccess = "注册成功"
-	LogoutSuccess   = "登出成功"
+	RegisterSuccess           = "注册成功"
+	LogoutSuccess             = "登出成功"
+	UpdateUserInfoSuccess     = "更新个人信息成功"
+	ModifyUserPasswordSuccess = "修改密码成功"
 )
 
 type Auth struct {
@@ -131,4 +133,51 @@ func Logout(ctx *gin.Context) {
 	}
 
 	authController.OK(LogoutSuccess)
+}
+
+// UpdateAuthUser
+// @Description 更新个人信息
+// @Router /auth/user-info [put]
+func UpdateAuthUserInfo(ctx *gin.Context) {
+	authController := NewAuthController(ctx)
+
+	var req vo.UpdateAuthUserReq
+	err := authController.Bind(&req, binding.JSON).Errors
+	if err != nil {
+		authController.Logger.Errorf("UpdateAuthUser failed, with error is %v", err)
+		authController.Error("系统错误")
+		return
+	}
+
+	authUserUpdateDTO := converter.ToDTO[dto.AuthUserUpdateDTO](&req)
+	if err = services.UpdateAuthUser(authUserUpdateDTO); err != nil {
+		authController.Logger.Errorf("UpdateAuthUser failed, with error is %v", err)
+		authController.Error(err.Error())
+		return
+	}
+
+	authController.OK(UpdateUserInfoSuccess)
+}
+
+// ModifyAuthUserPassword
+// @Description 修改密码
+// @Router /auth/modify-password [put]
+func ModifyAuthUserPassword(ctx *gin.Context) {
+	authController := NewAuthController(ctx)
+
+	var req vo.ModifyAuthUserPasswordReq
+	err := authController.Bind(&req, binding.JSON).Errors
+	if err != nil {
+		authController.Logger.Errorf("ModifyAuthUserPassword failed, with error is %v", err)
+		authController.Error("系统错误")
+		return
+	}
+
+	if err = services.ModifyAuthUserPassword(req.OldPassword, req.NewPassword); err != nil {
+		authController.Logger.Errorf("ModifyAuthUserPassword failed, with error is %v", err)
+		authController.Error(err.Error())
+		return
+	}
+
+	authController.OK(ModifyUserPasswordSuccess)
 }
