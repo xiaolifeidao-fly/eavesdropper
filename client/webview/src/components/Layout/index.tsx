@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Layout, message, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps } from 'antd';
-import getNavList from '@/components/layout/menu';
+import getNavList from '@/components/Layout/menu';
 import { useRouter } from 'next/navigation';
 import { getThemeBg } from '@utils/index';
 import './index_module.css';
@@ -39,7 +39,7 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
   }
 
   const handleUserCenter = () => {
-    
+    router.push('/auth/center');
   }
 
   const items: MenuProps['items'] = [
