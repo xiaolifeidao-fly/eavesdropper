@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { Layout, message, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps } from 'antd';
-import getNavList from '@/components/Layout/menu';
+import getNavList from '@/components/layout/menu';
 import { useRouter } from 'next/navigation';
 import { getThemeBg } from '@utils/index';
 import './index_module.css';
