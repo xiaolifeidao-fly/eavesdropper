@@ -1,6 +1,6 @@
 require('module-alias/register');
 import { DoorEntity } from "@src/door/entity";
-import { MbEngine } from "../mb.engine";
+import { MbEngine } from "@src/door/mb/mb.engine";
 import { Page, Response, Request } from "playwright";
 import { Monitor } from "@src/door/monitor/monitor";
 import { MbMonitorRequest } from "@src/door/monitor/mb/mb.monitor";
@@ -33,6 +33,10 @@ export class MdLoginMonitor extends MbMonitorRequest{
             }
         }
         return validateResult;
+    }
+
+    getKey(): string{
+        return "loginData";
     }
     
     async isMatch(url: string, method: string, headers: {[key: string]: string;}): Promise<boolean>{

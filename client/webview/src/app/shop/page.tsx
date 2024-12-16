@@ -101,7 +101,7 @@ export default function Clip() {
   async function getShopInfo(){
     const shopApi = new ShopApi();
     const result = await shopApi.findMbShopInfo("https://item.taobao.com/item.htm?id=862817545814&time=1734319603010");
-    console.log("window.shopApi1 " , JSON.parse(result.data))
+    console.log("window.shopApi1 " , result )
   }
 
   async function login(){

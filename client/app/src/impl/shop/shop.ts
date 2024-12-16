@@ -1,7 +1,7 @@
 require('module-alias/register');
 
 import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
-import { MdShopInfoMonitor } from "@src/door/mb/impl/md.shop.info.engine";
+import { MbShopDetailMonitorChain, MbShopInfoMonitor } from "@src/door/monitor/mb/shop/md.shop.info.monitor";
 import log from "electron-log";
 import { ShopApi } from "@eleapi/shop/shop";
 import { DoorEntity } from "@src/door/entity";
@@ -22,10 +22,10 @@ export class ShopApiImpl extends ShopApi {
                 return;
             }
             await page.goto(url);
-            const monitor = new MdShopInfoMonitor();
-            engine.addMonitor(monitor);
+            const monitorChain = new MbShopDetailMonitorChain();
+            engine.addMonitorChain(monitorChain);
             await engine.startMonitor();
-            const doorEntity = await monitor.waitForAction();
+            const doorEntity = await monitorChain.waitForAction();
             return doorEntity;
         }finally{
             await engine.closePage();
