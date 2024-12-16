@@ -38,6 +38,7 @@ instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
 
     // 添加请求头 Authorization
+    // @ts-ignore
     const token = localStorage.getItem(REQUEST_HEADER_TOKEN);
     if (token) {
       config.headers[REQUEST_HEADER_TOKEN] = token;

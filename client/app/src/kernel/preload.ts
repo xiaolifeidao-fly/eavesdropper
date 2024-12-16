@@ -3,7 +3,8 @@ const { contextBridge, ipcRenderer } = require('electron');
 require('module-alias/register');
 import log from 'electron-log';
 import { ElectronApi, Protocols } from '@eleapi/base';
-import { TestApi } from '@eleapi/test';
+import { ShopApi } from '@eleapi/shop/shop';
+import { MbLoginApi } from '@eleapi/login/mb.login';
  // 定义一个类型，将暴露给渲染进程的 API 类型化
 type ExposedApi = {
   [K in keyof ElectronApi]: ElectronApi[K] extends (...args: infer Args) => infer Return
@@ -50,9 +51,9 @@ function registerApi(cls: { new(...args: any[]): ElectronApi }){
 }
 
 try{
-  registerApi(TestApi);
+  registerApi(ShopApi);
+  registerApi(MbLoginApi);
 }catch(e){
   log.error(e)
 }
-
 

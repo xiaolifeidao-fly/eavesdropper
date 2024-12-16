@@ -1,3 +1,4 @@
+import { plainToInstance } from 'class-transformer';
 import 'reflect-metadata';
 
 export const Protocols = {
@@ -51,6 +52,10 @@ abstract class ElectronApi {
     return constructorName;
   }
 
+  jsonToObject(clazz: any, data: {}){
+    return plainToInstance(clazz, data)
+  }
+
   send(key : string, ...args: any[]): void{
     const channel = `${this.getApiName()}.${key}`;
     this.sendMessage(channel, ...args)
@@ -65,4 +70,3 @@ abstract class ElectronApi {
 export {
   ElectronApi
 }
-
