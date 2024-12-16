@@ -33,10 +33,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   useEffect(() => {
     // 加载登录用户信息
-    if (!loginToken) {
-      router.push("/auth/login");
-      return;
-    }
+    // if (!loginToken) {
+    //   router.push("/auth/login");
+    //   return;
+    // }
     fetchUserInfo();
   }, [loginToken, router])
 
