@@ -7,9 +7,11 @@ import (
 
 	"server/common"
 	"server/common/captcha"
+	"server/common/encryption"
 	"server/common/logger"
 	"server/common/middleware/application"
 	"server/common/server/middleware"
+	authCommon "server/internal/auth/common"
 	"server/internal/auth/services/converter"
 	"server/internal/auth/services/dto"
 	"time"
@@ -313,6 +315,21 @@ func setLoginUserToCache(userID uint64, userLoginInfoDTO *dto.UserLoginInfoDTO) 
 	return nil
 }
 
+// clearLoginUserCache
+// @Description 清除登录用户缓存
+func clearLoginUserCache(userID uint64) error {
+	var err error
+
+	cacheAdapter := common.Runtime.GetCacheAdapter()
+	cacheKey := fmt.Sprintf(AuthLoginUserCacheKey, userID)
+	if err = cacheAdapter.Del(cacheKey); err != nil {
+		logger.Errorf("ClearLoginUserCache failed, with error is %v", err)
+		return errors.New("系统错误")
+	}
+
+	return nil
+}
+
 // Logout
 // @Description 登出
 func Logout(userID uint64) error {
@@ -321,6 +338,68 @@ func Logout(userID uint64) error {
 	if err = middleware.ClearLoginToken(userID); err != nil {
 		logger.Errorf("Logout failed, with error is %v", err)
 		return errors.New("系统错误")
+	}
+
+	return nil
+}
+
+// UpdateAuthUser
+// @Description 更新用户信息
+func UpdateAuthUser(userUpdateDTO *dto.AuthUserUpdateDTO) error {
+	var err error
+
+	userID := common.GetLoginUserID()
+	var userDTO *dto.UserDTO
+	if userDTO, err = GetUserByID(userID); err != nil {
+		return err
+	}
+
+	userDTO = converter.AuthUserUpdateDTOToUserUpdateDTO(userUpdateDTO, userDTO)
+	if _, err = updateUser(userDTO); err != nil {
+		return err
+	}
+
+	// 清除用户信息缓存
+	if err = clearLoginUserCache(userID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ModifyAuthUserPassword
+// @Description 修改密码
+func ModifyAuthUserPassword(oldPassword, newPassword string) error {
+	var err error
+
+	userID := common.GetLoginUserID()
+
+	userPasswordDTO, err := getUserPasswordByUserID(userID)
+	if err != nil {
+		return err
+	}
+
+	// 校验旧密码
+	if err = checkPassword(oldPassword, userPasswordDTO.Password); err != nil {
+		return err
+	}
+
+	// 解密密码
+	if newPassword, err = encryption.DecryptRSA(newPassword, authCommon.GetPrivateKey()); err != nil {
+		logger.Errorf("DecryptRSA failed, with error is %v", err)
+		return errors.New("系统错误")
+	}
+
+	encryptPassword := encryptPassword(newPassword) // 不可逆加密密码
+	// 更新密码
+	userPasswordDTO.Password = encryptPassword
+	if _, err = updateUserPassword(userPasswordDTO); err != nil {
+		return err
+	}
+
+	// 修改成功登出用户
+	if err = middleware.ClearLoginToken(userID); err != nil {
+		return err
 	}
 
 	return nil

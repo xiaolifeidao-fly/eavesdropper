@@ -14,6 +14,7 @@ import (
 
 const (
 	DeleteUserSuccess = "删除用户成功"
+	UpdateUserSuccess = "更新用户成功"
 )
 
 type User struct {
@@ -70,6 +71,56 @@ func DeleteUser(ctx *gin.Context) {
 	}
 
 	userController.OK(DeleteUserSuccess)
+}
+
+// UpdateUser
+// @Description 更新用户
+// @Router /users/:id [put]
+func UpdateUser(ctx *gin.Context) {
+	userController := NewUserController(ctx)
+
+	var req vo.UserUpdateReq
+	err := userController.Bind(&req, nil, binding.JSON).Errors
+	if err != nil {
+		userController.Logger.Errorf("Update failed, with error is %v", err)
+		userController.Error("系统错误")
+		return
+	}
+
+	userUpdateDTO := converter.ToDTO[dto.UserUpdateDTO](&req)
+	if err = services.UpdateUser(userUpdateDTO); err != nil {
+		userController.Logger.Errorf("Update failed, with error is %v", err)
+		userController.Error(err.Error())
+		return
+	}
+
+	userController.OK(UpdateUserSuccess)
+}
+
+// GetUser
+// @Description 获取用户
+// @Router /users/:id [get]
+func GetUser(ctx *gin.Context) {
+	userController := NewUserController(ctx)
+
+	var req vo.GetUserReq
+	err := userController.Bind(&req, nil).Errors
+	if err != nil {
+		userController.Logger.Errorf("Get failed, with error is %v", err)
+		userController.Error("系统错误")
+		return
+	}
+
+	var userInfoDTO *dto.UserInfoDTO
+	if userInfoDTO, err = services.GetUserInfo(req.ID); err != nil {
+		userController.Logger.Errorf("Get failed, with error is %v", err)
+		userController.Error(err.Error())
+		return
+	}
+
+	var resp vo.GetUserInfoResp
+	converter.Copy(&resp, userInfoDTO)
+	userController.OK(&resp)
 }
 
 // Page

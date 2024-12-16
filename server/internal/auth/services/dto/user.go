@@ -15,9 +15,11 @@ type UserDTO struct {
 
 // UserInfoDTO 用户信息
 type UserInfoDTO struct {
-	ID       uint64 `json:"id"`
-	Nickname string `json:"nickname"`
-	Mobile   string `json:"mobile"`
+	ID          uint64    `json:"id"`
+	Nickname    string    `json:"nickname"`
+	Mobile      string    `json:"mobile"`
+	UpdatedAt   base.Time `json:"updatedAt"`
+	LastLoginAt base.Time `json:"lastLoginAt"`
 }
 
 // UserAddDTO 用户添加
@@ -25,6 +27,14 @@ type UserAddDTO struct {
 	Nickname string `json:"nickname"`
 	Mobile   string `json:"mobile"`
 	Password string `json:"password"`
+}
+
+// UserUpdateDTO 用户更新
+type UserUpdateDTO struct {
+	ID          uint64 `json:"id"`
+	Nickname    string `json:"nickname"`
+	OldPassword string `json:"oldPassword"`
+	NewPassword string `json:"newPassword"`
 }
 
 // UserPageParamDTO 用户分页参数

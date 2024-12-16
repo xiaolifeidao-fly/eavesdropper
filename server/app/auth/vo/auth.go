@@ -2,6 +2,7 @@ package vo
 
 import (
 	"server/common/base"
+	"server/common/base/vo"
 )
 
 // LoginReq 登录请求
@@ -38,4 +39,17 @@ type LoginUserResp struct {
 	Nickname string    `json:"nickname"`
 	Mobile   string    `json:"mobile"`
 	LoginAt  base.Time `json:"loginAt"`
+}
+
+// UpdateAuthUserReq 更新个人信息请求
+type UpdateAuthUserReq struct {
+	vo.BaseVO
+	Nickname string `json:"nickname" binding:"required"`
+}
+
+// ModifyAuthUserPasswordReq 修改密码请求
+type ModifyAuthUserPasswordReq struct {
+	vo.BaseVO
+	OldPassword string `json:"oldPassword" binding:"required"`
+	NewPassword string `json:"newPassword" binding:"required"`
 }
