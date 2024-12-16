@@ -80,12 +80,15 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   // logout 退出登录逻辑
   const logout = async () => {
-    const resp = await logoutApi();
-    if (resp) {
-      localStorage.removeItem(REQUEST_HEADER_TOKEN)
-      setLoginToken(null);
-      setUser(null);
+    try {
+      await logoutApi();
+    } catch (error) {
+      console.error(error);
     }
+
+    localStorage.removeItem(REQUEST_HEADER_TOKEN)
+    setLoginToken(null);
+    setUser(null);
   }
 
   return <AuthContext.Provider value={{ loginToken, user, login, register, logout }}>
