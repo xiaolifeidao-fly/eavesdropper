@@ -3,7 +3,6 @@ package controller
 import (
 	"fmt"
 
-	"server/common/server/common"
 	"server/common/server/response"
 	"server/library/logger"
 	"server/library/plugins/validator"
@@ -12,73 +11,66 @@ import (
 	"github.com/gin-gonic/gin/binding"
 )
 
-// Controller 基础控制器
-type Controller struct {
-	Context *gin.Context
-	Logger  *logger.Helper
-	Errors  error
-}
-
-func NewController(ctx *gin.Context) *Controller {
-	return &Controller{Context: ctx, Logger: common.GetRequestLogger()}
-}
-
-func (c *Controller) AddError(err error) {
-	if c.Errors == nil {
-		c.Errors = err
-	} else if err != nil {
-		c.Logger.Error(err)
-		c.Errors = fmt.Errorf("%v; %w", c.Errors, err)
-	}
-}
-
 // Error 通常错误数据处理
-func (c *Controller) Error(err string) {
-	response.Error(c.Context, err)
+func Error(context *gin.Context, err string) {
+	response.Error(context, err)
 }
 
 // OK 通常成功数据处理
-func (c *Controller) OK(data interface{}) {
-	response.OK(c.Context, data)
+func OK(context *gin.Context, data interface{}) {
+	response.OK(context, data)
 }
 
-func (c *Controller) Bind(d interface{}, bindings ...binding.Binding) *Controller {
-	var err error
+// Bind 绑定请求数据
+func Bind(context *gin.Context, d interface{}, bindings ...binding.Binding) error {
+	var err1 error
 	if len(bindings) == 0 {
 		bindings = constructor.GetBindingForGin(d)
 	}
 
 	for i := range bindings {
+		var err2 error
 		if bindings[i] == nil {
-			err = c.Context.ShouldBindUri(d)
+			err2 = context.ShouldBindUri(d)
 		} else {
-			err = c.Context.ShouldBindWith(d, bindings[i])
+			err2 = context.ShouldBindWith(d, bindings[i])
 		}
-		if err != nil {
-			if err.Error() == "EOF" {
-				c.Logger.Warn("request body is not present anymore. ")
-				err = nil
+
+		if err2 != nil {
+			if err2.Error() == "EOF" {
+				logger.Warn("request body is not present anymore. ")
+				err2 = nil
 				continue
 			}
 			if bindings[i] == nil {
-				c.Logger.Warn("request body is not present anymore. ")
-				err = nil
+				logger.Warn("request body is not present anymore. ")
+				err2 = nil
 				continue
 			}
-			c.AddError(err)
+			err1 = AddError(err1, err2)
 			break
 		}
 	}
 
-	if err := validator.Struct(d, ""); err != nil {
-		c.AddError(err)
+	if err2 := validator.Struct(d, ""); err2 != nil {
+		err1 = AddError(err1, err2)
 	}
 
 	if v, ok := d.(validator.Validator); ok {
-		if err := v.Validate(); err != nil {
-			c.AddError(err)
+		if err2 := v.Validate(); err2 != nil {
+			err1 = AddError(err1, err2)
 		}
 	}
 
-	return c
+	return err1
+}
+
+func AddError(err1, err2 error) error {
+	if err1 == nil {
+		return err2
+	}
+	if err2 == nil {
+		return err1
+	}
+	return fmt.Errorf("%v; %w", err1, err2)
 }

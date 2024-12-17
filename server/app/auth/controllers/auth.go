@@ -4,6 +4,7 @@ import (
 	"server/app/auth/vo"
 	"server/common"
 	"server/common/converter"
+	"server/common/logger"
 	serverCommon "server/common/server/common"
 	"server/common/server/controller"
 	"server/internal/auth/services"
@@ -20,25 +21,16 @@ const (
 	ModifyUserPasswordSuccess = "修改密码成功"
 )
 
-type Auth struct {
-	controller.Controller
-}
-
-func NewAuthController(ctx *gin.Context) *Auth {
-	return &Auth{Controller: *controller.NewController(ctx)}
-}
-
 // Login
 // @Description 登录
 // @Router /auth/login [post]
 func Login(ctx *gin.Context) {
-	authController := NewAuthController(ctx)
-	var req vo.LoginReq
+	var err error
 
-	err := authController.Bind(&req, binding.JSON).Errors
-	if err != nil {
-		authController.Logger.Errorf("Login failed, with error is %v", err)
-		authController.Error("系统错误")
+	var req vo.LoginReq
+	if err = controller.Bind(ctx, &req, binding.JSON); err != nil {
+		logger.Errorf("Login failed, with error is %v", err)
+		controller.Error(ctx, "系统错误")
 		return
 	}
 
@@ -49,135 +41,132 @@ func Login(ctx *gin.Context) {
 
 	var loginToken string
 	if loginToken, err = services.Login(loginDTO); err != nil {
-		authController.Logger.Errorf("Login failed, with error is %v", err)
-		authController.Error(err.Error())
+		logger.Errorf("Login failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
 		return
 	}
 
 	var resp vo.LoginResp
 	resp.AccessToken = loginToken
-	authController.OK(resp)
+	controller.OK(ctx, resp)
 }
 
 // Register
 // @Description 注册
 // @Router /auth/register [post]
 func Register(ctx *gin.Context) {
-	authController := NewAuthController(ctx)
+	var err error
 
 	var req vo.RegisterReq
-	err := authController.Bind(&req, binding.JSON).Errors
-	if err != nil {
-		authController.Logger.Errorf("Register failed, with error is %v", err)
-		authController.Error("系统错误")
+	if err = controller.Bind(ctx, &req, binding.JSON); err != nil {
+		logger.Errorf("Register failed, with error is %v", err)
+		controller.Error(ctx, "系统错误")
 		return
 	}
 
 	registerDTO := converter.ToDTO[dto.RegisterDTO](&req)
 	if err = services.Register(registerDTO); err != nil {
-		authController.Logger.Errorf("Register failed, with error is %v", err)
-		authController.Error(err.Error())
+		logger.Errorf("Register failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
 		return
 	}
 
-	authController.OK(RegisterSuccess)
+	controller.OK(ctx, RegisterSuccess)
 }
 
 // GetCaptcha
 // @Description 获取验证码
 // @Router /auth/captcha [get]
 func GetCaptcha(ctx *gin.Context) {
-	authController := NewAuthController(ctx)
+	var err error
 
 	captchaDTO, err := services.GetCaptcha()
 	if err != nil {
-		authController.Logger.Errorf("GetCaptcha failed, with error is %v", err)
-		authController.Error(err.Error())
+		logger.Errorf("GetCaptcha failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
 		return
 	}
 
 	resp := converter.ToVO[vo.CaptchaResp](captchaDTO)
-	authController.OK(resp)
+	controller.OK(ctx, resp)
 }
 
 // GetLoginUser
 // @Description 获取登录用户信息
 // @Router /auth/login-user [get]
 func GetLoginUser(ctx *gin.Context) {
-	authController := NewAuthController(ctx)
+	var err error
 
 	userID := common.GetLoginUserID()
 	userLoginInfoDTO, err := services.GetLoginUser(userID)
 	if err != nil {
-		authController.Logger.Errorf("GetLoginUser failed, with error is %v", err)
-		authController.Error(err.Error())
+		logger.Errorf("GetLoginUser failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
 		return
 	}
 
 	var resp vo.LoginUserResp
 	converter.Copy(&resp, userLoginInfoDTO)
-	authController.OK(resp)
+	controller.OK(ctx, resp)
 }
 
 // Logout
 // @Description 登出
 // @Router /auth/logout [post]
 func Logout(ctx *gin.Context) {
-	authController := NewAuthController(ctx)
+	var err error
 
 	userID := common.GetLoginUserID()
-	if err := services.Logout(userID); err != nil {
-		authController.Logger.Errorf("Logout failed, with error is %v", err)
-		authController.Error(err.Error())
+	if err = services.Logout(userID); err != nil {
+		logger.Errorf("Logout failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
 		return
 	}
 
-	authController.OK(LogoutSuccess)
+	controller.OK(ctx, LogoutSuccess)
 }
 
 // UpdateAuthUser
 // @Description 更新个人信息
 // @Router /auth/user-info [put]
 func UpdateAuthUserInfo(ctx *gin.Context) {
-	authController := NewAuthController(ctx)
+	var err error
 
 	var req vo.UpdateAuthUserReq
-	err := authController.Bind(&req, binding.JSON).Errors
-	if err != nil {
-		authController.Logger.Errorf("UpdateAuthUser failed, with error is %v", err)
-		authController.Error("系统错误")
+	if err = controller.Bind(ctx, &req, binding.JSON); err != nil {
+		logger.Errorf("UpdateAuthUser failed, with error is %v", err)
+		controller.Error(ctx, "系统错误")
 		return
 	}
 
 	authUserUpdateDTO := converter.ToDTO[dto.AuthUserUpdateDTO](&req)
 	if err = services.UpdateAuthUser(authUserUpdateDTO); err != nil {
-		authController.Logger.Errorf("UpdateAuthUser failed, with error is %v", err)
-		authController.Error(err.Error())
+		logger.Errorf("UpdateAuthUser failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
 		return
 	}
 
-	authController.OK(UpdateUserInfoSuccess)
+	controller.OK(ctx, UpdateUserInfoSuccess)
 }
 
 // ModifyAuthUserPassword
 // @Description 修改密码
 // @Router /auth/modify-password [put]
 func ModifyAuthUserPassword(ctx *gin.Context) {
-	authController := NewAuthController(ctx)
+	var err error
 
 	var req vo.ModifyAuthUserPasswordReq
-	err := authController.Bind(&req, binding.JSON).Errors
-	if err != nil {
-		authController.Logger.Errorf("ModifyAuthUserPassword failed, with error is %v", err)
-		authController.Error("系统错误")
+	if err = controller.Bind(ctx, &req, binding.JSON); err != nil {
+		logger.Errorf("ModifyAuthUserPassword failed, with error is %v", err)
+		controller.Error(ctx, "系统错误")
 		return
 	}
 
 	if err = services.ModifyAuthUserPassword(req.OldPassword, req.NewPassword); err != nil {
-		authController.Logger.Errorf("ModifyAuthUserPassword failed, with error is %v", err)
-		authController.Error(err.Error())
+		logger.Errorf("ModifyAuthUserPassword failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
 		return
 	}
 
-	authController.OK(ModifyUserPasswordSuccess)
+	controller.OK(ctx, ModifyUserPasswordSuccess)
 }
