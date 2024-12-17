@@ -1,15 +1,15 @@
-export function toJson(responseText: string): {}|[] | string {
+export function toJson(responseText: string): {}|[] | undefined {
     let message = extractJsonStr(responseText);
     message = message.replace(/\s/g, "");
     message = message.replace(/\n/g, "");
     try {
         return JSON.parse(message);
     } catch{
-        return responseText;
+        return undefined;
     }
 }
 
-function extractJsonStr(message: string): string {
+export function extractJsonStr(message: string): string {
     const startArrayIndex = message.indexOf('[');
     const endArrayIndex = message.lastIndexOf(']');
     const startJsonIndex = message.indexOf('{');

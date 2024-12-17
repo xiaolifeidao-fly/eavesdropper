@@ -1,7 +1,7 @@
 'use client';
 import { Button, Form, FormProps, Input, Modal, Space, Spin, Table, TableProps, Tag, theme } from 'antd';
 import AvaForm from './AvaForm';
-import Layout from '@/components/Layout';
+import Layout from '@/components/Layout/index';
 import { useEffect, useState } from 'react';
 import { getData } from '@api/shop/shop.api';
 import { Shop } from '@model/shop/shop';
@@ -101,7 +101,7 @@ export default function Clip() {
   async function getShopInfo(){
     const shopApi = new ShopApi();
     const result = await shopApi.findMbShopInfo("https://item.taobao.com/item.htm?id=862817545814&time=1734319603010");
-    console.log("window.shopApi1 " , JSON.parse(result.data))
+    console.log("window.shopApi1 " , result )
   }
 
   async function login(){

@@ -3,8 +3,9 @@ import fs from 'fs'
 import { Browser, chromium, devices,firefox, BrowserContext, Page, Route ,Request, Response} from 'playwright';
 import { get, set } from '@src/store/local';
 import { app } from 'electron';
-import { Monitor, MonitorRequest, MonitorResponse } from './monitor/monitor';
+import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from './monitor/monitor';
 import { DoorEntity } from './entity';
+import log from 'electron-log';
 
 
 const browserMap = new Map<string, Browser>();
@@ -43,6 +44,10 @@ export abstract class DoorEngine {
         this.monitors.push(monitor);
     }
 
+    public addMonitorChain(monitorChain: MonitorChain){
+        this.monitors.push(...monitorChain.getMonitors());
+    }
+
     public async init() : Promise<Page | undefined> {
         if(this.browser){
             return undefined;
@@ -73,6 +78,9 @@ export abstract class DoorEngine {
             if(monitor.finishTag){
                 continue;
             }
+            if(!(monitor instanceof MonitorRequest)){
+                continue;
+            }
             if(!await monitor.isMatch(request.url(), request.method(), headers)){
                 continue;
             }
@@ -99,6 +107,9 @@ export abstract class DoorEngine {
     public async doAfterResponse(response: Response){
         for(const monitor of this.monitors){
             if(monitor.finishTag){
+                continue;
+            }
+            if(!(monitor instanceof MonitorResponse)){
                 continue;
             }
             const responseMonitor = monitor as MonitorResponse;
