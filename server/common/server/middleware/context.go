@@ -9,8 +9,8 @@ import (
 // Context
 func Context() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		_ = common.GetContext()
 		ctx.Next()
-		common.ClearContext() // 清除goroutine context
+		common.ClearRequestID()
+		common.ClearLoginUserID()
 	}
 }

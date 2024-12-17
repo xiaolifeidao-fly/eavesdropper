@@ -59,6 +59,9 @@ async function request(url, req){
   if(menthd === 'PUT'){
     return await axios.put(url, req.body, {  headers});
   }
+  if(menthd === 'DELETE'){
+    return await axios.delete(url, { params: req.body, headers});
+  }
   return null;
 }
 

@@ -6,7 +6,9 @@ import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-comp
 import Layout from '@/components/Layout';
 import styles from './index.module.less';
 
-import { userPage as userPageApi } from '@api/auth/user.api';
+import { userPage as userPageApi, deleteUser as deleteUserApi } from '@api/auth/user.api';
+import useRefreshPage from '@/components/RefreshPage';
+
 
 type DataType = {
   id: number;
@@ -16,7 +18,7 @@ type DataType = {
   updatedAt: string;
 }
 
-const columns: ProColumns<DataType>[] = [
+const baseColumns: ProColumns<DataType>[] = [
   {
     title: '用户名',
     dataIndex: 'nickname',
@@ -36,22 +38,34 @@ const columns: ProColumns<DataType>[] = [
     align: 'center',
     width: 200,
   },
-  {
-    title: '操作',
-    key: 'option',
-    valueType: 'option',
-    align: 'center',
-    width: 150,
-    render: (_, record) => [
-      <Button key="edit" type="link" style={{ paddingRight: 0 }} disabled>编辑</Button>,
-      <Button key="delete" type="link" style={{ paddingLeft: 0 }} disabled>删除</Button>,
-    ],
-  }
 ]
 
 export default function UserManage() {
 
   const actionRef = useRef<ActionType>();
+
+  const { refreshPage } = useRefreshPage();
+
+  const columns: ProColumns<DataType>[] = [
+    ...baseColumns,
+    {
+      title: '操作',
+      key: 'option',
+      valueType: 'option',
+      align: 'center',
+      width: 150,
+      render: (_, record) => [
+        <Button key="edit" type="link" style={{ paddingRight: 0 }} disabled>编辑</Button>,
+        <Button key="delete" type="link" style={{ paddingLeft: 0 }} onClick={async () => {
+          const resp = await deleteUserApi(record.id);
+          if (resp) {
+            message.success('删除成功');
+            refreshPage(actionRef, true, 1);
+          }
+        }}>删除</Button>,
+      ],
+    }
+  ]
 
   return (
     <Layout curActive='/auth/user'>
@@ -82,7 +96,7 @@ export default function UserManage() {
               };
             }}
             pagination={{
-              pageSize: 10,
+              pageSize: 4,
             }}
           />
         </div>
