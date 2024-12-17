@@ -3,25 +3,13 @@ package logger
 import (
 	"server/common"
 	"server/library/logger"
-)
-
-const (
-	LoggerKey = common.LoggerKey
+	"strings"
 )
 
 func GetLogger() *logger.Helper {
-	gContext := common.GetContext()
-
-	l, ok := gContext.GetAny(LoggerKey)
-	if !ok {
-		return nil
-	}
-
-	logger, ok := l.(*logger.Helper)
-	if !ok {
-		return nil
-	}
-	return logger
+	return logger.NewHelper(common.Runtime.GetLogger()).WithFields(map[string]interface{}{
+		strings.ToLower(common.RequestIdKey): common.GetRequestID(),
+	})
 }
 
 func Info(args ...interface{}) {

@@ -48,9 +48,7 @@ func Authorization() gin.HandlerFunc {
 		}
 
 		// 设置登录用户
-		gContext := common.GetContext()
-		gContext.Set(common.LoginUserIDKey, userID)
-
+		common.SetLoginUserID(userID)
 		// 刷新登录凭证缓存
 		refreshLoginToken(userID, accessToken)
 

@@ -12,7 +12,7 @@ var Default = &response{}
 // prepareResponse 准备响应
 func prepareResponse(success bool, data interface{}, msg string) *response {
 	res := Default.Clone()
-	res.SetTraceID(common.GetContext().GetString(common.RequestIdKey))
+	res.SetTraceID(common.GetRequestID())
 	res.SetSuccess(success)
 	res.SetData(data)
 	res.SetMsg(msg)

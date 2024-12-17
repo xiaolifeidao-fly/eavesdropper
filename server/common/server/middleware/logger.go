@@ -3,12 +3,11 @@ package middleware
 import (
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
 	"server/common"
+	"server/common/logger"
 	serverCommon "server/common/server/common"
-	"server/library/logger"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -23,17 +22,8 @@ func Logger() gin.HandlerFunc {
 		}
 
 		// 设置requestId
-		requestIDKey := serverCommon.RequestIdKey
 		requestId := uuid.New().String()
-		gContext := common.GetContext()
-		gContext.Set(requestIDKey, requestId) // 设置到goroutine context中
-
-		// 设置Logger
-		loggerKey := serverCommon.LoggerKey
-		log := logger.NewHelper(common.Runtime.GetLogger()).WithFields(map[string]interface{}{
-			strings.ToLower(requestIDKey): requestId,
-		})
-		gContext.Set(loggerKey, log)
+		common.SetRequestID(requestId) // 设置到goroutine context中
 
 		// 记录请求开始时间
 		startTime := time.Now()
@@ -67,6 +57,5 @@ func requestLog(c *gin.Context, startTime time.Time, endTime time.Time) {
 		"uri":         reqUri,
 	}
 
-	log := serverCommon.GetRequestLogger()
-	log.WithFields(logData).Info()
+	logger.Info(logData)
 }
