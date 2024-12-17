@@ -6,7 +6,8 @@ import { app } from 'electron';
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from './monitor/monitor';
 import { DoorEntity } from './entity';
 import log from 'electron-log';
-
+import { ActionChain } from './element/element';
+import { getDoorList } from '@api/door/door.api';
 
 const browserMap = new Map<string, Browser>();
 
@@ -40,11 +41,11 @@ export abstract class DoorEngine {
 
     abstract getChromePath() : string;
 
-    public addMonitor(monitor: Monitor){
+    addMonitor(monitor: Monitor){
         this.monitors.push(monitor);
     }
 
-    public addMonitorChain(monitorChain: MonitorChain){
+    addMonitorChain(monitorChain: MonitorChain){
         this.monitors.push(...monitorChain.getMonitors());
     }
 
@@ -117,7 +118,8 @@ export abstract class DoorEngine {
                 continue;
             }
             const data = await responseMonitor.getResponseData(response);
-            responseMonitor._doCallback(new DoorEntity(data ? true : false, data));
+            const doorEntity = new DoorEntity(data ? true : false, data);
+            responseMonitor._doCallback(doorEntity, response.request(), response);
             responseMonitor.setFinishTag(true);
         }
     }
@@ -128,39 +130,93 @@ export abstract class DoorEngine {
         });
     }
 
-    public async open(page : Page,  url: string, headers: Record<string, string> = {}){
-        await page.goto(url, headers);
+    public async openWaitMonitor(page : Page,  url: string, monitor : Monitor, headers: Record<string, string> = {}){
+        const itemKey = monitor.getItemKey(url);
+        const cache = await this.fromCacheByMonitor(url, itemKey, monitor);
+        if(cache){
+            return cache;
+        }
+        let doorEntity;
+        try{
+            this.addMonitor(monitor);
+            await this.startMonitor();
+            await page.goto(url, headers);
+            doorEntity = await monitor.waitForAction();
+            return doorEntity;
+        }finally{
+            if(monitor instanceof MonitorResponse && doorEntity && itemKey){
+                await this.saveCache(url, monitor.getKey(), monitor.getType(), itemKey, doorEntity);
+            }
+        }
+    }
+
+    public async saveCache(url : string, monitorKey : string, type : string, itemKey : string, doorEntity: DoorEntity){
+        if(!doorEntity.code){
+            return;
+        }
+        this.resourceId;
+        // TODO 保存缓存
+    }
+
+    public async fromCacheByMonitor(url : string, itemKey : string | undefined, monitor : Monitor) : Promise<DoorEntity | undefined> {
+        if(!(monitor instanceof MonitorResponse)){
+            return undefined;
+        }
+        this.resourceId;
+        if(itemKey == undefined){
+            return undefined;
+        }
+        const monitorKey = monitor.getKey();
+        const type = monitor.getType();
+        // TODO 从缓存中获取数据
+        return undefined;
+    }
+
+    public async fromCacheByMonitorChain(url : string, itemKey : string | undefined, monitorChain : MonitorChain) : Promise<DoorEntity | undefined> {
+        this.resourceId;
+        if(itemKey == undefined){
+            return undefined;
+        }
+        const monitorKey = monitorChain.getKey();
+        const type = monitorChain.getType();
+        // TODO 从缓存中获取数据
+        return undefined;
+    }
+
+    public async openWaitMonitorChain(page : Page,  url: string, monitorChain: MonitorChain, headers: Record<string, string> = {}){
+        const itemKey = monitorChain.getItemKey(url);
+        const cache = await this.fromCacheByMonitorChain(url, itemKey, monitorChain)
+        if(cache){
+            return cache;
+        }
+        let doorEntity;
+        try{
+            this.addMonitorChain(monitorChain);
+            await this.startMonitor();
+            await page.goto(url, headers);
+            doorEntity = await monitorChain.waitForAction();
+            return doorEntity;
+        }finally{
+            if(doorEntity && doorEntity.code && itemKey){
+                await this.saveCache(url, monitorChain.getKey(), monitorChain.getType(), itemKey, doorEntity);
+            }
+        }
     }
 
 
     public async startMonitor(){
         for(const monitor of this.monitors){
-            await monitor.start();
+            monitor.start();
         }
     }
 
-    public async asyncDoElement(windowId: string, page : Page) : Promise<void>{
-        return new Promise((resolve, reject) => {
-            this.doWaitForElement(windowId, page).then(resolve).catch(reject);
-        });
+    public async doWaitForElement(page : Page, version: string, doorType: string) {
+        const actionCommands = await getDoorList(version, doorType);
+        const actionChain = new ActionChain();
+        actionChain.addActionCommands(actionCommands);
+        const result = await actionChain.do(page);
+        return result;
     }
-
-    public async doWaitForElement(windowId: string, page : Page) {
-        const data = await this.doWaitFor(windowId, page);
-        let doorEntity = new DoorEntity();
-        if(data){ 
-            doorEntity.data = data;
-            doorEntity.code = true;
-        }else{
-            doorEntity.code = false;
-        }
-        await this.doCallback(doorEntity);
-    }
-
-    abstract doWaitFor(windowId: string, page : Page) : Promise<{}|undefined>;
-
-    abstract doCallback(doorEntity: DoorEntity) : Promise<void>;
-
 
     public async closeContext(){
         if(this.context){
@@ -206,7 +262,7 @@ export abstract class DoorEngine {
         if(!this.browser){
             return;
         }
-        const key = this.getKey();
+        const key = this.headless.toString() + "_" + this.getKey();
         if(contextMap.has(key)){
             return contextMap.get(key);
         }
@@ -231,6 +287,7 @@ export abstract class DoorEngine {
         if (this.chromePath) {
             key += "_" + this.chromePath;
         }
+        console.log(browserMap)
         if(browserMap.has(key)){
             return browserMap.get(key);
         }
@@ -246,3 +303,4 @@ export abstract class DoorEngine {
     }
 
 }
+

@@ -1,6 +1,5 @@
 import { Page, Route , Request, BrowserContext, Response} from "playwright";
 import { DoorEntity } from "../entity";
-import log from "electron-log";
 import { EventEmitter } from 'events';
 const axios = require('axios');
 
@@ -10,10 +9,19 @@ export abstract class Monitor {
     timeout: number;
     key : string | undefined = undefined;
     eventEmitter: EventEmitter;
+    waitResolve: (value: DoorEntity | PromiseLike<DoorEntity>) => void = () => {};
+    waitPromise: Promise<DoorEntity>;
 
-    constructor(timeout: number = 60000){
+    constructor(timeout: number = 10000){
         this.timeout = timeout;
         this.eventEmitter = new EventEmitter();
+        this.waitPromise = new Promise<DoorEntity>((resolve) => {
+            this.waitResolve = resolve;
+        });
+    }
+
+    getItemKey(url : string): string | undefined {
+        return undefined;
     }
 
     abstract getKey(): string;
@@ -32,7 +40,18 @@ export abstract class Monitor {
     }
 
 
-    abstract start(): Promise<void>;
+    public async start(){
+        const monitor = this;
+        this.setFinishTag(false);
+        monitor.onceEnvet();
+        setTimeout(async () => {
+            if(monitor.finishTag){
+                return;
+            }
+            await monitor._doCallback(new DoorEntity(false, {}));
+            monitor.setFinishTag(true)
+        }, this.timeout);
+    }
 
     async _doCallback(doorEntity: DoorEntity, request: Request | undefined = undefined, response : Response | undefined = undefined) : Promise<void>{
         try{
@@ -50,13 +69,15 @@ export abstract class Monitor {
 
     }
 
+    async onceEnvet(){
+        this.eventEmitter.once(this.getEventKey(), async (result: DoorEntity) => {
+            this.waitResolve(result);
+        });
+    }
+
 
     async waitForAction(): Promise<DoorEntity>{
-        return await new Promise<DoorEntity>((resolve) => {
-            this.eventEmitter.once(this.getEventKey(), (result: DoorEntity) => {
-                resolve(result);
-            });
-        });
+        return await this.waitPromise;
     }
 
 }
@@ -65,16 +86,6 @@ export abstract class MonitorRequest extends Monitor {
 
     handler: undefined | ((request: Request | undefined, response: Response | undefined) => Promise<{} | undefined>) = undefined;
 
-    public async start(){
-        setTimeout(async () => {
-            if(!this.finishTag){
-                return;
-            }
-            await this.doCallback(new DoorEntity(false, {}));
-            this.setFinishTag(true)
-        }, this.timeout);
-    }
-
     setHandler(handler : (request: Request | undefined, response: Response | undefined) => Promise<{}|undefined>){
         this.handler = handler;
     }
@@ -82,7 +93,8 @@ export abstract class MonitorRequest extends Monitor {
 
   
 export abstract class MonitorResponse extends Monitor {
-
+    
+    abstract getType(): string;
 
     public async getResponseData(response: Response): Promise<any>{
         const contentType = response.headers()['content-type'];
@@ -93,16 +105,6 @@ export abstract class MonitorResponse extends Monitor {
             return await response.text();
         }
         return await response.body();
-    }
-
-    public async start(){
-        setTimeout(async () => {
-            if(!this.finishTag){
-                return;
-            }
-            await this.doCallback(new DoorEntity(false, {}));
-            this.setFinishTag(true)
-        }, this.timeout);
     }
 
 }
@@ -119,9 +121,15 @@ export abstract class MonitorChain {
 
     abstract initMonitors(): Monitor[];
 
+    public getKey(){
+        return this.constructor.name;
+    }
+
     public append(monitor: Monitor){
         this.monitors.push(monitor);
     }
+
+    abstract getType() :string;
 
     public getMonitors(): Monitor[]{
         return this.monitors;
@@ -140,7 +148,8 @@ export abstract class MonitorChain {
         return new DoorEntity(result, doorData);
     }
 
-
-
+    public getItemKey(url :string) : string | undefined{
+        return undefined;
+    }
 
 }

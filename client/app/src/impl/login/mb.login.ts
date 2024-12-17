@@ -1,10 +1,6 @@
 require('module-alias/register');
 
-import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
-import log from "electron-log";
-import { ShopApi } from "@eleapi/shop/shop";
-import { DoorEntity } from "@src/door/entity";
-import wait from "@utils/wait";
+import { InvokeType, Protocols } from "@eleapi/base";
 import { MbLoginApi } from "@eleapi/login/mb.login";
 import { MbEngine } from "@src/door/mb/mb.engine";
 import { MdLoginMonitor } from "@src/door/monitor/mb/login/md.login.monitor";
@@ -21,15 +17,12 @@ export class MbLoginApiImpl extends MbLoginApi {
             if(!page){ 
                 return;
             }
-            await page.goto(url);
             const monitor = new MdLoginMonitor();
             monitor.setHandler(async (request, response) => {
                 engine.saveContextState();
                 return {};
             });
-            engine.addMonitor(monitor);
-            await engine.startMonitor();
-            return await monitor.waitForAction();
+            return await engine.openWaitMonitor(page, url, monitor);
         }finally{
             await engine.closePage();
         }  
