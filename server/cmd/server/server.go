@@ -9,8 +9,6 @@ import (
 	"os/signal"
 	"time"
 
-	authControllers "server/app/auth/controllers"
-
 	"server/common"
 	"server/common/middleware/application"
 	"server/common/middleware/cache"
@@ -46,13 +44,8 @@ var (
 	}
 )
 
-var AppRouters = make([]func(g *gin.RouterGroup), 0)
-
 func init() {
 	StartCmd.PersistentFlags().StringVarP(&cmd.ConfigPath, "config", "c", "config/config.yaml", "使用提供的配置文件启动服务器")
-
-	AppRouters = append(AppRouters, authControllers.LoadAuthRouter) // 添加认证路由
-	AppRouters = append(AppRouters, authControllers.LoadUserRouter) // 添加用户路由
 }
 
 func setup() {
@@ -134,7 +127,7 @@ func initRouter() {
 		Use(middleware.CrossDomain())
 
 	// 加载路由
-	for _, f := range AppRouters {
+	for _, f := range GetAppRouters() {
 		f(g)
 	}
 }
