@@ -6,6 +6,7 @@ import (
 	"server/common/converter"
 	"server/common/logger"
 	"server/common/server/controller"
+	"server/common/server/middleware"
 	"server/internal/auth/services"
 	"server/internal/auth/services/dto"
 
@@ -17,6 +18,17 @@ const (
 	DeleteUserSuccess = "删除用户成功"
 	UpdateUserSuccess = "更新用户成功"
 )
+
+func LoadUserRouter(router *gin.RouterGroup) {
+	r := router.Group("/users")
+	{
+		r.Use(middleware.Authorization()).POST("", AddUser)
+		r.Use(middleware.Authorization()).DELETE("/:id", DeleteUser)
+		r.Use(middleware.Authorization()).PUT("/:id", UpdateUser)
+		r.Use(middleware.Authorization()).GET("/:id", GetUser)
+		r.Use(middleware.Authorization()).GET("/page", Page)
+	}
+}
 
 // AddUser
 // @Description 添加用户

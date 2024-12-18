@@ -7,6 +7,7 @@ import (
 	"server/common/logger"
 	serverCommon "server/common/server/common"
 	"server/common/server/controller"
+	"server/common/server/middleware"
 	"server/internal/auth/services"
 	"server/internal/auth/services/dto"
 
@@ -20,6 +21,19 @@ const (
 	UpdateUserInfoSuccess     = "更新个人信息成功"
 	ModifyUserPasswordSuccess = "修改密码成功"
 )
+
+func LoadAuthRouter(router *gin.RouterGroup) {
+	r := router.Group("/auth")
+	{
+		r.POST("/login", Login)
+		r.POST("/register", Register)
+		r.GET("/captcha", GetCaptcha)
+		r.Use(middleware.Authorization()).GET("/login-user", GetLoginUser)
+		r.Use(middleware.Authorization()).POST("/logout", Logout)
+		r.Use(middleware.Authorization()).PUT("/user-info", UpdateAuthUserInfo)
+		r.Use(middleware.Authorization()).PUT("/modify-password", ModifyAuthUserPassword)
+	}
+}
 
 // Login
 // @Description 登录
