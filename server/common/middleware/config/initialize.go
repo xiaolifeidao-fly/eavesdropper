@@ -6,12 +6,12 @@ import (
 	"server/common/middleware/database"
 	"server/common/middleware/jwtauth"
 	"server/common/middleware/logger"
-	"server/library/config"
+
+	"github.com/spf13/viper"
 )
 
 var (
-	DefaultConfig config.Config
-	_entity       *Entity
+	_entity *Entity
 )
 
 type Entity struct {
@@ -47,13 +47,12 @@ func Setup(configPath string) error {
 		},
 	}
 
-	// 初始化配置
-	DefaultConfig, err = config.NewConfig(
-		config.WithSource(configPath),
-		config.WithEntity(_entity),
-	)
+	viper.SetConfigFile(configPath)
+	if err = viper.ReadInConfig(); err != nil {
+		return err
+	}
 
-	if err != nil {
+	if err = viper.Unmarshal(_entity); err != nil {
 		return err
 	}
 
