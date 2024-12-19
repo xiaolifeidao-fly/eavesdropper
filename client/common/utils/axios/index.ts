@@ -1,7 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { plainToClass,plainToInstance } from 'class-transformer';
 import { getItem } from '../store/web';
-console.log(process.env.SERVER_TARGET);
 const REQUEST_HEADER_TOKEN = 'Authorization'
 
 // 定义一个 HttpError 类，扩展自 Error
@@ -23,10 +22,25 @@ function rejectHttpError(message: string, code?: any): Promise<never> {
   return Promise.reject(error);
 }
 
+function getBaseUrl() {
+  try{
+    // @ts-ignore
+    if(window != undefined){
+      //@ts-ignore
+      return process.env.APP_URL_PREFIX;
+    }
+    //@ts-ignore
+    return process.env.APP_URL_PREFIX;
+  }catch(e){
+    //@ts-ignore
+    return process.env.SERVER_TARGET + process.env.APP_URL_PREFIX;
+  }
+}
+
 const instance: AxiosInstance = axios.create({
   timeout: 60000,
   // baseURL: '',
-  baseURL: `${process.env.SERVER_TARGET}`,
+  baseURL: getBaseUrl(),
   withCredentials: true,
   // 登录成功后，设置请求头 Authorization
   // headers: {

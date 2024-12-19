@@ -23,7 +23,8 @@ const CORS_HEADERS = [
 const nextConfig = {
     env: {
       JWT_SECRET : process.env.JWT_SECRET,
-      SERVER_TARGET : process.env.SERVER_TARGET
+      SERVER_TARGET : process.env.SERVER_TARGET,
+      APP_URL_PREFIX : process.env.APP_URL_PREFIX
     },
     reactStrictMode: false,
     async headers() {
