@@ -4,19 +4,22 @@ import { registerApi } from "@src/impl/register";
 import { ipcMain } from "electron";
 import log from "electron-log";
 
-function registerMethodsFromClass(cls: { new(...args: any[]): ElectronApi }) {
+ function registerMethodsFromClass(cls: { new(...args: any[]): ElectronApi }) {
     const prototype = cls.prototype; // 通过类获取原型
   
     Object.getOwnPropertyNames(prototype)
         .filter((key) => key !== 'constructor')
-        .forEach((methodName) => {
+        .forEach(async (methodName) => {
             const method = (prototype as any)[methodName]; // 获取实例方法
             // 使用单例实例调用方法
             const registerInstance = new cls();
             const metadata = Reflect.getMetadata('invokeType', prototype, methodName);
             if(metadata == Protocols.INVOKE){
-                log.info("metadata impl", metadata, `${registerInstance.getApiName()}.${methodName}`);
-                ipcMain.handle(`${registerInstance.getApiName()}.${methodName}`, async (event, ...args) => {
+                const namespace = registerInstance.getNamespace();
+                const apiName = registerInstance.getApiName();
+                let rendererApiName = namespace + "_" + apiName;
+                log.info("metadata impl", metadata, `${rendererApiName}.${methodName}`);
+                ipcMain.handle(`${rendererApiName}.${methodName}`, async (event, ...args) => {
                     const instance = new cls();
                     instance.setEvent(event);
                     return method.apply(instance, args);
@@ -29,7 +32,7 @@ function registerMethodsFromClass(cls: { new(...args: any[]): ElectronApi }) {
 export async function registerRpc(){
     const register = registerApi();
     register.forEach(cls => {
-        registerMethodsFromClass(cls)
+        registerMethodsFromClass(cls);
     });
 }
 

@@ -4,6 +4,7 @@ import { MbShopApi } from "./door/shop/mb.shop";
 import { MbSkuApi } from "./door/sku/mb.sku";
 import { MbUserApi } from "./door/user/user";
 import { StoreApi } from "./store/store";
+import { v4 as uuidv4 } from 'uuid';
 
 const register : { new(...args: any[]): ElectronApi }[] = []
 

@@ -6,8 +6,8 @@ import { MbEngine } from "@src/door/mb/mb.engine";
 import { MdLoginMonitor } from "@src/door/monitor/mb/login/md.login.monitor";
 
 
-export class MbLoginApiImpl extends MbLoginApi { 
-    
+export class MbLoginApiImpl extends MbLoginApi {
+
 
     @InvokeType(Protocols.INVOKE)
     async login(url: string) {

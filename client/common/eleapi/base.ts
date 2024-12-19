@@ -20,6 +20,7 @@ abstract class ElectronApi {
 
   event : any;
 
+
   constructor() {
     this.apiName = this.getApiName()
   }
@@ -42,7 +43,7 @@ abstract class ElectronApi {
   }
   
   getNamespace(): any {
-    return undefined;
+    return "";
   }
 
   getEvent(){
@@ -53,21 +54,8 @@ abstract class ElectronApi {
     this.event = event
   }
 
-  getApiNameSuffix(): string{
-    return "Impl";
-  }
-
-  getApiName(): string{
-    const namespace = this.getNamespace();
-    let constructorName = this.constructor.name;
-    if(!constructorName.endsWith(this.getApiNameSuffix())){
-       constructorName = constructorName + this.getApiNameSuffix();
-    }
-    if(namespace){
-       return namespace + "_" +constructorName;
-    }
-    return constructorName;
-  }
+  abstract getApiName(): string;
+  
 
   jsonToObject(clazz: any, data: {}){
     return plainToInstance(clazz, data)
@@ -85,6 +73,10 @@ abstract class ElectronApi {
   async invokeApi(functionName : string, ...args : any){
       const env = this.getEnvironment();
       if(env == 'Electron'){
+          let apiName = this.getApiName();
+          if(this.getNamespace()){
+              apiName = this.getNamespace() + "_" + apiName;
+          }
           //@ts-ignore
           return await window[this.getApiName()][functionName](...args);
       }

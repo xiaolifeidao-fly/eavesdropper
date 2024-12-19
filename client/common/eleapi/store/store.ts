@@ -2,6 +2,10 @@ import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
 import { get, set, remove, clear } from "@utils/store/electron";
 
 export class StoreApi extends ElectronApi {
+    
+    getApiName(): string {
+        return "StoreApi";
+    }
 
     isElectron(){
         try{

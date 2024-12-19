@@ -8,11 +8,13 @@ import { mainWindow, setMainWindow } from './windows';
 
 import log from 'electron-log';
 import { registerRpc } from './register/rpc';
+import { init } from './store';
 
 
 log.info("app load")
 async function createDefaultWindow() {
   // const url = `${getClientBaseUrl()}/clip`;
+  init();
   const mainWindow = await createWindow('main', process.env.WEBVIEW_URL || "");
   setMainWindow(mainWindow);
 }

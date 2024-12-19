@@ -8,8 +8,8 @@ import { MbEngine } from "@src/door/mb/mb.engine";
 import { MbUserInfoMonitor } from "@src/door/monitor/mb/user/md.user.monitor";
 
 
-export class MbUserApiImpl extends MbUserApi { 
-    
+export class MbUserApiImpl extends MbUserApi {
+
    
     @InvokeType(Protocols.INVOKE)
     async getUserInfo(resourceId : number) {

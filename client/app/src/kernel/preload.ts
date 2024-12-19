@@ -3,16 +3,14 @@ const { contextBridge, ipcRenderer } = require('electron');
 require('module-alias/register');
 import log from 'electron-log';
 import { ElectronApi, Protocols } from '@eleapi/base';
-import { registerApi } from '@eleapi/register';
+import { registerApi } from '@src/impl/register';
+
  // 定义一个类型，将暴露给渲染进程的 API 类型化
 type ExposedApi = {
   [K in keyof ElectronApi]: ElectronApi[K] extends (...args: infer Args) => infer Return
     ? (...args: Args) => Promise<Return>
     : never;
 };
-
-
-
 
 
 function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
@@ -25,6 +23,7 @@ function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
       if (typeof method === 'function') {
         // 使用 ipcRenderer.invoke 封装方法
         const metadata = Reflect.getMetadata('invokeType', prototype, methodName);
+        console.log("exposeApi rendererApiName ", apiName);
         if(metadata == undefined || metadata == Protocols.INVOKE){
             (exposedConfig as any)[methodName] = (...args: any[]) => {
               return ipcRenderer.invoke(`${apiName}.${methodName}`, ...args);
@@ -42,19 +41,21 @@ function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
   return exposedConfig;
 }
 
-function registerRenderApi(cls: { new(...args: any[]): ElectronApi }){
+async function registerRenderApi(cls: { new(...args: any[]): ElectronApi }){
   const registerInstance = new cls();
   const apiName = registerInstance.getApiName();
-  const exposedConfig = exposeApi(apiName, cls)
+  const namespace = registerInstance.getNamespace();
+  let rendererApiName = namespace + "_" + apiName;
+  const exposedConfig = exposeApi(rendererApiName, cls)
   contextBridge.exposeInMainWorld(apiName, (exposedConfig as ExposedApi));
 }
 
 try{
-   const registerApis = registerApi();
-   registerApis.forEach(cls => {
+    const registerApis = registerApi();
+    console.log(registerApis)
+    registerApis.forEach(cls => {
       registerRenderApi(cls);
-   });
+    });
 }catch(e){
   log.error(e)
 }
-
