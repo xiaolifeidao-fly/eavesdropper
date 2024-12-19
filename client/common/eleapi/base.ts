@@ -23,6 +23,23 @@ abstract class ElectronApi {
   constructor() {
     this.apiName = this.getApiName()
   }
+
+  getEnvironment(): string {
+    try{
+      // @ts-ignore
+      if(navigator == undefined){
+         return 'Electron';
+      }
+      // @ts-ignore
+      const userAgent = navigator.userAgent  
+      if (userAgent.includes("Electron")) {
+        return 'Electron';
+      }
+      return 'Browser';
+    }catch(e){
+      return 'Electron';
+    }
+  }
   
   getNamespace(): any {
     return undefined;
@@ -63,6 +80,15 @@ abstract class ElectronApi {
 
   sendMessage(channel: string, ...args: any[]): void{
     this.getEvent().sender.send(channel, args);
+  }
+
+  async invokeApi(functionName : string, ...args : any){
+      const env = this.getEnvironment();
+      if(env == 'Electron'){
+          //@ts-ignore
+          return await window[this.getApiName()][functionName](...args);
+      }
+      return {};
   }
     
 }

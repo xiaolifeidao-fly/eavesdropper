@@ -31,5 +31,5 @@
       ]
     }
   },
-  "include": ["src/**/*","../common/utils/**/*"]
+  "include": ["src/**/*","../common/utils/**/*", "../common/utils/store/web.ts", "../common/utils/store/local.ts"]
 }

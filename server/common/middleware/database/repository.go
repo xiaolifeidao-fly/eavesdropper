@@ -31,7 +31,7 @@ func (r *Repository[T]) SetDb(db *gorm.DB) {
 // GetOne 获取单个
 func (r *Repository[T]) GetOne(sql string, values ...interface{}) (T, error) {
 	var repoValue *T = new(T)
-	err := r.Db.Raw(sql, values).Scan(&repoValue).Error
+	err := r.Db.Raw(sql, values...).Scan(&repoValue).Error
 	if err != nil {
 		return *repoValue, err
 	}
@@ -41,7 +41,7 @@ func (r *Repository[T]) GetOne(sql string, values ...interface{}) (T, error) {
 // GetList 获取列表
 func (r *Repository[T]) GetList(sql string, values ...interface{}) ([]T, error) {
 	var entities []T
-	err := r.Db.Raw(sql, values).Find(&entities).Error
+	err := r.Db.Raw(sql, values...).Find(&entities).Error
 	if err != nil {
 		return []T{}, err
 	}

@@ -1,8 +1,6 @@
 require('module-alias/register');
 import { ElectronApi, Protocols } from "@eleapi/base";
-import { MbLoginApiImpl } from "@src/impl/login/mb.login";
-import { SkuApiImpl } from "@src/impl/sku/sku";
-import { MbShopApiImpl } from "@src/impl/shop/mb.shop";
+import { registerApi } from "@src/impl/register";
 import { ipcMain } from "electron";
 import log from "electron-log";
 
@@ -29,9 +27,10 @@ function registerMethodsFromClass(cls: { new(...args: any[]): ElectronApi }) {
 
 
 export async function registerRpc(){
-    registerMethodsFromClass(SkuApiImpl)
-    registerMethodsFromClass(MbShopApiImpl)
-    registerMethodsFromClass(MbLoginApiImpl)
+    const register = registerApi();
+    register.forEach(cls => {
+        registerMethodsFromClass(cls)
+    });
 }
 
 

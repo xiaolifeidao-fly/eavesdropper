@@ -1,13 +1,14 @@
 import path from 'path';
 import fs from 'fs'
 import { Browser, chromium, devices,firefox, BrowserContext, Page, Route ,Request, Response} from 'playwright';
-import { get, set } from '@src/store/local';
+import { get, set } from '@utils/store/electron';
 import { app } from 'electron';
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from './monitor/monitor';
 import { DoorEntity } from './entity';
 import log from 'electron-log';
 import { ActionChain } from './element/element';
-import { getDoorList } from '@api/door/door.api';
+import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
+import { DoorRecord } from '@model/door/door';
 
 const browserMap = new Map<string, Browser>();
 
@@ -15,7 +16,7 @@ const contextMap = new Map<string, BrowserContext>();
 
 export abstract class DoorEngine {
 
-    private chromePath: string;
+    private chromePath: string | undefined;
 
     browser: Browser | undefined;
 
@@ -39,7 +40,9 @@ export abstract class DoorEngine {
         this.headless = headless;
     }
 
-    abstract getChromePath() : string;
+    getChromePath() : string | undefined{
+        return process.env.CHROME_PATH;
+    }
 
     addMonitor(monitor: Monitor){
         this.monitors.push(monitor);
@@ -131,76 +134,72 @@ export abstract class DoorEngine {
     }
 
     public async openWaitMonitor(page : Page,  url: string, monitor : Monitor, headers: Record<string, string> = {}){
-        const itemKey = monitor.getItemKey(url);
+        const itemKey = monitor.getItemKeys(url);
         const cache = await this.fromCacheByMonitor(url, itemKey, monitor);
         if(cache){
             return cache;
         }
-        let doorEntity;
-        try{
-            this.addMonitor(monitor);
-            await this.startMonitor();
-            await page.goto(url, headers);
-            doorEntity = await monitor.waitForAction();
-            return doorEntity;
-        }finally{
-            if(monitor instanceof MonitorResponse && doorEntity && itemKey){
-                await this.saveCache(url, monitor.getKey(), monitor.getType(), itemKey, doorEntity);
-            }
+        this.addMonitor(monitor);
+        await this.startMonitor();
+        await page.goto(url, headers);
+        const doorEntity = await monitor.waitForAction();
+        if(monitor instanceof MonitorResponse && itemKey){
+            await this.saveCache(url, monitor.getKey(), monitor.getType(), itemKey, doorEntity);
         }
+        return doorEntity;
     }
 
     public async saveCache(url : string, monitorKey : string, type : string, itemKey : string, doorEntity: DoorEntity){
         if(!doorEntity.code){
             return;
         }
-        this.resourceId;
-        // TODO 保存缓存
+        const doorRecord = new DoorRecord(undefined, monitorKey, url, itemKey, type, JSON.stringify(doorEntity.data));
+        await saveDoorRecord(doorRecord);
     }
 
     public async fromCacheByMonitor(url : string, itemKey : string | undefined, monitor : Monitor) : Promise<DoorEntity | undefined> {
         if(!(monitor instanceof MonitorResponse)){
             return undefined;
         }
-        this.resourceId;
         if(itemKey == undefined){
             return undefined;
         }
         const monitorKey = monitor.getKey();
         const type = monitor.getType();
-        // TODO 从缓存中获取数据
+        const doorRecord = await getDoorRecord(monitorKey, itemKey, type);
+        if(doorRecord){
+            return new DoorEntity(true, JSON.parse(doorRecord.data));
+        }
         return undefined;
     }
 
     public async fromCacheByMonitorChain(url : string, itemKey : string | undefined, monitorChain : MonitorChain) : Promise<DoorEntity | undefined> {
-        this.resourceId;
         if(itemKey == undefined){
             return undefined;
         }
         const monitorKey = monitorChain.getKey();
         const type = monitorChain.getType();
-        // TODO 从缓存中获取数据
+        const doorRecord = await getDoorRecord(monitorKey, itemKey, type);
+        if(doorRecord){
+            return new DoorEntity(true, JSON.parse(doorRecord.data));
+        }
         return undefined;
     }
 
     public async openWaitMonitorChain(page : Page,  url: string, monitorChain: MonitorChain, headers: Record<string, string> = {}){
-        const itemKey = monitorChain.getItemKey(url);
+        const itemKey = monitorChain.getItemKeys(url);
         const cache = await this.fromCacheByMonitorChain(url, itemKey, monitorChain)
         if(cache){
             return cache;
         }
-        let doorEntity;
-        try{
-            this.addMonitorChain(monitorChain);
-            await this.startMonitor();
-            await page.goto(url, headers);
-            doorEntity = await monitorChain.waitForAction();
-            return doorEntity;
-        }finally{
-            if(doorEntity && doorEntity.code && itemKey){
-                await this.saveCache(url, monitorChain.getKey(), monitorChain.getType(), itemKey, doorEntity);
-            }
+        this.addMonitorChain(monitorChain);
+        await this.startMonitor();
+        await page.goto(url, headers);
+        const doorEntity = await monitorChain.waitForAction();
+        if(doorEntity && doorEntity.code && itemKey){
+            await this.saveCache(url, monitorChain.getKey(), monitorChain.getType(), itemKey, doorEntity);
         }
+        return doorEntity;
     }
 
 
@@ -248,7 +247,6 @@ export abstract class DoorEngine {
     abstract getNamespace(): string;
 
     public async saveContextState() {
-        // 保存 cookies 和 localStorage 状态
         if(!this.context){
             return;
         }
@@ -287,13 +285,12 @@ export abstract class DoorEngine {
         if (this.chromePath) {
             key += "_" + this.chromePath;
         }
-        console.log(browserMap)
         if(browserMap.has(key)){
             return browserMap.get(key);
         }
         const browser = await chromium.launch({
             headless: this.headless,
-            executablePath: this.chromePath ? this.chromePath : undefined,
+            executablePath: this.chromePath,
             args: [
                 '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
               ]

@@ -5,11 +5,12 @@ import Layout from '@/components/Layout/index';
 import { useEffect, useState } from 'react';
 import { getData } from '@api/shop/shop.api';
 import { Shop } from '@model/shop/shop';
-import { SkuApi } from '@eleapi/sku/mb.sku';
+import { MbSkuApi } from '@eleapi/door/sku/mb.sku';
 
 import { EditOutlined, ExportOutlined, ScheduleOutlined, ScissorOutlined, UploadOutlined } from '@ant-design/icons';
-import { MbLoginApi } from '@eleapi/login/mb.login';
-import { MbShopApi } from '@eleapi/shop/mb.shop';
+import { MbLoginApi } from '@eleapi/door/login/mb.login';
+import { MbShopApi } from '@eleapi/door/shop/mb.shop';
+import { MbUserApi } from '@eleapi/door/user/user';
 
 export default function Clip() {
   const { token } = theme.useToken();
@@ -105,8 +106,14 @@ export default function Clip() {
   }
 
 
+  async function getUserInfo(){
+    const userApi = new MbUserApi();
+    const result = await userApi.getUserInfo(1);
+    console.log("window.userApi " , result )
+  }
+
   async function getSkuInfo(){
-    const shopApi = new SkuApi();
+    const shopApi = new MbSkuApi();
     const result = await shopApi.findMbSkuInfo("https://item.taobao.com/item.htm?id=862817545814&time=1734319603010");
     console.log("window.skuApi " , result )
   }
@@ -128,9 +135,10 @@ export default function Clip() {
     <Layout curActive='/clip'>
         <main >
             <div >
+                <Button onClick={login}>登录</Button>
+                <Button onClick={getUserInfo}>获取用户信息</Button>
                 <Button onClick={getShopInfo}>获取店铺信息</Button>
                 <Button onClick={getSkuInfo}>获取商品信息</Button>
-                <Button onClick={login}>登录</Button>
                 <div style={listStyle}>
                       <Table 
                           columns={columns} 

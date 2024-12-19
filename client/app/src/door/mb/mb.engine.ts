@@ -17,7 +17,4 @@ export class MbEngine extends DoorEngine {
         return "mb";
     }
 
-    public getChromePath() : string{
-        return "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-    }
 }

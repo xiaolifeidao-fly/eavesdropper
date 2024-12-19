@@ -3,6 +3,11 @@ import { DoorEntity } from "../entity";
 import { EventEmitter } from 'events';
 const axios = require('axios');
 
+function getUrlParameter(url: string) {
+    const urlObj = new URL(url);
+    return new URLSearchParams(urlObj.search);
+}
+
 export abstract class Monitor {
 
     finishTag: boolean = false;
@@ -20,8 +25,13 @@ export abstract class Monitor {
         });
     }
 
-    getItemKey(url : string): string | undefined {
+   
+    protected getItemKey(params : URLSearchParams): string | undefined {
         return undefined;
+    }
+
+    getItemKeys(url : string): string | undefined {
+        return this.getItemKey(getUrlParameter(url));
     }
 
     abstract getKey(): string;
@@ -148,8 +158,12 @@ export abstract class MonitorChain {
         return new DoorEntity(result, doorData);
     }
 
-    public getItemKey(url :string) : string | undefined{
+    protected getItemKey(params : URLSearchParams): string | undefined {
         return undefined;
+    }
+
+    getItemKeys(url : string): string | undefined {
+        return this.getItemKey(getUrlParameter(url));
     }
 
 }

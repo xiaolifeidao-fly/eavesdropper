@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"time"
 
+	"server/app"
 	"server/common"
 	"server/common/middleware/application"
 	"server/common/middleware/cache"
@@ -127,7 +128,7 @@ func initRouter() {
 		Use(middleware.CrossDomain())
 
 	// 加载路由
-	for _, f := range GetAppRouters() {
+	for _, f := range app.GetAppRouters() {
 		f(g)
 	}
 }

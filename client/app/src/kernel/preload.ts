@@ -3,9 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 require('module-alias/register');
 import log from 'electron-log';
 import { ElectronApi, Protocols } from '@eleapi/base';
-import { SkuApi } from '@eleapi/sku/mb.sku';
-import { MbShopApi } from '@eleapi/shop/mb.shop';
-import { MbLoginApi } from '@eleapi/login/mb.login';
+import { registerApi } from '@eleapi/register';
  // 定义一个类型，将暴露给渲染进程的 API 类型化
 type ExposedApi = {
   [K in keyof ElectronApi]: ElectronApi[K] extends (...args: infer Args) => infer Return
@@ -44,7 +42,7 @@ function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
   return exposedConfig;
 }
 
-function registerApi(cls: { new(...args: any[]): ElectronApi }){
+function registerRenderApi(cls: { new(...args: any[]): ElectronApi }){
   const registerInstance = new cls();
   const apiName = registerInstance.getApiName();
   const exposedConfig = exposeApi(apiName, cls)
@@ -52,9 +50,10 @@ function registerApi(cls: { new(...args: any[]): ElectronApi }){
 }
 
 try{
-  registerApi(SkuApi);
-  registerApi(MbShopApi);
-  registerApi(MbLoginApi);
+   const registerApis = registerApi();
+   registerApis.forEach(cls => {
+      registerRenderApi(cls);
+   });
 }catch(e){
   log.error(e)
 }

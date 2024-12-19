@@ -17,6 +17,15 @@ export abstract class MbMonitorResponse extends MonitorResponse {
         return "MB";
     }
 
+    public async isMatch(url : string, method: string, headers: { [key: string]: string; }): Promise<boolean> {
+        if(url.includes(this.getApiName())){
+            return true;
+        }
+        return false;
+    }
+
+    abstract getApiName(): string;
+
     public async getResponseData(response: Response): Promise<any> {
         try{
             const data = await response.text();

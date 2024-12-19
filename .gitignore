@@ -16,7 +16,8 @@ log
 *.pyc
 dist
 voice_data
-
+!.env.dev
+.env
 __debug**
 
 **/node_modules

@@ -7,6 +7,7 @@ import { LoginReq, RegisterReq } from '@model/auth/auth';
 import { login as loginApi, register as registerApi, getLoginUserInfo as getLoginUserInfoApi, logout as logoutApi } from '@api/auth/auth.api'
 import { encryptRSA } from '@utils/auth'
 import { instance } from '@utils/axios'
+import { getItem, removeItem, setItem } from "../../../common/utils/store/web";
 
 export type UserInfo = {
   id: number,
@@ -32,10 +33,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const [user, setUser] = useState<UserInfo | null>(null);
   const [loginToken, setLoginToken] = useState<string | null>(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem(REQUEST_HEADER_TOKEN);
+      // TODO return await getItem(REQUEST_HEADER_TOKEN);
+      return null;
     }
     return null;
   });
+
+
 
   const router = useRouter();
 
@@ -52,7 +56,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const fetchUserInfo = async () => {
     const resp = await getLoginUserInfoApi();
     if (!resp) {
-      localStorage.removeItem(REQUEST_HEADER_TOKEN)
+      await removeItem(REQUEST_HEADER_TOKEN)
       setLoginToken(null);
       setUser(null);
       // 跳转到登录页
@@ -70,7 +74,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     loginReq.password = encodedPassword;
     const { accessToken } = await loginApi(loginReq);
     setLoginToken(accessToken);
-    localStorage.setItem(REQUEST_HEADER_TOKEN, accessToken); // 存储到本地
+    await setItem(REQUEST_HEADER_TOKEN, accessToken); // 存储到本地
 
     // 修改请求头
     instance.defaults.headers[REQUEST_HEADER_TOKEN] = accessToken;
@@ -98,8 +102,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   }
 
   // 清除用户登录信息
-  const clearUserLogin = () => {
-    localStorage.removeItem(REQUEST_HEADER_TOKEN)
+  const clearUserLogin = async () => {
+    await removeItem(REQUEST_HEADER_TOKEN)
     setLoginToken(null);
     setUser(null);
   }

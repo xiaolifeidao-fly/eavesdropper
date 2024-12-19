@@ -40,3 +40,6 @@ func (e *BaseEntity) Delete() {
 		Valid: true,
 	}
 }
+
+
+

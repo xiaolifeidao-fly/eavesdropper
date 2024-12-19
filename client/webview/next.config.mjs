@@ -22,8 +22,8 @@ const CORS_HEADERS = [
 
 const nextConfig = {
     env: {
-      "JWT_SECRET": "next-admin",
-      "BASE_API_URL": "/api"
+      JWT_SECRET : process.env.JWT_SECRET,
+      SERVER_TARGET : process.env.SERVER_TARGET
     },
     reactStrictMode: false,
     async headers() {

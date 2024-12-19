@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { plainToClass,plainToInstance } from 'class-transformer';
-
+import { getItem } from '../store/web';
+console.log(process.env.SERVER_TARGET);
 const REQUEST_HEADER_TOKEN = 'Authorization'
 
 // 定义一个 HttpError 类，扩展自 Error
@@ -24,8 +25,8 @@ function rejectHttpError(message: string, code?: any): Promise<never> {
 
 const instance: AxiosInstance = axios.create({
   timeout: 60000,
-  baseURL: '',
-  // baseURL: `/${process.env.API_PREFIX}${process.env.NEXT_PUBLIC_BASE_URL}`,
+  // baseURL: '',
+  baseURL: `${process.env.SERVER_TARGET}`,
   withCredentials: true,
   // 登录成功后，设置请求头 Authorization
   // headers: {
@@ -33,13 +34,13 @@ const instance: AxiosInstance = axios.create({
   // },
 });
 
+
 // 前端请求拦截器
 instance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  async (config: InternalAxiosRequestConfig) => {
 
     // 添加请求头 Authorization
-    // @ts-ignore
-    const token = localStorage.getItem(REQUEST_HEADER_TOKEN);
+    const token = await getItem(REQUEST_HEADER_TOKEN);
     if (token) {
       config.headers[REQUEST_HEADER_TOKEN] = token;
     }
@@ -51,10 +52,7 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     let result = response.data;
-
     if (!result.success) {
-      console.log(result);
-
       return rejectHttpError(
         result.error || result.message || result.errorMessage || '请求异常！',
         500

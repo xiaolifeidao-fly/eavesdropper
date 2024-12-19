@@ -6,11 +6,8 @@ import { Monitor, MonitorChain } from "../../monitor";
 
 export class MbSkuInfoMonitor extends MbMonitorResponse{
 
-    public async isMatch(url : string, method: string, headers: { [key: string]: string; }): Promise<boolean> {
-        if(url.includes("mtop.taobao.pcdetail.data.get") && method == "GET"){
-            return true;
-        }
-        return false;
+    getApiName(): string{
+        return "mtop.taobao.pcdetail.data.get";
     }
 
     getKey(): string{
@@ -22,11 +19,8 @@ export class MbSkuInfoMonitor extends MbMonitorResponse{
 
 export class MbSkuDetailMonitor extends MbMonitorResponse{
 
-    public async isMatch(url: string, method: string, headers: { [key: string]: string; }): Promise<boolean> {
-        if(url.includes("mtop.taobao.detail.getdesc") && method == "GET"){
-            return true;
-        }
-        return false;
+    getApiName(): string{
+        return "mtop.taobao.detail.getdesc";
     }
 
     getKey(): string{
@@ -41,6 +35,15 @@ export class MbShopDetailMonitorChain extends MbMonitorChain{
     initMonitors(): Monitor[] {
         return [new MbSkuInfoMonitor(), new MbSkuDetailMonitor()];
     }
+
+    getItemKey(params: URLSearchParams): string | undefined {
+        const id = params.get("id");
+        if(id){
+            return id;
+        }
+        return undefined;
+    }
+
 
 
 }
