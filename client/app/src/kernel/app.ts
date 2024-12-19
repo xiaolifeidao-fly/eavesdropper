@@ -13,7 +13,7 @@ import { registerRpc } from './register/rpc';
 log.info("app load")
 async function createDefaultWindow() {
   // const url = `${getClientBaseUrl()}/clip`;
-  const mainWindow = await createWindow('main', 'http://localhost:8081/shop');
+  const mainWindow = await createWindow('main', process.env.WEBVIEW_URL || "");
   setMainWindow(mainWindow);
 }
  

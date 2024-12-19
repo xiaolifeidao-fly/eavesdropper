@@ -2,7 +2,7 @@
 import { Button, Empty } from 'antd';
 import { useRouter } from 'next/navigation';
 
-import Layout from '@/components/Layout';
+import Layout from '@/components/layout';
 import styles from './index.module.less';
 
 export default function Dashboard() {

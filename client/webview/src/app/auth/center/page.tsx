@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 
-import Layout from '@/components/Layout';
+import Layout from '@/components/layout';
 import UserProfile from './UserProfile';
 import UserPassword from './UserPasswrod';
 import { useAuth } from '@/context/AuthContext';

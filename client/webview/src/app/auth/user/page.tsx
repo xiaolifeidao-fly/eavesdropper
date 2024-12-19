@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { Button, message } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
-import Layout from '@/components/Layout';
+import Layout from '@/components/layout';
 import styles from './index.module.less';
 
 import { userPage as userPageApi, deleteUser as deleteUserApi } from '@api/auth/user.api';
