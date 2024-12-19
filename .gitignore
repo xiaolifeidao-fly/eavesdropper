@@ -17,6 +17,8 @@ log
 dist
 voice_data
 !.env.dev
+!**/.env.dev
+
 .env
 __debug**
 
@@ -29,3 +31,5 @@ webview/.next
 **/config.yaml
 
 client/resource/**/*
+
+nohup.outout

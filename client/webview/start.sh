@@ -1,1 +1,1 @@
-pnpm run start
+nohup pnpm run start &
