@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { StepsForm } from '@ant-design/pro-components';
-import { Modal, message, Button } from 'antd';
+import { Modal, message, Button, Form, Select } from 'antd';
 
 import ImportSku from './SkuLinkUpload';
 import type { LinkInfo } from './SkuLinkUpload';
@@ -23,6 +23,7 @@ interface PushSkuStepsFormProps {
 
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible }) => {
 
+  const [sourceAccount, setSourceAccount] = useState('');
   const [pushSkuFlag, setPushSkuFlag] = useState(false);
   const [current, setCurrent] = useState(0);
   const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
@@ -114,6 +115,12 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
             return true;
           }}
         >
+          <Select
+            placeholder="请选择资源账号"
+            options={[{ label: '资源账号1', value: '1' }, { label: '资源账号2', value: '2' }]}
+            onChange={setSourceAccount}
+            style={{ width: '100%' }}
+          />
           <ImportSku uploadUrlList={uploadUrlList} setUploadUrlList={setUploadUrlList} />
         </StepsForm.StepForm>
 
