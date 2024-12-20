@@ -22,7 +22,7 @@ const FileUploadList = ({ uploadFileList, onDelete }: FileUploadListProps) => {
       locale={{ emptyText: '暂无文件' }}
       dataSource={uploadFileList}
       renderItem={(item, index) => (
-        <List.Item key={index}>
+        <List.Item key={index} style={{ padding: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
             <FileOutlined style={{ fontSize: 18, marginRight: 10 }} />
             <span style={{ flex: 1 }}>{item.name}</span>

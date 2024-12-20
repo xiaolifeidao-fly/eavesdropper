@@ -100,6 +100,11 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
           title="导入链接"
           style={{ height: '400px' }}
           onFinish={async () => {
+            if (sourceAccount === '') {
+              message.error('请选择资源账号');
+              return false;
+            }
+
             if (uploadUrlList.length === 0) {
               message.error('请先导入链接');
               return false;
@@ -119,7 +124,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
             placeholder="请选择资源账号"
             options={[{ label: '资源账号1', value: '1' }, { label: '资源账号2', value: '2' }]}
             onChange={setSourceAccount}
-            style={{ width: '100%' }}
+            style={{ width: '100%', margin: 0, padding: 0 }}
           />
           <ImportSku uploadUrlList={uploadUrlList} setUploadUrlList={setUploadUrlList} />
         </StepsForm.StepForm>
