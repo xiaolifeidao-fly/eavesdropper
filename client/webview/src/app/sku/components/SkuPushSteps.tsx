@@ -114,6 +114,8 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
               return true;
             }
 
+            console.log(uploadUrlList);
+
             // 调用推送接口 TODO
 
             setPushSkuFlag(true);

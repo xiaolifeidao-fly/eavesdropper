@@ -20,8 +20,9 @@ export interface LinkInfo {
 
 const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }) => {
 
+  const [currentTab, setCurrentTab] = useState('file-import');
   const [uploadFileList, setUploadFileList] = useState<UploadFile[]>([]);
-  const [textAreaValue, setTextAreaValue] = useState<string>('');
+  // const [textAreaValue, setTextAreaValue] = useState<string>('');
 
   // 删除文件
   const onDelete = (item: UploadFile, index: number) => {
@@ -102,29 +103,29 @@ const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }
   };
 
 
-  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-  const textAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    setTextAreaValue(value);
+  // const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  // const textAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   const value = e.target.value;
+  //   setTextAreaValue(value);
 
-    // 防抖逻辑
-    if (debounceTimer.current) {
-      clearTimeout(debounceTimer.current);
-    }
+  //   // 防抖逻辑
+  //   if (debounceTimer.current) {
+  //     clearTimeout(debounceTimer.current);
+  //   }
 
-    debounceTimer.current = setTimeout(() => {
-      if (value.trim() === '') {
-        return;
-      }
+  //   debounceTimer.current = setTimeout(() => {
+  //     if (value.trim() === '') {
+  //       setUploadUrlList([]);
+  //       return;
+  //     }
 
-      // 解析链接
-      const linkList = value.split('\n');
-      const validLinkList = linkList.filter(link => link.trim() !== '');
-      const uid = Date.now().toString();
-      setUploadUrlList(validLinkList.map(link => ({ uid, url: link })));
-
-    }, 500); // 延迟 500 毫秒
-  };
+  //     // 解析链接
+  //     const linkList = value.split('\n');
+  //     const validLinkList = linkList.filter(link => link.trim() !== '');
+  //     // 添加到上传列表
+  //     setUploadUrlList([...validLinkList.map(link => ({ uid: Date.now().toString(), url: link }))]);
+  //   }, 500); // 延迟 500 毫秒
+  // };
 
   const importLinkTabs = () => {
     return [
@@ -146,24 +147,24 @@ const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }
           </div>
         </>,
       },
-      {
-        key: 'link-import',
-        label: '链接导入',
-        children: <>
-          <Input.TextArea
-            placeholder="请输入商品链接,每行一个"
-            style={{ height: '300px', resize: 'none' }}
-            value={textAreaValue}
-            onChange={textAreaChange}
-          />
-        </>,
-      }
+      // {
+      //   key: 'link-import',
+      //   label: '链接导入',
+      //   children: <>
+      //     <Input.TextArea
+      //       placeholder="请输入商品链接,每行一个"
+      //       style={{ height: '300px', resize: 'none' }}
+      //       value={textAreaValue}
+      //       onChange={textAreaChange}
+      //     />
+      //   </>,
+      // }
     ]
   }
 
   return (
     <>
-      <Tabs defaultActiveKey={"file-import"} items={importLinkTabs()} />
+      <Tabs defaultActiveKey={currentTab} onChange={setCurrentTab} items={importLinkTabs()} />
     </>
   )
 }
