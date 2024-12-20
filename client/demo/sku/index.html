@@ -102,6 +102,17 @@
                     <el-tabs v-model="activeTab" class="mt-20">
                         <!-- Excel导入选项 -->
                         <el-tab-pane label="Excel导入" name="excel">
+                            <!-- 新增账户资源选择 -->
+                            <el-form-item label="选择资源账号">
+                                <el-select v-model="selectedAccount" placeholder="请选择资源账号">
+                                    <el-option
+                                        v-for="account in accountOptions"
+                                        :key="account.value"
+                                        :label="account.label"
+                                        :value="account.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
                             <el-upload
                                 class="upload-demo"
                                 drag
@@ -117,6 +128,17 @@
                         
                         <!-- 链接导入选项 -->
                         <el-tab-pane label="链接导入" name="link">
+                            <!-- 新增账户资源选择 -->
+                            <el-form-item label="选择账户资源">
+                                <el-select v-model="selectedAccount" placeholder="请选择资源账号">
+                                    <el-option
+                                        v-for="account in accountOptions"
+                                        :key="account.value"
+                                        :label="account.label"
+                                        :value="account.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
                             <el-input
                                 type="textarea"
                                 v-model="productLinks"
@@ -225,6 +247,14 @@
                     subTitle: '',
                     details: []
                 })
+
+                // 账户资源选择数据
+                const selectedAccount = ref('')
+                const accountOptions = ref([
+                    { value: 'account1', label: '账户资源1' },
+                    { value: 'account2', label: '账户资源2' }
+                    // 添加更多账户资源选项
+                ])
 
                 // 搜索方法
                 const handleSearch = () => {
@@ -359,7 +389,9 @@
                     handleConfirmPublish,
                     format,
                     handlePublish,
-                    handleDelete
+                    handleDelete,
+                    selectedAccount,
+                    accountOptions
                 }
             }
         }).use(ElementPlus).mount('#app')
