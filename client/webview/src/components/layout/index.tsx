@@ -109,20 +109,19 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
               </span>
             </div>
           </Header>
-          <Content style={{ margin: '24px 16px 0' }}>
+          <Content style={{ margin: '10px 10px 0' }}>
             <div
               style={{
-                padding: 24,
-                minHeight: 520,
                 ...getThemeBg(curTheme),
                 borderRadius: borderRadiusLG,
+                height: '100%',
               }}
             >
               {children}
             </div>
           </Content>
-          <Footer style={{ textAlign: 'center' }}>
-          </Footer>
+          {/* <Footer style={{ textAlign: 'center' }}>
+          </Footer> */}
         </Layout>
       </Layout>
     </ConfigProvider>

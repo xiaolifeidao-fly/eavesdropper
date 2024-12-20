@@ -35,6 +35,11 @@ const getNavList = () => {
             icon: <LayoutOutlined />,
             label: '商品管理'
         },
+        {
+            key: '/sku',
+            icon: <LayoutOutlined />,
+            label: '商品管理'
+        },
         
     ]
 }

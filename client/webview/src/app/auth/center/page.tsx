@@ -34,7 +34,9 @@ export default function UserCenter() {
 
   return (
     <Layout curActive='/auth/center'>
-      <Tabs defaultActiveKey="user-info" items={items(user)} />
+      <div style={{ width: '100%' }}>
+        <Tabs defaultActiveKey="user-info" items={items(user)} style={{ width: '100%' }} />
+      </div>
     </Layout>
   );
 }

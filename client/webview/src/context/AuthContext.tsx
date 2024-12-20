@@ -31,15 +31,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserInfo | null>(null);
-  const [loginToken, setLoginToken] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      // TODO return await getItem(REQUEST_HEADER_TOKEN);
-      return null;
-    }
-    return null;
-  });
-
-
+  const [loginToken, setLoginToken] = useState<string | null>(null);
 
   const router = useRouter();
 
