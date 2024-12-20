@@ -6,7 +6,7 @@ import Layout from '@/components/layout';
 import styles from './index.module.less';
 
 import useRefreshPage from '@/components/RefreshPage';
-import { PushSkuStepsForm } from './components';
+import { SkuPushStepsForm } from './components';
 
 type DataType = {
   id: number;
@@ -125,7 +125,9 @@ export default function SkuManage() {
               pageSize: 10,
             }}
           />
-          <PushSkuStepsForm visible={visible} setVisible={setVisible} />
+
+          {/* 发布商品 */}
+          <SkuPushStepsForm visible={visible} setVisible={setVisible} />
         </div>
       </main>
     </Layout>

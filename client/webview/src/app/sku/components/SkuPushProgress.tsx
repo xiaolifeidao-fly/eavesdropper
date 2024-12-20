@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react';
 import { Progress, Table, Button, Tag } from 'antd';
 import type { TableColumnsType } from 'antd';
@@ -36,7 +37,7 @@ const columns: TableColumnsType<SkuPushInfo> = [
   },
 ];
 
-const PushProgress: React.FC = () => {
+const SkuPushProgress: React.FC = () => {
 
   const [data, setData] = useState<SkuPushInfo[]>([]);
 
@@ -68,4 +69,4 @@ const PushProgress: React.FC = () => {
   )
 }
 
-export default PushProgress;
+export default SkuPushProgress;

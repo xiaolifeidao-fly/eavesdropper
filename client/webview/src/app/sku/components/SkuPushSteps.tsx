@@ -1,12 +1,14 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import {
   StepsForm,
 } from '@ant-design/pro-components';
 import { Modal, message } from 'antd';
 
-import ImportSku from './ImportSku';
-import PushProgress from './PushProgress';
-import PushConfirm from './PushConfirm';
+import ImportSku from './SkuLinkUpload';
+import type { SkuInfo } from './SkuLinkUpload';
+import SkuPushProgress from './SkuPushProgress';
+import SukPushConfirm from './SkuPushConfirm';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -21,7 +23,9 @@ interface PushSkuStepsFormProps {
   setVisible: (visible: boolean) => void;
 }
 
-const PushSkuStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible }) => {
+const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible }) => {
+
+  const [uploadUrlList, setUploadUrlList] = useState<SkuInfo[]>([]);
 
   return (
     <>
@@ -31,11 +35,6 @@ const PushSkuStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
           await waitTime(1000);
           setVisible(false);
           message.success('提交成功');
-        }}
-        formProps={{
-          validateMessages: {
-            required: '此项为必填项',
-          },
         }}
         containerStyle={{ width: '100%' }}
         stepsFormRender={(dom, submitter) => {
@@ -59,11 +58,11 @@ const PushSkuStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
           title="导入链接"
           style={{ height: '400px' }}
           onFinish={async () => {
-            await waitTime(2000);
-            return true;
+            console.log(uploadUrlList);
+            return false;
           }}
         >
-          <ImportSku />
+          <ImportSku uploadUrlList={uploadUrlList} setUploadUrlList={setUploadUrlList} />
         </StepsForm.StepForm>
 
         {/* 第二步： 发布进度 */}
@@ -72,16 +71,16 @@ const PushSkuStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
           title="发布进度"
           style={{ height: '400px' }}
         >
-          <PushProgress />
+          <SkuPushProgress />
         </StepsForm.StepForm>
 
         {/* 第三步： 发布确认 */}
         <StepsForm.StepForm name="time" title="发布确认">
-          <PushConfirm />
+          <SukPushConfirm />
         </StepsForm.StepForm>
       </StepsForm>
     </>
   )
 }
 
-export default PushSkuStepsForm;
+export default SkuPushStepsForm;

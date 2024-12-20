@@ -1,7 +1,8 @@
+'use client'
 import React from 'react';
 import { Result } from 'antd';
 
-const PushConfirm: React.FC = () => {
+const SukPushConfirm: React.FC = () => {
 
   const count = 100;
   const resultStatus = Math.random() > 0.5 ? 'success' : 'warning';
@@ -18,4 +19,4 @@ const PushConfirm: React.FC = () => {
   )
 }
 
-export default PushConfirm;
+export default SukPushConfirm;

@@ -62,7 +62,8 @@
     "reflect-metadata": "^0.2.2",
     "sharp": "^0.33.3",
     "sortablejs": "^1.15.2",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/d3-scale-chromatic": "^3.0.3",

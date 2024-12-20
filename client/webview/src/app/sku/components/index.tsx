@@ -1,9 +1,9 @@
-import PushSkuStepsForm from './PushSku';
-import PushProgress from './PushProgress';
-import PushConfirm from './PushConfirm';
+import SkuPushStepsForm from './SkuPushSteps';
+import PushProgress from './SkuPushProgress';
+import PushConfirm from './SkuPushConfirm';
 
 export {
-  PushSkuStepsForm,
+  SkuPushStepsForm,
   PushProgress,
   PushConfirm,
 }

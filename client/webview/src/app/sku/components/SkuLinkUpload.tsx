@@ -1,0 +1,171 @@
+'use client'
+import React, { useState, useRef } from 'react';
+import { Tabs, message, Upload, Input } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
+import type { UploadProps } from 'antd';
+
+import { parseXlsxFile } from '@utils/parse-file';
+import FileUploadList from './FileUploadList';
+import type { UploadFile } from './FileUploadList';
+
+interface ImportSkuProps {
+  uploadUrlList: SkuInfo[];
+  setUploadUrlList: (list: SkuInfo[]) => void;
+}
+
+export interface SkuInfo {
+  uid: string;
+  url: string;
+}
+
+const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }) => {
+
+  const [uploadFileList, setUploadFileList] = useState<UploadFile[]>([]);
+  const [textAreaValue, setTextAreaValue] = useState<string>('');
+
+  // 删除文件
+  const onDelete = (item: UploadFile, index: number) => {
+    setUploadFileList(uploadFileList.filter((_, i) => i !== index));
+
+    // 删除上传列表
+    setUploadUrlList(uploadUrlList.filter(item => item.uid !== item.uid));
+  }
+
+  // 添加或更新文件
+  function addOrUpdateUploadFile(file: UploadFile) {
+    const uid = file.uid;
+    let index = -1;
+    uploadFileList.find((item, i) => {
+      if (item.uid === uid) {
+        index = i;
+        return true;
+      }
+      return false;
+    });
+
+    if (index !== -1) {
+      uploadFileList[index] = file;
+      setUploadFileList([...uploadFileList]);
+    } else {
+      setUploadFileList([...uploadFileList, file]);
+    }
+  }
+
+  // 文件上传配置
+  const props: UploadProps = {
+    name: 'file',
+    multiple: false, // 不允许多选
+    showUploadList: false, // 不显示上传列表
+    disabled: uploadFileList.length >= 3, // 最多支持3个文件
+    beforeUpload: async (file) => { // 文件上传前处理
+      if (uploadFileList.length >= 3) {
+        message.error('最多支持3个文件同时上传');
+        return false;
+      }
+
+      const uid = file.uid;
+      const name = file.name;
+
+      // 校验文件类型
+      const fileType = file.type;
+      const isExcel =
+        fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        fileType === 'application/vnd.ms-excel' ||
+        fileType === 'text/csv';
+
+      if (!isExcel) {
+        message.error('请上传xlsx、xls、csv文件');
+        return Upload.LIST_IGNORE;
+      }
+
+      // 解析文件
+      let err = false;
+      let urlCount = 0;
+      try {
+        const { headers, tableData } = await parseXlsxFile(file);
+        // 将解析后的数据添加到上传列表
+        const newUploadUrlList = tableData.map(item => ({
+          uid: uid,
+          url: item.url
+        }));
+        setUploadUrlList([...uploadUrlList, ...newUploadUrlList]);
+        urlCount = tableData.length;
+      } catch (error) {
+        console.error("解析文件失败: ", error);
+        message.error('解析文件失败');
+        err = true;
+      }
+
+      addOrUpdateUploadFile({ uid, name, urlCount, uploading: false, error: err });
+      return false; // 阻止文件上传
+    },
+  };
+
+
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const textAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setTextAreaValue(value);
+
+    // 防抖逻辑
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(() => {
+      if (value.trim() === '') {
+        return;
+      }
+
+      // 解析链接
+      const linkList = value.split('\n');
+      const validLinkList = linkList.filter(link => link.trim() !== '');
+      const uid = Date.now().toString();
+      setUploadUrlList(validLinkList.map(link => ({ uid, url: link })));
+
+    }, 500); // 延迟 500 毫秒
+  };
+
+  const importLinkTabs = () => {
+    return [
+      {
+        key: 'file-import',
+        label: '文件导入',
+        children: <>
+          <div style={{ overflowY: 'auto', }}>
+            <Upload.Dragger
+              {...props}
+            >
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">点击或拖拽文件到此区域,最多支持3个文件</p>
+              <p className="ant-upload-hint">支持xlsx、xls、csv文件</p>
+            </Upload.Dragger>
+            <FileUploadList uploadFileList={uploadFileList} onDelete={onDelete} />
+          </div>
+        </>,
+      },
+      {
+        key: 'link-import',
+        label: '链接导入',
+        children: <>
+          <Input.TextArea
+            placeholder="请输入商品链接,每行一个"
+            style={{ height: '300px', resize: 'none' }}
+            value={textAreaValue}
+            onChange={textAreaChange}
+          />
+        </>,
+      }
+    ]
+  }
+
+  return (
+    <>
+      <Tabs defaultActiveKey={"file-import"} items={importLinkTabs()} />
+    </>
+  )
+}
+
+export default ImportSku;
