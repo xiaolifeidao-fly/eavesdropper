@@ -1,12 +1,10 @@
 'use client';
 import React, { useState } from 'react';
-import {
-  StepsForm,
-} from '@ant-design/pro-components';
-import { Modal, message } from 'antd';
+import { StepsForm } from '@ant-design/pro-components';
+import { Modal, message, Button } from 'antd';
 
 import ImportSku from './SkuLinkUpload';
-import type { SkuInfo } from './SkuLinkUpload';
+import type { LinkInfo } from './SkuLinkUpload';
 import SkuPushProgress from './SkuPushProgress';
 import SukPushConfirm from './SkuPushConfirm';
 
@@ -25,16 +23,59 @@ interface PushSkuStepsFormProps {
 
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible }) => {
 
-  const [uploadUrlList, setUploadUrlList] = useState<SkuInfo[]>([]);
+  const [pushSkuFlag, setPushSkuFlag] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
+
+  const onCancel = () => {
+    setVisible(false);
+    setCurrent(0);
+    setUploadUrlList([]);
+    setPushSkuFlag(false);
+  }
 
   return (
     <>
       <StepsForm
+        current={current}
+        onCurrentChange={(current) => {
+          setCurrent(current);
+        }}
         onFinish={async (values) => {
           console.log(values);
           await waitTime(1000);
           setVisible(false);
           message.success('提交成功');
+          return true;
+        }}
+        submitter={{
+          render: (props) => {
+            const step = props.step;
+
+            if (step === 2) { // 第三步
+              return [
+                <Button key={`cancel-${step}`} onClick={onCancel}>
+                  取消
+                </Button>,
+                <Button type="primary" key={`submit-${step}`} onClick={() => props.onSubmit?.()}>
+                  确认发布
+                </Button>
+              ];
+            }
+
+            return [
+              <Button key={`cancel-${step}`} onClick={onCancel}>
+                取消
+              </Button>,
+              <Button
+                type="primary"
+                key={`submit-${step}`}
+                onClick={() => props.onSubmit?.()}
+              >
+                下一步
+              </Button>
+            ];
+          }
         }}
         containerStyle={{ width: '100%' }}
         stepsFormRender={(dom, submitter) => {
@@ -42,7 +83,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
             <Modal
               title="发布商品"
               width={2000}
-              onCancel={() => setVisible(false)}
+              onCancel={onCancel}
               open={visible}
               footer={submitter}
               destroyOnClose
@@ -58,8 +99,19 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
           title="导入链接"
           style={{ height: '400px' }}
           onFinish={async () => {
-            console.log(uploadUrlList);
-            return false;
+            if (uploadUrlList.length === 0) {
+              message.error('请先导入链接');
+              return false;
+            }
+
+            if (pushSkuFlag) {
+              return true;
+            }
+
+            // 调用推送接口 TODO
+
+            setPushSkuFlag(true);
+            return true;
           }}
         >
           <ImportSku uploadUrlList={uploadUrlList} setUploadUrlList={setUploadUrlList} />
@@ -70,8 +122,12 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
           name="progress"
           title="发布进度"
           style={{ height: '400px' }}
+          onFinish={async () => {
+            console.log('发布进度');
+            return true;
+          }}
         >
-          <SkuPushProgress />
+          <SkuPushProgress uploadUrlList={uploadUrlList} />
         </StepsForm.StepForm>
 
         {/* 第三步： 发布确认 */}

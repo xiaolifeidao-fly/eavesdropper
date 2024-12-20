@@ -1,10 +1,13 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Progress, Table, Button, Tag } from 'antd';
 import type { TableColumnsType } from 'antd';
 
+import type { LinkInfo } from './SkuLinkUpload';
+
 interface SkuPushInfo {
   name: string;
+  url: string;
   status: number;
   detail: string;
 }
@@ -37,24 +40,33 @@ const columns: TableColumnsType<SkuPushInfo> = [
   },
 ];
 
-const SkuPushProgress: React.FC = () => {
+interface SkuPushProgressProps {
+  uploadUrlList: LinkInfo[];
+}
+
+const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
 
   const [data, setData] = useState<SkuPushInfo[]>([]);
+  const [pushCount, setPushCount] = useState(0);
+  const [pushProgress, setPushProgress] = useState(0);
 
-  const addData = () => {
-    const status = Math.random() > 0.5 ? 1 : 0;
-    setData([...data, { name: '商品' + data.length, status: status, detail: '详情' }]);
-  };
+  useEffect(() => {
+    if (props.uploadUrlList.length === 0) {
+      return;
+    }
+
+    for (let i = 0; i < props.uploadUrlList.length; i++) {
+      console.log(i, props.uploadUrlList[i]);
+    }
+    
+  }, [pushCount]);
 
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <p style={{ margin: '5px 0' }}>正在发布商品,请稍等...</p>
-        <p style={{ margin: '5px 0' }}> 0/100 </p>
-        <Button type="primary" onClick={addData}>
-          继续发布
-        </Button>
-        <Progress percent={50} />
+        <p style={{ margin: '5px 0' }}>已处理：{pushCount}/{props.uploadUrlList.length}</p>
+        <Progress percent={pushProgress} />
         <div style={{ height: 250, overflow: 'auto' }}>
           <Table<SkuPushInfo>
             columns={columns}

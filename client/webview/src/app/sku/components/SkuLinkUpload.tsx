@@ -9,11 +9,11 @@ import FileUploadList from './FileUploadList';
 import type { UploadFile } from './FileUploadList';
 
 interface ImportSkuProps {
-  uploadUrlList: SkuInfo[];
-  setUploadUrlList: (list: SkuInfo[]) => void;
+  uploadUrlList: LinkInfo[];
+  setUploadUrlList: (list: LinkInfo[]) => void;
 }
 
-export interface SkuInfo {
+export interface LinkInfo {
   uid: string;
   url: string;
 }

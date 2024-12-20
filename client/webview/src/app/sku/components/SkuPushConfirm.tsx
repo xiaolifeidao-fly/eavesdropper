@@ -11,6 +11,7 @@ const SukPushConfirm: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Result
+        key="skuPushConfirm"
         status={resultStatus}
         title={resultStatus === 'success' ? '发布成功' : '商品发布预处理完成（部分失败）'}
         subTitle={subTitle}
