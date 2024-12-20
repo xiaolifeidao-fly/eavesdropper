@@ -10,6 +10,9 @@ const prefix = process.env.APP_URL_PREFIX;
 const target = process.env.SERVER_TARGET;
 
 // Next.js API 路由处理函数
+
+
+
 export default async function handler(req, res) {
   // 创建代理中间件
   // console.error(prefix);
@@ -36,7 +39,6 @@ export default async function handler(req, res) {
         res.status(500).send('Proxy error');
       },
     });
-    // 将请求交给代理中间件处理
     return proxy(req, res);
   }
   try {

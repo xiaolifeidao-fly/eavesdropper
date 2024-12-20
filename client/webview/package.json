@@ -48,7 +48,6 @@
     "crypto": "^1.0.1",
     "d3-scale-chromatic": "^3.1.0",
     "dotenv": "^16.4.6",
-    "electron-store": "8.1.0",
     "http-proxy-middleware": "^3.0.3",
     "jsonwebtoken": "^9.0.2",
     "next": "14.1.3",

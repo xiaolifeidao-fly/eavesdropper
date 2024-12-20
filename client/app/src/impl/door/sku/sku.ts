@@ -8,8 +8,8 @@ import { MbSkuApi } from "@eleapi/door/sku/mb.sku";
 import { MbEngine } from "@src/door/mb/mb.engine";
 
 
-export class MbSkuApiImpl extends MbSkuApi { 
-    
+export class MbSkuApiImpl extends MbSkuApi {
+
 
     @InvokeType(Protocols.INVOKE)
     async findMbSkuInfo(url: string) {

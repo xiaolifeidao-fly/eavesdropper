@@ -8,8 +8,7 @@ import { MbEngine } from "@src/door/mb/mb.engine";
 import { MbShopInfoMonitor } from "@src/door/monitor/mb/shop/md.shop.monitor";
 
 
-export class MbShopApiImpl extends MbShopApi { 
-    
+export class MbShopApiImpl extends MbShopApi {
 
     @InvokeType(Protocols.INVOKE)
     async findMbShopInfo(resourceId : number) {

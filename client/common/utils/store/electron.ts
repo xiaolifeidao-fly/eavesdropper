@@ -1,15 +1,9 @@
 
 let store :any = undefined;
 
-function initStore(){
-    try{
-        const Store = require("electron-store");
-        store = new Store();
-    }catch(e){
-        //ignore
-    }
+export function initStore(electronStore:any){
+    store = electronStore;
 }
-initStore();
 
 export function get(key : string){
     return store.get(key);
