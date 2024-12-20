@@ -4,7 +4,7 @@ import { Tabs, message, Upload, Input } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 
-import { parseXlsxFile } from '@utils/parse-file';
+import { parseXlsxFileClient } from '@utils/parse-file';
 import FileUploadList from './FileUploadList';
 import type { UploadFile } from './FileUploadList';
 
@@ -83,7 +83,7 @@ const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }
       let err = false;
       let urlCount = 0;
       try {
-        const { headers, tableData } = await parseXlsxFile(file);
+        const { headers, tableData } = await parseXlsxFileClient(file);
         // 将解析后的数据添加到上传列表
         const newUploadUrlList = tableData.map(item => ({
           uid: uid,
