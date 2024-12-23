@@ -15,8 +15,6 @@ const target = process.env.SERVER_TARGET;
 
 export default async function handler(req, res) {
   // 创建代理中间件
-  // console.error(prefix);
-  // console.error(target);
   if(req.method == 'GET'){
     const proxy = createProxyMiddleware({
       target: target, // 设置代理目标地址
@@ -71,6 +69,6 @@ async function request(url, req){
 }
 
 function getTargetUrl(url){
-  // url = url.replace("api/","")
+  url = url.replace("/api",prefix)
   return target  + url;
 }

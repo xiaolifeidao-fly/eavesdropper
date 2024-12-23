@@ -1,12 +1,16 @@
 
-class SkuPublish extends Sku {
-    constructor(page){
+class SkuPublish {
+
+    constructor(page, data){
         this.page = page;
+        this.data = data;
     }
-    doHandler(a, b){
-        console.log("this is a test!," + (a + b));
-        return a + b;
+
+
+    doHandler(preResult){
+
+
     }
 }
 
-return new SkuPublish().doHandler(page, a, b);
+return new SkuPublish().doHandler(page, data, preResult);

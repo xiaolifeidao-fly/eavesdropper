@@ -11,6 +11,7 @@ import { MbLoginApi } from '@eleapi/door/login/mb.login';
 import { MbShopApi } from '@eleapi/door/shop/mb.shop';
 import { MbUserApi } from '@eleapi/door/user/user';
 import { getData } from '@api/shop/shop.api';
+import { MbFileApi } from '@eleapi/door/file/mb.file';
 
 
 export default function Clip() {
@@ -125,6 +126,18 @@ export default function Clip() {
     console.log("window.shopApi1 " , result);
   }
 
+  async function uploadFilePath(){
+    const mbFileApi = new MbFileApi();
+    const result = await mbFileApi.upload(["/Users/fly/Downloads/test/e06193c3fac5a3ab2fbe8d35c4f12171.jpeg",
+      "/Users/fly/Downloads/test/7da71c20eb6d3689497804749829e045.jpeg",
+      "/Users/fly/Downloads/test/2d6aa7e497a059df30d635667b1ec998.jpeg",
+      "/Users/fly/Downloads/test/1_副本3.jpeg",
+      "/Users/fly/Downloads/test/1_副本2.jpeg",
+      "/Users/fly/Downloads/test/1.jpeg",
+      "/Users/fly/Downloads/test/b69575c689bf4db8c607164a2c79b0bd.jpeg",
+    ]);
+    console.log("window.shopApi1 " , result);
+  }
 
   type FieldType = {
     name?: string;
@@ -140,6 +153,8 @@ export default function Clip() {
                 <Button onClick={getUserInfo}>获取用户信息</Button>
                 <Button onClick={getShopInfo}>获取店铺信息</Button>
                 <Button onClick={getSkuInfo}>获取商品信息</Button>
+                <Button onClick={uploadFilePath}>上传图片</Button>
+
                 <div style={listStyle}>
                       <Table 
                           columns={columns} 

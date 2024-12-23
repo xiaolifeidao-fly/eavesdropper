@@ -21,9 +21,11 @@ client/app
 │   │   ├── app.ts  (核心启动逻辑)
 │   │   ├── windows.ts (窗口管理)
 │   │   └── register (rpc 注册)
-│   │   └── api (rpc 接口实现)
 │   │   └── session (会话管理)
-│   │   └── store (存储)
+│   │   └── preload (渲染注册)
+│── door (爬数据相关)
+|── impl (rpc实现)
+│   │   └── door (爬数据 rpc)
 │   └── main.ts (程序入口)
 ├── tsconfig.json
 ├── package.sh

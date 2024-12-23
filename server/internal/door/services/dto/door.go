@@ -14,3 +14,16 @@ type DoorRecordDTO struct {
 	Data       string    `json:"data"`
 	ExpireTime base.Time `json:"expire_time"`
 }
+
+type DoorFileRecordDTO struct {
+	dto.BaseDTO
+	ResourceId uint64 `json:"resourceId"`
+	Source     string `json:"source"`
+	FileType   string `json:"fileType"`
+	FileSize   uint64 `json:"fileSize"`
+	FolderId   string `json:"folderId"`
+	FileId     string `json:"fileId"`
+	FileUrl    string `json:"fileUrl"`
+	FileName   string `json:"fileName"`
+	FileKey    string `json:"fileKey"`
+}

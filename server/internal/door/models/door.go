@@ -15,23 +15,23 @@ type DoorRecord struct {
 	ExpireTime base.Time `json:"expire_time"`
 }
 
-/**
- 给出DoorRecord的表创建语句
- create table door_record (
-	id bigint not null auto_increment,
-	created_at datetime not null,
-	updated_at datetime not null,
-	deleted_at datetime,
-	item_key varchar(255) not null,
-	item_type varchar(255) not null,
-	door_key varchar(255) not null,
-	url varchar(255) not null,
-	data text not null,
-	expire_time datetime not null,
-	primary key (id)
-) engine=InnoDB default charset=utf8mb4;
-*/
-
 func (u *DoorRecord) TableName() string {
 	return "door_record"
+}
+
+type DoorFileRecord struct {
+	database.BaseEntity
+	ResourceId uint64 `json:"resource_id"`
+	Source     string `json:"source"`
+	FileType   string `json:"file_type"`
+	FileSize   uint64 `json:"file_size"`
+	FolderId   string `json:"folder_id"`
+	FileId     string `json:"file_id"`
+	FileUrl    string `json:"file_url"`
+	FileName   string `json:"file_name"`
+	FileKey    string `json:"file_key"`
+}
+
+func (f *DoorFileRecord) TableName() string {
+	return "door_file_record"
 }

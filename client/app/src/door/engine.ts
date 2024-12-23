@@ -6,7 +6,7 @@ import { app } from 'electron';
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from './monitor/monitor';
 import { DoorEntity } from './entity';
 import log from 'electron-log';
-import { ActionChain } from './element/element';
+import { ActionChain, ActionResult } from './element/element';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
 import { DoorRecord } from '@model/door/door';
 
@@ -14,7 +14,7 @@ const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
 
-export abstract class DoorEngine {
+export abstract class DoorEngine<T = any> {
 
     private chromePath: string | undefined;
 
@@ -26,7 +26,9 @@ export abstract class DoorEngine {
 
     public headless: boolean = true;
 
-    monitors : Monitor[] = [];
+    monitors : Monitor<T>[] = [];
+
+    monitorsChain : MonitorChain<T>[] = [];
 
     page : Page | undefined;
 
@@ -48,11 +50,12 @@ export abstract class DoorEngine {
         this.monitors.push(monitor);
     }
 
-    addMonitorChain(monitorChain: MonitorChain){
+    addMonitorChain(monitorChain: MonitorChain<T>){
+        this.monitorsChain.push(monitorChain);
         this.monitors.push(...monitorChain.getMonitors());
     }
 
-    public async init() : Promise<Page | undefined> {
+    public async init(url : string|undefined = undefined) : Promise<Page | undefined> {
         if(this.browser){
             return undefined;
         }
@@ -64,6 +67,9 @@ export abstract class DoorEngine {
             return undefined;
         }
         const page = await this.context.newPage();
+        if(url){
+            await page.goto(url, {timeout: 10000});
+        }
         this.onRequest(page);
         this.onResponse(page);
         this.page = page;
@@ -88,7 +94,7 @@ export abstract class DoorEngine {
             if(!await monitor.isMatch(request.url(), request.method(), headers)){
                 continue;
             }
-            const requestMonitor = monitor as MonitorRequest;
+            const requestMonitor = monitor as MonitorRequest<T>;
             let data;
             if(requestMonitor.handler){
                 data = await requestMonitor.handler(request, undefined);
@@ -116,12 +122,12 @@ export abstract class DoorEngine {
             if(!(monitor instanceof MonitorResponse)){
                 continue;
             }
-            const responseMonitor = monitor as MonitorResponse;
+            const responseMonitor = monitor as MonitorResponse<T>;
             if(!await monitor.doMatchResponse(response)){
                 continue;
             }
             const data = await responseMonitor.getResponseData(response);
-            const doorEntity = new DoorEntity(data ? true : false, data);
+            const doorEntity = new DoorEntity<T>(data ? true : false, data);
             responseMonitor._doCallback(doorEntity, response.request(), response);
             responseMonitor.setFinishTag(true);
         }
@@ -133,7 +139,7 @@ export abstract class DoorEngine {
         });
     }
 
-    public async openWaitMonitor(page : Page,  url: string, monitor : Monitor, headers: Record<string, string> = {}){
+    public async openWaitMonitor(page : Page,  url: string, monitor : Monitor<T | any>, headers: Record<string, string> = {}){
         const itemKey = monitor.getItemKeys(url);
         const cache = await this.fromCacheByMonitor(url, itemKey, monitor);
         if(cache){
@@ -149,7 +155,7 @@ export abstract class DoorEngine {
         return doorEntity;
     }
 
-    public async saveCache(url : string, monitorKey : string, type : string, itemKey : string, doorEntity: DoorEntity){
+    public async saveCache(url : string, monitorKey : string, type : string, itemKey : string, doorEntity: DoorEntity<T>){
         if(!doorEntity.code){
             return;
         }
@@ -157,7 +163,7 @@ export abstract class DoorEngine {
         await saveDoorRecord(doorRecord);
     }
 
-    public async fromCacheByMonitor(url : string, itemKey : string | undefined, monitor : Monitor) : Promise<DoorEntity | undefined> {
+    public async fromCacheByMonitor(url : string, itemKey : string | undefined, monitor : Monitor<T>) : Promise<DoorEntity<T> | undefined> {
         if(!(monitor instanceof MonitorResponse)){
             return undefined;
         }
@@ -173,7 +179,7 @@ export abstract class DoorEngine {
         return undefined;
     }
 
-    public async fromCacheByMonitorChain(url : string, itemKey : string | undefined, monitorChain : MonitorChain) : Promise<DoorEntity | undefined> {
+    public async fromCacheByMonitorChain(url : string, itemKey : string | undefined, monitorChain : MonitorChain<T>) : Promise<DoorEntity<T> | undefined> {
         if(itemKey == undefined){
             return undefined;
         }
@@ -186,7 +192,7 @@ export abstract class DoorEngine {
         return undefined;
     }
 
-    public async openWaitMonitorChain(page : Page,  url: string, monitorChain: MonitorChain, headers: Record<string, string> = {}){
+    public async openWaitMonitorChain(page : Page,  url: string, monitorChain: MonitorChain<T | any>, headers: Record<string, string> = {}){
         const itemKey = monitorChain.getItemKeys(url);
         const cache = await this.fromCacheByMonitorChain(url, itemKey, monitorChain)
         if(cache){
@@ -202,19 +208,60 @@ export abstract class DoorEngine {
         return doorEntity;
     }
 
-
     public async startMonitor(){
         for(const monitor of this.monitors){
             monitor.start();
         }
     }
 
-    public async doWaitForElement(page : Page, version: string, doorType: string) {
+    public async doFillWaitForElement(page : Page, version: string, doorType: string, data? : any) {
         const actionCommands = await getDoorList(version, doorType);
-        const actionChain = new ActionChain();
-        actionChain.addActionCommands(actionCommands);
-        const result = await actionChain.do(page);
-        return result;
+        let prevResult : DoorEntity<T> | undefined = undefined;
+        for (const actionCommand of actionCommands) {
+            const monitorChain = this.getMonitorChainFromChain(actionCommand.key);
+            if(monitorChain){
+                await monitorChain.start();
+            }else{
+                const monitor = this.getMonitor(actionCommand.key);
+                if(monitor){
+                    await monitor.start();
+                }
+            }
+            const dynamicFunction = new Function(actionCommand.code)();
+            await dynamicFunction(page, prevResult, data);
+            prevResult = await monitorChain?.waitForAction();
+            if(!prevResult){
+                continue;
+            }
+            if(!prevResult.code){
+                return prevResult;
+            }
+        }
+        return prevResult;
+    }
+
+    getMonitorChainFromChain(key : string) : MonitorChain<T> | undefined{
+        if(!this.monitorsChain || this.monitorsChain.length == 0){
+            return undefined;
+        }
+        for(const monitorChain of this.monitorsChain){
+            if(monitorChain.getKey() == key){
+                return monitorChain;
+            }
+        }
+        return undefined;
+    }
+
+    getMonitor(key : string) : Monitor<T> | undefined{
+        if(!this.monitors || this.monitors.length == 0){
+            return undefined;
+        }
+        for(const monitor of this.monitors){
+            if(monitor.getKey() == key){
+                return monitor;
+            }
+        }
+        return undefined;
     }
 
     public async closeContext(){

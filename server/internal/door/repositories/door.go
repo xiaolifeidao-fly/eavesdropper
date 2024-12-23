@@ -12,3 +12,15 @@ type DoorRecordRepository struct {
 func (r *DoorRecordRepository) FindByDoorKeyAndItemKeyAndType(doorKey string, itemKey string, itemType string) (*models.DoorRecord, error) {
 	return r.GetOne("select * from door_record where door_key = ? and item_key = ? and type = ?", doorKey, itemKey, itemType)
 }
+
+type DoorFileRecordRepository struct {
+	database.Repository[*models.DoorFileRecord]
+}
+
+func (r *DoorFileRecordRepository) FindBySourceAndFileId(source string, fileId string, resourceId uint64) (*models.DoorFileRecord, error) {
+	return r.GetOne("select * from door_file_record where source = ? and file_id = ? and resource_id = ?", source, fileId, resourceId)
+}
+
+func (r *DoorFileRecordRepository) FindBySourceAndFileKey(source string, fileKey string) (*models.DoorFileRecord, error) {
+	return r.GetOne("select * from door_file_record where source = ? and file_key = ?", source, fileKey)
+}

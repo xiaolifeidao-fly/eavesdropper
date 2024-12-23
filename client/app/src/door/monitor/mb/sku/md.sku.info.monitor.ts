@@ -4,7 +4,7 @@ import { Monitor, MonitorChain } from "../../monitor";
 
 
 
-export class MbSkuInfoMonitor extends MbMonitorResponse{
+export class MbSkuInfoMonitor extends MbMonitorResponse<{}>{
 
     getApiName(): string{
         return "mtop.taobao.pcdetail.data.get";
@@ -17,7 +17,7 @@ export class MbSkuInfoMonitor extends MbMonitorResponse{
 }
 
 
-export class MbSkuDetailMonitor extends MbMonitorResponse{
+export class MbSkuDetailMonitor extends MbMonitorResponse<{}>{
 
     getApiName(): string{
         return "mtop.taobao.detail.getdesc";
@@ -30,9 +30,9 @@ export class MbSkuDetailMonitor extends MbMonitorResponse{
 }
 
 
-export class MbShopDetailMonitorChain extends MbMonitorChain{
+export class MbShopDetailMonitorChain extends MbMonitorChain<{}>{
     
-    initMonitors(): Monitor[] {
+    initMonitors(): Monitor<{}>[] {
         return [new MbSkuInfoMonitor(), new MbSkuDetailMonitor()];
     }
 

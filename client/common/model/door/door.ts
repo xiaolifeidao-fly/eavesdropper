@@ -1,11 +1,38 @@
 
 export class ActionCommand {
+    key : string;
     code: string;
     version: string;
 
-    constructor(code: string, version: string) {
+    constructor(key: string, code: string, version: string) {
+        this.key = key;
         this.code = code;
         this.version = version;
+    }
+}
+
+
+export class DoorFileRecord {
+    id: number | undefined;
+    source: string;
+    fileId: string;
+    resourceId: number;
+    fileType: string;
+    fileName: string;
+    fileUrl: string;
+    fileSize: number;
+    folderId: string;
+
+    constructor(id: number | undefined, source: string, fileId: string, resourceId: number, fileType: string, fileName: string, fileUrl: string, fileSize: number, folderId: string) {
+        this.id = id;
+        this.source = source;
+        this.fileId = fileId;
+        this.resourceId = resourceId;
+        this.fileType = fileType;
+        this.fileName = fileName;
+        this.fileUrl = fileUrl;
+        this.fileSize = fileSize;
+        this.folderId = folderId;
     }
 }
 

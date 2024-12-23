@@ -1,5 +1,6 @@
 import { Page } from "playwright";
 import { ActionCommand } from "@model/door/door";
+import { MonitorChain } from "../monitor/monitor";
 
 export class ActionResult {
     success: boolean;
@@ -29,13 +30,13 @@ export class ActionChain {
     }
 
 
-    public async do(page: Page): Promise<ActionResult> {
+    public async do(page: Page, data : any = undefined): Promise<ActionResult> {
         let prevResult: any = null;
         let result: ActionResult = new ActionResult();
         let resultData: {[key: string]: any} = {};
         for (const actionCommand of this.actionCommands) {
             const dynamicFunction = new Function(actionCommand.code)();
-            prevResult = await dynamicFunction(page, prevResult);
+            prevResult = await dynamicFunction(page, prevResult, data);
             if(!prevResult){
                 result.success = false;
                 result.data = resultData;

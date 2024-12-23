@@ -7,7 +7,7 @@ import { MbMonitorRequest } from "@src/door/monitor/mb/mb.monitor";
 import log from "electron-log";
 
 
-export class MdLoginMonitor extends MbMonitorRequest{
+export class MdLoginMonitor extends MbMonitorRequest<{}>{
 
     hasLogin : boolean = false;
 

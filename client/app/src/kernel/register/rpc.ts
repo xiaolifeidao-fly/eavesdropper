@@ -1,5 +1,6 @@
 require('module-alias/register');
 import { ElectronApi, Protocols } from "@eleapi/base";
+import { uploadFile } from "@src/door/mb/file/file";
 import { registerApi } from "@src/impl/register";
 import { ipcMain } from "electron";
 import log from "electron-log";
@@ -27,6 +28,8 @@ import log from "electron-log";
             }
         });
 }
+
+
 
 
 export async function registerRpc(){

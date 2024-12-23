@@ -1,10 +1,11 @@
 
 
-export class DoorEntity{
-    code: boolean;
-    data : {};
 
-    constructor(code: boolean = true, data: {} = {}){
+export class DoorEntity<T>{
+    code: boolean;
+    data : T;
+
+    constructor(code: boolean = true, data: T = {} as T){
         this.code = code;
         this.data = data;
     }

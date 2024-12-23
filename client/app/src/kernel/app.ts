@@ -1,6 +1,4 @@
-// const { app, BrowserWindow,ipcMain,protocol} = require('electron');
-import { app, BrowserWindow, CallbackResponse, ipcMain,OnBeforeRequestListenerDetails,protocol, session } from 'electron';
-import * as fs from 'fs';
+import { app, BrowserWindow,protocol } from 'electron';
 const path = require('path');
 import * as dotenv from 'dotenv';
 dotenv.config(); // 加载 .env 文件中的环境变量
@@ -13,7 +11,6 @@ import { init } from './store';
 
 log.info("app load")
 async function createDefaultWindow() {
-  // const url = `${getClientBaseUrl()}/clip`;
   init();
   const mainWindow = await createWindow('main', process.env.WEBVIEW_URL || "");
   setMainWindow(mainWindow);

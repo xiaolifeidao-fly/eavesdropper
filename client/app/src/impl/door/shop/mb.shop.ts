@@ -2,7 +2,6 @@ require('module-alias/register');
 
 import {  InvokeType, Protocols } from "@eleapi/base";
 import { MbShopApi } from "@eleapi/door/shop/mb.shop";
-import { MbSkuApi } from "@eleapi/door/sku/mb.sku";
 
 import { MbEngine } from "@src/door/mb/mb.engine";
 import { MbShopInfoMonitor } from "@src/door/monitor/mb/shop/md.shop.monitor";
@@ -24,7 +23,6 @@ export class MbShopApiImpl extends MbShopApi {
             await engine.closePage();
         }  
     }
-
 
 
 }

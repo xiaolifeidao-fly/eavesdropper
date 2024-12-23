@@ -6,12 +6,12 @@ import { toJson } from "@utils/json";
 import log from "electron-log";
 
 
-export abstract class MbMonitorRequest extends MonitorRequest{
+export abstract class MbMonitorRequest<T> extends MonitorRequest<T> {
 
 
 }
 
-export abstract class MbMonitorResponse extends MonitorResponse {
+export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
 
     getType(): string{
         return "MB";
@@ -51,7 +51,7 @@ export abstract class MbMonitorResponse extends MonitorResponse {
 
 }
 
-export abstract class MbMonitorChain extends MonitorChain{
+export abstract class MbMonitorChain<T> extends MonitorChain<T>{
 
     getType(): string {
         return "MB"

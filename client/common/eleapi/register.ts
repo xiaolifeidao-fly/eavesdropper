@@ -1,4 +1,5 @@
 import { ElectronApi } from "./base";
+import { MbFileApi } from "./door/file/mb.file";
 import { MbLoginApi } from "./door/login/mb.login";
 import { MbShopApi } from "./door/shop/mb.shop";
 import { MbSkuApi } from "./door/sku/mb.sku";
@@ -14,5 +15,6 @@ export function registerApi(){
     register.push(MbLoginApi);
     register.push(StoreApi);
     register.push(MbUserApi);
+    register.push(MbFileApi);
     return register;
 }
