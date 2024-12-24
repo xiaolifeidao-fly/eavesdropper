@@ -8,8 +8,9 @@ import (
 	"server/common"
 	"server/common/captcha"
 	"server/common/encryption"
-	"server/common/logger"
-	"server/common/middleware/application"
+	"server/common/middleware/logger"
+	"server/common/middleware/server"
+	"server/common/middleware/storage/cache"
 	"server/common/server/middleware"
 	authCommon "server/internal/auth/common"
 	"server/internal/auth/services/converter"
@@ -165,16 +166,15 @@ func registerUser(registerDTO *dto.RegisterDTO) error {
 func checkCaptcha(captchaID, captcha string) error {
 	var err error
 
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(AuthCaptchaCacheKey, captchaID)
 
-	if application.ApplicationConfig.Mode == "dev" {
-		cacheAdapter.Del(cacheKey)
+	if server.Entity.Mode == "dev" {
+		cache.Del(cacheKey)
 		return nil
 	}
 
 	var cacheData string
-	if cacheData, err = cacheAdapter.Get(cacheKey); err != nil {
+	if cacheData, err = cache.Get(cacheKey); err != nil {
 		logger.Errorf("CheckCaptcha failed, with error is %v", err)
 		return errors.New("验证码操作失败")
 	}
@@ -184,7 +184,7 @@ func checkCaptcha(captchaID, captcha string) error {
 	}
 
 	// 清除验证码缓存
-	cacheAdapter.Del(cacheKey)
+	cache.Del(cacheKey)
 
 	return nil
 }
@@ -200,14 +200,13 @@ func GetCaptcha() (*dto.CaptchaDTO, error) {
 	}
 
 	// 缓存验证码值
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(AuthCaptchaCacheKey, captchaResult.CaptchaID)
 	cacheTTL := int(AuthCaptchaCacheTTL.Seconds())
-	if err = cacheAdapter.Set(cacheKey, []byte(captchaResult.CaptchaCode), cacheTTL); err != nil {
+	if err = cache.SetEx(cacheKey, []byte(captchaResult.CaptchaCode), cacheTTL); err != nil {
 		return nil, err
 	}
 
-	if application.ApplicationConfig.Mode == "dev" {
+	if server.Entity.Mode == "dev" {
 		logger.Infof("GetCaptcha success, with captchaCode is %s", captchaResult.CaptchaCode)
 	}
 
@@ -271,11 +270,9 @@ func getLoginUser(userID uint64) (*dto.UserLoginInfoDTO, error) {
 func getLoginUserFromCache(userID uint64) (*dto.UserLoginInfoDTO, error) {
 	var err error
 
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(AuthLoginUserCacheKey, userID)
-
 	var cacheData string
-	if cacheData, err = cacheAdapter.Get(cacheKey); err != nil {
+	if cacheData, err = cache.Get(cacheKey); err != nil {
 		logger.Errorf("GetLoginUserFromCache failed, with error is %v", err)
 		return nil, errors.New("系统错误")
 	}
@@ -304,10 +301,9 @@ func setLoginUserToCache(userID uint64, userLoginInfoDTO *dto.UserLoginInfoDTO) 
 		return errors.New("系统错误")
 	}
 
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(AuthLoginUserCacheKey, userID)
 	cacheTTL := int(AuthLoginUserCacheTTL.Seconds())
-	if err = cacheAdapter.Set(cacheKey, marshal, cacheTTL); err != nil {
+	if err = cache.SetEx(cacheKey, marshal, cacheTTL); err != nil {
 		logger.Errorf("SetLoginUserToCache failed, with error is %v", err)
 		return errors.New("系统错误")
 	}
@@ -320,9 +316,8 @@ func setLoginUserToCache(userID uint64, userLoginInfoDTO *dto.UserLoginInfoDTO) 
 func clearLoginUserCache(userID uint64) error {
 	var err error
 
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(AuthLoginUserCacheKey, userID)
-	if err = cacheAdapter.Del(cacheKey); err != nil {
+	if err = cache.Del(cacheKey); err != nil {
 		logger.Errorf("ClearLoginUserCache failed, with error is %v", err)
 		return errors.New("系统错误")
 	}

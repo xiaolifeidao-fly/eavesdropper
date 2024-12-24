@@ -1,37 +1,29 @@
 config:
-  application:
+  server:
     mode: dev # dev开发环境 test测试环境 prod线上环境
-    host: 0.0.0.0
-    port: 8081
+    name: lodge-server
+    host: 127.0.0.1
+    port: 8080
     prefix: /api
   logger:
-    logName: lodge-server
-    # 日志等级, trace, debug, info, warn, error, fatal
-    level: debug
-    # 日志输出方式,file 文件输出, default 默认控制台输出
-    stdout: file
-    driver: zap
-    # 日志存放路径
-    path: log
-    # 文件分割大小,单位kb
-    cap: 10000
+    encoding: json
+    level: info
+    timeLayout: "2006-01-02 15:04:05.000"
+    name: logger
+    path: ./log
+    cap: 10
   database:
-    # 数据库类型 mysql
-    # mysql: mysql://用户名:密码@地址?database=数据库名
     driver: mysql
-    # 数据库连接字符串 mysql 缺省信息 charset=utf8&parseTime=True&loc=Local&timeout=1000ms
-    source: xianglong:A4622511z3!@tcp(rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com:3306)/eavesdropper?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
-  jwtAuth:
-    # 密钥
-    key: QWEE@#$!$%^
-    # 过期时间 7天 单位秒
-    timeout: 604800
+    username: xianglong
+    password: A4622511z3!
+    host: rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com
+    port: 3306
+    database: eavesdropper
+    maxOpen: 100
+    maxIdle: 10
   cache:
-    # memory:
-    #   # 缓存前缀
-    #   prefix: test
-    # 缓存类型 redis,memory
+    driver: redis
+    prefix: dev
     redis:
-      prefix: dev
       addr: r-bp1jjf4dd9lxzgm807pd.redis.rds.aliyuncs.com:6379
       password: A4622511z3!

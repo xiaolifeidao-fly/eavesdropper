@@ -1,25 +1,15 @@
 package server
 
 import (
-	"context"
-	"errors"
 	"fmt"
-	"net/http"
-	"os"
-	"os/signal"
-	"time"
 
 	"server/app"
-	"server/common"
-	"server/common/middleware/application"
-	"server/common/middleware/cache"
 	"server/common/middleware/config"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
-	"server/common/network"
+	"server/common/middleware/server"
+	"server/common/middleware/storage/cache"
 	"server/common/server/middleware"
-
-	log "server/library/logger"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
@@ -54,81 +44,45 @@ func setup() {
 	config.Setup(cmd.ConfigPath)
 
 	// 日志初始化
-	logger.LoggerEntity.Setup()
+	logger.Setup(logger.Entity)
 
 	// 数据库初始化
-	database.Setup()
+	database.Setup(database.Config)
 
 	// 缓存初始化
-	cache.Setup()
+	cache.Setup(cache.Entity)
 }
 
 func tip() {
 	usageStr := `欢迎使用 ` + `server` + ` 可以使用 ` + `-h` + ` 查看命令`
 	fmt.Printf("%s \n\n", usageStr)
 }
-func run() error {
 
-	// 初始化路由
-	initRouter()
-
-	host := application.ApplicationConfig.Host
-	port := application.ApplicationConfig.Port
-	srv := &http.Server{
-		Addr:    fmt.Sprintf("%s:%d", host, port),
-		Handler: common.Runtime.GetEngine(),
-	}
-
-	go func() {
-		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatal("listen: ", err)
-		}
-	}()
-
-	tip()
-	log.Infof("Server %s run success", application.ApplicationConfig.Mode)
-	log.Infof("Local:   %s://localhost:%d \r", "http", port)
-	log.Infof("Network: %s://%s:%d \r", "http", network.GetLocalHost(), port)
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	log.Infof("%s Shutdown Server ... \r\n", time.Now().Format("2006-01-02 15:04:05"))
-
-	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown:", err)
-	}
-	log.Infof("Server exiting")
-	return nil
+// runServer 启动服务
+func runServer() {
+	server.Setup(server.Entity)
+	server.LoadRouterAndMiddleware(server.Entity, loadRouter(), loadMiddleware()...)
+	server.Run(server.Entity)
 }
 
-func initRouter() {
-	h := common.Runtime.GetEngine()
-	if h == nil {
-		h = gin.New()
-		common.Runtime.SetEngine(h) // 设置引擎至全局
-	}
-
-	var r *gin.Engine
-	switch h := h.(type) {
-	case *gin.Engine:
-		r = h
-	default:
-		log.Fatal("not support other engine")
-	}
-
-	g := r.Group(application.ApplicationConfig.Prefix)
-	// 添加中间件
-	g.Use(middleware.Error()).
-		Use(middleware.Context()).
-		Use(middleware.Logger()).
-		Use(middleware.CrossDomain())
-
-	// 加载路由
+// loadRouter 加载路由
+func loadRouter() []func(router *gin.RouterGroup) {
+	routers := []func(router *gin.RouterGroup){}
 	for _, f := range app.GetAppRouters() {
-		f(g)
+		routers = append(routers, f)
 	}
+	return routers
+}
+
+// loadMiddleware 加载中间件
+func loadMiddleware() []gin.HandlerFunc {
+	middlewares := []gin.HandlerFunc{}
+	middlewares = append(middlewares, middleware.Error(), middleware.Context(), middleware.Logger(), middleware.CrossDomain())
+	return middlewares
+}
+
+func run() error {
+
+	runServer() // 启动服务
+	return nil
 }

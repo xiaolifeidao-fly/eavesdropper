@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"server/common"
-	"server/common/logger"
+	"server/common/middleware/logger"
 	serverCommon "server/common/server/common"
 
 	"github.com/gin-gonic/gin"
@@ -52,5 +52,5 @@ func requestLog(c *gin.Context, startTime time.Time, endTime time.Time) {
 
 	msgStr := fmt.Sprintf("status: %d, latency: %vms, clientIP: %s, method: %s, uri: %s", statusCode, latencyTime, clientIP, reqMethod, reqUri)
 
-	logger.Info(msgStr)
+	logger.Infof(msgStr)
 }

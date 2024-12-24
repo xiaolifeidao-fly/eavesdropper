@@ -2,8 +2,8 @@ package services
 
 import (
 	"errors"
-	"server/common/logger"
 	"server/common/middleware/database"
+	"server/common/middleware/logger"
 	"server/internal/auth/models"
 	"server/internal/auth/repositories"
 	"server/internal/auth/services/dto"

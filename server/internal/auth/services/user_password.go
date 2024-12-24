@@ -4,8 +4,8 @@ import (
 	"errors"
 
 	"server/common/encryption"
-	"server/common/logger"
 	"server/common/middleware/database"
+	"server/common/middleware/logger"
 	authCommon "server/internal/auth/common"
 	"server/internal/auth/models"
 	"server/internal/auth/repositories"

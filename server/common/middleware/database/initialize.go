@@ -1,88 +1,65 @@
 package database
 
 import (
-	// "log"
+	"fmt"
 	"time"
 
-	"server/common"
-	"server/library/database"
-	gormLogger "server/library/database/gorm/logger"
-	log "server/library/logger"
+	gormLogger "server/common/middleware/database/logger"
+	"server/common/middleware/logger"
 
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
-var DatabaseConfig = new(Database)
-var DatabasesConfig = make(map[string]*Database)
+var DB *gorm.DB
 
-// Database 数据库配置
-type Database struct {
-	// Driver 数据库类型:mysql
-	Driver string `json:"driver"`
-	// Source 数据库连接字符串mysql缺省信息 charset=utf8&parseTime=True&loc=Local&timeout=1000ms
-	Source string `json:"source"`
-	// ConnMaxIdleTime 连接最大空闲时间
-	ConnMaxIdleTime int `json:"conn-max-idle-time"`
-	// ConnMaxLifeTime 连接最大生命周期
-	ConnMaxLifeTime int `json:"conn-max-life-time"`
-	// MaxIdleConns 最大空闲连接数
-	MaxIdleConns int `json:"max-idle-conns"`
-	// MaxOpenConns 最大打开连接数
-	MaxOpenConns int `json:"max-open-conns"`
-}
-
-func multiDatabase() {
-	if len(DatabasesConfig) == 0 {
-		DatabasesConfig = map[string]*Database{
-			"*": DatabaseConfig,
-		}
+func Setup(entity *DatabaseEntity) {
+	if entity == nil {
+		panic("database entity is nil")
 	}
-}
+	entity.Default()
 
-// Setup 初始化数据库
-func Setup() {
-	// 多数据库配置
-	multiDatabase()
+	var err error
+	var db *gorm.DB
 
-	for k, config := range DatabasesConfig {
-		db, err := SimpleSetupDatabase(k, config)
-		if err != nil {
-			log.Errorf("%s connect error :%s", k, err)
-		}
+	dsn := dsn(entity.Username, entity.Password, entity.Host, entity.Port, entity.Database, entity.Source)
 
-		common.Runtime.SetDb(k, db)
-		log.Infof("%s connect success !", k)
+	dialect := dialect(entity.Driver, dsn)
+	gormLogger := gormLogger.New(entity.LogLevel, time.Duration(entity.SlowLog)*time.Millisecond)
+
+	gormConfig := &gorm.Config{
+		Logger: gormLogger,
 	}
 
-	RepositoryInit() // 初始化Repository
+	if db, err = gorm.Open(dialect, gormConfig); err != nil {
+		panic(err)
+	}
+
+	sqlDB, _ := db.DB()
+	sqlDB.SetMaxOpenConns(entity.MaxOpen) // 设置最大连接数
+	sqlDB.SetMaxIdleConns(entity.MaxIdle) // 设置最大空闲连接数
+	sqlDB.SetConnMaxLifetime(time.Hour)   // 设置连接最大存活时间
+
+	DB = db
+
+	logger.Infof("database %s:%s setup success", entity.Host, entity.Port)
+
+	RepositoryInit(DB) // 初始化仓库
 }
 
-func SimpleSetupDatabase(host string, c *Database) (*gorm.DB, error) {
-	log.Infof("%s => %s", host, c.Source)
+func dsn(username, password, host, port, database, source string) string {
+	dsnFormat := "%s:%s@tcp(%s:%s)/%s?%s"
+	dsn := fmt.Sprintf(dsnFormat, username, password, host, port, database, source)
+	return dsn
+}
 
-	// 初始化数据库配置
-	configure := database.NewDBConfig(
-		c.Source,
-		c.MaxIdleConns,
-		c.MaxOpenConns,
-		c.ConnMaxIdleTime,
-		c.ConnMaxLifeTime,
-	)
-
-	// 初始化 gorm 配置
-	gormConfig := &gorm.Config{}
-	gormConfig.Logger = gormLogger.New(
-		logger.Config{
-			SlowThreshold: time.Second,
-			Colorful:      true,
-			LogLevel:      logger.LogLevel(log.DefaultLogger.Options().Level.LevelForGorm()),
-		},
-	)
-
-	db, err := configure.Init(c.Driver, gormConfig)
-	if err != nil {
-		return nil, err
+func dialect(driver, dsn string) gorm.Dialector {
+	var dialect gorm.Dialector
+	switch driver {
+	case "mysql":
+		dialect = mysql.New(mysql.Config{DSN: dsn})
+	default:
+		panic(fmt.Sprintf("unsupported driver: %s", driver))
 	}
-	return db, nil
+	return dialect
 }

@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"server/app/sku/vo"
-	"server/common/logger"
+	"server/common/middleware/logger"
 	"server/common/server/controller"
 
 	"github.com/gin-gonic/gin"

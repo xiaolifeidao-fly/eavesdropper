@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"server/common"
 	"server/common/encryption"
-	"server/common/logger"
+	"server/common/middleware/logger"
+	"server/common/middleware/storage/cache"
 	serverCommon "server/common/server/common"
 	"server/common/server/response"
 	"strconv"
@@ -62,9 +63,8 @@ func getLoginUserIDByLoginToken(loginToken string) (uint64, error) {
 	var err error
 	var userIDStr string
 
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(LoginUserIDCacheKey, loginToken)
-	if userIDStr, err = cacheAdapter.Get(cacheKey); err != nil {
+	if userIDStr, err = cache.Get(cacheKey); err != nil {
 		return 0, err
 	}
 
@@ -132,10 +132,9 @@ func ClearLoginToken(userID uint64) error {
 func setLoginTokenByUserID(userID uint64, loginToken string) error {
 	var err error
 
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(LoginUserTokenCacheKey, userID)
 	cacheTTL := int(LoginUserTokenCacheTTL.Seconds())
-	if err = cacheAdapter.Set(cacheKey, loginToken, cacheTTL); err != nil {
+	if err = cache.SetEx(cacheKey, loginToken, cacheTTL); err != nil {
 		return err
 	}
 
@@ -148,9 +147,8 @@ func getLoginTokenByUserID(userID uint64) (string, error) {
 	var err error
 	var token string
 
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(LoginUserTokenCacheKey, userID)
-	if token, err = cacheAdapter.Get(cacheKey); err != nil {
+	if token, err = cache.Get(cacheKey); err != nil {
 		return "", err
 	}
 	return token, nil
@@ -161,9 +159,8 @@ func getLoginTokenByUserID(userID uint64) (string, error) {
 func clearLoginTokenByUserID(userID uint64) error {
 	var err error
 
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(LoginUserTokenCacheKey, userID)
-	if err = cacheAdapter.Del(cacheKey); err != nil {
+	if err = cache.Del(cacheKey); err != nil {
 		return err
 	}
 
@@ -175,10 +172,9 @@ func clearLoginTokenByUserID(userID uint64) error {
 func setLoginUserIDByLoginToken(loginToken string, userID uint64) error {
 	var err error
 
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(LoginUserIDCacheKey, loginToken)
 	cacheTTL := int(LoginUserIDCacheTTL.Seconds())
-	if err = cacheAdapter.Set(cacheKey, userID, cacheTTL); err != nil {
+	if err = cache.SetEx(cacheKey, userID, cacheTTL); err != nil {
 		return err
 	}
 
@@ -207,9 +203,8 @@ func refreshLoginToken(userID uint64, loginToken string) error {
 func clearLoginUserIDByLoginToken(loginToken string) error {
 	var err error
 
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(LoginUserIDCacheKey, loginToken)
-	if err = cacheAdapter.Del(cacheKey); err != nil {
+	if err = cache.Del(cacheKey); err != nil {
 		return err
 	}
 

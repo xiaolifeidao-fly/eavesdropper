@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"server/common"
+	"server/common/middleware/storage/cache"
 )
 
 const (
@@ -16,9 +17,8 @@ const (
 // SetTokenCache
 // @Description 设置Token缓存
 func SetTokenCache(userID uint64, token string) error {
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(common.LoginUserTokenCacheKey, userID)
-	return cacheAdapter.Set(cacheKey, token, int(common.LoginUserTokenCacheTTL.Seconds()))
+	return cache.SetEx(cacheKey, token, int(common.LoginUserTokenCacheTTL.Seconds()))
 }
 
 // CheckTokenCache
@@ -34,15 +34,13 @@ func CheckTokenCache(userID uint64, token string) bool {
 // GetTokenCache
 // @Description 获取Token缓存
 func GetTokenCache(userID uint64) (string, error) {
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(common.LoginUserTokenCacheKey, userID)
-	return cacheAdapter.Get(cacheKey)
+	return cache.Get(cacheKey)
 }
 
 // ClearTokenCache
 // @Description 清除Token缓存
 func ClearTokenCache(userID uint64) error {
-	cacheAdapter := common.Runtime.GetCacheAdapter()
 	cacheKey := fmt.Sprintf(common.LoginUserTokenCacheKey, userID)
-	return cacheAdapter.Del(cacheKey)
+	return cache.Del(cacheKey)
 }

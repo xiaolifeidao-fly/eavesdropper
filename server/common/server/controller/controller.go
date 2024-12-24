@@ -3,9 +3,10 @@ package controller
 import (
 	"fmt"
 
+	"server/common/middleware/logger"
+
+	"server/common/server/controller/validator"
 	"server/common/server/response"
-	"server/library/logger"
-	"server/library/plugins/validator"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -38,12 +39,12 @@ func Bind(context *gin.Context, d interface{}, bindings ...binding.Binding) erro
 
 		if err2 != nil {
 			if err2.Error() == "EOF" {
-				logger.Warn("request body is not present anymore. ")
+				logger.Warnf("request body is not present anymore. ")
 				err2 = nil
 				continue
 			}
 			if bindings[i] == nil {
-				logger.Warn("request body is not present anymore. ")
+				logger.Warnf("request body is not present anymore. ")
 				err2 = nil
 				continue
 			}

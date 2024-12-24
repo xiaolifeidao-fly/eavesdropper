@@ -4,7 +4,7 @@ import (
 	"server/app/auth/vo"
 	"server/common/base/page"
 	"server/common/converter"
-	"server/common/logger"
+	"server/common/middleware/logger"
 	"server/common/server/controller"
 	"server/common/server/middleware"
 	"server/internal/auth/services"

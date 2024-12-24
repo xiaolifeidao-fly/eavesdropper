@@ -3,7 +3,7 @@ package database
 import (
 	"errors"
 	"server/common/base/page"
-	"server/library/database/gorm/search"
+	"server/common/middleware/database/search"
 
 	"gorm.io/gorm"
 )

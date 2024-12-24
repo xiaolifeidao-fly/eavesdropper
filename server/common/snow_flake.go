@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"sync"
 	"time"
-
-	"server/library/logger"
 )
 
 var SnowflakeUtil = NewSnowflake()
@@ -61,7 +59,6 @@ func (s *Snowflake) NextVal() int64 {
 	t := now - epoch
 	if t > timestampMax {
 		s.Unlock()
-		logger.Errorf("epoch must be between 0 and %d", timestampMax-1)
 		return 0
 	}
 	s.timestamp = now
