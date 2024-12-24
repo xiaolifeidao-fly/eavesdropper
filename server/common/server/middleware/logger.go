@@ -49,13 +49,8 @@ func requestLog(c *gin.Context, startTime time.Time, endTime time.Time) {
 	// 执行时间
 	latencyTime := float64(endTime.Sub(startTime).Microseconds()) / 1000
 	// 日志格式
-	logData := map[string]interface{}{
-		"statusCode":  statusCode,
-		"latencyTime": fmt.Sprintf("%vms", latencyTime),
-		"clientIP":    clientIP,
-		"method":      reqMethod,
-		"uri":         reqUri,
-	}
 
-	logger.Info(logData)
+	msgStr := fmt.Sprintf("status: %d, latency: %vms, clientIP: %s, method: %s, uri: %s", statusCode, latencyTime, clientIP, reqMethod, reqUri)
+
+	logger.Info(msgStr)
 }

@@ -12,12 +12,12 @@ import (
 var LoggerEntity = new(Looger)
 
 type Looger struct {
-	LogName string `json:"log-name"` // 日志前缀名称
-	Level   string `json:"level"`    // 日志等级
-	Driver  string `json:"driver"`   // 分割引擎
-	Stdout  string `json:"stdout"`   // 日志输出模式
-	Path    string `json:"path"`     // 日志输出文件路径
-	Cap     uint   `json:"cap"`      // 日志文件分割大小
+	LogName string `json:"logName"` // 日志前缀名称
+	Level   string `json:"level"`   // 日志等级
+	Driver  string `json:"driver"`  // 分割引擎
+	Stdout  string `json:"stdout"`  // 日志输出模式
+	Path    string `json:"path"`    // 日志输出文件路径
+	Cap     uint   `json:"cap"`     // 日志文件分割大小
 }
 
 func (l *Looger) Setup() {
