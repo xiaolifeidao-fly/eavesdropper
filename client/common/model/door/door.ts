@@ -13,7 +13,7 @@ export class ActionCommand {
 
 
 export class DoorFileRecord {
-    id: number | undefined;
+    id: number;
     source: string;
     fileId: string;
     resourceId: number;
@@ -23,7 +23,7 @@ export class DoorFileRecord {
     fileSize: number;
     folderId: string;
 
-    constructor(id: number | undefined, source: string, fileId: string, resourceId: number, fileType: string, fileName: string, fileUrl: string, fileSize: number, folderId: string) {
+    constructor(id?: number, source?: string, fileId?: string, resourceId?: number, fileType?: string, fileName?: string, fileUrl?: string, fileSize?: number, folderId?: string) {
         this.id = id;
         this.source = source;
         this.fileId = fileId;

@@ -14,3 +14,6 @@ export const saveDoorFileRecord = async (doorFileRecord: DoorFileRecord) : Promi
     return await instance.post("/doors/file/save", doorFileRecord);
 }
     
+export const getDoorFileRecordByKey = async (source: string, fileKey: string) : Promise<DoorFileRecord> => {
+    return await getData(DoorFileRecord, "/doors/file/getByKey", {source, fileKey});
+}

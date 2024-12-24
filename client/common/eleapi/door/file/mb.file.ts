@@ -8,7 +8,7 @@ export class MbFileApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async upload(paths: string[]) {
-        return await this.invokeApi("upload", paths);
+    async upload(resourceId : number, paths: string[]) {
+        return await this.invokeApi("upload", resourceId, paths);
     }
 }

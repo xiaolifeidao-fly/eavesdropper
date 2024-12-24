@@ -8,8 +8,8 @@ import { MbFileApi } from "@eleapi/door/file/mb.file";
 export class MbFileApiImpl extends MbFileApi {
 
     @InvokeType(Protocols.INVOKE)
-    async upload(paths: string[]) {
-        uploadFile(1, paths);
+    async upload(resourceId : number, paths: string[]) {
+        uploadFile(resourceId, paths,"");
     }
 }
 

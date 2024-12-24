@@ -128,7 +128,7 @@ export default function Clip() {
 
   async function uploadFilePath(){
     const mbFileApi = new MbFileApi();
-    const result = await mbFileApi.upload(["/Users/fly/Downloads/test/e06193c3fac5a3ab2fbe8d35c4f12171.jpeg",
+    const result = await mbFileApi.upload(1, ["/Users/fly/Downloads/test/e06193c3fac5a3ab2fbe8d35c4f12171.jpeg",
       "/Users/fly/Downloads/test/7da71c20eb6d3689497804749829e045.jpeg",
       "/Users/fly/Downloads/test/2d6aa7e497a059df30d635667b1ec998.jpeg",
       "/Users/fly/Downloads/test/1_副本3.jpeg",

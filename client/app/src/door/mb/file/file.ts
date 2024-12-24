@@ -1,6 +1,8 @@
 import { FileData, MbFileUploadMonitor } from "@src/door/monitor/mb/file/file";
 import { MbEngine } from "../mb.engine";
-
+import { getStringHash } from "@utils/crypto.util";
+import { getDoorFileRecordByKey } from "@api/door/file.api";
+import { MbSkuFileUploadMonitor } from "@src/door/monitor/mb/sku/mb.sku.file.upload.monitor";
 
 const code = `
 
@@ -87,19 +89,40 @@ return async function doHandler(page, params, preResult){
 
 `
 
+async function getUnUploadFile(source : string, resourceId : number, paths: string[], sourceSkuId? : string){
+    const unUploadFiles = [];
+    for(let path of paths){
+        let fileKey = path;
+        if(sourceSkuId){
+            fileKey = fileKey + "_" + sourceSkuId;
+        }
+        fileKey = getStringHash(fileKey);
+
+        const doorFileRecord = await getDoorFileRecordByKey(source, fileKey);
+        if(doorFileRecord){
+            continue;
+        }
+        unUploadFiles.push(path);
+    }
+    return unUploadFiles;
+}
+
 export async function uploadFile(resourceId : number, paths: string[], sourceSkuId? : string){
     const mbEngine = new MbEngine(resourceId, false);
+    const monitor = new MbSkuFileUploadMonitor(resourceId, 1, {});
     try{
+        const unUploadFiles = await getUnUploadFile(monitor.getType(), resourceId, paths, sourceSkuId);
+        if(unUploadFiles.length === 0){
+            return;
+        }
         const page = await mbEngine.init("https://qn.taobao.com/home.htm/sucai-tu/home");
-        const monitor = new MbFileUploadMonitor(resourceId);
         monitor.setAllowRepeat(true);
         mbEngine.addMonitor(monitor);
         await monitor.start();
         const functionCode = new Function(code)();
-        const result = await functionCode(page, {paths : paths}, undefined);
-        console.log(result);
-        const fileResult = await monitor.waitForAction();
-        console.log(fileResult);
+        await functionCode(page, {paths : unUploadFiles}, undefined);
+        const actionResult = await monitor.waitForAction();
+        console.log(actionResult);
     }finally{
         await mbEngine.closePage();
     }

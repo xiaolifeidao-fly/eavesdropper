@@ -34,8 +34,8 @@ export class MbSkuApiImpl extends MbSkuApi {
         if(!page){ 
             return undefined;
         }
-        const skuData= await this.findMbSkuInfo(skuUrl);
-        
+        const skuData = await this.findMbSkuInfo(skuUrl);
+
 
         // const monitor = new MbShopInfoMonitor();
         const result = await engine.doFillWaitForElement(page, "1.0.1", "publishSku", skuData);

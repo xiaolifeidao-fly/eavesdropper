@@ -63,6 +63,11 @@ export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
         const url = data.url;
         const doorFileRecord = new DoorFileRecord(undefined, this.getType(), fileId, this.resourceId, "IMAGE", fileName, url, Number(data.size), data.folderId);
         const result = await saveDoorFileRecord(doorFileRecord);
+        await this.uploadFileCallBack(result);
+    }
+
+    async uploadFileCallBack(doorFileRecord: DoorFileRecord){
+
     }
 
 }
