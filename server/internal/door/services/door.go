@@ -72,5 +72,8 @@ func FindDoorFileRecordBySourceAndFileKey(source string, fileKey string) (*dto.D
 	if err != nil {
 		return nil, err
 	}
+	if doorFileRecord == nil {
+		return nil, nil
+	}
 	return database.ToDTO[dto.DoorFileRecordDTO](doorFileRecord), nil
 }

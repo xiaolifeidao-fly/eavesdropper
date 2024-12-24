@@ -89,16 +89,14 @@ return async function doHandler(page, params, preResult){
 
 `
 
-async function getUnUploadFile(source : string, resourceId : number, paths: string[], sourceSkuId? : string){
+async function getUnUploadFile(source : string, resourceId : number, paths: string[]){
     const unUploadFiles = [];
     for(let path of paths){
-        let fileKey = path;
-        if(sourceSkuId){
-            fileKey = fileKey + "_" + sourceSkuId;
-        }
+        let fileKey = path.substring(path.lastIndexOf("/") + 1);
+        console.log(" fileKey ", fileKey);
         fileKey = getStringHash(fileKey);
-
         const doorFileRecord = await getDoorFileRecordByKey(source, fileKey);
+        console.log(" getUnUploadFile ", doorFileRecord);
         if(doorFileRecord){
             continue;
         }
@@ -108,22 +106,25 @@ async function getUnUploadFile(source : string, resourceId : number, paths: stri
 }
 
 export async function uploadFile(resourceId : number, paths: string[], sourceSkuId? : string){
-    const mbEngine = new MbEngine(resourceId, false);
     const monitor = new MbSkuFileUploadMonitor(resourceId, 1, {});
     try{
-        const unUploadFiles = await getUnUploadFile(monitor.getType(), resourceId, paths, sourceSkuId);
+        const unUploadFiles = await getUnUploadFile(monitor.getType(), resourceId, paths);
+        console.log(" unUploadFiles ", unUploadFiles);
         if(unUploadFiles.length === 0){
             return;
         }
+        const mbEngine = new MbEngine(resourceId, false);
         const page = await mbEngine.init("https://qn.taobao.com/home.htm/sucai-tu/home");
         monitor.setAllowRepeat(true);
         mbEngine.addMonitor(monitor);
         await monitor.start();
         const functionCode = new Function(code)();
         await functionCode(page, {paths : unUploadFiles}, undefined);
-        const actionResult = await monitor.waitForAction();
-        console.log(actionResult);
+        for(let path of unUploadFiles){
+            const result = await monitor.waitForAction();
+            console.log(path, " uploadFile result ", result);
+        }
     }finally{
-        await mbEngine.closePage();
+        // await mbEngine.closePage();
     }
 }

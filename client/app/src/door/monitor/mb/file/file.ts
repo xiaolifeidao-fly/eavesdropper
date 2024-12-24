@@ -4,6 +4,7 @@ import { MbMonitorResponse } from "../mb.monitor";
 import log from "electron-log";
 import { getDoorFileRecord, saveDoorFileRecord } from "@api/door/file.api";
 import { DoorFileRecord } from "@model/door/door";
+import { getStringHash } from "@utils/crypto.util";
 export class FileData {
     fileId: string;
     folderId: string;
@@ -61,7 +62,9 @@ export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
         const fileId = data.fileId;
         const fileName = data.fileName;
         const url = data.url;
-        const doorFileRecord = new DoorFileRecord(undefined, this.getType(), fileId, this.resourceId, "IMAGE", fileName, url, Number(data.size), data.folderId);
+        let fileKey = fileName;
+        fileKey = getStringHash(fileKey);
+        const doorFileRecord = new DoorFileRecord(undefined, this.getType(), fileId, this.resourceId, "IMAGE", fileName, url, Number(data.size), data.folderId, fileKey);
         const result = await saveDoorFileRecord(doorFileRecord);
         await this.uploadFileCallBack(result);
     }

@@ -102,7 +102,6 @@ export abstract class Monitor<T = any> {
         try{
             await this.doCallback(doorEntity, request, response);
         }finally{
-            console.log("eventEmitter emit result ", doorEntity);
             this.eventEmitter.emit(this.getEventKey(), doorEntity);
         }
     }

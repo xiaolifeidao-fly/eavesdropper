@@ -68,7 +68,7 @@ export abstract class DoorEngine<T = any> {
         }
         const page = await this.context.newPage();
         if(url){
-            await page.goto(url, {timeout: 10000});
+            await page.goto(url);
         }
         this.onRequest(page);
         this.onResponse(page);

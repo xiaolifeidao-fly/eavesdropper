@@ -9,7 +9,7 @@ export class MbFileApiImpl extends MbFileApi {
 
     @InvokeType(Protocols.INVOKE)
     async upload(resourceId : number, paths: string[]) {
-        uploadFile(resourceId, paths,"");
+        return await uploadFile(resourceId, paths,"");
     }
 }
 
