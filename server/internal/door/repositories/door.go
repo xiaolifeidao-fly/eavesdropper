@@ -21,6 +21,6 @@ func (r *DoorFileRecordRepository) FindBySourceAndFileId(source string, fileId s
 	return r.GetOne("select * from door_file_record where source = ? and file_id = ? and resource_id = ?", source, fileId, resourceId)
 }
 
-func (r *DoorFileRecordRepository) FindBySourceAndFileKey(source string, fileKey string) (*models.DoorFileRecord, error) {
-	return r.GetOne("select * from door_file_record where source = ? and file_key = ?", source, fileKey)
+func (r *DoorFileRecordRepository) FindBySourceAndResourceIdAndFileKey(source string, resourceId uint64, fileKey string) (*models.DoorFileRecord, error) {
+	return r.GetOne("select * from door_file_record where source = ? and resource_id = ? and file_key = ?", source, resourceId, fileKey)
 }

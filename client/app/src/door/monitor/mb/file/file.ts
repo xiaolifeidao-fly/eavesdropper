@@ -24,6 +24,19 @@ export class FileData {
 }
 
 
+export function getFileKey(filePath: string){
+    const lastIndex = filePath.lastIndexOf("/");
+    let fileKey = filePath;
+    if(lastIndex != -1){
+        fileKey = fileKey.substring(lastIndex + 1);
+    }
+    const suffixIndex = fileKey.indexOf(".");
+    if(suffixIndex != -1){
+        fileKey = fileKey.substring(0, suffixIndex);
+    }
+    return getStringHash(fileKey);
+}
+
 export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
 
     resourceId: number;
@@ -62,8 +75,7 @@ export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
         const fileId = data.fileId;
         const fileName = data.fileName;
         const url = data.url;
-        let fileKey = fileName;
-        fileKey = getStringHash(fileKey);
+        const fileKey = getFileKey(fileName);
         const doorFileRecord = new DoorFileRecord(undefined, this.getType(), fileId, this.resourceId, "IMAGE", fileName, url, Number(data.size), data.folderId, fileKey);
         const result = await saveDoorFileRecord(doorFileRecord);
         await this.uploadFileCallBack(result);

@@ -25,8 +25,8 @@ export class MbSkuApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.TRRIGER)
-    async notifyPublishShop(skuId : number, skuStatus : string, statistic : SkuPublishStatitic){
-        return await this.invokeApi("notifyPublishShop", skuId, skuStatus, statistic);
+    async onPublishShopMessage(skuId : number, skuStatus : string, statistic : SkuPublishStatitic){
+        return await this.invokeApi("onPublishShopMessage", skuId, skuStatus, statistic);
     }
 
 }
