@@ -1,10 +1,10 @@
 
 export class Sku {
 
-    id : number;
-    sourceSkuId : number;
-    taskId : number;
-    status : string;
+    id : number|undefined;
+    sourceSkuId : number|undefined;
+    taskId : number|undefined;
+    status : string|undefined;
 
     constructor(id? : number, sourceSkuId? : number, taskId? : number, status? : string){
         this.id = id;
@@ -16,10 +16,10 @@ export class Sku {
 
 export class SkuPublishStatitic {
 
-    taskId : number;
-    totalNum : number;
-    successNum : number;
-    errorNum : number;
+    taskId : number|undefined;
+    totalNum : number|undefined;
+    successNum : number|undefined;
+    errorNum : number|undefined;
 
     constructor(taskId? : number, totalNum? : number, successNum? : number, errorNum? : number) {
         this.taskId = taskId;

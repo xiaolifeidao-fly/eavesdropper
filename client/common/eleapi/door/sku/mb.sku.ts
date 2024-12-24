@@ -1,4 +1,4 @@
-import { Sku, SkuPublishStatitic } from "@/model/sku/sku";
+import { Sku, SkuPublishStatitic } from "@model/sku/sku";
 import { Task } from "@model/task/task";
 import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
 

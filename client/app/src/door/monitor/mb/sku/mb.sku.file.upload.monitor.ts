@@ -28,14 +28,15 @@ export class MbSkuFileUploadMonitor extends MbFileUploadMonitor {
     }
 
     async uploadFileCallBack(doorFileRecord: DoorFileRecord): Promise<void> {
-        const skuFileName = this.skuFileNames[doorFileRecord.fileName];
+        let fileName = doorFileRecord.fileName;
+        if(!fileName){
+            return;
+        }
+        const skuFileName = this.skuFileNames[fileName];
         if(!skuFileName){
             return;
         }
-        const skuFile = new SkuFile();
-        skuFile.skuId = this.skuId;
-        skuFile.fileId = doorFileRecord?.id;
-        skuFile.type = doorFileRecord.fileType;
+        const skuFile = new SkuFile(undefined, this.skuId, doorFileRecord.id, doorFileRecord.fileType, skuFileName.sortId);
         skuFile.sortId = skuFileName.sortId;
         await saveSkuFile(skuFile);
     }

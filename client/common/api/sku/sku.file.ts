@@ -1,5 +1,5 @@
 import { SkuFile } from "@model/sku/sku.file";
-import { getData, instance } from "@/utils/axios";
+import { getData, instance } from "@utils/axios";
 
 export const getSkuFile = (skuId : number) => {
     return getData(SkuFile, `/sku/file/get?skuId=${skuId}`);

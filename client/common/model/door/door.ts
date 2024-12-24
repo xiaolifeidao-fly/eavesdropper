@@ -13,15 +13,15 @@ export class ActionCommand {
 
 
 export class DoorFileRecord {
-    id: number;
-    source: string;
-    fileId: string;
-    resourceId: number;
-    fileType: string;
-    fileName: string;
-    fileUrl: string;
-    fileSize: number;
-    folderId: string;
+    id: number|undefined;
+    source: string|undefined;
+    fileId: string|undefined;
+    resourceId: number|undefined;
+    fileType: string|undefined;
+    fileName: string|undefined;
+    fileUrl: string|undefined;
+    fileSize: number|undefined;
+    folderId: string|undefined;
 
     constructor(id?: number, source?: string, fileId?: string, resourceId?: number, fileType?: string, fileName?: string, fileUrl?: string, fileSize?: number, folderId?: string) {
         this.id = id;
