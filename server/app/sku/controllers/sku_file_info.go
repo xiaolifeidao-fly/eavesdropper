@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func LoadSkuFileRouter(router *gin.RouterGroup) {
+func LoadSkuFileInfoRouter(router *gin.RouterGroup) {
 	r := router.Group("/sku/file")
 	{
 		r.POST("/save", SaveSkuFile)
