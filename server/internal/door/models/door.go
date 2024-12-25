@@ -12,6 +12,7 @@ type DoorRecord struct {
 	DoorKey    string    `json:"door_key"`
 	Url        string    `json:"url"`
 	Data       string    `json:"data"`
+	Version    string    `json:"version"`
 	ExpireTime base.Time `json:"expire_time"`
 }
 

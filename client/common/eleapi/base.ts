@@ -62,7 +62,9 @@ abstract class ElectronApi {
   }
 
   send(key : string, ...args: any[]): void{
-    const channel = `${this.getApiName()}.${key}`;
+    let namespace = this.getNamespace();
+    let rendererApiName = namespace + "_" + this.getApiName();
+    const channel = `${rendererApiName}.${key}`;
     this.sendMessage(channel, ...args)
   }
 
