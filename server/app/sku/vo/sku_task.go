@@ -2,7 +2,7 @@ package vo
 
 type AddSkuTaskReq struct {
 	Count             int `json:"count" binding:"required"`
-	PublishResourceId int `json:"publishResourceId" binding:"required"`
+	PublishResourceID int `json:"publishResourceId" binding:"required"`
 }
 
 type UpdateSkuTaskReq struct {

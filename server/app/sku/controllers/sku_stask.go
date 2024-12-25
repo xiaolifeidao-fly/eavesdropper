@@ -2,8 +2,13 @@ package controllers
 
 import (
 	"server/app/sku/vo"
+	"server/common"
+	"server/common/converter"
 	"server/common/middleware/logger"
 	"server/common/server/controller"
+	"server/common/server/middleware"
+	"server/internal/sku/services"
+	"server/internal/sku/services/dto"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -12,8 +17,8 @@ import (
 func LoadSkuTaskRouter(router *gin.RouterGroup) {
 	r := router.Group("/sku/task")
 	{
-		r.POST("", AddSkuTask)
-		r.PUT("/:id", UpdateSkuTask)
+		r.Use(middleware.Authorization()).POST("", AddSkuTask)
+		r.Use(middleware.Authorization()).PUT("/:id", UpdateSkuTask)
 	}
 }
 
@@ -29,8 +34,18 @@ func AddSkuTask(ctx *gin.Context) {
 		return
 	}
 
-	logger.Infof("AddSkuTask req: %v", req)
-	controller.OK(ctx, 1)
+	var taskID uint64
+	taskDTO := converter.ToDTO[dto.SkuTaskDTO](&req)
+	taskDTO.Status = "pending"
+	taskDTO.UserID = common.GetLoginUserID()
+	taskDTO.CreatedBy = common.GetLoginUserID()
+	taskDTO.UpdatedBy = common.GetLoginUserID()
+	if taskID, err = services.CreateSkuTask(taskDTO); err != nil {
+		logger.Errorf("AddSkuTask failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, taskID)
 }
 
 // UpdateSkuTask
@@ -45,6 +60,13 @@ func UpdateSkuTask(ctx *gin.Context) {
 		return
 	}
 
+	updateTaskDTO := converter.ToDTO[dto.UpdateSkuTaskDTO](&req)
+	if err = services.UpdateSkuTask(updateTaskDTO); err != nil {
+		logger.Errorf("UpdateSkuTask failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
 	logger.Infof("UpdateSkuTask req: %+v", req)
-	controller.OK(ctx, 1)
+	controller.OK(ctx, "更新成功")
 }

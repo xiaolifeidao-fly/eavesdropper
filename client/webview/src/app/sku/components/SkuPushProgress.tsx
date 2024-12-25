@@ -67,7 +67,10 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
       console.log(task);
 
       
+      // mbSkuApi.onPublishShopMessage(task.id, task.status, task.statistic);
+
       // 监听任务状态
+      console.log("event: ", mbSkuApi.getEvent());
       // mbSkuApi.event.on("notifyPublishShop", (skuId: number, skuStatus: string, statistic: SkuPublishStatitic) => {
       //   console.log("接收到的数据:", skuId, skuStatus, statistic);
       // });

@@ -12,3 +12,9 @@ type SkuTaskDTO struct {
 	Progress          int    `json:"progress"`
 	Status            string `json:"status"`
 }
+
+type UpdateSkuTaskDTO struct {
+	ID       uint64 `json:"id"`
+	Progress int    `json:"progress"`
+	Status   string `json:"status"`
+}

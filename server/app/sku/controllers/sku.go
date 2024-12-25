@@ -6,6 +6,7 @@ import (
 	"server/common/converter"
 	"server/common/middleware/logger"
 	"server/common/server/controller"
+	"server/common/server/middleware"
 	"server/internal/sku/services"
 	"server/internal/sku/services/dto"
 
@@ -16,7 +17,7 @@ import (
 func LoadSkuRouter(router *gin.RouterGroup) {
 	r := router.Group("/sku")
 	{
-		r.POST("", AddSku)
+		r.Use(middleware.Authorization()).POST("", AddSku)
 	}
 }
 
@@ -34,8 +35,10 @@ func AddSku(ctx *gin.Context) {
 
 	var skuID uint64
 	skuDTO := converter.ToDTO[dto.SkuDTO](&req)
-	skuDTO.CreatedBy = common.GetLoginUserID()
-	skuDTO.UpdatedBy = common.GetLoginUserID()
+	userID := common.GetLoginUserID()
+	skuDTO.UserID = userID
+	skuDTO.CreatedBy = userID
+	skuDTO.UpdatedBy = userID
 	if skuID, err = services.CreateSku(skuDTO); err != nil {
 		logger.Errorf("SaveSku failed, with error is %v", err)
 		controller.Error(ctx, err.Error())

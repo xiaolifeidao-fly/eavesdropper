@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"server/common"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
 	"server/internal/sku/models"
@@ -19,8 +20,22 @@ func CreateSkuTask(skuTaskDTO *dto.SkuTaskDTO) (uint64, error) {
 	return skuTaskDTO.ID, nil
 }
 
-func UpdateSkuTask(skuTaskDTO *dto.SkuTaskDTO) error {
+func UpdateSkuTask(skuTaskUpdateDTO *dto.UpdateSkuTaskDTO) error {
 	var err error
+
+	taskID := skuTaskUpdateDTO.ID
+	skuTaskDTO, err := getSkuTask(taskID)
+	if err != nil {
+		return err
+	}
+
+	if skuTaskDTO.ID <= 0 {
+		return errors.New("任务不存在")
+	}
+
+	skuTaskDTO.Progress = skuTaskUpdateDTO.Progress
+	skuTaskDTO.Status = skuTaskUpdateDTO.Status
+	skuTaskDTO.UpdatedBy = common.GetLoginUserID()
 
 	if _, err = updateSkuTask(skuTaskDTO); err != nil {
 		return err
@@ -54,5 +69,18 @@ func updateSkuTask(skuTaskDTO *dto.SkuTaskDTO) (*dto.SkuTaskDTO, error) {
 	}
 
 	skuTaskDTO = database.ToDTO[dto.SkuTaskDTO](skuTask)
+	return skuTaskDTO, nil
+}
+
+func getSkuTask(id uint64) (*dto.SkuTaskDTO, error) {
+	var err error
+	skuRepository := repositories.SkuTaskRepository
+
+	skuTask, err := skuRepository.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	skuTaskDTO := database.ToDTO[dto.SkuTaskDTO](skuTask)
 	return skuTaskDTO, nil
 }

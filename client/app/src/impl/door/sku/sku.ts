@@ -52,7 +52,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             // 保存商品信息
             const req = new AddSkuReq(864073465826, taskId, status, publishResourceId);
             const skuId = await addSku(req);
-            return new Sku(skuId as number, 864073465826, 1, status);
+            return new Sku(skuId as number, 864073465826, taskId, status);
         }
     }
 
