@@ -52,7 +52,7 @@ func FindDoorFileRecordBySourceAndFileId(source string, fileId string, resourceI
 }
 
 func SaveDoorFileRecord(doorFileRecordDTO *dto.DoorFileRecordDTO) (*dto.DoorFileRecordDTO, error) {
-	doorFileRecord, err := doorFileRecordRepository.FindBySourceAndFileId(doorFileRecordDTO.Source, doorFileRecordDTO.FileId, doorFileRecordDTO.ResourceId)
+	doorFileRecord, err := doorFileRecordRepository.FindBySourceAndResourceIdAndFileKey(doorFileRecordDTO.Source, doorFileRecordDTO.ResourceId, doorFileRecordDTO.FileKey)
 	if err != nil {
 		return nil, err
 	}
@@ -67,8 +67,8 @@ func SaveDoorFileRecord(doorFileRecordDTO *dto.DoorFileRecordDTO) (*dto.DoorFile
 	return database.ToDTO[dto.DoorFileRecordDTO](saveDoorFileRecord), nil
 }
 
-func FindDoorFileRecordBySourceAndFileKey(source string, fileKey string) (*dto.DoorFileRecordDTO, error) {
-	doorFileRecord, err := doorFileRecordRepository.FindBySourceAndFileKey(source, fileKey)
+func FindDoorFileRecordBySourceAndResourceIdAndFileKey(source string, resourceId uint64, fileKey string) (*dto.DoorFileRecordDTO, error) {
+	doorFileRecord, err := doorFileRecordRepository.FindBySourceAndResourceIdAndFileKey(source, resourceId, fileKey)
 	if err != nil {
 		return nil, err
 	}

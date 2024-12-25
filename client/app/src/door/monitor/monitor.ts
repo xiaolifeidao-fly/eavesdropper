@@ -90,7 +90,7 @@ export abstract class Monitor<T = any> {
     listenEvent(){
         if(this.allowRepeat && !this.hadListen){
             this.eventEmitter.on(this.getEventKey(), async (result: DoorEntity<T>) => {
-                this.waitResolve(result);
+                await this.waitResolve(result);
             });
             this.hadListen = true;
             return;

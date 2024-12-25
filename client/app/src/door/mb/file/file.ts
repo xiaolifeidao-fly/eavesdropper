@@ -1,8 +1,9 @@
-import { FileData, MbFileUploadMonitor } from "@src/door/monitor/mb/file/file";
+import { FileData, getFileKey, MbFileUploadMonitor } from "@src/door/monitor/mb/file/file";
 import { MbEngine } from "../mb.engine";
 import { getStringHash } from "@utils/crypto.util";
 import { getDoorFileRecordByKey } from "@api/door/file.api";
 import { MbSkuFileUploadMonitor } from "@src/door/monitor/mb/sku/mb.sku.file.upload.monitor";
+import { MbFileApi } from "@eleapi/door/file/mb.file";
 
 const code = `
 
@@ -92,10 +93,9 @@ return async function doHandler(page, params, preResult){
 async function getUnUploadFile(source : string, resourceId : number, paths: string[]){
     const unUploadFiles = [];
     for(let path of paths){
-        let fileKey = path.substring(path.lastIndexOf("/") + 1);
-        console.log(" fileKey ", fileKey);
-        fileKey = getStringHash(fileKey);
-        const doorFileRecord = await getDoorFileRecordByKey(source, fileKey);
+        const fileKey = getFileKey(path);
+        console.log(" getUnUploadFile ", fileKey);
+        const doorFileRecord = await getDoorFileRecordByKey(source, resourceId, fileKey);
         console.log(" getUnUploadFile ", doorFileRecord);
         if(doorFileRecord){
             continue;
@@ -105,16 +105,14 @@ async function getUnUploadFile(source : string, resourceId : number, paths: stri
     return unUploadFiles;
 }
 
-export async function uploadFile(resourceId : number, paths: string[], sourceSkuId? : string){
-    const monitor = new MbSkuFileUploadMonitor(resourceId, 1, {});
+export async function uploadFile(resourceId : number, paths: string[], monitor : MbFileUploadMonitor){
+    const unUploadFiles = await getUnUploadFile(monitor.getType(), resourceId, paths);
+    if(unUploadFiles.length === 0){
+        return;
+    }
+    const mbEngine = new MbEngine(resourceId, false);
+    const page = await mbEngine.init("https://qn.taobao.com/home.htm/sucai-tu/home");
     try{
-        const unUploadFiles = await getUnUploadFile(monitor.getType(), resourceId, paths);
-        console.log(" unUploadFiles ", unUploadFiles);
-        if(unUploadFiles.length === 0){
-            return;
-        }
-        const mbEngine = new MbEngine(resourceId, false);
-        const page = await mbEngine.init("https://qn.taobao.com/home.htm/sucai-tu/home");
         monitor.setAllowRepeat(true);
         mbEngine.addMonitor(monitor);
         await monitor.start();
@@ -125,6 +123,9 @@ export async function uploadFile(resourceId : number, paths: string[], sourceSku
             console.log(path, " uploadFile result ", result);
         }
     }finally{
-        // await mbEngine.closePage();
+        if(page){
+            await page.waitForTimeout(3000);
+            await mbEngine.closePage();
+        }
     }
 }

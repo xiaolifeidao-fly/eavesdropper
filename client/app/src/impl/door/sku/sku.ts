@@ -82,7 +82,7 @@ export class MbSkuApiImpl extends MbSkuApi {
                 }
                 console.log("result: ", result);
                 //通过事件发送给端 单个商品的结果以及进度
-                this.send("notifyPublishShop", result.id, result.status, new SkuPublishStatitic());
+                this.send("onPublishShopMessage", result.id, result.status, new SkuPublishStatitic());
     
                 if (progress % 2 == 0){
                     const req = new UpdateSkuTaskReq(progress, "pending");

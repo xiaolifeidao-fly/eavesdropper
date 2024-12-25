@@ -57,8 +57,13 @@ func SaveDoorFileRecord(ctx *gin.Context) {
 
 func GetDoorFileRecordByKey(ctx *gin.Context) {
 	source := ctx.Query("source")
+	resourceId, err := strconv.ParseUint(ctx.Query("resourceId"), 10, 64)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
 	fileKey := ctx.Query("fileKey")
-	result, err := services.FindDoorFileRecordBySourceAndFileKey(source, fileKey)
+	result, err := services.FindDoorFileRecordBySourceAndResourceIdAndFileKey(source, resourceId, fileKey)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return
