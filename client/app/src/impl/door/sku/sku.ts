@@ -10,6 +10,8 @@ import { Sku, SkuPublishStatitic, AddSkuReq } from "@model/sku/sku";
 import { addSkuTask, updateSkuTask } from "@api/sku/skuTask.api";
 import { AddSkuTaskReq, UpdateSkuTaskReq} from "@model/sku/skuTask";
 import { Task } from "@model/task/task";
+import { uploadFile } from "@src/door/mb/file/file";
+import { MbSkuFileUploadMonitor } from "@src/door/monitor/mb/sku/mb.sku.file.upload.monitor";
 
 
 export class MbSkuApiImpl extends MbSkuApi {
@@ -29,6 +31,13 @@ export class MbSkuApiImpl extends MbSkuApi {
             await engine.closePage();
         }  
     }
+
+    async uploadSkuImages(publishResourceId : number, data : {}, skuId : number){
+        const fileNames ={};
+        const monitor = new MbSkuFileUploadMonitor(publishResourceId, skuId, fileNames);
+        // uploadFile(publishResourceId, paths, monitor);
+    }
+
 
     @InvokeType(Protocols.INVOKE)
     async publishShop(publishResourceId : number, taskId : number, skuUrl : string) : Promise<Sku|undefined>{
