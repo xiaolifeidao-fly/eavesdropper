@@ -7,6 +7,8 @@ import { MbSkuApi } from "@eleapi/door/sku/mb.sku";
 import { MbEngine } from "@src/door/mb/mb.engine";
 import { Sku, SkuPublishStatitic } from "@model/sku/sku";
 import { Task } from "@model/task/task";
+import { uploadFile } from "@src/door/mb/file/file";
+import { MbSkuFileUploadMonitor } from "@src/door/monitor/mb/sku/mb.sku.file.upload.monitor";
 
 
 export class MbSkuApiImpl extends MbSkuApi {
@@ -27,8 +29,15 @@ export class MbSkuApiImpl extends MbSkuApi {
         }  
     }
 
+    async uploadSkuImages(publishResourceId : number, data : {}, skuId : number){
+        const fileNames ={};
+        const monitor = new MbSkuFileUploadMonitor(publishResourceId, skuId, fileNames);
+        // uploadFile(publishResourceId, paths, monitor);
+    }
+
+
     @InvokeType(Protocols.INVOKE)
-    async publishShop(publishResourceId : number, skuUrl : string) : Promise<Sku|undefined>{
+    async publishSku(publishResourceId : number, skuUrl : string) : Promise<Sku|undefined>{
         const engine = new MbEngine(publishResourceId);
         const page = await engine.init();
         if(!page){ 
@@ -46,19 +55,19 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async batchPublishShops(publishResourceId : number, skuUrls : string[]) : Promise<Task|undefined>{
+    async batchPublishSkus(publishResourceId : number, skuUrls : string[]) : Promise<Task|undefined>{
         // 创建任务要求是幂等
         
         
         // 异步操作
         for(const skuUrl of skuUrls){
             //发布商品
-            const result = await this.publishShop(publishResourceId, skuUrl);
+            const result = await this.publishSku(publishResourceId, skuUrl);
             if(!result){
                 return undefined;
             }
             //通过事件发送给端 单个商品的结果以及进度
-            this.send("onPublishShopMessage", result.id, result.status, new SkuPublishStatitic());
+            this.send("onPublishSkuMessage", result.id, result.status, new SkuPublishStatitic());
         }
         //返回任务
         return new Task(undefined, undefined);

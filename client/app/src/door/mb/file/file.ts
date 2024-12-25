@@ -120,11 +120,10 @@ export async function uploadFile(resourceId : number, paths: string[], monitor :
         await functionCode(page, {paths : unUploadFiles}, undefined);
         for(let path of unUploadFiles){
             const result = await monitor.waitForAction();
-            console.log(path, " uploadFile result ", result);
         }
     }finally{
         if(page){
-            await page.waitForTimeout(3000);
+            await page.waitForTimeout(1500);
             await mbEngine.closePage();
         }
     }

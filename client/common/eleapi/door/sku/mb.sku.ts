@@ -15,18 +15,18 @@ export class MbSkuApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async publishShop(publishResourceId : number, skuUrl : string) : Promise<Sku|undefined>{
-        return await this.invokeApi("publishShop", publishResourceId, skuUrl);
+    async publishSku(publishResourceId : number, skuUrl : string) : Promise<Sku|undefined>{
+        return await this.invokeApi("publishSku", publishResourceId, skuUrl);
     }
 
     @InvokeType(Protocols.INVOKE)
-    async batchPublishShops(publishResourceId : number, skuUrls : string[]) : Promise<Task|undefined>{
-        return await this.invokeApi("batchPublishShops", publishResourceId, skuUrls);
+    async batchPublishSkus(publishResourceId : number, skuUrls : string[]) : Promise<Task|undefined>{
+        return await this.invokeApi("batchPublishSkus", publishResourceId, skuUrls);
     }
 
     @InvokeType(Protocols.TRRIGER)
-    async onPublishShopMessage(skuId : number, skuStatus : string, statistic : SkuPublishStatitic){
-        return await this.invokeApi("onPublishShopMessage", skuId, skuStatus, statistic);
+    async onPublishSkuMessage(callback : (skuId : number, skuStatus : string, statistic : SkuPublishStatitic) => void){
+        return await this.invokeApi("onPublishSkuMessage", callback);
     }
 
 }
