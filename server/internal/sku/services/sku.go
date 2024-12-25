@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"server/common/base/page"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
 	"server/internal/sku/models"
@@ -16,6 +17,25 @@ func CreateSku(skuDTO *dto.SkuDTO) (uint64, error) {
 		return 0, err
 	}
 	return skuDTO.ID, nil
+}
+
+func PageSku(param *dto.SkuPageParamDTO) (*page.Page, error) {
+	var err error
+	skuRepository := repositories.SkuRepository
+
+	var count = int64(0)
+	var pageData = make([]*dto.SkuPageDTO, 0)
+	if err = skuRepository.Page(&models.Sku{}, *param, param.Query, &pageData, &count); err != nil {
+		return nil, err
+	}
+
+	if count <= 0 {
+		return page.BuildEmptyPage(param.ToPageInfo(count)), nil
+	}
+
+	pageDTO := page.BuildPage(param.ToPageInfo(count), pageData)
+
+	return pageDTO, nil
 }
 
 func saveSku(skuDTO *dto.SkuDTO) (*dto.SkuDTO, error) {

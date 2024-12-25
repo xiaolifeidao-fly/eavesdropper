@@ -6,6 +6,8 @@ import Layout from '@/components/layout';
 import styles from './index.module.less';
 
 import useRefreshPage from '@/components/RefreshPage';
+import { getSkuPage as getSkuPageApi } from '@api/sku/sku.api';
+import type { SkuPageResp } from '@model/sku/sku';
 import { SkuPushStepsForm } from './components';
 
 type DataType = {
@@ -54,17 +56,24 @@ const baseColumns: ProColumns<DataType>[] = [
   },
 ]
 
-const getSkuList = async () => {
-  // mock 数据
-  const data = []
-  for (let i = 0; i < 100; i++) {
+function skuPageRespConvertDataType(resp: SkuPageResp[]): DataType[] {
+  const data: DataType[] = []
+  for (const item of resp) {
+
+    let status = 0;
+    if (item.status === 'success') {
+      status = 1;
+    } else if (item.status === 'error') {
+      status = 0;
+    }
+
     data.push({
-      id: i,
-      sourceAccount: '123456',
-      shopName: '店铺1',
-      skuName: '商品' + i,
-      publishTime: '2024-01-01 00:00:00',
-      publishStatus: 0,
+      id: item.id,
+      sourceAccount: item.resourceAccount,
+      shopName: item.shopName,
+      skuName: item.skuName,
+      publishTime: item.publishTime,
+      publishStatus: status,
     })
   }
   return data
@@ -86,7 +95,7 @@ export default function SkuManage() {
       align: 'center',
       width: 150,
       render: (_, record) => [
-        <Button key="edit" type="link" style={{ paddingRight: 0 }}>发布</Button>,
+        <Button key="edit" type="link" style={{ paddingRight: 0 }} disabled={record.publishStatus === 1}>发布</Button>,
         <Button key="delete" type="link" danger style={{ paddingLeft: 0 }} onClick={async () => {
           message.success('删除成功');
           refreshPage(actionRef, true, 1);
@@ -113,12 +122,16 @@ export default function SkuManage() {
               </Button>,
             ]}
             request={async (params) => {
-              console.log(params);
-              const data = await getSkuList();
+              const { data: list, pageInfo } = await getSkuPageApi({
+                ...params,
+                current: params.current ?? 1,
+                pageSize: params.pageSize ?? 10,
+              })
+              const data = skuPageRespConvertDataType(list);
               return {
                 data: data,
                 success: true,
-                total: data.length,
+                total: pageInfo.total,
               };
             }}
             pagination={{
@@ -127,7 +140,9 @@ export default function SkuManage() {
           />
 
           {/* 发布商品 */}
-          <SkuPushStepsForm visible={visible} setVisible={setVisible} />
+          <SkuPushStepsForm visible={visible} setVisible={setVisible} onClose={() => {
+            refreshPage(actionRef, false);
+          }} />
         </div>
       </main>
     </Layout>

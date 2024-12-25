@@ -26,7 +26,7 @@ func LoadUserRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).DELETE("/:id", DeleteUser)
 		r.Use(middleware.Authorization()).PUT("/:id", UpdateUser)
 		r.Use(middleware.Authorization()).GET("/:id", GetUser)
-		r.Use(middleware.Authorization()).GET("/page", Page)
+		r.Use(middleware.Authorization()).GET("/page", PageUser)
 	}
 }
 
@@ -124,10 +124,10 @@ func GetUser(ctx *gin.Context) {
 	controller.OK(ctx, &resp)
 }
 
-// Page
+// PageUser
 // @Description 分页获取用户
 // @Router /users/page [get]
-func Page(ctx *gin.Context) {
+func PageUser(ctx *gin.Context) {
 	var err error
 
 	var req vo.UserPageReq

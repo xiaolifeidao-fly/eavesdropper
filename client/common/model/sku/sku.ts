@@ -1,51 +1,75 @@
-
 export class Sku {
-
-    id : number|undefined;
-    name : string|undefined;
-    sourceSkuId : string|undefined;
-    taskId : number|undefined;
-    publishResourceId : number|undefined;
-    status : string|undefined;
-
-    constructor(id? : number, name? : string, sourceSkuId? : string, taskId? : number, publishResourceId? : number, status? : string){
-        this.id = id;
-        this.name = name;
-        this.sourceSkuId = sourceSkuId;
-        this.taskId = taskId;
-        this.publishResourceId = publishResourceId;
-        this.status = status;
-    }
-}
-
-export class SkuPublishStatitic {
-
-    taskId : number|undefined;
-    totalNum : number|undefined;
-    successNum : number|undefined;
-    errorNum : number|undefined;
-
-    constructor(taskId? : number, totalNum? : number, successNum? : number, errorNum? : number) {
-        this.taskId = taskId;
-        this.totalNum = totalNum;
-        this.successNum = successNum;
-        this.errorNum = errorNum;
-    }
-
+  constructor(
+    public id?: number,
+    public name?: string,
+    public sourceSkuId?: string,
+    public taskId?: number,
+    public publishResourceId?: number,
+    public status?: string,
+    public url?: string,
+    public publishTime?: string
+  ) {
+    this.id = id
+    this.name = name
+    this.sourceSkuId = sourceSkuId
+    this.taskId = taskId
+    this.publishResourceId = publishResourceId
+    this.status = status
+    this.url = url
+    this.publishTime = publishTime
+  }
 }
 
 export class AddSkuReq {
-    name : string|undefined; // 商品名称
-    sourceSkuId : string|undefined; // 源商品id
-    taskId : number|undefined; // 任务id
-    status : string|undefined; // 状态
-    publishResourceId : number|undefined; // 发布资源id
+  constructor(
+    public name?: string, // 商品名称
+    public sourceSkuId?: string, // 源商品id
+    public taskId?: number, // 任务id
+    public status?: string, // 状态
+    public publishResourceId?: number, // 发布资源id
+    public url?: string, // 商品链接
+    public publishTime?: string // 发布时间
+  ) {
+    this.name = name
+    this.sourceSkuId = sourceSkuId
+    this.taskId = taskId
+    this.status = status
+    this.publishResourceId = publishResourceId
+    this.url = url
+    this.publishTime = publishTime
+  }
+}
 
-    constructor(name? : string, sourceSkuId? : string, taskId? : number, status? : string, publishResourceId? : number) {
-        this.name = name;
-        this.sourceSkuId = sourceSkuId;
-        this.taskId = taskId;
-        this.status = status;
-        this.publishResourceId = publishResourceId;
-    }
+export class SkuPageReq {
+  constructor(
+    public current: number,
+    public pageSize: number,
+    public shopName?: string,
+    public skuName?: string
+  ) {
+    this.shopName = shopName
+    this.skuName = skuName
+    this.current = current
+    this.pageSize = pageSize
+  }
+}
+
+export class SkuPageResp {
+  constructor(
+    public id: number,
+    public resourceAccount: string,
+    public shopName: string,
+    public skuName: string,
+    public status: string,
+    public publishTime: string,
+    public createdAt: string
+  ) {
+    this.id = id
+    this.resourceAccount = resourceAccount
+    this.shopName = shopName
+    this.skuName = skuName
+    this.status = status
+    this.publishTime = publishTime
+    this.createdAt = createdAt
+  }
 }
