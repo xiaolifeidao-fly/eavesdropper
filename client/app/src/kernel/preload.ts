@@ -25,7 +25,7 @@ function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
       if (typeof method === 'function') {
         // 使用 ipcRenderer.invoke 封装方法
         if(metadata == undefined || metadata == Protocols.INVOKE){
-            (exposedConfig as any)[methodName] = (...args: any[]) => {
+            (exposedConfig as any)[methodName] = (...args: any) => {
               return ipcRenderer.invoke(`${apiName}.${methodName}`, ...args);
             };
         }else{

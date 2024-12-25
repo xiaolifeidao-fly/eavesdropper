@@ -20,6 +20,10 @@ abstract class ElectronApi {
 
   event : any;
 
+  consumers : {
+    [key: string]: string
+  } = {};
+
 
   constructor() {
     this.apiName = this.getApiName()
@@ -80,9 +84,32 @@ abstract class ElectronApi {
               apiName = this.getNamespace() + "_" + apiName;
           }
           //@ts-ignore
+          const prototype = cls.prototype; // 通过类获取原型
           return await window[this.getApiName()][functionName](...args);
       }
       return {};
+  }
+
+  async onMessage(functionName : string, callback : (...args: any) => void, topic : string = undefined){
+    if(topic == undefined){
+      topic = this.constructor.name;
+    }
+    const env = this.getEnvironment();
+    if(env == 'Electron'){
+        let apiName = this.getApiName();
+        if(this.getNamespace()){
+            apiName = this.getNamespace() + "_" + apiName;
+        }
+        if(topic){
+          if(topic in this.consumers){
+            return {};
+          }
+          this.consumers[topic] = apiName;
+        }
+        //@ts-ignore
+        return await window[this.getApiName()][functionName](callback);
+    }
+    return {};
   }
     
 }

@@ -26,7 +26,7 @@ export class MbSkuApi extends ElectronApi {
 
     @InvokeType(Protocols.TRRIGER)
     async onPublishSkuMessage(callback : (skuId : number, skuStatus : string, statistic : SkuPublishStatitic) => void){
-        return await this.invokeApi("onPublishSkuMessage", callback);
+        return await this.onMessage("onPublishSkuMessage",callback);
     }
 
 }
