@@ -40,7 +40,7 @@ export class MbSkuApiImpl extends MbSkuApi {
 
 
     @InvokeType(Protocols.INVOKE)
-    async publishShop(publishResourceId : number, taskId : number, skuUrl : string) : Promise<Sku|undefined>{
+    async publishSku(publishResourceId : number, skuUrl : string, taskId : number) : Promise<Sku|undefined>{
         let status = "success";
         try {
             // const engine = new MbEngine(publishResourceId);
@@ -66,7 +66,7 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async batchPublishShops(publishResourceId : number, skuUrls : string[]) : Promise<Task|undefined>{
+    async batchPublishSkus(publishResourceId : number, skuUrls : string[]) : Promise<Task|undefined>{
         // 1. 创建task记录
         const req = new AddSkuTaskReq(skuUrls.length, publishResourceId);
         const taskId = await addSkuTask(req);
@@ -84,14 +84,14 @@ export class MbSkuApiImpl extends MbSkuApi {
             for(const skuUrl of skuUrls){
                 progress++;
                 //发布商品
-                const result = await this.publishShop(publishResourceId, taskId, skuUrl);
+                const result = await this.publishSku(publishResourceId, skuUrl, taskId);
                 if(!result){
                     console.error("publishShop error");
                     return undefined;
                 }
                 console.log("result: ", result);
                 //通过事件发送给端 单个商品的结果以及进度
-                this.send("onPublishShopMessage", result.id, result.status, new SkuPublishStatitic());
+                this.send("onPublishSkuMessage", result.id, result.status, new SkuPublishStatitic());
     
                 if (progress % 2 == 0){
                     const req = new UpdateSkuTaskReq(progress, "pending");
