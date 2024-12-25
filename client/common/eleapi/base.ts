@@ -89,9 +89,9 @@ abstract class ElectronApi {
       return {};
   }
 
-  async onMessage(functionName : string, callback : (...args: any) => void, topic : string = undefined){
+  async onMessage(functionName : string, callback : (...args: any) => void, topic : string|undefined = undefined){
     if(topic == undefined){
-      topic = this.constructor.name;
+      topic = functionName;
     }
     const env = this.getEnvironment();
     if(env == 'Electron'){
