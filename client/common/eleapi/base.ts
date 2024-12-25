@@ -84,7 +84,6 @@ abstract class ElectronApi {
               apiName = this.getNamespace() + "_" + apiName;
           }
           //@ts-ignore
-          const prototype = cls.prototype; // 通过类获取原型
           return await window[this.getApiName()][functionName](...args);
       }
       return {};
