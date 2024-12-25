@@ -60,9 +60,9 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     console.log("skuId: ", skuId, "skuStatus: ", skuStatus, "statistic: ", statistic);
   };
 
-  const mbSkuApi = new MbSkuApi(onPublishSkuMessage);
+  const mbSkuApi = new MbSkuApi();
 
-  // mbSkuApi.onPublishSkuMessage(onPublishSkuMessage);
+  mbSkuApi.onPublishSkuMessage(onPublishSkuMessage);
 
   useEffect(() => {
     if (props.urls.length === 0) {

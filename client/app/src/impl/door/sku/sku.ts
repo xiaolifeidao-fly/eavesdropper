@@ -122,10 +122,5 @@ export class MbSkuApiImpl extends MbSkuApi {
         return
     }
 
-    @InvokeType(Protocols.TRRIGER)
-    async onPublishSkuMessage(callback : (skuId : number, skuStatus : string, statistic : SkuPublishStatitic) => void){
-        console.log("callback: ", callback);
-    }
-
 }
 

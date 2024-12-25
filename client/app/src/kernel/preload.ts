@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 require('module-alias/register');
 import log from 'electron-log';
 import { ElectronApi, Protocols } from '@eleapi/base';
-import { registerApi } from '@src/impl/register';
+import { registerApi } from '@eleapi/register';
 
  // 定义一个类型，将暴露给渲染进程的 API 类型化
 type ExposedApi = {
@@ -20,15 +20,17 @@ function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
     .filter((key) => key !== 'constructor') // 排除构造函数
     .forEach((methodName) => {
       const method = (prototype as any)[methodName];
+      const metadata = Reflect.getMetadata('invokeType', prototype, methodName);
+      console.log("exposeApi rendererApiName ", methodName);
+
       if (typeof method === 'function') {
         // 使用 ipcRenderer.invoke 封装方法
-        const metadata = Reflect.getMetadata('invokeType', prototype, methodName);
-        console.log("exposeApi rendererApiName ", apiName);
         if(metadata == undefined || metadata == Protocols.INVOKE){
             (exposedConfig as any)[methodName] = (...args: any[]) => {
               return ipcRenderer.invoke(`${apiName}.${methodName}`, ...args);
             };
         }else{
+            console.log("exposeApi trigger ", apiName);
             (exposedConfig as any)[methodName] = (callback: (...args: any[]) => void) => {
               ipcRenderer.on(`${apiName}.${methodName}`, (event, ...args: any[]) => {
                   callback(args); // 将参数传递给回调函数
