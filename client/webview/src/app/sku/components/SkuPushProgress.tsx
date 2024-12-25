@@ -46,6 +46,7 @@ export interface SkuUrl {
 }
 
 interface SkuPushProgressProps {
+  publishResourceId: number;
   urls: SkuUrl[];
 }
 
@@ -55,26 +56,26 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
   const [pushCount, setPushCount] = useState(0);
   const [pushProgress, setPushProgress] = useState(0);
 
+  const onPublishSkuMessage = (skuId: number, skuStatus: string, statistic: SkuPublishStatitic) => {
+    console.log("skuId: ", skuId, "skuStatus: ", skuStatus, "statistic: ", statistic);
+  };
+
+  const mbSkuApi = new MbSkuApi(onPublishSkuMessage);
+
+  // mbSkuApi.onPublishSkuMessage(onPublishSkuMessage);
+
   useEffect(() => {
     if (props.urls.length === 0) {
       console.log("uploadUrlList is empty");
       return;
     }
-
-    const mbSkuApi = new MbSkuApi();
-    const publishResourceId = 1;            
-    mbSkuApi.batchPublishShops(publishResourceId, props.urls.map(item => item.url)).then(task => {
+    
+    mbSkuApi.batchPublishSkus(props.publishResourceId, props.urls.map(item => item.url)).then(task => {
       console.log(task);
-
-      
-      // mbSkuApi.onPublishShopMessage(task.id, task.status, task.statistic);
-
-      // 监听任务状态
-      console.log("event: ", mbSkuApi.getEvent());
-      // mbSkuApi.event.on("notifyPublishShop", (skuId: number, skuStatus: string, statistic: SkuPublishStatitic) => {
-      //   console.log("接收到的数据:", skuId, skuStatus, statistic);
-      // });
     });
+    
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.urls]);
 
   return (

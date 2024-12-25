@@ -5,7 +5,8 @@ import "server/common/middleware/database"
 type Sku struct {
 	database.BaseEntity
 	UserId            uint64 `json:"userId"`
-	SourceSkuId       uint64 `json:"sourceSkuId"`
+	Name              string `json:"name"`
+	SourceSkuId       string `json:"sourceSkuId"`
 	TaskId            uint64 `json:"taskId"`
 	Status            string `json:"status"`
 	PublishResourceId uint64 `json:"publishResourceId"`

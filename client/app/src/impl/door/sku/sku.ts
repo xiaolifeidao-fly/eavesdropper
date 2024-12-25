@@ -41,17 +41,25 @@ export class MbSkuApiImpl extends MbSkuApi {
 
     @InvokeType(Protocols.INVOKE)
     async publishSku(publishResourceId : number, skuUrl : string, taskId : number) : Promise<Sku|undefined>{
+        const sku = new Sku();
+        sku.taskId = taskId;
+        sku.publishResourceId = publishResourceId;
+
         let status = "success";
         try {
-            // const engine = new MbEngine(publishResourceId);
-            // const page = await engine.init();
-            // if(!page){ 
-            //     return undefined;
-            // }
-            // //获取商品信息
-            // const skuData = await this.findMbSkuInfo(skuUrl);
-            // //上传图片信息
+            const engine = new MbEngine(publishResourceId);
+            const page = await engine.init();
+            if(!page){ 
+                return undefined;
+            }
+            //获取商品信息
+            const skuData = await this.findMbSkuInfo(skuUrl);
+            console.log("skuData: ", skuData);
 
+            sku.name = "test";
+            sku.sourceSkuId = "123";
+
+            //上传图片信息
             // // 填充商品信息
             // const result = await engine.doFillWaitForElement(page, "1.0.1", "publishSku", skuData);
         } catch (error) {
@@ -59,9 +67,10 @@ export class MbSkuApiImpl extends MbSkuApi {
             console.error("publishShop error: ", error);
         } finally {
             // 保存商品信息
-            const req = new AddSkuReq(864073465826, taskId, status, publishResourceId);
+            const req = new AddSkuReq(sku.name, sku.sourceSkuId, taskId, status, publishResourceId);
             const skuId = await addSku(req);
-            return new Sku(skuId as number, 864073465826, taskId, status);
+            sku.id = skuId as number;
+            return sku;
         }
     }
 
@@ -73,26 +82,34 @@ export class MbSkuApiImpl extends MbSkuApi {
         const status = "pending";
 
         // 异步操作
-        this.asyncBatchPublishShop(taskId as number, publishResourceId, skuUrls);
+        this.asyncBatchPublishSku(taskId as number, publishResourceId, skuUrls);
         //返回任务
         return new Task(taskId as number, status);
     }
 
-    async asyncBatchPublishShop(taskId : number, publishResourceId : number, skuUrls : string[]) : Promise<void>{
+    async asyncBatchPublishSku(taskId : number, publishResourceId : number, skuUrls : string[]) : Promise<void>{
+        const statistic = new SkuPublishStatitic();
+        statistic.taskId = taskId;
+        statistic.totalNum = skuUrls.length;
         let progress = 0;
         try {
             for(const skuUrl of skuUrls){
                 progress++;
+
                 //发布商品
-                const result = await this.publishSku(publishResourceId, skuUrl, taskId);
-                if(!result){
+                const sku = await this.publishSku(publishResourceId, skuUrl, taskId);
+                if(!sku || sku.status == "error"){
+                    // 发送错误事件
+                    statistic.errorNum = statistic.errorNum ? statistic.errorNum + 1 : 1;
                     console.error("publishShop error");
                     return undefined;
                 }
-                console.log("result: ", result);
+                console.log("result: ", sku);
+
                 //通过事件发送给端 单个商品的结果以及进度
-                this.send("onPublishSkuMessage", result.id, result.status, new SkuPublishStatitic());
-    
+                statistic.successNum = statistic.successNum ? statistic.successNum + 1 : 1;
+                this.send("onPublishSkuMessage", sku.id, sku.status, statistic);
+
                 if (progress % 2 == 0){
                     const req = new UpdateSkuTaskReq(progress, "pending");
                     await updateSkuTask(taskId as number, req);
@@ -105,6 +122,10 @@ export class MbSkuApiImpl extends MbSkuApi {
         return
     }
 
+    @InvokeType(Protocols.TRRIGER)
+    async onPublishSkuMessage(callback : (skuId : number, skuStatus : string, statistic : SkuPublishStatitic) => void){
+        console.log("callback: ", callback);
+    }
 
 }
 

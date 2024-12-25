@@ -24,7 +24,7 @@ interface PushSkuStepsFormProps {
 
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible }) => {
 
-  const [sourceAccount, setSourceAccount] = useState('');
+  const [sourceAccount, setSourceAccount] = useState<number>(0);
   const [pushSkuFlag, setPushSkuFlag] = useState(false);
   const [current, setCurrent] = useState(0);
   const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
@@ -35,6 +35,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
     setCurrent(0);
     setUploadUrlList([]);
     setPushSkuFlag(false);
+    setUrls([]);
   }
 
   return (
@@ -102,7 +103,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
           title="导入链接"
           style={{ height: '400px' }}
           onFinish={async () => {
-            if (sourceAccount === '') {
+            if (sourceAccount === 0) {
               message.error('请选择资源账号');
               return false;
             }
@@ -124,8 +125,8 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
         >
           <Select
             placeholder="请选择资源账号"
-            options={[{ label: '资源账号1', value: '1' }, { label: '资源账号2', value: '2' }]}
-            onChange={setSourceAccount}
+            options={[{ label: '资源账号1', value: 1 }, { label: '资源账号2', value: 2 }]}
+            onChange={(value) => setSourceAccount(value)}
             style={{ width: '100%', margin: 0, padding: 0 }}
           />
           <ImportSku uploadUrlList={uploadUrlList} setUploadUrlList={setUploadUrlList} />
@@ -141,7 +142,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
             return true;
           }}
         >
-          <SkuPushProgress urls={urls} />
+          <SkuPushProgress publishResourceId={sourceAccount} urls={urls} />
         </StepsForm.StepForm>
 
         {/* 第三步： 发布确认 */}

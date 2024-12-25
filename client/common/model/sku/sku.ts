@@ -2,14 +2,18 @@
 export class Sku {
 
     id : number|undefined;
-    sourceSkuId : number|undefined;
+    name : string|undefined;
+    sourceSkuId : string|undefined;
     taskId : number|undefined;
+    publishResourceId : number|undefined;
     status : string|undefined;
 
-    constructor(id? : number, sourceSkuId? : number, taskId? : number, status? : string){
+    constructor(id? : number, name? : string, sourceSkuId? : string, taskId? : number, publishResourceId? : number, status? : string){
         this.id = id;
+        this.name = name;
         this.sourceSkuId = sourceSkuId;
         this.taskId = taskId;
+        this.publishResourceId = publishResourceId;
         this.status = status;
     }
 }
@@ -31,12 +35,14 @@ export class SkuPublishStatitic {
 }
 
 export class AddSkuReq {
-    sourceSkuId : number; // 源商品id
-    taskId : number; // 任务id
-    status : string; // 状态
-    publishResourceId : number; // 发布资源id
+    name : string|undefined; // 商品名称
+    sourceSkuId : string|undefined; // 源商品id
+    taskId : number|undefined; // 任务id
+    status : string|undefined; // 状态
+    publishResourceId : number|undefined; // 发布资源id
 
-    constructor(sourceSkuId : number, taskId : number, status : string, publishResourceId : number) {
+    constructor(name? : string, sourceSkuId? : string, taskId? : number, status? : string, publishResourceId? : number) {
+        this.name = name;
         this.sourceSkuId = sourceSkuId;
         this.taskId = taskId;
         this.status = status;

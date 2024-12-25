@@ -5,6 +5,13 @@ import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
 
 export class MbSkuApi extends ElectronApi {
 
+    publishSkuMessageCallback? : (skuId : number, skuStatus : string, statistic : SkuPublishStatitic) => void | undefined;
+
+    constructor(publishSkuMessageCallback? : (skuId : number, skuStatus : string, statistic : SkuPublishStatitic) => void | undefined){
+        super();
+        this.publishSkuMessageCallback = publishSkuMessageCallback;
+    }
+
     getApiName(): string {
         return "MbSkuApi";
     }
