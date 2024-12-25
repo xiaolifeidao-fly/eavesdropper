@@ -21,7 +21,6 @@ function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
     .forEach((methodName) => {
       const method = (prototype as any)[methodName];
       const metadata = Reflect.getMetadata('invokeType', prototype, methodName);
-      console.log("exposeApi rendererApiName ", methodName);
 
       if (typeof method === 'function') {
         // 使用 ipcRenderer.invoke 封装方法
@@ -31,9 +30,9 @@ function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
             };
         }else{
             console.log("exposeApi trigger ", apiName);
-            (exposedConfig as any)[methodName] = (callback: (...args: any[]) => void) => {
-              ipcRenderer.on(`${apiName}.${methodName}`, (event, ...args: any[]) => {
-                  callback(args); // 将参数传递给回调函数
+            (exposedConfig as any)[methodName] = (callback: (...args: any) => void) => {
+              ipcRenderer.on(`${apiName}.${methodName}`, (event, ...args: any) => {
+                  callback(...args); // 将参数传递给回调函数
               });
             };
         }
@@ -54,7 +53,6 @@ async function registerRenderApi(cls: { new(...args: any[]): ElectronApi }){
 
 try{
     const registerApis = registerApi();
-    console.log(registerApis)
     registerApis.forEach(cls => {
       registerRenderApi(cls);
     });

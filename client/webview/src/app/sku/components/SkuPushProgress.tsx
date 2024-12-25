@@ -50,17 +50,17 @@ interface SkuPushProgressProps {
   urls: SkuUrl[];
 }
 
+const mbSkuApi = new MbSkuApi();
+
 const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
 
   const [data, setData] = useState<SkuPushInfo[]>([]);
   const [pushCount, setPushCount] = useState(0);
   const [pushProgress, setPushProgress] = useState(0);
 
-  const onPublishSkuMessage = (skuId: number, skuStatus: string, statistic: SkuPublishStatitic) => {
+  const onPublishSkuMessage: (skuId: number, skuStatus: string, statistic: SkuPublishStatitic) => void = (skuId: number, skuStatus: string, statistic: SkuPublishStatitic) => {
     console.log("skuId: ", skuId, "skuStatus: ", skuStatus, "statistic: ", statistic);
   };
-
-  const mbSkuApi = new MbSkuApi();
 
   mbSkuApi.onPublishSkuMessage(onPublishSkuMessage);
 

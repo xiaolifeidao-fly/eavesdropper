@@ -61,15 +61,15 @@ abstract class ElectronApi {
     return plainToInstance(clazz, data)
   }
 
-  send(key : string, ...args: any[]): void{
+  send(key : string, ...args: any): void{
     let namespace = this.getNamespace();
     let rendererApiName = namespace + "_" + this.getApiName();
     const channel = `${rendererApiName}.${key}`;
     this.sendMessage(channel, ...args)
   }
 
-  sendMessage(channel: string, ...args: any[]): void{
-    this.getEvent().sender.send(channel, args);
+  sendMessage(channel: string, ...args: any): void{
+    this.getEvent().sender.send(channel, ...args);
   }
 
   async invokeApi(functionName : string, ...args : any){

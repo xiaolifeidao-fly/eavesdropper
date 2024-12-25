@@ -44,8 +44,8 @@ export class MbSkuApiImpl extends MbSkuApi {
         const sku = new Sku();
         sku.taskId = taskId;
         sku.publishResourceId = publishResourceId;
+        sku.status = "pending";
 
-        let status = "success";
         try {
             const engine = new MbEngine(publishResourceId);
             const page = await engine.init();
@@ -62,12 +62,14 @@ export class MbSkuApiImpl extends MbSkuApi {
             //上传图片信息
             // // 填充商品信息
             // const result = await engine.doFillWaitForElement(page, "1.0.1", "publishSku", skuData);
+
+            sku.status = "success";
         } catch (error) {
-            status = "error";
+            sku.status = "error";
             console.error("publishShop error: ", error);
         } finally {
             // 保存商品信息
-            const req = new AddSkuReq(sku.name, sku.sourceSkuId, taskId, status, publishResourceId);
+            const req = new AddSkuReq(sku.name, sku.sourceSkuId, taskId, sku.status, publishResourceId);
             const skuId = await addSku(req);
             sku.id = skuId as number;
             return sku;
@@ -91,6 +93,9 @@ export class MbSkuApiImpl extends MbSkuApi {
         const statistic = new SkuPublishStatitic();
         statistic.taskId = taskId;
         statistic.totalNum = skuUrls.length;
+        statistic.successNum = 0;
+        statistic.errorNum = 0;
+
         let progress = 0;
         try {
             for(const skuUrl of skuUrls){
@@ -100,14 +105,16 @@ export class MbSkuApiImpl extends MbSkuApi {
                 const sku = await this.publishSku(publishResourceId, skuUrl, taskId);
                 if(!sku || sku.status == "error"){
                     // 发送错误事件
-                    statistic.errorNum = statistic.errorNum ? statistic.errorNum + 1 : 1;
+                    statistic.errorNum = statistic.errorNum + 1;
                     console.error("publishShop error");
                     return undefined;
                 }
                 console.log("result: ", sku);
 
                 //通过事件发送给端 单个商品的结果以及进度
-                statistic.successNum = statistic.successNum ? statistic.successNum + 1 : 1;
+                statistic.successNum = statistic.successNum + 1;
+
+                console.log("skuId: ", sku.id, "skuStatus: ", sku.status, "statistic: ", statistic);
                 this.send("onPublishSkuMessage", sku.id, sku.status, statistic);
 
                 if (progress % 2 == 0){
