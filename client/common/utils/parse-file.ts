@@ -23,3 +23,9 @@ export const parseXlsxFileClient = async (file: File): Promise<{ headers: any[],
 
   return { headers, tableData };
 };
+
+export const parseTxtFileClient = async (file: File): Promise<{ urls: string[] }> => {
+  const text = await file.text();
+  const urls = text.split('\n');
+  return { urls };
+};

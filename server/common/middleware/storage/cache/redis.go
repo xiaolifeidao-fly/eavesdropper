@@ -33,7 +33,7 @@ func (m *Redis) Get(key string) (string, error) {
 	val, err := m.client.Get(context.TODO(), m.BuildKey(key)).Result()
 	if err != nil {
 		if err == redis.Nil {
-			return "", ErrKeyNotFound
+			return "", nil
 		}
 		return "", err
 	}
@@ -53,7 +53,7 @@ func (m *Redis) SetEx(key string, val interface{}, expire int) error {
 func (m *Redis) Del(key string) error {
 	if err := m.client.Del(context.TODO(), m.BuildKey(key)).Err(); err != nil {
 		if err == redis.Nil {
-			return ErrKeyNotFound
+			return nil
 		}
 		return err
 	}
@@ -74,7 +74,7 @@ func (m *Redis) GetExpire(key string) (int64, error) {
 	ttl, err := m.client.TTL(context.TODO(), m.BuildKey(key)).Result()
 	if err != nil {
 		if err == redis.Nil {
-			return 0, ErrKeyNotFound
+			return 0, nil
 		}
 		return 0, err
 	}

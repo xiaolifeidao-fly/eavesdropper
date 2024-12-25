@@ -29,3 +29,17 @@ export class SkuPublishStatitic {
     }
 
 }
+
+export class AddSkuReq {
+    sourceSkuId : number; // 源商品id
+    taskId : number; // 任务id
+    status : string; // 状态
+    publishResourceId : number; // 发布资源id
+
+    constructor(sourceSkuId : number, taskId : number, status : string, publishResourceId : number) {
+        this.sourceSkuId = sourceSkuId;
+        this.taskId = taskId;
+        this.status = status;
+        this.publishResourceId = publishResourceId;
+    }
+}

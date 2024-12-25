@@ -6,6 +6,7 @@ import { Modal, message, Button, Form, Select } from 'antd';
 import ImportSku from './SkuLinkUpload';
 import type { LinkInfo } from './SkuLinkUpload';
 import SkuPushProgress from './SkuPushProgress';
+import type { SkuUrl } from './SkuPushProgress';
 import SukPushConfirm from './SkuPushConfirm';
 
 const waitTime = (time: number = 100) => {
@@ -27,6 +28,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
   const [pushSkuFlag, setPushSkuFlag] = useState(false);
   const [current, setCurrent] = useState(0);
   const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
+  const [urls, setUrls] = useState<SkuUrl[]>([]);
 
   const onCancel = () => {
     setVisible(false);
@@ -114,10 +116,8 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
               return true;
             }
 
-            console.log(uploadUrlList);
-
-            // 调用推送接口 TODO
-
+            const urls: SkuUrl[] = uploadUrlList.map(item => { return { url: item.url } });
+            setUrls(urls);
             setPushSkuFlag(true);
             return true;
           }}
@@ -141,7 +141,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = ({ visible, setVisible
             return true;
           }}
         >
-          <SkuPushProgress uploadUrlList={uploadUrlList} />
+          <SkuPushProgress urls={urls} />
         </StepsForm.StepForm>
 
         {/* 第三步： 发布确认 */}

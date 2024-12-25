@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Progress, Table, Button, Tag } from 'antd';
 import type { TableColumnsType } from 'antd';
 
-import type { LinkInfo } from './SkuLinkUpload';
+import { MbSkuApi } from '@eleapi/door/sku/mb.sku';
+import { SkuPublishStatitic } from "@model/sku/sku";
 
 interface SkuPushInfo {
   name: string;
@@ -40,8 +41,12 @@ const columns: TableColumnsType<SkuPushInfo> = [
   },
 ];
 
+export interface SkuUrl {
+  url: string;
+}
+
 interface SkuPushProgressProps {
-  uploadUrlList: LinkInfo[];
+  urls: SkuUrl[];
 }
 
 const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
@@ -51,21 +56,29 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
   const [pushProgress, setPushProgress] = useState(0);
 
   useEffect(() => {
-    if (props.uploadUrlList.length === 0) {
+    if (props.urls.length === 0) {
+      console.log("uploadUrlList is empty");
       return;
     }
 
-    for (let i = 0; i < props.uploadUrlList.length; i++) {
-      console.log(i, props.uploadUrlList[i]);
-    }
-    
-  }, [pushCount]);
+    const mbSkuApi = new MbSkuApi();
+    const publishResourceId = 1;            
+    mbSkuApi.batchPublishShops(publishResourceId, props.urls.map(item => item.url)).then(task => {
+      console.log(task);
+
+      
+      // 监听任务状态
+      // mbSkuApi.event.on("notifyPublishShop", (skuId: number, skuStatus: string, statistic: SkuPublishStatitic) => {
+      //   console.log("接收到的数据:", skuId, skuStatus, statistic);
+      // });
+    });
+  }, [props.urls]);
 
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <p style={{ margin: '5px 0' }}>正在发布商品,请稍等...</p>
-        <p style={{ margin: '5px 0' }}>已处理：{pushCount}/{props.uploadUrlList.length}</p>
+        <p style={{ margin: '5px 0' }}>已处理：{pushCount}/{props.urls.length}</p>
         <Progress percent={pushProgress} />
         <div style={{ height: 250, overflow: 'auto' }}>
           <Table<SkuPushInfo>

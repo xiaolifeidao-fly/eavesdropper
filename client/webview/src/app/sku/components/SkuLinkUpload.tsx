@@ -4,7 +4,7 @@ import { Tabs, message, Upload, Input } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 
-import { parseXlsxFileClient } from '@utils/parse-file';
+import { parseTxtFileClient } from '@utils/parse-file';
 import FileUploadList from './FileUploadList';
 import type { UploadFile } from './FileUploadList';
 
@@ -69,13 +69,14 @@ const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }
 
       // 校验文件类型
       const fileType = file.type;
-      const isExcel =
-        fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-        fileType === 'application/vnd.ms-excel' ||
-        fileType === 'text/csv';
+      const checkType = 
+        fileType === 'text/plain';
+        // fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        // fileType === 'application/vnd.ms-excel' ||
+        // fileType === 'text/csv';
 
-      if (!isExcel) {
-        message.error('请上传xlsx、xls、csv文件');
+      if (!checkType) {
+        message.error('请上传txt文件,每行一个链接');
         return Upload.LIST_IGNORE;
       }
 
@@ -83,14 +84,14 @@ const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }
       let err = false;
       let urlCount = 0;
       try {
-        const { headers, tableData } = await parseXlsxFileClient(file);
+        const { urls } = await parseTxtFileClient(file);
         // 将解析后的数据添加到上传列表
-        const newUploadUrlList = tableData.map(item => ({
+        const newUploadUrlList = urls.map(item => ({
           uid: uid,
-          url: item.url
+          url: item
         }));
         setUploadUrlList([...uploadUrlList, ...newUploadUrlList]);
-        urlCount = tableData.length;
+        urlCount = urls.length;
       } catch (error) {
         console.error("解析文件失败: ", error);
         message.error('解析文件失败');
@@ -141,7 +142,7 @@ const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }
                 <InboxOutlined />
               </p>
               <p className="ant-upload-text">点击或拖拽文件到此区域,最多支持3个文件</p>
-              <p className="ant-upload-hint">支持xlsx、xls、csv文件</p>
+              <p className="ant-upload-hint">支持txt文件,每行一个链接</p>
             </Upload.Dragger>
             <FileUploadList uploadFileList={uploadFileList} onDelete={onDelete} />
           </div>

@@ -15,8 +15,8 @@ export class MbSkuApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async publishShop(publishResourceId : number, skuUrl : string) : Promise<Sku|undefined>{
-        return await this.invokeApi("publishShop", publishResourceId, skuUrl);
+    async publishShop(publishResourceId : number, taskId : number, skuUrl : string) : Promise<Sku|undefined>{
+        return await this.invokeApi("publishShop", publishResourceId, taskId, skuUrl);
     }
 
     @InvokeType(Protocols.INVOKE)

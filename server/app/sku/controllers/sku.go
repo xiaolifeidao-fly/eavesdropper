@@ -2,8 +2,12 @@ package controllers
 
 import (
 	"server/app/sku/vo"
+	"server/common"
+	"server/common/converter"
 	"server/common/middleware/logger"
 	"server/common/server/controller"
+	"server/internal/sku/services"
+	"server/internal/sku/services/dto"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -12,11 +16,13 @@ import (
 func LoadSkuRouter(router *gin.RouterGroup) {
 	r := router.Group("/sku")
 	{
-		r.POST("", SaveSku)
+		r.POST("", AddSku)
 	}
 }
 
-func SaveSku(ctx *gin.Context) {
+// AddSku
+// @Description 保存商品
+func AddSku(ctx *gin.Context) {
 	var err error
 
 	var req vo.SkuAddReq
@@ -26,5 +32,14 @@ func SaveSku(ctx *gin.Context) {
 		return
 	}
 
-	controller.OK(ctx, nil)
+	var skuID uint64
+	skuDTO := converter.ToDTO[dto.SkuDTO](&req)
+	skuDTO.CreatedBy = common.GetLoginUserID()
+	skuDTO.UpdatedBy = common.GetLoginUserID()
+	if skuID, err = services.CreateSku(skuDTO); err != nil {
+		logger.Errorf("SaveSku failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, skuID)
 }

@@ -2,6 +2,8 @@ package vo
 
 // SkuAddReq 添加sku请求
 type SkuAddReq struct {
-	Name string `json:"name" binding:"required"`
-	Url  string `json:"url" binding:"required"`
+	SourceSkuId       int    `json:"sourceSkuId" binding:"required"`
+	TaskId            int    `json:"taskId" binding:"required"`
+	Status            string `json:"status" binding:"required"`
+	PublishResourceId int    `json:"publishResourceId" binding:"required"`
 }

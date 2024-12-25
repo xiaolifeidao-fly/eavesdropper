@@ -3,11 +3,11 @@ package services
 import (
 	"server/common/middleware/database"
 	"server/internal/sku/models"
-	"server/internal/sku/repository"
+	"server/internal/sku/repositories"
 	"server/internal/sku/services/dto"
 )
 
-var skuFileInfoRepository = repository.SkuFileInfoRepository{}
+var skuFileInfoRepository = database.NewRepository[repositories.SkuFileInfoRepository]()
 
 func GetSkuFileInfo(skuId uint64) ([]*dto.SkuFileInfoDTO, error) {
 	skuFileInfos, err := skuFileInfoRepository.FindBySkuId(skuId)
