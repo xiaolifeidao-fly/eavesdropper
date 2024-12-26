@@ -41,6 +41,8 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
 
   const [data, setData] = useState<SkuPushInfo[]>([]);
   const [pushCount, setPushCount] = useState(0);
+  const [successCount, setSuccessCount] = useState(0);
+  const [errorCount, setErrorCount] = useState(0);
 
   const columns: TableColumnsType<SkuPushInfo> = [
     {
@@ -87,6 +89,9 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     let status = SkuPushStatus.ERROR;
     if (sku.status === SkuStatus.SUCCESS) {
       status = SkuPushStatus.SUCCESS;
+      setSuccessCount(prevCount => prevCount + 1);
+    } else {
+      setErrorCount(prevCount => prevCount + 1);
     }
 
     const skuInfo = {
@@ -136,7 +141,9 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     <>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <p style={{ margin: '5px 0' }}>正在发布商品,请稍等...</p>
-        <p style={{ margin: '5px 0' }}>已处理：{pushCount}/{props.urls.length}</p>
+        <p style={{ margin: '5px 0' }}>
+          已处理:{pushCount}/{props.urls.length}{successCount > 0 && <>,成功数:{successCount}</>}{errorCount > 0 && <>,失败数:{errorCount}</>}
+        </p>
         <Progress percent={parseFloat((pushCount / props.urls.length * 100).toFixed(2))} />
         <div style={{ height: 250, overflow: 'auto' }}>
           <Table<SkuPushInfo>

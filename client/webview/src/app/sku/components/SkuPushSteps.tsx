@@ -63,7 +63,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           render: (props) => {
             const step = props.step;
             const buttons = [];
-            const buttonNextText = step === 2 ? "确认发布" : "下一步";
+            const buttonNextText = step === 1 ? "确认发布" : "下一步";
             buttons.push(<Button key={`cancel-${step}`} onClick={() => { onCancel() }}>取消</Button>);
             buttons.push(<Button type="primary" key={`submit-${step}`} onClick={() => props.onSubmit?.()} disabled={step === 1 && !onPublishFinish}>{buttonNextText}</Button>);
             return buttons;
@@ -126,7 +126,9 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           title="发布进度"
           style={{ height: '400px' }}
           onFinish={async () => {
-            return true;
+            onCancel(); // 关闭弹窗
+            message.success('发布完成');
+            return false;
           }}
         >
           <SkuPushProgress
@@ -139,7 +141,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
         </StepsForm.StepForm>
 
         {/* 第三步： 发布确认 */}
-        <StepsForm.StepForm
+        {/* <StepsForm.StepForm
           name="time"
           title="发布确认"
           onFinish={async () => {
@@ -149,7 +151,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           }}
         >
           <SukPushConfirm {...publishResult} />
-        </StepsForm.StepForm>
+        </StepsForm.StepForm> */}
       </StepsForm>
     </>
   )
