@@ -137,7 +137,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <p style={{ margin: '5px 0' }}>正在发布商品,请稍等...</p>
         <p style={{ margin: '5px 0' }}>已处理：{pushCount}/{props.urls.length}</p>
-        <Progress percent={pushCount / props.urls.length * 100} />
+        <Progress percent={parseFloat((pushCount / props.urls.length * 100).toFixed(2))} />
         <div style={{ height: 250, overflow: 'auto' }}>
           <Table<SkuPushInfo>
             rowKey="id"
