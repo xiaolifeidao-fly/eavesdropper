@@ -1,3 +1,8 @@
+export enum SkuStatus {
+  SUCCESS = "success",
+  ERROR = "error",
+}
+
 export class Sku {
   constructor(
     public id?: number,
@@ -7,7 +12,9 @@ export class Sku {
     public publishResourceId?: number,
     public status?: string,
     public url?: string,
-    public publishTime?: string
+    public publishTime?: string,
+    public detail?: string,
+    public publishSkuId?: string,
   ) {
     this.id = id
     this.name = name
@@ -17,6 +24,8 @@ export class Sku {
     this.status = status
     this.url = url
     this.publishTime = publishTime
+    this.detail = detail
+    this.publishSkuId = publishSkuId
   }
 }
 
@@ -28,7 +37,8 @@ export class AddSkuReq {
     public status?: string, // 状态
     public publishResourceId?: number, // 发布资源id
     public url?: string, // 商品链接
-    public publishTime?: string // 发布时间
+    public publishTime?: string, // 发布时间
+    public publishSkuId?: string, // 发布商品id
   ) {
     this.name = name
     this.sourceSkuId = sourceSkuId
@@ -37,6 +47,7 @@ export class AddSkuReq {
     this.publishResourceId = publishResourceId
     this.url = url
     this.publishTime = publishTime
+    this.publishSkuId = publishSkuId
   }
 }
 

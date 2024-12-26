@@ -1,3 +1,9 @@
+export enum SkuTaskStatus {
+  PENDING = "pending",
+  DONE = "done",
+  ERROR = "error",
+}
+
 export class SkuTask {
   constructor(
     public id?: number,

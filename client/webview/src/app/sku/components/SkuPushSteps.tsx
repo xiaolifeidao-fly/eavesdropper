@@ -9,6 +9,7 @@ import SkuPushProgress from './SkuPushProgress';
 import type { SkuUrl } from './SkuPushProgress';
 import SukPushConfirm from './SkuPushConfirm';
 import type { PublishResult } from './SkuPushConfirm';
+import { StoreApi } from '@eleapi/store/store';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -33,8 +34,14 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   const [urls, setUrls] = useState<SkuUrl[]>([]);
   const [onPublishFinish, setOnPublishFinish] = useState(false);
   const [publishResult, setPublishResult] = useState<PublishResult>();
+  const [taskId, setTaskId] = useState<number>(0);
+
+  const store = new StoreApi();
 
   const onCancel = () => {
+    if (taskId > 0) {
+      store.removeItem(`task_${taskId}`);
+    }
     props.setVisible(false);
     setCurrent(0);
     setUploadUrlList([]);
@@ -57,7 +64,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
             const step = props.step;
             const buttons = [];
             const buttonNextText = step === 2 ? "确认发布" : "下一步";
-            buttons.push(<Button key={`cancel-${step}`} onClick={onCancel}>取消</Button>);
+            buttons.push(<Button key={`cancel-${step}`} onClick={() => { onCancel() }}>取消</Button>);
             buttons.push(<Button type="primary" key={`submit-${step}`} onClick={() => props.onSubmit?.()} disabled={step === 1 && !onPublishFinish}>{buttonNextText}</Button>);
             return buttons;
           }
@@ -126,7 +133,9 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
             publishResourceId={sourceAccount}
             urls={urls}
             onPublishFinish={setOnPublishFinish}
-            setPublishResult={setPublishResult} />
+            setPublishResult={setPublishResult}
+            setTaskId={setTaskId}
+          />
         </StepsForm.StepForm>
 
         {/* 第三步： 发布确认 */}
