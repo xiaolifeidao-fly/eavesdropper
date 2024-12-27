@@ -19,6 +19,7 @@ func LoadSkuRouter(router *gin.RouterGroup) {
 	r := router.Group("/sku")
 	{
 		r.Use(middleware.Authorization()).POST("", AddSku)
+		r.Use(middleware.Authorization()).GET("/check-existence", CheckSkuExistence)
 		r.Use(middleware.Authorization()).GET("/page", PageSku)
 	}
 }
@@ -48,6 +49,32 @@ func AddSku(ctx *gin.Context) {
 		return
 	}
 	controller.OK(ctx, skuID)
+}
+
+// CheckSkuExistence
+// @Description 检查商品是否存在
+func CheckSkuExistence(ctx *gin.Context) {
+	var err error
+
+	var req vo.CheckSkuExistenceReq
+	if err = controller.Bind(ctx, &req, binding.Form); err != nil {
+		logger.Errorf("CheckSkuExistence failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	var skuDTO *dto.SkuDTO
+	if skuDTO, err = services.GetSkuByPublishResourceIdAndSourceSkuId(req.PublishResourceID, req.SourceSkuID); err != nil {
+		logger.Errorf("CheckSkuExistence failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	var resp bool
+	if skuDTO != nil && skuDTO.ID > 0 {
+		resp = true
+	}
+	controller.OK(ctx, resp)
 }
 
 // PageSku

@@ -5,12 +5,13 @@ import type { TableColumnsType } from 'antd';
 
 import type { PublishResult } from "./SkuPushConfirm";
 import { MbSkuApi } from '@eleapi/door/sku/mb.sku';
-import { Sku } from "@model/sku/sku";
+import { SkuPublishResult } from "@model/sku/sku";
 import { SkuPublishStatitic } from "@model/sku/skuTask";
 import { SkuStatus } from "@model/sku/sku";
 import { SkuTask, SkuTaskStatus } from "@model/sku/skuTask";
 
 interface SkuPushInfo {
+  key?: number;
   id?: number;
   name?: string;
   url?: string;
@@ -31,7 +32,6 @@ interface SkuPushProgressProps {
   publishResourceId: number;
   urls: SkuUrl[];
   onPublishFinish: (finish: boolean) => void;
-  setPublishResult: (result: PublishResult) => void;
   setTaskId: (taskId: number) => void;
 }
 
@@ -84,8 +84,16 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     },
   ];
 
-  const onPublishSkuMessage: (sku: Sku, statistic: SkuPublishStatitic) => void = (sku: Sku, statistic: SkuPublishStatitic) => {
+  const onPublishSkuMessage: (sku: SkuPublishResult | undefined, statistic: SkuPublishStatitic) => void = (sku: SkuPublishResult | undefined, statistic: SkuPublishStatitic) => {
     console.log("onPublishSkuMessage: ", sku, statistic);
+    if (sku == undefined){
+      if (statistic.status == SkuTaskStatus.ERROR){
+        props.onPublishFinish(true);
+      }
+      message.error("异常错误");
+      return;
+    }
+
     let status = SkuPushStatus.ERROR;
     if (sku.status === SkuStatus.SUCCESS) {
       status = SkuPushStatus.SUCCESS;
@@ -95,11 +103,12 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     }
 
     const skuInfo = {
+      key: sku.key,
       id: sku.id,
       name: sku.name,
       url: sku.url,
       status: status,
-      detail: sku.detail,
+      detail: sku.remark,
     }
 
     setData((prevData) => [...prevData, skuInfo]);
@@ -107,7 +116,6 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
 
     if (statistic.status === SkuTaskStatus.DONE) {
       props.onPublishFinish(true);
-      props.setPublishResult({ count: statistic.totalNum, successCount: statistic.successNum, errorCount: statistic.errorNum });
     }
   };
 
@@ -147,7 +155,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
         <Progress percent={parseFloat((pushCount / props.urls.length * 100).toFixed(2))} />
         <div style={{ height: 250, overflow: 'auto' }}>
           <Table<SkuPushInfo>
-            rowKey="id"
+            rowKey="key"
             columns={columns}
             dataSource={data}
             pagination={false}

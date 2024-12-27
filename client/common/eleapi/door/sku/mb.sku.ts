@@ -1,4 +1,4 @@
-import { Sku } from "@model/sku/sku";
+import { SkuPublishResult } from "@model/sku/sku";
 import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
 import { SkuTask, SkuPublishStatitic } from "@model/sku/skuTask";
 
@@ -14,7 +14,7 @@ export class MbSkuApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async publishSku(publishResourceId : number, skuUrl : string, taskId : number) : Promise<Sku|undefined>{
+    async publishSku(publishResourceId : number, skuUrl : string, taskId : number) : Promise<SkuPublishResult>{
         return await this.invokeApi("publishSku", publishResourceId, skuUrl, taskId);
     }
 
@@ -24,7 +24,7 @@ export class MbSkuApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.TRRIGER)
-    async onPublishSkuMessage(callback : (sku : Sku, statistic : SkuPublishStatitic) => void){
+    async onPublishSkuMessage(callback : (sku : SkuPublishResult | undefined, statistic : SkuPublishStatitic) => void){
         return await this.onMessage("onPublishSkuMessage",callback);
     }
 

@@ -13,7 +13,6 @@ export class Sku {
     public status?: string,
     public url?: string,
     public publishTime?: string,
-    public detail?: string,
     public publishSkuId?: string,
   ) {
     this.id = id
@@ -24,8 +23,35 @@ export class Sku {
     this.status = status
     this.url = url
     this.publishTime = publishTime
-    this.detail = detail
     this.publishSkuId = publishSkuId
+  }
+}
+
+export class SkuPublishResult {
+  constructor(
+    public taskId: number,
+    public publishResourceId: number,
+    public status: string,
+    public key?: number,
+    public id?: number,
+    public name?: string,
+    public url?: string,
+    public sourceSkuId?: string,
+    public publishSkuId?: string,
+    public publishTime?: string,
+    public remark?: string,
+  ) {
+    this.taskId = taskId
+    this.publishResourceId = publishResourceId
+    this.status = status
+    this.key = key
+    this.id = id
+    this.name = name
+    this.url = url
+    this.sourceSkuId = sourceSkuId
+    this.publishSkuId = publishSkuId
+    this.publishTime = publishTime
+    this.remark = remark
   }
 }
 
@@ -51,6 +77,16 @@ export class AddSkuReq {
   }
 }
 
+export class CheckSkuExistenceReq {
+  constructor(
+    public sourceSkuId: string,
+    public publishResourceId: number,
+  ) {
+    this.sourceSkuId = sourceSkuId
+    this.publishResourceId = publishResourceId
+  }
+}
+
 export class SkuPageReq {
   constructor(
     public current: number,
@@ -73,7 +109,8 @@ export class SkuPageResp {
     public skuName: string,
     public status: string,
     public publishTime: string,
-    public createdAt: string
+    public createdAt: string,
+    public url: string,
   ) {
     this.id = id
     this.resourceAccount = resourceAccount
@@ -82,5 +119,6 @@ export class SkuPageResp {
     this.status = status
     this.publishTime = publishTime
     this.createdAt = createdAt
+    this.url = url
   }
 }

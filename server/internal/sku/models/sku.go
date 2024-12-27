@@ -8,13 +8,14 @@ import (
 type Sku struct {
 	database.BaseEntity
 	UserId            uint64    `json:"userId"`
+	PublishResourceId uint64    `json:"publishResourceId"`
+	TaskId            uint64    `json:"taskId"`
 	Name              string    `json:"name"`
 	SourceSkuId       string    `json:"sourceSkuId"`
-	TaskId            uint64    `json:"taskId"`
-	Status            string    `json:"status"`
+	PublishSkuID      string    `json:"publishSkuId"`
 	Url               string    `json:"url"`
-	PublishResourceId uint64    `json:"publishResourceId"`
 	PublishTime       base.Time `json:"publishTime"`
+	Status            string    `json:"status"`
 }
 
 func (s *Sku) TableName() string {

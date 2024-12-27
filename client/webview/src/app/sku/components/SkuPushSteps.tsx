@@ -33,7 +33,6 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
   const [urls, setUrls] = useState<SkuUrl[]>([]);
   const [onPublishFinish, setOnPublishFinish] = useState(false);
-  const [publishResult, setPublishResult] = useState<PublishResult>();
   const [taskId, setTaskId] = useState<number>(0);
 
   const store = new StoreApi();
@@ -48,7 +47,6 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
     setPushSkuFlag(false);
     setUrls([]);
     setOnPublishFinish(false);
-    setPublishResult(undefined);
     props.onClose(); // 关闭弹窗
   }
 
@@ -135,7 +133,6 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
             publishResourceId={sourceAccount}
             urls={urls}
             onPublishFinish={setOnPublishFinish}
-            setPublishResult={setPublishResult}
             setTaskId={setTaskId}
           />
         </StepsForm.StepForm>
