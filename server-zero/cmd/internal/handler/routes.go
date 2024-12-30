@@ -8,7 +8,7 @@ import (
 
 	auth "server-zero/cmd/internal/handler/auth"
 	"server-zero/cmd/internal/svc"
-
+	test "server-zero/cmd/internal/handler/test"
 	"github.com/zeromicro/go-zero/rest"
 )
 
@@ -16,13 +16,37 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// 登录
+				// 请求时间统计
+				Method:  http.MethodGet,
+				Path:    "/time",
+				Handler: test.TimeHandler(serverCtx),
+			},
+			{
+				// 订单
 				Method:  http.MethodPost,
-				Path:    "/login",
-				Handler: auth.LoginHandler(serverCtx),
+				Path:    "/order",
+				Handler: test.OrderHandler(serverCtx),
+			},
+			{
+				// 订单长链接测试
+				Method:  http.MethodPost,
+				Path:    "/kakrolot_web/yike/submit",
+				Handler: test.OrderHandler(serverCtx),
+			},
+			{
+				// 订单长链接测试
+				Method:  http.MethodPost,
+				Path:    "/kakrolot/yike/submit",
+				Handler: test.OrderHandler(serverCtx),
+			},
+			{
+				// 订单长链接测试
+				Method:  http.MethodPost,
+				Path:    "/kakrolot/yike/submit/orders",
+				Handler: test.OrderHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/v1/auth"),
+		rest.WithPrefix("/test"),
 	)
 
 	server.AddRoutes(
@@ -34,6 +58,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/logout",
 					Handler: auth.LogoutHandler(serverCtx),
+				},
+				{
+					// 登录
+					Method:  http.MethodPost,
+					Path:    "/login",
+					Handler: auth.LoginHandler(serverCtx),
 				},
 			}...,
 		),
