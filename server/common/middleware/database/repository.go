@@ -88,6 +88,20 @@ func (r *Repository[T]) Create(e T) (T, error) {
 	return e, nil
 }
 
+// BatchCreate 批量创建
+func (r *Repository[T]) BatchCreate(entities []T) ([]T, error) {
+	if entities, ok := interface{}(entities).([]Entity); ok {
+		for _, e := range entities {
+			e.Init()
+		}
+	}
+	err := r.Db.Create(entities).Error
+	if err != nil {
+		return entities, err
+	}
+	return entities, nil
+}
+
 // SaveOrUpdate 保存或更新
 func (r *Repository[T]) SaveOrUpdate(e T) (T, error) {
 	if e, ok := interface{}(e).(Entity); ok {

@@ -6,9 +6,9 @@ type SkuTask struct {
 	database.BaseEntity
 	UserID            uint64 `json:"userId"`
 	PublishResourceID uint64 `json:"publishResourceId"`
-	Count             int    `json:"count"`
-	Progress          int    `json:"progress"`
 	Status            string `json:"status"`
+	Remark            string `json:"remark"`
+	Count             int    `json:"count"`
 }
 
 func (s *SkuTask) TableName() string {

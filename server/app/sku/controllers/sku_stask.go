@@ -36,7 +36,7 @@ func AddSkuTask(ctx *gin.Context) {
 
 	var taskID uint64
 	taskDTO := converter.ToDTO[dto.SkuTaskDTO](&req)
-	taskDTO.Status = "pending"
+	taskDTO.Status = string(dto.SkuTaskStatusPending)
 	taskDTO.UserID = common.GetLoginUserID()
 	taskDTO.CreatedBy = common.GetLoginUserID()
 	taskDTO.UpdatedBy = common.GetLoginUserID()

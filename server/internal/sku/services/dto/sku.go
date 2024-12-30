@@ -10,6 +10,7 @@ type SkuDTO struct {
 	dto.BaseDTO
 	UserID            uint64    `json:"userId"`
 	SourceSkuID       string    `json:"sourceSkuId"`
+	PublishSkuID      string    `json:"publishSkuId"`
 	PublishResourceID uint64    `json:"publishResourceId"`
 	TaskID            uint64    `json:"taskId"`
 	Name              string    `json:"name"`
@@ -35,4 +36,5 @@ type SkuPageDTO struct {
 	PublishTime base.Time `json:"publishTime" select:"table:sku;column:publish_time"`
 	CreatedAt   base.Time `json:"createdAt" select:"table:sku;column:created_at"`
 	UpdatedAt   base.Time `json:"updatedAt" select:"table:sku;column:updated_at"`
+	Url         string    `json:"url" select:"table:sku;column:url"`
 }

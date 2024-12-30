@@ -33,11 +33,16 @@ func UpdateSkuTask(skuTaskUpdateDTO *dto.UpdateSkuTaskDTO) error {
 		return errors.New("任务不存在")
 	}
 
-	skuTaskDTO.Progress = skuTaskUpdateDTO.Progress
 	skuTaskDTO.Status = skuTaskUpdateDTO.Status
+	skuTaskDTO.Remark = skuTaskUpdateDTO.Remark
 	skuTaskDTO.UpdatedBy = common.GetLoginUserID()
 
 	if _, err = updateSkuTask(skuTaskDTO); err != nil {
+		return err
+	}
+
+	// 更新任务项
+	if err = BatchAddSkuTaskItem(skuTaskUpdateDTO.Items); err != nil {
 		return err
 	}
 

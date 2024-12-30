@@ -1,3 +1,8 @@
+export enum SkuStatus {
+  SUCCESS = "success",
+  ERROR = "error",
+}
+
 export class Sku {
   constructor(
     public id?: number,
@@ -7,7 +12,8 @@ export class Sku {
     public publishResourceId?: number,
     public status?: string,
     public url?: string,
-    public publishTime?: string
+    public publishTime?: string,
+    public publishSkuId?: string,
   ) {
     this.id = id
     this.name = name
@@ -17,6 +23,35 @@ export class Sku {
     this.status = status
     this.url = url
     this.publishTime = publishTime
+    this.publishSkuId = publishSkuId
+  }
+}
+
+export class SkuPublishResult {
+  constructor(
+    public taskId: number,
+    public publishResourceId: number,
+    public status: string,
+    public key?: number,
+    public id?: number,
+    public name?: string,
+    public url?: string,
+    public sourceSkuId?: string,
+    public publishSkuId?: string,
+    public publishTime?: string,
+    public remark?: string,
+  ) {
+    this.taskId = taskId
+    this.publishResourceId = publishResourceId
+    this.status = status
+    this.key = key
+    this.id = id
+    this.name = name
+    this.url = url
+    this.sourceSkuId = sourceSkuId
+    this.publishSkuId = publishSkuId
+    this.publishTime = publishTime
+    this.remark = remark
   }
 }
 
@@ -28,7 +63,8 @@ export class AddSkuReq {
     public status?: string, // 状态
     public publishResourceId?: number, // 发布资源id
     public url?: string, // 商品链接
-    public publishTime?: string // 发布时间
+    public publishTime?: string, // 发布时间
+    public publishSkuId?: string, // 发布商品id
   ) {
     this.name = name
     this.sourceSkuId = sourceSkuId
@@ -37,6 +73,17 @@ export class AddSkuReq {
     this.publishResourceId = publishResourceId
     this.url = url
     this.publishTime = publishTime
+    this.publishSkuId = publishSkuId
+  }
+}
+
+export class CheckSkuExistenceReq {
+  constructor(
+    public sourceSkuId: string,
+    public publishResourceId: number,
+  ) {
+    this.sourceSkuId = sourceSkuId
+    this.publishResourceId = publishResourceId
   }
 }
 
@@ -62,7 +109,8 @@ export class SkuPageResp {
     public skuName: string,
     public status: string,
     public publishTime: string,
-    public createdAt: string
+    public createdAt: string,
+    public url: string,
   ) {
     this.id = id
     this.resourceAccount = resourceAccount
@@ -71,5 +119,6 @@ export class SkuPageResp {
     this.status = status
     this.publishTime = publishTime
     this.createdAt = createdAt
+    this.url = url
   }
 }

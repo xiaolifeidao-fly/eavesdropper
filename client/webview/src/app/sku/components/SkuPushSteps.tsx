@@ -9,6 +9,7 @@ import SkuPushProgress from './SkuPushProgress';
 import type { SkuUrl } from './SkuPushProgress';
 import SukPushConfirm from './SkuPushConfirm';
 import type { PublishResult } from './SkuPushConfirm';
+import { StoreApi } from '@eleapi/store/store';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -32,16 +33,20 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
   const [urls, setUrls] = useState<SkuUrl[]>([]);
   const [onPublishFinish, setOnPublishFinish] = useState(false);
-  const [publishResult, setPublishResult] = useState<PublishResult>();
+  const [taskId, setTaskId] = useState<number>(0);
+
+  const store = new StoreApi();
 
   const onCancel = () => {
+    if (taskId > 0) {
+      store.removeItem(`task_${taskId}`);
+    }
     props.setVisible(false);
     setCurrent(0);
     setUploadUrlList([]);
     setPushSkuFlag(false);
     setUrls([]);
     setOnPublishFinish(false);
-    setPublishResult(undefined);
     props.onClose(); // 关闭弹窗
   }
 
@@ -56,8 +61,8 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           render: (props) => {
             const step = props.step;
             const buttons = [];
-            const buttonNextText = step === 2 ? "确认发布" : "下一步";
-            buttons.push(<Button key={`cancel-${step}`} onClick={onCancel}>取消</Button>);
+            const buttonNextText = step === 1 ? "确认发布" : "下一步";
+            buttons.push(<Button key={`cancel-${step}`} onClick={() => { onCancel() }}>取消</Button>);
             buttons.push(<Button type="primary" key={`submit-${step}`} onClick={() => props.onSubmit?.()} disabled={step === 1 && !onPublishFinish}>{buttonNextText}</Button>);
             return buttons;
           }
@@ -119,18 +124,21 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           title="发布进度"
           style={{ height: '400px' }}
           onFinish={async () => {
-            return true;
+            onCancel(); // 关闭弹窗
+            message.success('发布完成');
+            return false;
           }}
         >
           <SkuPushProgress
             publishResourceId={sourceAccount}
             urls={urls}
             onPublishFinish={setOnPublishFinish}
-            setPublishResult={setPublishResult} />
+            setTaskId={setTaskId}
+          />
         </StepsForm.StepForm>
 
         {/* 第三步： 发布确认 */}
-        <StepsForm.StepForm
+        {/* <StepsForm.StepForm
           name="time"
           title="发布确认"
           onFinish={async () => {
@@ -140,7 +148,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           }}
         >
           <SukPushConfirm {...publishResult} />
-        </StepsForm.StepForm>
+        </StepsForm.StepForm> */}
       </StepsForm>
     </>
   )

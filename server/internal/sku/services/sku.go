@@ -10,13 +10,37 @@ import (
 	"server/internal/sku/services/dto"
 )
 
+const (
+	SkuStatusSuccess = "success" // 发布成功
+)
+
 func CreateSku(skuDTO *dto.SkuDTO) (uint64, error) {
 	var err error
+
+	var skuDTO2 *dto.SkuDTO
+	if skuDTO2, err = GetSkuByPublishResourceIdAndSourceSkuId(skuDTO.PublishResourceID, skuDTO.SourceSkuID); err != nil {
+		return 0, err
+	}
+	if skuDTO2 != nil && skuDTO2.ID > 0 {
+		return 0, errors.New("商品已存在")
+	}
 
 	if skuDTO, err = saveSku(skuDTO); err != nil {
 		return 0, err
 	}
 	return skuDTO.ID, nil
+}
+
+func GetSkuByPublishResourceIdAndSourceSkuId(publishResourceId uint64, sourceSkuId string) (*dto.SkuDTO, error) {
+	var err error
+	skuRepository := repositories.SkuRepository
+
+	sku, err := skuRepository.GetSkuByPublishResourceIdAndSourceSkuId(publishResourceId, sourceSkuId)
+	if err != nil {
+		return nil, err
+	}
+
+	return database.ToDTO[dto.SkuDTO](sku), nil
 }
 
 func PageSku(param *dto.SkuPageParamDTO) (*page.Page, error) {
