@@ -15,8 +15,18 @@ import (
 // 订单处理
 func OrderHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// 获取 Content-Type
+		// 打印所有请求头信息
+		fmt.Printf("\n========== Request Headers ==========\n")
+		for name, values := range r.Header {
+			for _, value := range values {
+				fmt.Printf("%s: %s\n", name, value)
+			}
+		}
+		fmt.Printf("===================================\n\n")
+
+		// 获取并特别标注 Content-Type
 		contentType := r.Header.Get("Content-Type")
+		fmt.Printf(">>> Content-Type: %s <<<\n\n", contentType)
 
 		var requestData map[string]interface{}
 
@@ -34,7 +44,7 @@ func OrderHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 				return
 			}
 
-			fmt.Printf("Received JSON request:\n")
+			fmt.Printf("========== JSON Request Body ==========\n")
 		} else if strings.Contains(contentType, "application/x-www-form-urlencoded") {
 			// 处理 Form 请求
 			if err := r.ParseForm(); err != nil {
@@ -50,7 +60,7 @@ func OrderHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 				}
 			}
 
-			fmt.Printf("Received Form request:\n")
+			fmt.Printf("========== Form Request Body ==========\n")
 		} else {
 			// 不支持的 Content-Type
 			httpx.Error(w, fmt.Errorf("unsupported Content-Type: %s", contentType))
@@ -64,6 +74,7 @@ func OrderHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 		fmt.Printf("%s\n", string(prettyJSON))
+		fmt.Printf("=====================================\n\n")
 
 		// 返回处理结果
 		resp := types.OrderResp{
