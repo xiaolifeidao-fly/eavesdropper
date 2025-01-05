@@ -13,3 +13,21 @@ type LoginResp struct {
 	Token    string `json:"token"`    // 登录token
 	ExpireAt string `json:"expireAt"` // 过期时间
 }
+
+type TimeReq struct {
+	SleepTime int `form:"sleepTime,optional"` // 用户名
+}
+type TimeResp struct {
+	TranceId string `json:"tranceId"`  // 用户名
+	Duration int `json:"duration"`  // 用户名
+}
+type OrderReq struct {
+	GoodsName  string  `json:"goodsName,optional"`  // 商品名称
+	GoodsSN    int64   `json:"goodsSN,optional"`    // 商品编号
+	OrderSN    string  `json:"orderSN,optional"`    // 订单编号
+}
+
+type OrderResp struct {
+	Code int    `json:"code"` // 响应码
+	Msg  string `json:"msg"`  // 响应信息
+}
