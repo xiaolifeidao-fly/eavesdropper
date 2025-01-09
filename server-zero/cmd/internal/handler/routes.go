@@ -34,16 +34,10 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: test.OrderHandler(serverCtx),
 			},
 			{
-				// 订单长链接测试
-				Method:  http.MethodPost,
-				Path:    "/kakrolot/yike/submit",
-				Handler: test.OrderHandler(serverCtx),
-			},
-			{
-				// 订单长链接测试
-				Method:  http.MethodPost,
-				Path:    "/kakrolot/yike/submit/orders",
-				Handler: test.OrderHandler(serverCtx),
+				// 代理IP
+				Method:  http.MethodGet,
+				Path:    "/ExclusiveProxy/GetIP/",
+				Handler: test.ZdyHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/test"),
