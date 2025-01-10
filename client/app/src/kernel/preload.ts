@@ -57,5 +57,5 @@ try{
       registerRenderApi(cls);
     });
 }catch(e){
-  log.error(e)
+  // log.error(e)
 }

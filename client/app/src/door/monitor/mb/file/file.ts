@@ -1,7 +1,7 @@
 import { DoorEntity } from "@src/door/entity";
 import { Request, Response } from "playwright";
 import { MbMonitorResponse } from "../mb.monitor";
-import log from "electron-log";
+// import log from "electron-log";
 import { getDoorFileRecord, saveDoorFileRecord } from "@api/door/file.api";
 import { DoorFileRecord } from "@model/door/door";
 import { getStringHash } from "@utils/crypto.util";
@@ -62,7 +62,7 @@ export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
             }
             return data.object;
         }catch(e){
-            log.error("MbSkuInfoMonitor getResponseData error", e);
+            // log.error("MbSkuInfoMonitor getResponseData error", e);
             return undefined;
         }
     }

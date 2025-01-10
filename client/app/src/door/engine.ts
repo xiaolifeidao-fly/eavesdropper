@@ -5,7 +5,7 @@ import { get, set } from '@utils/store/electron';
 import { app } from 'electron';
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from './monitor/monitor';
 import { DoorEntity } from './entity';
-import log from 'electron-log';
+// import log from 'electron-log';
 import { ActionChain, ActionResult } from './element/element';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
 import { DoorRecord } from '@model/door/door';

@@ -4,7 +4,7 @@ import { MbEngine } from "@src/door/mb/mb.engine";
 import { Page, Response, Request } from "playwright";
 import { Monitor } from "@src/door/monitor/monitor";
 import { MbMonitorRequest } from "@src/door/monitor/mb/mb.monitor";
-import log from "electron-log";
+// import log from "electron-log";
 
 
 export class MdLoginMonitor extends MbMonitorRequest<{}>{

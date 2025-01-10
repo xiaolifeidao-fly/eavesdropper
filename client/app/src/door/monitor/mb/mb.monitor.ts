@@ -3,7 +3,7 @@ import { Response } from "playwright";
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from "../monitor";
 import { DoorEntity } from "@src/door/entity";
 import { toJson } from "@utils/json";
-import log from "electron-log";
+// import log from "electron-log";
 
 
 export abstract class MbMonitorRequest<T> extends MonitorRequest<T> {
@@ -44,7 +44,7 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
             }
             return jsonDataObj.data;
         }catch(e){
-            log.error("MbSkuInfoMonitor getResponseData error", e);
+            // log.error("MbSkuInfoMonitor getResponseData error", e);
             return undefined;
         }
     }

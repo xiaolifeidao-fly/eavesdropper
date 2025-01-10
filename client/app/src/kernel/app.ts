@@ -1,15 +1,17 @@
-import { app, BrowserWindow,protocol } from 'electron';
+import { app, BrowserWindow,protocol, dialog, autoUpdater } from 'electron';
+
 const path = require('path');
 import * as dotenv from 'dotenv';
 dotenv.config(); // 加载 .env 文件中的环境变量
 import { mainWindow, setMainWindow } from './windows';
 
-import log from 'electron-log';
+// import log from 'electron-log';
 import { registerRpc } from './register/rpc';
 import { init } from './store';
 
+require('module-alias/register');
 
-log.info("app load")
+// log.info("app load")
 async function createDefaultWindow() {
   init();
   const mainWindow = await createWindow('main', process.env.WEBVIEW_URL || "");
@@ -55,6 +57,54 @@ function registerFileProtocol(){
   });
 }
 
+// 自动更新检查
+function checkForUpdates() {
+
+  // 检查新版本
+  autoUpdater.checkForUpdates()
+
+  // 监听更新事件
+  autoUpdater.on('checking-for-update', () => {
+    console.log('正在检查更新...')
+  })
+
+  autoUpdater.on('update-available', () => {
+    console.log('发现新版本...')
+  })
+
+  autoUpdater.on('update-not-available', () => {
+    console.log('当前已经是最新版本.')
+  })
+
+  autoUpdater.on('error', (error) => {
+    console.error('更新出错:', error)
+  })
+
+  autoUpdater.on('update-downloaded', (_) => {
+    console.log('下载完成，准备安装...')
+    // 下载完成后进行弹窗提示(也可以直接调用autoUpdater.quitAndInstall()进行更新)
+    showUpdateDialog()
+  })
+}
+
+// 创建弹窗提示
+function showUpdateDialog() {
+  if (!mainWindow) {
+    return;
+  }
+
+  dialog.showMessageBox(mainWindow, {
+    type: 'info',
+    title: '更新可用',
+    message: '发现新版本，需要立即更新！',
+    buttons: ['立即更新'],
+  }).then(result => {
+    if (result.response === 0) {
+      // 用户点击 "立即更新" 按钮，执行更新
+      autoUpdater.quitAndInstall();
+    }
+  });
+}
 
 export const start = () => {
   
@@ -75,6 +125,12 @@ export const start = () => {
         await createDefaultWindow();
       }
     });
+
+  // 每隔一段时间自动检查更新
+  setInterval(() => {
+  	// 调用上方的函数
+    checkForUpdates()
+  }, 10 * 1000) // 10秒检查一次更新
 }
 
 
