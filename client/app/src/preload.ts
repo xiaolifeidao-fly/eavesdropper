@@ -1,6 +1,6 @@
 
+// require('module-alias/register');
 const { contextBridge, ipcRenderer } = require('electron');
-require('module-alias/register');
 import log from 'electron-log';
 import { ElectronApi, Protocols } from '@eleapi/base';
 import { registerApi } from '@eleapi/register';

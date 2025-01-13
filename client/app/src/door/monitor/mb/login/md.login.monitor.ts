@@ -1,4 +1,3 @@
-require('module-alias/register');
 import { DoorEntity } from "@src/door/entity";
 import { MbEngine } from "@src/door/mb/mb.engine";
 import { Page, Response, Request } from "playwright";

@@ -1,10 +1,10 @@
-import { ElectronApi } from "./base";
-import { MbFileApi } from "./door/file/mb.file";
-import { MbLoginApi } from "./door/login/mb.login";
-import { MbShopApi } from "./door/shop/mb.shop";
-import { MbSkuApi } from "./door/sku/mb.sku";
-import { MbUserApi } from "./door/user/user";
-import { StoreApi } from "./store/store";
+import { ElectronApi } from "@eleapi/base";
+import { MbFileApi } from "@eleapi/door/file/mb.file";
+import { MbLoginApi } from "@eleapi/door/login/mb.login";
+import { MbShopApi } from "@eleapi/door/shop/mb.shop";
+import { MbSkuApi } from "@eleapi/door/sku/mb.sku";
+import { MbUserApi } from "@eleapi/door/user/user";
+import { StoreApi } from "@eleapi/store/store";
 import { v4 as uuidv4 } from 'uuid';
 
 const register : { new(...args: any[]): ElectronApi }[] = []

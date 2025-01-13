@@ -1,4 +1,3 @@
-require('module-alias/register');
 import { Response } from "playwright";
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from "../monitor";
 import { DoorEntity } from "@src/door/entity";

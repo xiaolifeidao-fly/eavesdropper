@@ -1,2 +1,3 @@
 sh package.sh
-electron-builder --mac 
+cp .env ./dist/
+electron-builder --mac

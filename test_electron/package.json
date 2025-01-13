@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "electron": "^33.3.1",
+    "electron-webpack": "^2.8.2",
+    "webpack": "^4.47.0",
+    "webpack-cli": "^6.0.1"
+  }
+}

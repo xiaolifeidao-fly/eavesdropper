@@ -1,4 +1,3 @@
-require('module-alias/register');
 
 import {  InvokeType, Protocols } from "@eleapi/base";
 import { MbShopDetailMonitorChain } from "@src/door/monitor/mb/sku/md.sku.info.monitor";

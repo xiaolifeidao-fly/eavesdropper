@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { plainToClass,plainToInstance } from 'class-transformer';
-import { getItem } from '../store/web';
+import { getItem } from '@utils/store/web';
 const REQUEST_HEADER_TOKEN = 'Authorization'
 
 // 定义一个 HttpError 类，扩展自 Error

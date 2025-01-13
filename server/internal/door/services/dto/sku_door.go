@@ -1,7 +1,7 @@
 package dto
 
 type SkuBaseItem struct {
-	SkuId     uint64   `json:"skuId"`
+	DoorId    uint64   `json:"doorId"`
 	ItemId    string   `json:"itemId"`
 	Title     string   `json:"title"`
 	TitleIcon string   `json:"titleIcon"`

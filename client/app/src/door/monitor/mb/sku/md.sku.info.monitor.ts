@@ -1,4 +1,3 @@
-require('module-alias/register');
 import { MbMonitorChain, MbMonitorResponse } from "@src/door/monitor/mb/mb.monitor";
 import { Monitor, MonitorChain } from "../../monitor";
 

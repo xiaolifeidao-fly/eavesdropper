@@ -1,4 +1,3 @@
-require('module-alias/register');
 
 import { InvokeType, Protocols } from "@eleapi/base";
 import { MbLoginApi } from "@eleapi/door/login/mb.login";

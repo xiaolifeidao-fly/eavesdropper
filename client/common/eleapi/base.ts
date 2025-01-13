@@ -1,3 +1,4 @@
+// require('module-alias/register');
 import { plainToInstance } from 'class-transformer';
 import 'reflect-metadata';
 
@@ -83,6 +84,8 @@ abstract class ElectronApi {
           if(this.getNamespace()){
               apiName = this.getNamespace() + "_" + apiName;
           }
+          //@ts-ignore
+          console.log(window[this.getApiName()])
           //@ts-ignore
           return await window[this.getApiName()][functionName](...args);
       }

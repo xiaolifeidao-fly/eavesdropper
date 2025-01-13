@@ -1,0 +1,5 @@
+{
+	"dependencies": {
+		"delayed-stream": "^1.0.0"
+	}
+}

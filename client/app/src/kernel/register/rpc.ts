@@ -1,4 +1,3 @@
-require('module-alias/register');
 import { ElectronApi, Protocols } from "@eleapi/base";
 import { registerApi } from "@src/impl/register";
 import { ipcMain } from "electron";
