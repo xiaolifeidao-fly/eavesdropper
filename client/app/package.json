@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "tsc && electron .",
+    "dev": "webpack --config webpack.config.js && electron .",
     "build": "webpack --config webpack.config.js",
     "start": "electron .",
     "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
