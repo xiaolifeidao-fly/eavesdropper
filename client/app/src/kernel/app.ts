@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config({path: path.join(__dirname, '.env')}); // 加载 .env 文件中的环境变量
 import { mainWindow, setMainWindow } from './windows';
 
+import { checkForUpdates, setupAutoUpdater } from './update/update';
 import log from 'electron-log';
 import { registerRpc } from './register/rpc';
 import { init } from './store';
@@ -69,6 +70,17 @@ export const start = () => {
       registerRpc();
       registerFileProtocol();
       await createDefaultWindow();
+
+      if(process.env.NODE_ENV !== 'development' && mainWindow){
+        setupAutoUpdater(mainWindow);
+
+        // 每隔一段时间自动检查更新
+        setInterval(async () => {
+          // 调用上方的函数
+          await checkForUpdates()
+        }, 60 * 1000) // 60秒检查一次更新
+      }
+
       // registerSessionInterceptor('targetWindow', session.defaultSession);
     });
     app.on('window-all-closed', () => {
