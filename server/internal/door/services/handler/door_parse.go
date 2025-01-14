@@ -9,10 +9,12 @@ import (
 )
 
 // MBParseDoorInfo 解析商品信息
-func MBParseDoorInfo(doorInfo string, doorInfoDTO *dto.DoorSkuDTO) *dto.DoorSkuDTO {
+func MBParseDoorInfo(doorInfoMap map[string]interface{}) *dto.DoorSkuDTO {
 	// 解析信息, 可以直接取的信息
+	doorInfoDTO := &dto.DoorSkuDTO{}
 	doorInfoRule := doorInfoDTO.ToExtractorRule() // 获取提取规则
-	doorInfoValueMap := extractor.ResolveJSON(doorInfo, doorInfoRule)
+	doorInfoJson, _ := json.Marshal(doorInfoMap)
+	doorInfoValueMap := extractor.ResolveJSON(string(doorInfoJson), doorInfoRule)
 
 	doorSkuSaleInfoValueMap := doorInfoValueMap["doorSkuSaleInfo"].(map[string]interface{})
 	doorInfoValueMap["doorSkuSaleInfo"] = mbParseDoorSkuSaleInfo(doorSkuSaleInfoValueMap)
