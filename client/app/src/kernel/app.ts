@@ -71,7 +71,9 @@ export const start = () => {
       registerFileProtocol();
       await createDefaultWindow();
 
-      if(process.env.NODE_ENV !== 'development' && mainWindow){
+      console.log("mainWindow", mainWindow);
+      if(mainWindow){
+        // 设置自动更新
         setupAutoUpdater(mainWindow);
 
         // 每隔一段时间自动检查更新

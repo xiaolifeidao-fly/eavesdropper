@@ -14,7 +14,7 @@ export default function Dashboard() {
         <Empty
           image="/landing.svg"
           imageStyle={{ height: 410, paddingTop: 160 }}
-          description={"正在建设中......"}
+          description={"正在建设中2......"}
         >
         </Empty>
       </main>
