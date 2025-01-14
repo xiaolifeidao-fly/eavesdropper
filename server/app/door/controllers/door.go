@@ -29,7 +29,7 @@ func ParseDoorSkuInfo(ctx *gin.Context) {
 		controller.Error(ctx, err.Error())
 		return
 	}
-	doorInfoMap := handler.MBParseDoorInfo(*doorSkuDTO)
+	doorInfoMap := handler.MBParseDoorInfo(doorSkuDTO)
 	controller.OK(ctx, doorInfoMap)
 }
 
