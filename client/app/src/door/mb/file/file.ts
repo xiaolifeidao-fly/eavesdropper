@@ -3,7 +3,6 @@ import { MbEngine } from "../mb.engine";
 import { getStringHash } from "@utils/crypto.util";
 import { getDoorFileRecordByKey } from "@api/door/file.api";
 import { MbSkuFileUploadMonitor } from "@src/door/monitor/mb/sku/mb.sku.file.upload.monitor";
-import { MbFileApi } from "@eleapi/door/file/mb.file";
 
 const code = `
 
@@ -94,9 +93,7 @@ async function getUnUploadFile(source : string, resourceId : number, paths: stri
     const unUploadFiles = [];
     for(let path of paths){
         const fileKey = getFileKey(path);
-        console.log(" getUnUploadFile ", fileKey);
         const doorFileRecord = await getDoorFileRecordByKey(source, resourceId, fileKey);
-        console.log(" getUnUploadFile ", doorFileRecord);
         if(doorFileRecord){
             continue;
         }
@@ -104,6 +101,7 @@ async function getUnUploadFile(source : string, resourceId : number, paths: stri
     }
     return unUploadFiles;
 }
+
 
 export async function uploadFile(resourceId : number, paths: string[], monitor : MbFileUploadMonitor){
     const unUploadFiles = await getUnUploadFile(monitor.getType(), resourceId, paths);
@@ -117,14 +115,18 @@ export async function uploadFile(resourceId : number, paths: string[], monitor :
         mbEngine.addMonitor(monitor);
         await monitor.start();
         const functionCode = new Function(code)();
-        await functionCode(page, {paths : unUploadFiles}, undefined);
+        const filePathList = [];
         for(let path of unUploadFiles){
-            const result = await monitor.waitForAction();
+            filePathList.push(path);
+        }
+        await functionCode(page, {paths : filePathList}, undefined);
+        for(let path of unUploadFiles){
+            await monitor.waitForAction();
         }
     }finally{
         if(page){
             await page.waitForTimeout(1500);
-            await mbEngine.closePage();
+            // await mbEngine.closePage();
         }
     }
 }

@@ -1,11 +1,11 @@
 {
-  "name": "jarvis-video",
+  "name": "eavesdropper",
   "version": "1.0.0",
   "description": "",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "webpack --config webpack.config.js && electron .",
-    "build": "webpack --config webpack.config.js",
+    "dev": "webpack --config webpack.config.js --mode development && electron .",
+    "build": "webpack --config webpack.config.js --mode production",
     "start": "electron .",
     "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
     "package:mac": "sh package_mac.sh",

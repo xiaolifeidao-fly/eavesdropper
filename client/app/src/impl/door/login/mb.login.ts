@@ -17,7 +17,9 @@ export class MbLoginApiImpl extends MbLoginApi {
                 return;
             }
             const monitor = new MdLoginMonitor();
+            monitor.setMonitorTimeout(60000);
             monitor.setHandler(async (request, response) => {
+                console.log("login monitor request ", await request?.allHeaders());
                 engine.saveContextState();
                 return {};
             });

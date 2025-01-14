@@ -7,9 +7,10 @@ import { MbFileUploadMonitor } from "@src/door/monitor/mb/file/file";
 
 export class MbFileApiImpl extends MbFileApi {
 
+
     @InvokeType(Protocols.INVOKE)
     async upload(resourceId : number, paths: string[]) {
-        return await uploadFile(resourceId, paths, new MbFileUploadMonitor(resourceId));
+        // return await uploadFile(resourceId, paths, new MbFileUploadMonitor(resourceId));
     }
 }
 

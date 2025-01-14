@@ -1,30 +1,16 @@
 import { DoorFileRecord } from "@model/door/door";
-import { MbFileUploadMonitor } from "../file/file";
+import { FileInfo, MbFileUploadMonitor } from "../file/file";
 import { SkuFile } from "@model/sku/sku.file";
 import { saveSkuFile } from "@api/sku/sku.file";
-export class SkuFileName { 
-
-    fileName : string;
-    sortId : number;
-    fileType : string;
-
-    constructor(fileName: string, sortId: number, fileType: string) {
-        this.fileName = fileName;
-        this.sortId = sortId;
-        this.fileType = fileType;
-    }
-}
 
 export class MbSkuFileUploadMonitor extends MbFileUploadMonitor {
 
     skuId: number;
 
-    skuFileNames: { [key: string]: SkuFileName };
 
-    constructor(resourceId: number, skuId: number, skuFileNames: { [key: string]: SkuFileName }) {
-        super(resourceId);
+    constructor(resourceId: number, skuId: number, fileInfos: { [key: string]: FileInfo }) {
+        super(resourceId, fileInfos);
         this.skuId = skuId;
-        this.skuFileNames = skuFileNames;
     }
 
     async uploadFileCallBack(doorFileRecord: DoorFileRecord): Promise<void> {
@@ -32,12 +18,12 @@ export class MbSkuFileUploadMonitor extends MbFileUploadMonitor {
         if(!fileName){
             return;
         }
-        const skuFileName = this.skuFileNames[fileName];
-        if(!skuFileName){
+        const fileInfo = this.fileInfos[fileName];
+        if(!fileInfo){  
             return;
         }
-        const skuFile = new SkuFile(undefined, this.skuId, doorFileRecord.id, doorFileRecord.fileType, skuFileName.sortId);
-        skuFile.sortId = skuFileName.sortId;
+        const skuFile = new SkuFile(undefined, this.skuId, doorFileRecord.id, doorFileRecord.fileType, fileInfo.sortId);
+        skuFile.sortId = fileInfo.sortId;
         await saveSkuFile(skuFile);
     }
 

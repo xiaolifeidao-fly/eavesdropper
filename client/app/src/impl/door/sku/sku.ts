@@ -20,6 +20,13 @@ import {
 import { uploadFile } from "@src/door/mb/file/file";
 import { MbSkuFileUploadMonitor } from "@src/door/monitor/mb/sku/mb.sku.file.upload.monitor";
 import { plainToClass } from 'class-transformer'
+import { parseSku } from "@api/door/door.api";
+import { DoorSkuDTO } from "@model/door/sku";
+import axios from "axios";
+import fs from 'fs';
+import path from "path";
+import log from "electron-log";
+import { FileInfo } from "@src/door/monitor/mb/file/file";
 
 export class MbSkuApiImpl extends MbSkuApi {
 
@@ -39,16 +46,88 @@ export class MbSkuApiImpl extends MbSkuApi {
         }  
     }
 
-    async uploadSkuImages(publishResourceId : number, data : {}, skuId : number){
+    async uploadSkuImages(publishResourceId : number, skuItem : DoorSkuDTO, skuId : number){
+        const { newMainImages, newDetailImages } = await this.downloadSkuImages(skuItem, skuId);
+        const filePaths = [...newMainImages, ...newDetailImages];
+        const skuFileNames: { [key: string]: FileInfo } = {};
+        for (let index = 0; index < newMainImages.length; index++){
+            const mainImage = newMainImages[index];
+            let fileName = path.basename(mainImage);
+            const indexOf = fileName.indexOf(".");
+            if(indexOf >= 0){
+                fileName = fileName.substring(0, indexOf);
+            }
+            skuFileNames[fileName] = new FileInfo(fileName, index, "main");
+        }
+        for (let index = 0; index < newDetailImages.length; index++){
+            const detailImage = newDetailImages[index];
+            let fileName = path.basename(detailImage);
+            const indexOf = fileName.indexOf(".");
+            if(indexOf >= 0){
+                fileName = fileName.substring(0, indexOf);
+            }
+            skuFileNames[fileName] = new FileInfo(fileName, index, "detail");
+        }   
+        const monitor = new MbSkuFileUploadMonitor(publishResourceId, skuId, skuFileNames);
+        await uploadFile(publishResourceId, filePaths, monitor);
+    }
+
+    async getImage(mainImages : string[], detailImages : string[], skuId : number, itemId : string) {
+        try {
+            const newMainImages = [];
+            const newDetailImages = [];
+            if (fs.existsSync(path.join(__dirname, "images", skuId.toString()))) {
+                fs.rmSync(path.join(__dirname, "images", skuId.toString()), { recursive: true });
+            }
+            fs.mkdirSync(path.join(__dirname, "images", skuId.toString()), { recursive: true });
+
+            for(let index = 0; index < mainImages.length; index++){
+                const mainImage = mainImages[index];
+                // Download background image
+                const bgResponse = await axios.get(mainImage, { responseType: 'arraybuffer' });
+                const bgPath = path.join(__dirname, "images", skuId.toString(), `main_${itemId}_${index}.jpg`);
+                fs.writeFileSync(bgPath, Buffer.from(bgResponse.data, 'binary'));
+                newMainImages.push(bgPath);
+            }
+            for(let index = 0; index < detailImages.length; index++){
+                const detailImage = detailImages[index];
+                // Download slider image
+                const pointResponse = await axios.get(detailImage, { responseType: 'arraybuffer' });
+                const bgPath = path.join(__dirname, "images", skuId.toString(), `detail_${itemId}_${index}.jpg`);
+                fs.writeFileSync(bgPath, Buffer.from(pointResponse.data, 'binary'));
+                newDetailImages.push(bgPath);
+            }
+            return { newMainImages, newDetailImages };
+        } catch (error) {
+            console.error('Error downloading images:', error);
+            return { newMainImages: [], newDetailImages: [] };
+        }
+    }
+
+    async downloadSkuImages(skuItem : DoorSkuDTO, skuId : number){
+        const mainImages = skuItem.baseInfo.mainImages;
+        const infos = skuItem.doorSkuImageInfo.doorSkuImageInfos;
+        const detailImages = [];
+        for (let info of infos){
+            const content = info.content;
+            const type = info.type;
+            if(type == "image"){
+                detailImages.push(content);
+            }
+        }
+        return this.getImage(mainImages, detailImages, skuId, skuItem.baseInfo.itemId);
+    }
+
+
+    async getSkuImages(publishResourceId : number, data : {}, skuId : number){
         const fileNames ={};
         const monitor = new MbSkuFileUploadMonitor(publishResourceId, skuId, fileNames);
         // uploadFile(publishResourceId, paths, monitor);
     }
 
-
     @InvokeType(Protocols.INVOKE)
     async publishSku(publishResourceId : number, skuUrl : string, taskId : number) : Promise<SkuPublishResult>{
-        const skuPublishResult = new SkuPublishResult(taskId, publishResourceId, SkuStatus.SUCCESS);
+        const skuPublishResult = new SkuPublishResult(taskId, publishResourceId, SkuStatus.PENDING);
         skuPublishResult.url = skuUrl;
 
         try {
@@ -67,13 +146,7 @@ export class MbSkuApiImpl extends MbSkuApi {
                 skuPublishResult.remark = "获取商品信息失败";
                 return skuPublishResult;
             }
-
-            const skuData = skuResult.data;
-            const skuInfo = skuData.skuInfo;
-            const skuItem = skuInfo.item;
-            skuPublishResult.name = skuItem.title;
-            skuPublishResult.sourceSkuId = skuItem.itemId;
-
+  
             // 校验商品是否存在
             const checkSkuExistenceReq = new CheckSkuExistenceReq(skuUrl, publishResourceId);
             const result = await checkSkuExistence(checkSkuExistenceReq);
@@ -83,18 +156,29 @@ export class MbSkuApiImpl extends MbSkuApi {
                 return skuPublishResult;
             }
 
+            const skuData = skuResult.data;
+            const skuItem : DoorSkuDTO | null = await parseSku(skuData);
+            if(!skuItem){
+                skuPublishResult.status = SkuStatus.ERROR;
+                skuPublishResult.remark = "商品信息解析失败";
+                return skuPublishResult;
+            }
+            skuPublishResult.name = skuItem.baseInfo.title;
+            skuPublishResult.sourceSkuId = skuItem.baseInfo.itemId;
+            skuPublishResult.publishSkuId = skuItem.baseInfo.itemId;
+            skuPublishResult.publishTime = formatDate(new Date());
+            const addSkuReq = plainToClass(AddSkuReq, skuPublishResult);
+            const skuId = await addSku(addSkuReq) as number;
+            skuPublishResult.id = skuId;
+            await this.uploadSkuImages(publishResourceId, skuItem,skuId );
             //上传图片信息
             // // 填充商品信息
             // const result = await engine.doFillWaitForElement(page, "1.0.1", "publishSku", skuData);
 
             // 发布商品ID
-            skuPublishResult.publishSkuId = skuItem.itemId;
-            skuPublishResult.publishTime = formatDate(new Date());
-            const addSkuReq = plainToClass(AddSkuReq, skuPublishResult);
-            const skuId = await addSku(addSkuReq) as number;
-            skuPublishResult.id = skuId;
             return skuPublishResult;
         } catch (error: any) {
+            log.error("publishSku error", error);
             skuPublishResult.status = SkuStatus.ERROR;
             skuPublishResult.remark = error.message;
             return skuPublishResult;

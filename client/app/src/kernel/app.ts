@@ -27,8 +27,8 @@ async function createDefaultWindow() {
  
 export async function createWindow(windowId : string, url : string) {
   const windowInstance = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1920,
+    height: 1080,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -83,8 +83,18 @@ export const start = () => {
     app.on('ready', async ()=> {
       registerRpc();
       registerFileProtocol();
+
       await createDefaultWindow();
-      // registerSessionInterceptor('targetWindow', session.defaultSession);
+
+      if(mainWindow){
+        // 设置自动更新
+        setupAutoUpdater(mainWindow);
+        // 每隔一段时间自动检查更新
+        setInterval(async () => {
+          // 调用上方的函数
+          await checkForUpdates()
+        }, 60 * 1000) // 60秒检查一次更新
+      }
     });
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {

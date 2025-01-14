@@ -45,13 +45,13 @@ export function setupAutoUpdater(win: BrowserWindow) {
     console.info('当前已经是最新版本.');
   });
 
-  autoUpdater.on('error', (error) => {
-    console.info('更新出错:', error);
+  autoUpdater.on('error', (error: any) => {
+    log.error('更新出错:', error);
     updateFlag = false; // 解除更新锁
     isDownloading = false;
   });
 
-  autoUpdater.on('download-progress', (progressObj) => {
+  autoUpdater.on('download-progress', (progressObj: any) => {
     const percent = Math.round(progressObj.percent);
     console.info(`下载进度: ${percent}%`);
     win.webContents.send('update-log', `下载进度: ${percent}%`);

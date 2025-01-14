@@ -29,6 +29,8 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
         try{
             const data = await response.text();
             const jsonData = toJson(data);
+            console.log("jsonDataObj ", jsonData);
+
             if(!jsonData){
                 return undefined;
             }

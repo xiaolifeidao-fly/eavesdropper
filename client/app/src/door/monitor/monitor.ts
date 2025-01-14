@@ -20,12 +20,16 @@ export abstract class Monitor<T = any> {
     allowRepeat: boolean = false;
     startTag: boolean = false;
 
-    constructor(timeout: number = 10000){
+    constructor(timeout: number = 60000){
         this.timeout = timeout;
         this.eventEmitter = new EventEmitter();
         this.waitPromise = new Promise<DoorEntity<T>>((resolve) => {
             this.waitResolve = resolve;
         });
+    }
+
+    setMonitorTimeout(timeout: number){
+        this.timeout = timeout;
     }
 
     setAllowRepeat(allowRepeat: boolean){
@@ -90,6 +94,7 @@ export abstract class Monitor<T = any> {
     listenEvent(){
         if(this.allowRepeat && !this.hadListen){
             this.eventEmitter.on(this.getEventKey(), async (result: DoorEntity<T>) => {
+                console.log("result ", result);
                 await this.waitResolve(result);
             });
             this.hadListen = true;

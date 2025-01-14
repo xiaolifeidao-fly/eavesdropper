@@ -37,13 +37,29 @@ export function getFileKey(filePath: string){
     return getStringHash(fileKey);
 }
 
+export class FileInfo { 
+
+    fileName : string;
+    sortId : number;
+    fileType : string;
+
+    constructor(fileName: string, sortId: number, fileType: string) {
+        this.fileName = fileName;
+        this.sortId = sortId;
+        this.fileType = fileType;
+    }
+}
+
 export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
 
     resourceId: number;
 
-    constructor(resourceId: number) {
+    fileInfos: { [key: string]: FileInfo };
+
+    constructor(resourceId: number, fileInfos: { [key: string]: FileInfo }) {
         super();
         this.resourceId = resourceId;
+        this.fileInfos = fileInfos;
     }
 
     getApiName(): string {
@@ -73,7 +89,16 @@ export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
         }
         const data  = doorEntity.data;
         const fileId = data.fileId;
-        const fileName = data.fileName;
+        let fileName = data.fileName;
+        let indexOf = fileName.indexOf(".");
+        if(indexOf >= 0){
+            fileName = fileName.substring(0, indexOf);
+        }
+        const fileInfo = this.fileInfos[fileName];
+        if(!fileInfo){
+            log.warn("fileInfo not found ", fileName);
+            return;
+        }
         const url = data.url;
         const fileKey = getFileKey(fileName);
         const doorFileRecord = new DoorFileRecord(undefined, this.getType(), fileId, this.resourceId, "IMAGE", fileName, url, Number(data.size), data.folderId, fileKey);
