@@ -1,5 +1,7 @@
+import { DoorSkuDTO } from "@model/door/sku";
 import { ActionCommand, DoorRecord } from "@model/door/door"
 import { getData, getDataList,instance } from "@utils/axios"
+import { plainToClass } from "class-transformer";
 
 
 export const getDoorList = async (version: string, doorType: string) : Promise<ActionCommand[]> => {
@@ -19,6 +21,15 @@ export const getDoorRecord = async (doorKey: string, itemKey: string, itemType: 
     }
     return await getData(DoorRecord, "/doors/get", params);
 }
+
+export const parseSku = async (params: {}) : Promise<DoorSkuDTO|null> => {
+    const jsonResult = await instance.post("/doors/sku/parse", params);
+    const result = plainToClass(DoorSkuDTO, jsonResult);
+    console.log("result ", result);
+    return result;
+}
+
+
 
 export const saveDoorRecord = async (doorRecord: DoorRecord) : Promise<DoorRecord> => {
     return await instance.post("/doors/save", doorRecord);

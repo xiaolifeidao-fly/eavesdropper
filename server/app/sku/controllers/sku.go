@@ -7,7 +7,6 @@ import (
 	"server/common/converter"
 	"server/common/middleware/logger"
 	"server/common/server/controller"
-	"server/common/server/middleware"
 	"server/internal/sku/services"
 	"server/internal/sku/services/dto"
 
@@ -18,9 +17,9 @@ import (
 func LoadSkuRouter(router *gin.RouterGroup) {
 	r := router.Group("/sku")
 	{
-		r.Use(middleware.Authorization()).POST("", AddSku)
-		r.Use(middleware.Authorization()).GET("/check-existence", CheckSkuExistence)
-		r.Use(middleware.Authorization()).GET("/page", PageSku)
+		r.Use().POST("", AddSku)
+		r.Use().GET("/check-existence", CheckSkuExistence)
+		r.Use().GET("/page", PageSku)
 	}
 }
 
@@ -65,13 +64,15 @@ func CheckSkuExistence(ctx *gin.Context) {
 
 	var skuDTO *dto.SkuDTO
 	if skuDTO, err = services.GetSkuByPublishResourceIdAndSourceSkuId(req.PublishResourceID, req.SourceSkuID); err != nil {
-		logger.Errorf("CheckSkuExistence failed, with error is %v", err)
-		controller.Error(ctx, err.Error())
-		return
+		if skuDTO.Status == services.SKU_SUCCESS {
+			logger.Errorf("CheckSkuExistence failed, with error is %v", err)
+			controller.Error(ctx, err.Error())
+			return
+		}
 	}
 
 	var resp bool
-	if skuDTO != nil && skuDTO.ID > 0 {
+	if skuDTO != nil {
 		resp = true
 	}
 	controller.OK(ctx, resp)

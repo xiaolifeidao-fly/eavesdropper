@@ -1,8 +1,8 @@
 import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
 
-
 export class MbFileApi extends ElectronApi {
     
+
     getApiName(): string {
         return "MbFileApi";
     }

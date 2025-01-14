@@ -4,6 +4,7 @@ import (
 	"server/common/server/controller"
 	"server/internal/door/services"
 	"server/internal/door/services/dto"
+	"server/internal/door/services/handler"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -17,8 +18,19 @@ func LoadDoorRouter(router *gin.RouterGroup) {
 		r.POST("/file/save", SaveDoorFileRecord)
 		r.GET("/file/get", GetDoorFileRecord)
 		r.GET("/file/getByKey", GetDoorFileRecordByKey)
-
+		r.POST("/sku/parse", ParseDoorSkuInfo)
 	}
+}
+
+func ParseDoorSkuInfo(ctx *gin.Context) {
+	doorSkuDTO := &map[string]interface{}{}
+	err := ctx.BindJSON(doorSkuDTO)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	doorInfoMap := handler.MBParseDoorInfo(*doorSkuDTO)
+	controller.OK(ctx, doorInfoMap)
 }
 
 func SaveDoorRecord(ctx *gin.Context) {

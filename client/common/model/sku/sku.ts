@@ -1,5 +1,6 @@
 export enum SkuStatus {
   SUCCESS = "success",
+  PENDING = "pending",
   ERROR = "error",
 }
 

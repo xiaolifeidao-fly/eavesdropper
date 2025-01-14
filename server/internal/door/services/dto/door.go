@@ -55,6 +55,7 @@ func (d *DoorSkuDTO) SetRequiredDefault() {
 
 // DoorSkuBaseInfoDTO 商品基础信息
 type DoorSkuBaseInfoDTO struct {
+	ItemId              string                 `json:"itemId"`              // 商品ID
 	SkuType             string                 `json:"skuType"`             // 宝贝类型, 必填（自动填充）, 全新 5,二手 6
 	MainImages          []string               `json:"mainImages"`          // 宝贝主图, 必填
 	Title               string                 `json:"title"`               // 宝贝标题, 必填
@@ -68,6 +69,7 @@ func (d *DoorSkuBaseInfoDTO) ToExtractorRule() map[string]interface{} {
 		"mainImages": "skuInfo.item.images",
 		"title":      "skuInfo.item.title",
 		"guideTitle": "skuInfo.item.title",
+		"itemId":     "skuInfo.item.itemId",
 	}
 }
 

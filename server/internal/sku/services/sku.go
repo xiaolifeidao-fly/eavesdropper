@@ -11,7 +11,9 @@ import (
 )
 
 const (
-	SkuStatusSuccess = "success" // 发布成功
+	SKU_SUCCESS = "success" // 发布成功
+	SKU_PENDING = "pending" // 发布中
+	SKU_ERROR   = "error"   // 发布失败
 )
 
 func CreateSku(skuDTO *dto.SkuDTO) (uint64, error) {
@@ -22,7 +24,9 @@ func CreateSku(skuDTO *dto.SkuDTO) (uint64, error) {
 		return 0, err
 	}
 	if skuDTO2 != nil && skuDTO2.ID > 0 {
-		return 0, errors.New("商品已存在")
+		if skuDTO2.Status == SKU_SUCCESS {
+			return 0, errors.New("商品已存在")
+		}
 	}
 
 	if skuDTO, err = saveSku(skuDTO); err != nil {
@@ -40,6 +44,9 @@ func GetSkuByPublishResourceIdAndSourceSkuId(publishResourceId uint64, sourceSku
 		return nil, err
 	}
 
+	if sku == nil {
+		return nil, nil
+	}
 	return database.ToDTO[dto.SkuDTO](sku), nil
 }
 
