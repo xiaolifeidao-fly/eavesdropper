@@ -18,6 +18,7 @@ async function createDefaultWindow() {
     const store = new Store();
     init(store);
     const mainWindow = await createWindow('main', process.env.WEBVIEW_URL || "http://localhost:8899/shop");
+    checkUpdate(mainWindow);
     setMainWindow(mainWindow);
   } catch (e) {
     log.error("createDefaultWindow error", e);
@@ -63,6 +64,19 @@ function registerFileProtocol(){
   });
 }
 
+function checkUpdate(mainWindow: BrowserWindow){
+  console.log("checkUpdate: ", mainWindow);
+
+  // 设置自动更新
+  setupAutoUpdater(mainWindow);
+
+  // 每隔一段时间自动检查更新
+  setInterval(async () => {
+    // 调用上方的函数
+    await checkForUpdates()
+  }, 60 * 1000) // 60秒检查一次更新
+}
+
 
 export const start = () => {
   
@@ -70,19 +84,6 @@ export const start = () => {
       registerRpc();
       registerFileProtocol();
       await createDefaultWindow();
-
-      console.log("mainWindow", mainWindow);
-      if(mainWindow){
-        // 设置自动更新
-        setupAutoUpdater(mainWindow);
-
-        // 每隔一段时间自动检查更新
-        setInterval(async () => {
-          // 调用上方的函数
-          await checkForUpdates()
-        }, 60 * 1000) // 60秒检查一次更新
-      }
-
       // registerSessionInterceptor('targetWindow', session.defaultSession);
     });
     app.on('window-all-closed', () => {
