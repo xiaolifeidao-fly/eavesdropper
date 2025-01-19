@@ -138,6 +138,7 @@ func (r *Repository[T]) Page(entity T, queryParam interface{}, query page.Query,
 		return nil
 	}
 
+	db = r.Db.Model(entity).Debug().Unscoped()
 	if err = db.Scopes(r.buildSelect(list), r.buildCondition(queryParam, false), r.buildPaginate(query)).Find(list).Error; err != nil {
 		return err
 	}
