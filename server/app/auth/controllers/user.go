@@ -138,15 +138,15 @@ func PageUser(ctx *gin.Context) {
 	}
 
 	param := converter.ToDTO[dto.UserPageParamDTO](&req)
-	var pageDTO *page.Page
+	var pageDTO *page.Page[dto.UserPageDTO]
 	if pageDTO, err = services.PageUser(param); err != nil {
 		logger.Errorf("Page failed, with error is %v", err)
 		controller.Error(ctx, err.Error())
 		return
 	}
 
-	var pageData []vo.UserPageResp
+	var pageData []*vo.UserPageResp
 	converter.Copy(&pageData, pageDTO.Data)
-	pageResp := page.BuildPage(pageDTO.PageInfo, pageData)
+	pageResp := page.BuildPage[vo.UserPageResp](pageDTO.PageInfo, pageData)
 	controller.OK(ctx, pageResp)
 }

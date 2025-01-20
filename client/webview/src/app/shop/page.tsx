@@ -1,183 +1,118 @@
-'use client';
-import { Button, Form, FormProps, Input, Modal, Space, Spin, Table, TableProps, Tag, theme } from 'antd';
-import AvaForm from './AvaForm';
+'use client'
+import { useRef } from 'react';
+import { Button, message, Popconfirm, Tooltip } from 'antd';
+import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
-import { useEffect, useState } from 'react';
-import { Shop } from '@model/shop/shop';
-import { MbSkuApi } from '@eleapi/door/sku/mb.sku';
 
-import { EditOutlined, ExportOutlined, ScheduleOutlined, ScissorOutlined, UploadOutlined } from '@ant-design/icons';
-import { MbLoginApi } from '@eleapi/door/login/mb.login';
-import { MbShopApi } from '@eleapi/door/shop/mb.shop';
-import { MbUserApi } from '@eleapi/door/user/user';
-import { getData } from '@api/shop/shop.api';
-import { MbFileApi } from '@eleapi/door/file/mb.file';
+import useRefreshPage from '@/components/RefreshPage';
+import {
+  getShopPage as getShopPageApi,
+  deleteShop as deleteShopApi
+} from '@api/shop/shop.api';
+import { ShopPageReq, ShopPageResp } from '@model/shop/shop';
 
+type DataType = {
+  id: number;
+  account: string;
+  name: string;
+  remark: string;
+}
 
-export default function Clip() {
-  const { token } = theme.useToken();
+function shopPageRespConvertDataType(resp: ShopPageResp[]): DataType[] {
+  const data: DataType[] = []
+  for (const item of resp) {
+    data.push(item)
+  }
+  return data
+}
 
-  const listStyle: React.CSSProperties = {
-    background: token.colorFillAlter,
-    borderRadius: token.borderRadiusLG,
-    padding: 12
-  };
+export default function ShopManage() {
+  const actionRef = useRef<ActionType>();
+  const { refreshPage } = useRefreshPage();
 
-  const [loading, setLoading] = useState<boolean>(false);
-  
-  const initPageInfo = {
-    pageSize: 10,
-    pageIndex: 1,
-    total:0
-  };
-
-  const [pageInfo, setPageInfo] = useState(initPageInfo);
-  const [currentPageIndex, setCurrentPageIndex] = useState(1);
-
-  const [data, setData] = useState<Shop[]>([]);
-
-  const columns: TableProps<Shop>['columns'] = [
+  const baseColumns: ProColumns<DataType>[] = [
     {
-      title: '名称',
+      title: '资源账号',
+      dataIndex: 'account',
+      align: 'center',
+      width: 150,
+    },
+    {
+      title: '店铺名称',
       dataIndex: 'name',
-      key: 'name',
-      // render: (text) => <a>{text}</a>,
-      fixed: 'left',
-      width: 100
+      search: false,
+      align: 'center',
     },
     {
-      title: '操作时间',
-      key: 'operate_time',
-      dataIndex: 'operate_time'
-    },
-    {
-      title: '状态',
-      key: 'status',
-      dataIndex: 'status',
-      render: (status) => (
-        <>
-          {
-             <Tag>{status}</Tag>
-          }
-        </>
+      title: '备注',
+      dataIndex: 'remark',
+      align: 'center',
+      width: 200,
+      search: false,
+      render: (_, record) => (
+        record.remark ? (
+          <Tooltip title={record.remark}>
+            {record.remark.length > 20 // 假设超过20个字符时缩小展示
+              ? `${record.remark.slice(0, 20)}...` // 显示前20个字符并加上省略号
+              : record.remark}
+          </Tooltip>
+        ) : null
       ),
     },
+  ]
+
+  const deleteConfirm = async (id: number) => {
+    await deleteShopApi(id);
+    message.success('删除成功');
+    refreshPage(actionRef, true, 1);
+  };
+
+  const columns: ProColumns<DataType>[] = [
+    ...baseColumns,
     {
       title: '操作',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="small">
-          <Button icon={<EditOutlined/>} size="small" onClick={()=>{
-
-            // openEditModal(record.id, record.name)
-          }} >编辑</Button>
-        </Space>
-      ),
-    },
-  ];
-
-
-
-  const handlePageChange = async (pageIndex : number, pageSize : number) => {
-    try{
-      setLoading(true);
-      setCurrentPageIndex(pageIndex);
-      const pageData = await getData();
-      setPageInfo({
-        ...pageInfo,
-        pageIndex: pageIndex || 1,
-        total : pageData.total
-      });
-      setData(pageData.data);
-    }finally{
-      setLoading(false);
+      key: 'option',
+      valueType: 'option',
+      align: 'center',
+      width: 50,
+      render: (_, record) => [
+        <Button key="sync" type="link" style={{ paddingRight: 0 }} onClick={() => {
+          message.success('同步');
+        }}>同步</Button>,
+        <Popconfirm key="deleteConfirm" title="确定要删除吗？" onConfirm={async () => await deleteConfirm(record.id)}>
+          <Button key="delete" type="link" danger style={{ paddingLeft: 0 }}>删除</Button>
+        </Popconfirm>
+      ],
     }
-     
-  };
+  ]
 
-  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
-
-  useEffect(()=>{
-       handlePageChange(initPageInfo.pageIndex, initPageInfo.pageSize);
-  },[]);
-
-  async function getShopInfo(){
-    const shopApi = new MbShopApi();
-    const result = await shopApi.findMbShopInfo(1);
-    console.log("window.shopApi " , result )
-  }
-
-
-  async function getUserInfo(){
-    const userApi = new MbUserApi();
-    const result = await userApi.getUserInfo(1);
-    console.log("window.userApi " , result )
-  }
-
-  async function getSkuInfo(){
-    const shopApi = new MbSkuApi();
-    const result = await shopApi.findMbSkuInfo("https://item.taobao.com/item.htm?id=862817545814&time=1734319603010");
-    console.log("window.skuApi " , result )
-  }
-
-  async function login(){
-    const mbLoginApi = new MbLoginApi();
-    const result = await mbLoginApi.login("https://login.taobao.com/member/login.jhtml");
-    console.log("window.shopApi1 " , result);
-  }
-
-  async function uploadFilePath(){
-    const mbFileApi = new MbFileApi();
-    const result = await mbFileApi.upload(1, ["/Users/fly/Downloads/test/e06193c3fac5a3ab2fbe8d35c4f12171.jpeg",
-      "/Users/fly/Downloads/test/7da71c20eb6d3689497804749829e045.jpeg",
-      "/Users/fly/Downloads/test/2d6aa7e497a059df30d635667b1ec998.jpeg",
-      "/Users/fly/Downloads/test/1_副本3.jpeg",
-      "/Users/fly/Downloads/test/1_副本2.jpeg",
-      "/Users/fly/Downloads/test/1.jpeg",
-      "/Users/fly/Downloads/test/b69575c689bf4db8c607164a2c79b0bd.jpeg",
-    ]);
-    console.log("window.shopApi1 " , result);
-  }
-
-  type FieldType = {
-    name?: string;
-  };
-  const [form] = Form.useForm();
-
-  
   return (
-    <Layout curActive='/clip'>
-        <main >
-            <div >
-                <Button onClick={login}>登录</Button>
-                <Button onClick={getUserInfo}>获取用户信息</Button>
-                <Button onClick={getShopInfo}>获取店铺信息</Button>
-                <Button onClick={getSkuInfo}>获取商品信息</Button>
-                <Button onClick={uploadFilePath}>上传图片</Button>
-
-                <div style={listStyle}>
-                      <Table 
-                          columns={columns} 
-                          rowKey="id"
-                          dataSource={data} 
-                          loading={loading}
-                          pagination={{
-                            ...pageInfo,
-                            onChange: handlePageChange,
-                            current:currentPageIndex,
-                            showQuickJumper: true,
-                            size: "small",
-                            showTotal: (total) => `共${total}条`,
-                          }}
-                          scroll={{ x: 1000 }} />
-                </div>
-            </div>
-        </main>
-
-        <Modal open={false} onCancel={()=>{}}>
-           <AvaForm/>
-        </Modal>
+    <Layout curActive='/shop'>
+      <ProTable<DataType>
+        rowKey="id"
+        headerTitle="店铺管理"
+        columns={columns}
+        actionRef={actionRef}
+        options={false}
+        toolBarRender={() => [
+          <Button key="add" type="primary" onClick={() => {
+            message.success('一键同步');
+          }}>一键同步</Button>
+        ]}
+        request={async (params) => {
+          const req = new ShopPageReq(params.current ?? 1, params.pageSize ?? 10, params.account ?? '')
+          const { data: list, pageInfo } = await getShopPageApi(req)
+          const data = shopPageRespConvertDataType(list);
+          return {
+            data: data,
+            success: true,
+            total: pageInfo.total,
+          };
+        }}
+        pagination={{
+          pageSize: 10,
+        }}
+      />
     </Layout>
-    
-  );
+  )
 }

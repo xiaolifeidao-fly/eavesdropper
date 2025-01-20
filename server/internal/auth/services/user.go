@@ -115,7 +115,7 @@ func GetUserInfo(userID uint64) (*dto.UserInfoDTO, error) {
 }
 
 // PageUser 分页获取用户
-func PageUser(param *dto.UserPageParamDTO) (*page.Page, error) {
+func PageUser(param *dto.UserPageParamDTO) (*page.Page[dto.UserPageDTO], error) {
 	var err error
 	userRepository := repositories.UserRepository
 
@@ -126,7 +126,7 @@ func PageUser(param *dto.UserPageParamDTO) (*page.Page, error) {
 	}
 
 	if count <= 0 {
-		return page.BuildEmptyPage(param.ToPageInfo(count)), nil
+		return page.BuildEmptyPage[dto.UserPageDTO](param.ToPageInfo(count)), nil
 	}
 
 	// 组装用户其他信息

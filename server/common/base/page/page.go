@@ -35,20 +35,20 @@ type PageInfo struct {
 	PageSize int   `json:"pageSize"`
 }
 
-type Page struct {
+type Page[T any] struct {
 	PageInfo PageInfo `json:"pageInfo"`
-	Data     any      `json:"data"`
+	Data     []*T     `json:"data"`
 }
 
-func BuildEmptyPage(pageInfo PageInfo) *Page {
-	return &Page{
+func BuildEmptyPage[T any](pageInfo PageInfo) *Page[T] {
+	return &Page[T]{
 		PageInfo: pageInfo,
-		Data:     make([]any, 0),
+		Data:     make([]*T, 0),
 	}
 }
 
-func BuildPage(pageInfo PageInfo, data any) *Page {
-	var page Page
+func BuildPage[T any](pageInfo PageInfo, data []*T) *Page[T] {
+	var page Page[T]
 	page.PageInfo = pageInfo
 	page.Data = data
 	return &page

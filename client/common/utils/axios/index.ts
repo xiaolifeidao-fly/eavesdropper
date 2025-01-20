@@ -55,7 +55,7 @@ instance.interceptors.request.use(
 
     // 添加请求头 Authorization
     const token = await getItem(REQUEST_HEADER_TOKEN);
-    console.log("token", token);
+    // console.log("token", token);
     if (token) {
       config.headers[REQUEST_HEADER_TOKEN] = token;
     }

@@ -29,3 +29,15 @@ export class BasePageResp<T> {
         this.pageInfo = pageInfo
     }
 }
+
+export class LabelValue {
+    constructor(
+        public label: string,
+        public value: string,
+        public color: string,
+    ) {
+        this.label = label
+        this.value = value
+        this.color = color
+    }
+}

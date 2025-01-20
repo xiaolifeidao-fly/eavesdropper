@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"server/common"
 	"server/common/base"
 )
 
@@ -19,6 +20,15 @@ type BaseDTO struct {
 
 func (dto *BaseDTO) GetID() uint64 {
 	return dto.ID
+}
+
+func (dto *BaseDTO) InitCreate() {
+	dto.CreatedBy = common.GetLoginUserID()
+	dto.UpdatedBy = common.GetLoginUserID()
+}
+
+func (dto *BaseDTO) InitUpdate() {
+	dto.UpdatedBy = common.GetLoginUserID()
 }
 
 type QueryDTO struct {
@@ -51,4 +61,10 @@ func BuildPageDTO[T any](pageInfo PageInfo, data []*T) *PageDTO[T] {
 	pageDTO.PageInfo = pageInfo
 	pageDTO.Data = data
 	return &pageDTO
+}
+
+type LabelValueDTO struct {
+	Label string `json:"label"`
+	Value string `json:"value"`
+	Color string `json:"color"`
 }

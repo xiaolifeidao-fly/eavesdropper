@@ -91,7 +91,7 @@ func PageSku(ctx *gin.Context) {
 	}
 
 	param := converter.ToDTO[dto.SkuPageParamDTO](&req)
-	var pageDTO *page.Page
+	var pageDTO *page.Page[dto.SkuPageDTO]
 	if pageDTO, err = services.PageSku(param); err != nil {
 		logger.Errorf("Page failed, with error is %v", err)
 		controller.Error(ctx, err.Error())
@@ -101,14 +101,14 @@ func PageSku(ctx *gin.Context) {
 	var pageData []vo.SkuPageResp
 	converter.Copy(&pageData, pageDTO.Data)
 
-	pageDataMock := make([]vo.SkuPageResp, 0)
+	pageDataMock := make([]*vo.SkuPageResp, 0)
 	for _, v := range pageData {
 		v.ResourceAccount = "a13576525293"
 		v.ShopName = "测试店铺"
-		pageDataMock = append(pageDataMock, v)
+		pageDataMock = append(pageDataMock, &v)
 	}
 
-	pageResp := page.BuildPage(pageDTO.PageInfo, pageDataMock)
+	pageResp := page.BuildPage[vo.SkuPageResp](pageDTO.PageInfo, pageDataMock)
 	controller.OK(ctx, pageResp)
 
 }

@@ -1,9 +1,17 @@
-import { getDataList, getPage, instance } from "@utils/axios"
-import { Shop } from "@model/shop/shop"
+import { plainToClass } from 'class-transformer'
+import { instance } from '@utils/axios'
 
+import { BasePageResp } from '@model/base/base'
+import { ShopPageReq, ShopPageResp } from '@model/shop/shop'
 
+// 删除店铺
+export const deleteShop = async (id: number) => {
+    const result = await instance.delete(`/shop/${id}`)
+    return plainToClass(String, result)
+}
 
-export const getData = async () =>{
-    // const result = await getPage(Shop, "shop/test/page", {});
-    return {total : 100, data : []};
+// 分页获取店铺
+export const getShopPage = async (req: ShopPageReq) => {
+    const result = await instance.get(`/shop/page`, { params: req })
+    return plainToClass(BasePageResp<ShopPageResp>, result)
 }
