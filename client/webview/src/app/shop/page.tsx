@@ -1,21 +1,26 @@
 'use client'
-import { useRef } from 'react';
-import { Button, message, Popconfirm, Tooltip } from 'antd';
+import { useRef, useState } from 'react';
+import { Button, message, Popconfirm, Tooltip, Spin } from 'antd';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
 
 import useRefreshPage from '@/components/RefreshPage';
 import {
   getShopPage as getShopPageApi,
-  deleteShop as deleteShopApi
+  deleteShop as deleteShopApi,
+  syncShop as syncShopApi
 } from '@api/shop/shop.api';
-import { ShopPageReq, ShopPageResp } from '@model/shop/shop';
+import { getMainResourceList as getMainResourceListApi } from '@api/resource/resource.api';
+import { ShopPageReq, ShopPageResp, SyncShopReq } from '@model/shop/shop';
+import { MbShopApi } from '@eleapi/door/shop/mb.shop';
 
 type DataType = {
   id: number;
+  resourceId: number;
   account: string;
   name: string;
   remark: string;
+  updatedAt: string;
 }
 
 function shopPageRespConvertDataType(resp: ShopPageResp[]): DataType[] {
@@ -27,27 +32,29 @@ function shopPageRespConvertDataType(resp: ShopPageResp[]): DataType[] {
 }
 
 export default function ShopManage() {
+  const [loading, setLoading] = useState(false);
   const actionRef = useRef<ActionType>();
   const { refreshPage } = useRefreshPage();
 
   const baseColumns: ProColumns<DataType>[] = [
     {
-      title: '资源账号',
+      title: '店铺账号',
       dataIndex: 'account',
       align: 'center',
       width: 150,
+      search: false,
     },
     {
       title: '店铺名称',
       dataIndex: 'name',
       search: false,
+      width: 200,
       align: 'center',
     },
     {
       title: '备注',
       dataIndex: 'remark',
       align: 'center',
-      width: 200,
       search: false,
       render: (_, record) => (
         record.remark ? (
@@ -59,6 +66,13 @@ export default function ShopManage() {
         ) : null
       ),
     },
+    {
+      title: '更新时间',
+      dataIndex: 'updatedAt',
+      align: 'center',
+      width: 200,
+      search: false,
+    }
   ]
 
   const deleteConfirm = async (id: number) => {
@@ -66,6 +80,34 @@ export default function ShopManage() {
     message.success('删除成功');
     refreshPage(actionRef, true, 1);
   };
+
+  const syncAllShop = async () => {
+    const resources = await getMainResourceListApi();
+    if (!resources) {
+      return false;
+    }
+    for (const resource of resources) {
+      const result = await syncShop(0, resource.id);
+      console.log(result);
+    }
+    return true;
+  }
+
+  const syncShop = async (id: number, resourceId: number) => {
+    const shopApi = new MbShopApi();
+    const shopInfo = await shopApi.findMbShopInfo(resourceId);
+    if (shopInfo.code == false) {
+      return false;
+    }
+
+    const shop = shopInfo.data.result;
+    const req = new SyncShopReq(resourceId, shop.nick, shop.shopName, shop.shopId);
+    const result = await syncShopApi(id, req);
+    if (!result) {
+      return false;
+    }
+    return true;
+  }
 
   const columns: ProColumns<DataType>[] = [
     ...baseColumns,
@@ -76,8 +118,16 @@ export default function ShopManage() {
       align: 'center',
       width: 50,
       render: (_, record) => [
-        <Button key="sync" type="link" style={{ paddingRight: 0 }} onClick={() => {
-          message.success('同步');
+        <Button key="sync" type="link" style={{ paddingRight: 0 }} onClick={async () => {
+          setLoading(true);
+          const result = await syncShop(record.id, record.resourceId);
+          if (!result) {
+            setLoading(false);
+            message.error('同步失败');
+          }
+          refreshPage(actionRef, false);
+          setLoading(false);
+          message.success('同步成功');
         }}>同步</Button>,
         <Popconfirm key="deleteConfirm" title="确定要删除吗？" onConfirm={async () => await deleteConfirm(record.id)}>
           <Button key="delete" type="link" danger style={{ paddingLeft: 0 }}>删除</Button>
@@ -88,31 +138,41 @@ export default function ShopManage() {
 
   return (
     <Layout curActive='/shop'>
-      <ProTable<DataType>
-        rowKey="id"
-        headerTitle="店铺管理"
-        columns={columns}
-        actionRef={actionRef}
-        options={false}
-        toolBarRender={() => [
-          <Button key="add" type="primary" onClick={() => {
-            message.success('一键同步');
-          }}>一键同步</Button>
-        ]}
-        request={async (params) => {
-          const req = new ShopPageReq(params.current ?? 1, params.pageSize ?? 10, params.account ?? '')
-          const { data: list, pageInfo } = await getShopPageApi(req)
-          const data = shopPageRespConvertDataType(list);
-          return {
-            data: data,
-            success: true,
-            total: pageInfo.total,
-          };
-        }}
-        pagination={{
-          pageSize: 10,
-        }}
-      />
+      <Spin spinning={loading} tip="同步中">
+        <ProTable<DataType>
+          rowKey="id"
+          headerTitle="店铺管理"
+          columns={columns}
+          actionRef={actionRef}
+          options={false}
+          toolBarRender={() => [
+            <Button key="syncAll" type="primary" onClick={async () => {
+              setLoading(true);
+              const result = await syncAllShop();
+              if (!result) {
+                setLoading(false);
+                message.error('一键同步失败');
+              }
+              refreshPage(actionRef, false);
+              setLoading(false);
+              message.success('一键同步成功');
+            }}>一键同步</Button>
+          ]}
+          request={async (params) => {
+            const req = new ShopPageReq(params.current ?? 1, params.pageSize ?? 10, params.account ?? '')
+            const { data: list, pageInfo } = await getShopPageApi(req)
+            const data = shopPageRespConvertDataType(list);
+            return {
+              data: data,
+              success: true,
+              total: pageInfo.total,
+            };
+          }}
+          pagination={{
+            pageSize: 10,
+          }}
+        />
+      </Spin>
     </Layout>
   )
 }

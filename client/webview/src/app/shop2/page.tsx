@@ -103,7 +103,7 @@ export default function Clip() {
 
   async function getShopInfo(){
     const shopApi = new MbShopApi();
-    const result = await shopApi.findMbShopInfo(1);
+    const result = await shopApi.findMbShopInfo(5);
     console.log("window.shopApi " , result )
   }
 
@@ -122,7 +122,7 @@ export default function Clip() {
 
   async function login(){
     const mbLoginApi = new MbLoginApi();
-    const result = await mbLoginApi.login("https://login.taobao.com/member/login.jhtml");
+    const result = await mbLoginApi.login(1, "https://login.taobao.com/member/login.jhtml");
     console.log("window.shopApi1 " , result);
   }
 

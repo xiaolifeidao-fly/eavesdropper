@@ -28,8 +28,10 @@ func LoadResourceRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).PUT("/:id", UpdateResource)
 		r.Use(middleware.Authorization()).GET("/:id", GetResource)
 		r.Use(middleware.Authorization()).GET("/page", PageResource)
+		r.Use(middleware.Authorization()).POST("/bind/:id", BindResource)
 		r.Use(middleware.Authorization()).GET("/source", GetResourceSourceList)
 		r.Use(middleware.Authorization()).GET("/tag", GetResourceTagList)
+		r.Use(middleware.Authorization()).GET("/main", GetMainResourceList)
 	}
 }
 
@@ -179,6 +181,29 @@ func PageResource(ctx *gin.Context) {
 	controller.OK(ctx, pageResp)
 }
 
+// BindResource
+// @Description 绑定资源
+// @Router /resource/bind/:id [post]
+func BindResource(ctx *gin.Context) {
+	var err error
+
+	var req vo.ResourceBindReq
+	if err = controller.Bind(ctx, &req, nil, binding.JSON); err != nil {
+		logger.Errorf("BindResource failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	reqDTO := converter.ToDTO[dto.ResourceBindDTO](&req)
+	if err = services.BindResource(reqDTO); err != nil {
+		logger.Errorf("BindResource failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	controller.OK(ctx, "绑定成功")
+}
+
 // GetResourceSourceList
 // @Description 获取资源来源列表
 // @Router /resource/source [get]
@@ -191,4 +216,22 @@ func GetResourceSourceList(ctx *gin.Context) {
 // @Router /resource/tag [get]
 func GetResourceTagList(ctx *gin.Context) {
 	controller.OK(ctx, services.GetResourceTagList())
+}
+
+// GetMainResourceList
+// @Description 获取主账号资源列表
+// @Router /resource/main [get]
+func GetMainResourceList(ctx *gin.Context) {
+	var err error
+
+	userID := common.GetLoginUserID()
+
+	tag := services.ResourceTagMain
+	var resources []*dto.ResourceDTO
+	if resources, err = services.GetResourceByUserIDAndTag(userID, tag); err != nil {
+		logger.Errorf("GetMainResourceList failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, resources)
 }

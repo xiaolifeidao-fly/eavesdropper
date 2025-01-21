@@ -4,6 +4,7 @@ import (
 	"errors"
 	"server/common"
 	"server/common/base/page"
+	"server/common/middleware/database"
 	"server/common/middleware/logger"
 	"server/internal/shop/models"
 	"server/internal/shop/repositories"
@@ -52,4 +53,72 @@ func PageShop(param *dto.ShopPageParamDTO) (*page.Page[dto.ShopPageDTO], error) 
 
 	pageDTO := page.BuildPage[dto.ShopPageDTO](param.ToPageInfo(count), pageData)
 	return pageDTO, nil
+}
+
+func SyncShop(syncDTO *dto.ShopSyncDTO) error {
+	var err error
+
+	userID := common.GetLoginUserID()
+	var shopDTO *dto.ShopDTO
+	if shopDTO, err = GetShopByUserIDAndResourceID(userID, syncDTO.ResourceID); err != nil {
+		return err
+	}
+
+	if shopDTO == nil || shopDTO.ID == 0 {
+		shopDTO = &dto.ShopDTO{}
+		shopDTO.UserID = common.GetLoginUserID()
+		shopDTO.ResourceID = syncDTO.ResourceID
+		shopDTO.InitCreate()
+	}
+
+	shopDTO.Name = syncDTO.Name
+	shopDTO.ShopID = syncDTO.ShopID
+	shopDTO.InitUpdate()
+	if _, err = updateShop(shopDTO); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func GetShopByUserIDAndResourceID(userID uint64, resourceID uint64) (*dto.ShopDTO, error) {
+	var err error
+	shopRepository := repositories.ShopRepository
+
+	shop := &models.Shop{}
+	if shop, err = shopRepository.FindByUserIDAndResourceID(userID, resourceID); err != nil {
+		logger.Errorf("GetShopByUserIDAndResourceID failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+
+	shopDTO := database.ToDTO[dto.ShopDTO](shop)
+	return shopDTO, nil
+}
+
+func GetShopByID(id uint64) (*dto.ShopDTO, error) {
+	var err error
+	shopRepository := repositories.ShopRepository
+
+	shop := &models.Shop{}
+	if shop, err = shopRepository.FindById(id); err != nil {
+		logger.Errorf("GetShopByID failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+
+	shopDTO := database.ToDTO[dto.ShopDTO](shop)
+	return shopDTO, nil
+}
+
+func updateShop(shopDTO *dto.ShopDTO) (*dto.ShopDTO, error) {
+	var err error
+	shopRepository := repositories.ShopRepository
+
+	shop := database.ToPO[models.Shop](shopDTO)
+	if shop, err = shopRepository.SaveOrUpdate(shop); err != nil {
+		logger.Errorf("updateShop failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+
+	shopDTO = database.ToDTO[dto.ShopDTO](shop)
+	return shopDTO, nil
 }

@@ -30,3 +30,12 @@ type ShopPageResp struct {
 	UpdatedAt  base.Time `json:"updatedAt"`  // 更新时间
 	CreatedBy  string    `json:"createdBy"`  // 创建人
 }
+
+// ShopSyncReq 同步店铺请求
+type ShopSyncReq struct {
+	ID         uint64 `uri:"id"`
+	ResourceID uint64 `json:"resourceId"`
+	Account    string `json:"account"`
+	Name       string `json:"name"`
+	ShopID     uint64 `json:"shopId"`
+}

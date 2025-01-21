@@ -2,8 +2,18 @@ package dto
 
 import (
 	"server/common/base"
+	"server/common/base/dto"
 	"server/common/base/page"
 )
+
+type ShopDTO struct {
+	dto.BaseDTO
+	UserID     uint64 `json:"userId"`
+	ResourceID uint64 `json:"resourceId"`
+	Name       string `json:"name"`
+	ShopID     uint64 `json:"shopId"`
+	Remark     string `json:"remark"`
+}
 
 // ShopPageParamDTO 店铺分页参数DTO
 type ShopPageParamDTO struct {
@@ -25,4 +35,13 @@ type ShopPageDTO struct {
 	Remark     string    `json:"remark" select:"table:shop;column:remark"`
 	CreatedBy  string    `json:"createdBy" select:"table:shop;column:created_by"`
 	UpdatedAt  base.Time `json:"updatedAt" select:"table:shop;column:updated_at"`
+}
+
+// ShopSyncDTO 同步店铺DTO
+type ShopSyncDTO struct {
+	ID         uint64 `json:"id"`
+	ResourceID uint64 `json:"resourceId"`
+	Account    string `json:"account"`
+	Name       string `json:"name"`
+	ShopID     uint64 `json:"shopId"`
 }

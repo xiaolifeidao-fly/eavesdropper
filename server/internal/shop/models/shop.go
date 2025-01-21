@@ -7,6 +7,7 @@ type Shop struct {
 	UserID     uint64 `json:"userId"`
 	ResourceID uint64 `json:"resourceId"`
 	Name       string `json:"name"`
+	ShopID     uint64 `json:"shopId"`
 	Remark     string `json:"remark"`
 }
 

@@ -68,13 +68,13 @@ function checkUpdate(mainWindow: BrowserWindow){
   console.log("checkUpdate: ", mainWindow);
 
   // 设置自动更新
-  setupAutoUpdater(mainWindow);
+  // setupAutoUpdater(mainWindow);
 
   // 每隔一段时间自动检查更新
-  setInterval(async () => {
-    // 调用上方的函数
-    await checkForUpdates()
-  }, 60 * 1000) // 60秒检查一次更新
+  // setInterval(async () => {
+  //   // 调用上方的函数
+  //   await checkForUpdates()
+  // }, 60 * 1000) // 60秒检查一次更新
 }
 
 
@@ -88,12 +88,12 @@ export const start = () => {
 
       if(mainWindow){
         // 设置自动更新
-        setupAutoUpdater(mainWindow);
-        // 每隔一段时间自动检查更新
-        setInterval(async () => {
-          // 调用上方的函数
-          await checkForUpdates()
-        }, 60 * 1000) // 60秒检查一次更新
+        // setupAutoUpdater(mainWindow);
+        // // 每隔一段时间自动检查更新
+        // setInterval(async () => {
+        //   // 调用上方的函数
+        //   await checkForUpdates()
+        // }, 60 * 1000) // 60秒检查一次更新
       }
     });
     app.on('window-all-closed', () => {

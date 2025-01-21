@@ -2,7 +2,14 @@ import { plainToClass } from 'class-transformer'
 
 import { instance } from '@utils/axios'
 import { BasePageResp, LabelValue } from '@model/base/base'
-import { AddResourceReq, ResourcePageReq, ResourcePageResp, ResourceResp, UpdateResourceReq } from '@model/resource/resource'
+import {
+  AddResourceReq,
+  ResourcePageReq,
+  ResourcePageResp,
+  ResourceResp,
+  UpdateResourceReq,
+  BindResourceReq
+} from '@model/resource/resource'
 
 // 添加资源
 export const addResource = async (req: AddResourceReq) => {
@@ -34,6 +41,12 @@ export const getResourcePage = async (req: ResourcePageReq) => {
   return plainToClass(BasePageResp<ResourcePageResp>, result)
 }
 
+// 绑定资源
+export const bindResource = async (id: number, req: BindResourceReq) => {
+  const result = await instance.post(`/resource/bind/${id}`, req)
+  return plainToClass(String, result)
+}
+
 // 获取资源来源列表
 export const getResourceSourceList = async () => {
   const result = await instance.get(`/resource/source`)
@@ -46,3 +59,8 @@ export const getResourceTagList = async () => {
   return plainToClass(Array<LabelValue>, result)
 }
 
+// 获取主资源列表
+export const getMainResourceList = async () => {
+  const result = await instance.get(`/resource/main`)
+  return plainToClass(Array<ResourceResp>, result)
+}

@@ -42,4 +42,13 @@ type ResourcePageDTO struct {
 	CreatedBy string    `json:"createdBy" select:"table:resource;column:created_by"`
 	UpdatedAt base.Time `json:"updatedAt" select:"table:resource;column:updated_at"`
 	Remark    string    `json:"remark" select:"table:resource;column:remark"`
+	Nick      string    `json:"nick"`
+}
+
+// ResourceBindDTO 绑定资源DTO
+type ResourceBindDTO struct {
+	ID          uint64 `json:"id"`
+	DisplayNick string `json:"displayNick"`
+	Nick        string `json:"nick"`
+	UserNumId   uint64 `json:"userNumId"`
 }

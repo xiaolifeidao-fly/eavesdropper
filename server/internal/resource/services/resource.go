@@ -88,7 +88,7 @@ func GetResourceByID(id uint64) (*dto.ResourceDTO, error) {
 		return nil, errors.New("数据库操作失败")
 	}
 
-	if resource.ID == 0 {
+	if resource == nil || resource.ID == 0 {
 		return nil, errors.New("资源不存在")
 	}
 
@@ -111,6 +111,58 @@ func PageResource(param *dto.ResourcePageParamDTO) (*page.Page[dto.ResourcePageD
 		return page.BuildEmptyPage[dto.ResourcePageDTO](param.ToPageInfo(count)), nil
 	}
 
+	for _, d := range pageData {
+		var nick string
+		if d.Source == ResourceSourceTaobao {
+			var taobaoDTO *dto.ResourceTaobaoDTO
+			if taobaoDTO, err = GetResourceTaobaoByResourceID(d.ID); err != nil {
+				logger.Errorf("PageResource failed, with error is %v", err)
+				return nil, errors.New("数据库操作失败")
+			}
+			nick = taobaoDTO.Nick
+		}
+		d.Nick = nick
+	}
+
 	pageDTO := page.BuildPage[dto.ResourcePageDTO](param.ToPageInfo(count), pageData)
 	return pageDTO, nil
+}
+
+func BindResource(req *dto.ResourceBindDTO) error {
+	var err error
+
+	var resourceDTO *dto.ResourceDTO
+	if resourceDTO, err = GetResourceByID(req.ID); err != nil {
+		return err
+	}
+
+	resourceDTO.Account = req.Nick
+	resourceDTO.InitUpdate()
+	if _, err = UpdateResource(resourceDTO); err != nil {
+		return err
+	}
+
+	if resourceDTO.Source == ResourceSourceTaobao {
+		taobaoDTO := &dto.ResourceTaobaoDTO{}
+		converter.Copy(taobaoDTO, req)
+		taobaoDTO.ResourceID = resourceDTO.ID
+		if err = CreateResourceTaobao(taobaoDTO); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func GetResourceByUserIDAndTag(userID uint64, tag string) ([]*dto.ResourceDTO, error) {
+	var err error
+	resourceRepository := repositories.ResourceRepository
+
+	var resources []*models.Resource
+	if resources, err = resourceRepository.GetResourceByUserIDAndTag(userID, tag); err != nil {
+		return nil, err
+	}
+
+	resourcesDTO := database.ToDTOs[dto.ResourceDTO](resources)
+	return resourcesDTO, nil
 }

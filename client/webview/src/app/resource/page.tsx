@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState, useEffect } from 'react';
-import { Button, message, Tag, Space, Popconfirm, Tooltip } from 'antd';
+import { Button, message, Tag, Space, Popconfirm, Tooltip, Spin } from 'antd';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
 
@@ -10,14 +10,19 @@ import {
   getResourcePage as getResourcePageApi,
   getResourceSourceList as getResourceSourceListApi,
   getResourceTagList as getResourceTagListApi,
-  deleteResource as deleteResourceApi
+  deleteResource as deleteResourceApi,
+  bindResource as bindResourceApi,
 } from '@api/resource/resource.api';
-import { ResourcePageReq, ResourcePageResp } from '@model/resource/resource';
+import { ResourcePageReq, ResourcePageResp, BindResourceReq } from '@model/resource/resource';
 import { LabelValue } from '@model/base/base';
+import { MbLoginApi } from '@eleapi/door/login/mb.login';
+import { MbUserApi } from '@eleapi/door/user/user';
+
 
 type DataType = {
   id: number;
   account: string;
+  nick: string;
   source: LabelValue;
   tag: LabelValue;
   remark: string;
@@ -38,6 +43,8 @@ export default function ResourceManage() {
   const [sourceEnum, setSourceEnum] = useState<Record<string, any>>();
   const [sourceList, setSourceList] = useState<LabelValue[]>([]);
   const [tagList, setTagList] = useState<LabelValue[]>([]);
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getResourceSourceListApi().then((res) => {
@@ -90,15 +97,17 @@ export default function ResourceManage() {
       ),
     },
     {
-      title: '资源账号',
-      dataIndex: 'account',
+      title: '昵称',
+      dataIndex: 'nick',
       align: 'center',
+      search: false,
     },
     {
       title: '备注',
       dataIndex: 'remark',
       align: 'center',
       width: 200,
+      search: false,
       render: (_, record) => (
         record.remark ? (
           <Tooltip title={record.remark}>
@@ -110,6 +119,40 @@ export default function ResourceManage() {
       ),
     },
   ]
+
+  const bindResource = async (record: DataType) => {
+    try {
+      setLoading(true);
+      const resourceId = record.id;
+
+      const mbLoginApi = new MbLoginApi();
+      const url = "https://login.taobao.com/member/login.jhtml";
+      const loginResult = await mbLoginApi.login(resourceId, url); // TODO,获取资源登录地址
+      if (loginResult.code === false) {
+        message.error('绑定失败');
+        return;
+      }
+
+      // 获取用户信息
+      const userApi = new MbUserApi();
+      const userInfo = await userApi.getUserInfo(resourceId);
+      if (userInfo.code === false) {
+        message.error('绑定失败');
+        return;
+      }
+
+      const userInfoData = userInfo.data;
+      const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
+      const bindResult = await bindResourceApi(resourceId, bindResourceReq);
+      if (!bindResult) {
+        message.error('绑定失败');
+        return;
+      }
+      message.success('绑定成功');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const deleteConfirm = async (id: number) => {
     await deleteResourceApi(id);
@@ -127,7 +170,7 @@ export default function ResourceManage() {
       width: 150,
       render: (_, record) => [
         <Button key="bind" type="link" style={{ paddingRight: 0 }} onClick={async () => {
-          message.success('重绑定');
+          await bindResource(record);
           refreshPage(actionRef, false);
         }}>重绑定</Button>,
         <UpdateResourceModal key="updateResourceModal"
@@ -146,31 +189,33 @@ export default function ResourceManage() {
 
   return (
     <Layout curActive='/resource'>
-      <ProTable<DataType>
-        rowKey="id"
-        headerTitle="商品管理"
-        columns={columns}
-        actionRef={actionRef}
-        options={false}
-        toolBarRender={() => [
-          <AddResourceModal key="addResourceModal" sources={sourceList} tags={tagList} onFinish={() => {
-            refreshPage(actionRef, false);
-          }} />
-        ]}
-        request={async (params) => {
-          const req = new ResourcePageReq(params.current ?? 1, params.pageSize ?? 10, params.account, params.source)
-          const { data: list, pageInfo } = await getResourcePageApi(req)
-          const data = resourcePageRespConvertDataType(list);
-          return {
-            data: data,
-            success: true,
-            total: pageInfo.total,
-          };
-        }}
-        pagination={{
-          pageSize: 10,
-        }}
-      />
+      <Spin spinning={loading} tip="绑定中">
+        <ProTable<DataType>
+          rowKey="id"
+          headerTitle="商品管理"
+          columns={columns}
+          actionRef={actionRef}
+          options={false}
+          toolBarRender={() => [
+            <AddResourceModal key="addResourceModal" sources={sourceList} tags={tagList} onFinish={() => {
+              refreshPage(actionRef, false);
+            }} />
+          ]}
+          request={async (params) => {
+            const req = new ResourcePageReq(params.current ?? 1, params.pageSize ?? 10, params.account, params.source)
+            const { data: list, pageInfo } = await getResourcePageApi(req)
+            const data = resourcePageRespConvertDataType(list);
+            return {
+              data: data,
+              success: true,
+              total: pageInfo.total,
+            };
+          }}
+          pagination={{
+            pageSize: 10,
+          }}
+        />
+      </Spin>
     </Layout>
   )
 }

@@ -2,7 +2,7 @@ import { plainToClass } from 'class-transformer'
 import { instance } from '@utils/axios'
 
 import { BasePageResp } from '@model/base/base'
-import { ShopPageReq, ShopPageResp } from '@model/shop/shop'
+import { ShopPageReq, ShopPageResp, SyncShopReq } from '@model/shop/shop'
 
 // 删除店铺
 export const deleteShop = async (id: number) => {
@@ -14,4 +14,10 @@ export const deleteShop = async (id: number) => {
 export const getShopPage = async (req: ShopPageReq) => {
     const result = await instance.get(`/shop/page`, { params: req })
     return plainToClass(BasePageResp<ShopPageResp>, result)
+}
+
+// 同步店铺
+export const syncShop = async (id: number, req: SyncShopReq) => {
+    const result = await instance.post(`/shop/${id}/sync`, req)
+    return plainToClass(String, result)
 }

@@ -20,6 +20,7 @@ func LoadShopRouter(router *gin.RouterGroup) {
 	{
 		r.Use(middleware.Authorization()).DELETE("/:id", DeleteShop)
 		r.Use(middleware.Authorization()).GET("/page", PageShop)
+		r.Use(middleware.Authorization()).POST("/:id/sync", SyncShop)
 	}
 }
 
@@ -74,4 +75,27 @@ func PageShop(ctx *gin.Context) {
 
 	pageResp := page.BuildPage(pageDTO.PageInfo, pageData)
 	controller.OK(ctx, pageResp)
+}
+
+// SyncShop
+// @Description 同步店铺
+// @Router /shop/:id/sync [post]
+func SyncShop(ctx *gin.Context) {
+	var err error
+
+	var req vo.ShopSyncReq
+	if err = controller.Bind(ctx, &req, nil, binding.JSON); err != nil {
+		logger.Errorf("SyncShop failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	syncDTO := converter.ToDTO[dto.ShopSyncDTO](&req)
+	if err = services.SyncShop(syncDTO); err != nil {
+		logger.Errorf("SyncShop failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	controller.OK(ctx, "同步成功")
 }

@@ -52,6 +52,7 @@ type ResourcePageReq struct {
 	Source  string `form:"source"`
 	Tag     string `form:"tag"`
 	Account string `form:"account"`
+	Nick    string `form:"nick"`
 }
 
 // ResourcePageResp 资源分页响应
@@ -64,4 +65,13 @@ type ResourcePageResp struct {
 	UpdatedAt base.Time       `json:"updatedAt"` // 更新时间
 	CreatedBy string          `json:"createdBy"` // 创建人
 	Remark    string          `json:"remark"`    // 备注
+	Nick      string          `json:"nick"`      // 昵称
+}
+
+// ResourceBindReq 绑定资源请求
+type ResourceBindReq struct {
+	ID          uint64 `uri:"id" binding:"required"`
+	DisplayNick string `json:"displayNick"`
+	Nick        string `json:"nick"`
+	UserNumId   uint64 `json:"userNumId" binding:"required"`
 }

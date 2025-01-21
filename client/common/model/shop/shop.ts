@@ -10,7 +10,7 @@ export class ShopPageReq {
   constructor(
     public page: number,
     public size: number,
-    public account: string
+    public account?: string
   ) {
     this.page = page
     this.size = size
@@ -37,5 +37,19 @@ export class ShopPageResp {
     this.remark = remark
     this.createdAt = createdAt
     this.updatedAt = updatedAt
+  }
+}
+
+export class SyncShopReq {
+  constructor(
+    public resourceId: number,
+    public account: string,
+    public name: string,
+    public shopId: number
+  ) {
+    this.resourceId = resourceId
+    this.account = account
+    this.name = name
+    this.shopId = shopId
   }
 }

@@ -67,6 +67,7 @@ export class ResourcePageResp {
     public id: number,
     public userId: number,
     public account: string,
+    public nick: string,
     public source: LabelValue,
     public tag: LabelValue,
     public createdAt: string,
@@ -76,10 +77,23 @@ export class ResourcePageResp {
     this.id = id
     this.userId = userId
     this.account = account
+    this.nick = nick
     this.source = source
     this.tag = tag
     this.createdAt = createdAt
     this.updatedAt = updatedAt
     this.remark = remark
+  }
+}
+
+export class BindResourceReq {
+  constructor(
+    public displayNick: string,
+    public nick: string,
+    public userNumId: number,
+  ) {
+    this.displayNick = displayNick
+    this.nick = nick
+    this.userNumId = userNumId
   }
 }

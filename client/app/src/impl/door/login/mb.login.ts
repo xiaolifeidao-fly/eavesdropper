@@ -9,8 +9,8 @@ export class MbLoginApiImpl extends MbLoginApi {
 
 
     @InvokeType(Protocols.INVOKE)
-    async login(url: string) {
-        const engine = new MbEngine<{}>(1, false);
+    async login(resourceId: number, url: string) {
+        const engine = new MbEngine<{}>(resourceId, false);
         try{
             const page = await engine.init();
             if(!page){ 
