@@ -17,13 +17,14 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
     }
 
     public async isMatch(url : string, method: string, headers: { [key: string]: string; }): Promise<boolean> {
-        if(url.includes(this.getApiName())){
-            return true;
+        const apiNames = this.getApiName();
+        if(Array.isArray(apiNames)){
+            return apiNames.some(apiName => url.includes(apiName));
         }
-        return false;
+        return url.includes(apiNames);
     }
 
-    abstract getApiName(): string;
+    abstract getApiName(): string | string[];
 
     public async getResponseData(response: Response): Promise<any> {
         try{

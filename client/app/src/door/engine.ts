@@ -99,7 +99,24 @@ export abstract class DoorEngine<T = any> {
             if(requestMonitor.handler){
                 data = await requestMonitor.handler(request, undefined);
             }
-            monitor._doCallback(new DoorEntity(data ? true : false, data));
+            let headerData = {};
+            if(requestMonitor.needHeaderData()){
+                headerData = await request.allHeaders();
+            }
+            let url = "";
+            if(requestMonitor.needUrl()){
+                url = request.url();
+            }
+            let requestBody = {};
+            if(requestMonitor.needRequestBody()){
+                const body = request.postData();
+                if(body){
+                    const params = new URLSearchParams(body);
+                    // 将其转换为对象
+                    requestBody = Object.fromEntries(params.entries());
+                }
+            }
+            monitor._doCallback(new DoorEntity(data ? true : false, data, url, headerData, requestBody));
             monitor.setFinishTag(true);
         }
     }
@@ -127,7 +144,25 @@ export abstract class DoorEngine<T = any> {
                 continue;
             }
             const data = await responseMonitor.getResponseData(response);
-            const doorEntity = new DoorEntity<T>(data ? true : false, data);
+            let headerData = {};
+            const request = response.request();
+            if(responseMonitor.needHeaderData()){
+                headerData = await request.allHeaders();
+            }
+            let url = "";
+            if(responseMonitor.needUrl()){
+                url = request.url();
+            }
+            let requestBody = {};
+            if(responseMonitor.needRequestBody()){
+                const body = request.postData();
+                if(body){
+                    const params = new URLSearchParams(body);
+                    // 将其转换为对象
+                    requestBody = Object.fromEntries(params.entries());
+                }
+            }
+            const doorEntity = new DoorEntity<T>(data ? true : false, data, url, headerData, requestBody);
             responseMonitor._doCallback(doorEntity, response.request(), response);
             responseMonitor.setFinishTag(true);
         }
@@ -139,7 +174,7 @@ export abstract class DoorEngine<T = any> {
         });
     }
 
-    public async openWaitMonitor(page : Page,  url: string, monitor : Monitor<T | any>, headers: Record<string, string> = {}){
+    public async openWaitMonitor(page : Page,  url: string, monitor : Monitor<T | any>, headers: Record<string, string> = {}, doAction: (page: Page, ...doActionParams: any[]) => Promise<void> = async (page: Page, ...doActionParams: any[]) => {}, ...doActionParams: any[]){
         const itemKey = monitor.getItemKeys(url);
         const cache = await this.fromCacheByMonitor(url, itemKey, monitor);
         if(cache){
@@ -148,6 +183,7 @@ export abstract class DoorEngine<T = any> {
         this.addMonitor(monitor);
         await this.startMonitor();
         await page.goto(url, headers);
+        await doAction(page, ...doActionParams);
         const doorEntity = await monitor.waitForAction();
         if(monitor instanceof MonitorResponse && itemKey){
             await this.saveCache(url, monitor.getKey(), monitor.getType(), itemKey, doorEntity);
@@ -192,7 +228,7 @@ export abstract class DoorEngine<T = any> {
         return undefined;
     }
 
-    public async openWaitMonitorChain(page : Page,  url: string, monitorChain: MonitorChain<T | any>, headers: Record<string, string> = {}){
+    public async openWaitMonitorChain(page : Page,  url: string, monitorChain: MonitorChain<T | any>, headers: Record<string, string> = {}, doAction: (page: Page, ...doActionParams: any[]) => Promise<void> = async (page: Page, ...doActionParams: any[]) => {}, ...doActionParams: any[] ){
         const itemKey = monitorChain.getItemKeys(url);
         const cache = await this.fromCacheByMonitorChain(url, itemKey, monitorChain)
         if(cache){
@@ -201,6 +237,7 @@ export abstract class DoorEngine<T = any> {
         this.addMonitorChain(monitorChain);
         await this.startMonitor();
         await page.goto(url, headers);
+        await doAction(page, ...doActionParams);
         const doorEntity = await monitorChain.waitForAction();
         if(doorEntity && doorEntity.code && itemKey){
             await this.saveCache(url, monitorChain.getKey(), monitorChain.getType(), itemKey, doorEntity);

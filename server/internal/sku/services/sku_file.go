@@ -17,6 +17,14 @@ func GetSkuFileInfo(skuId uint64) ([]*dto.SkuFileInfoDTO, error) {
 	return database.ToDTOs[dto.SkuFileInfoDTO](skuFileInfos), nil
 }
 
+func GetSkuFileDetail(skuId uint64) ([]*dto.SkuFileDetailDTO, error) {
+	skuFileInfos, err := skuFileInfoRepository.FindDetailBySkuId(skuId)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTOs[dto.SkuFileDetailDTO](skuFileInfos), nil
+}
+
 func SaveSkuFileInfo(skuFileInfoDTO *dto.SkuFileInfoDTO) (*dto.SkuFileInfoDTO, error) {
 	skuFileInfo, err := skuFileInfoRepository.FindBySkuIdAndFileId(skuFileInfoDTO.SkuId, skuFileInfoDTO.FileId)
 	if err != nil {

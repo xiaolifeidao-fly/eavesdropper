@@ -1,0 +1,295 @@
+{
+    "requestId": "a6d49439-f5c6-4980-a55e-0149334f1fcf",
+    "success": true,
+    "errorMessage": "",
+    "data": {
+        "baseInfo": {
+            "itemId": "864073465826",
+            "skuType": "5",
+            "mainImages": [
+                "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01USYkDB20pnTl1nQMz_!!3683936899.jpg",
+                "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01zdDzUX20pnTl1nMF1_!!3683936899.jpg",
+                "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01mXg9Xp20pnTkMNizv_!!3683936899.jpg",
+                "https://img.alicdn.com/imgextra/i3/3683936899/O1CN017PgpRi20pnTlYp5sg_!!3683936899.jpg",
+                "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01C6lKii20pnTjL8noP_!!3683936899.jpg"
+            ],
+            "title": "2025春季小众设计感大码贴标潮长袖衬衫外套男",
+            "guideTitle": "2025春季小众设计感大码贴标潮长袖衬衫外套男",
+            "categoryAttr": {
+                "p-20000": {
+                    "text": "无品牌",
+                    "value": 3246379
+                }
+            },
+            "procurementLocation": "globalStock_1"
+        },
+        "doorSkuSaleInfo": {
+            "salesAttr": {
+                "p-1627207": {
+                    "label": "颜色",
+                    "values": [
+                        {
+                            "text": "黑色",
+                            "value": "28341"
+                        },
+                        {
+                            "text": "白色",
+                            "value": "28320"
+                        },
+                        {
+                            "text": "灰色",
+                            "value": "28334"
+                        }
+                    ]
+                },
+                "p-20509": {
+                    "label": "尺码",
+                    "values": [
+                        {
+                            "text": "M",
+                            "value": "28315"
+                        },
+                        {
+                            "text": "L",
+                            "value": "28316"
+                        },
+                        {
+                            "text": "XL",
+                            "value": "28317"
+                        },
+                        {
+                            "text": "2XL",
+                            "value": "6145171"
+                        },
+                        {
+                            "text": "3XL",
+                            "value": "115781"
+                        },
+                        {
+                            "text": "4XL",
+                            "value": "3727387"
+                        },
+                        {
+                            "text": "5XL",
+                            "value": "7539404"
+                        }
+                    ]
+                }
+            },
+            "salesSkus": [
+                {
+                    "salePropPath": "1627207:28341;20509:28315",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28341;20509:28316",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28341;20509:28317",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28341;20509:6145171",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28341;20509:115781",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28341;20509:3727387",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28341;20509:7539404",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28320;20509:28315",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28320;20509:28316",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28320;20509:28317",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28320;20509:6145171",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28320;20509:115781",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28320;20509:3727387",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28320;20509:7539404",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28334;20509:28315",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28334;20509:28316",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28334;20509:28317",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28334;20509:6145171",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28334;20509:115781",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28334;20509:3727387",
+                    "price": "67",
+                    "quantity": "99"
+                },
+                {
+                    "salePropPath": "1627207:28334;20509:7539404",
+                    "price": "67",
+                    "quantity": "99"
+                }
+            ],
+            "price": "67",
+            "quantity": "200",
+            "purchaseTips": "",
+            "outerId": "",
+            "barcode": "",
+            "subStock": "1",
+            "shelfTime": {
+                "type": 0,
+                "shelfTime": null
+            }
+        },
+        "doorSkuLogisticsInfo": {
+            "dispatchTimeframe": "0",
+            "pickupMode": "64723339970",
+            "regionalRestrictions": "regionLimitSale_1",
+            "postSaleSupport": ""
+        },
+        "doorSkuImageInfo": {
+            "images": null,
+            "videos": null,
+            "longImages": null,
+            "doorSkuImageInfos": [
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01mxhJGF20pnTjz7k1z_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01BUfxuN20pnTkMPbQV_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i4/3683936899/O1CN01hLXFK520pnThgiw9X_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i2/3683936899/O1CN01NNgBis20pnTgy8L5J_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i1/3683936899/O1CN010eWDNh20pnThgj4SL_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i2/3683936899/O1CN01KVbPDr20pnTjheAil_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i4/3683936899/O1CN01MtATQ320pnTkyVXJZ_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i2/3683936899/O1CN01oKUGfu20pnTkIoJvq_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01wpPM0a20pnThtuq4B_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01lgcMWc20pnTl1m5GK_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01FkugeP20pnTjz8Tl8_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i2/3683936899/O1CN01fJIEvP20pnTjLBDVL_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i3/3683936899/O1CN018qRqv120pnTjL9wVm_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01R6xQL520pnTkMNFtb_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01IgUDq920pnThtsl9o_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i2/3683936899/O1CN010NnJTb20pnTjhclRC_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01l2Kn1F20pnTjheVVy_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i4/3683936899/O1CN01DJPzCD20pnTlYocmA_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01fLhHI420pnThtuVGX_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i4/3683936899/O1CN01YakAc020pnTkyXgJP_!!3683936899.jpg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01sWS9pS20pnThgiKlD_!!3683936899.jpg"
+                }
+            ]
+        }
+    }
+}

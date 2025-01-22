@@ -48,6 +48,15 @@ func (r *Repository[T]) GetList(sql string, values ...interface{}) ([]T, error) 
 	return entities, nil
 }
 
+func GetListByEntity[P any](db *gorm.DB, sql string, entity P, values ...interface{}) ([]P, error) {
+	var entities []P
+	err := db.Model(entity).Raw(sql, values...).Find(&entities).Error
+	if err != nil {
+		return nil, err
+	}
+	return entities, nil
+}
+
 // Execute 执行SQL
 func (r *Repository[T]) Execute(sql string, params map[string]interface{}) error {
 	return r.Db.Exec(sql, params).Error

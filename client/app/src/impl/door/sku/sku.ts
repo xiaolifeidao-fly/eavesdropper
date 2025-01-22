@@ -27,6 +27,8 @@ import fs from 'fs';
 import path from "path";
 import log from "electron-log";
 import { FileInfo } from "@src/door/monitor/mb/file/file";
+import { publishFromTb } from "@src/door/mb/sku/sku.publish";
+import { SkuFile } from "@model/sku/sku.file";
 
 export class MbSkuApiImpl extends MbSkuApi {
 
@@ -69,7 +71,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             skuFileNames[fileName] = new FileInfo(fileName, index, "detail");
         }   
         const monitor = new MbSkuFileUploadMonitor(publishResourceId, skuId, skuFileNames);
-        await uploadFile(publishResourceId, filePaths, monitor);
+        return await uploadFile(publishResourceId, skuId, filePaths, monitor);
     }
 
     async getImage(mainImages : string[], detailImages : string[], skuId : number, itemId : string) {
@@ -170,7 +172,10 @@ export class MbSkuApiImpl extends MbSkuApi {
             const addSkuReq = plainToClass(AddSkuReq, skuPublishResult);
             const skuId = await addSku(addSkuReq) as number;
             skuPublishResult.id = skuId;
-            await this.uploadSkuImages(publishResourceId, skuItem,skuId );
+            const imageFileList = await this.uploadSkuImages(publishResourceId, skuItem,skuId );
+            if(imageFileList){
+                await publishFromTb(imageFileList, skuItem, publishResourceId, skuItem.baseInfo.itemId);
+            }
             //上传图片信息
             // // 填充商品信息
             // const result = await engine.doFillWaitForElement(page, "1.0.1", "publishSku", skuData);

@@ -138,13 +138,19 @@ func (d *DoorSkuSaleInfoDTO) SetRequiredDefault() {
 }
 
 type SalesAttr struct {
-	Label  string           `json:"label"`  // 属性名称
-	Values []SalesAttrValue `json:"values"` // 属性值
+	HasImage      string           `json:"hasImage"`      // 是否有图片
+	ComboProperty string           `json:"comboProperty"` // 是否是组合属性
+	Label         string           `json:"label"`         // 属性名称
+	PackPro       string           `json:"packPro"`       // 是否是打包属性
+	Pid           string           `json:"pid"`           // 属性ID
+	Values        []SalesAttrValue `json:"values"`        // 属性值
 }
 
 type SalesAttrValue struct {
-	Text  string `json:"text"`  // 属性值
-	Value string `json:"value"` // 属性值ID
+	Text      string `json:"text"`      // 属性值
+	Value     string `json:"value"`     // 属性值ID
+	Image     string `json:"image"`     // 属性值图片
+	SortOrder string `json:"sortOrder"` // 排序
 }
 
 type SalesSku struct {
@@ -181,11 +187,17 @@ func (d *DoorSkuLogisticsInfoDTO) SetRequiredDefault() {
 	d.RegionalRestrictions = "regionLimitSale_1"
 }
 
+type SkuItem struct {
+	Text  []string `json:"text"`  // 属性值列表
+	Title string   `json:"value"` // 属性值ID
+}
+
 // DoorSkuImageInfoDTO 商品图文信息
 type DoorSkuImageInfoDTO struct {
 	Images     []string                   `json:"images"`            // 3:4主图, 直接对Infos进行处理
 	Videos     []string                   `json:"videos"`            // 视频, 直接对Infos进行处理
 	LongImages []string                   `json:"longImages"`        // 长图, 直接对Infos进行处理
+	SkuItems   []string                   `json:"skuItems"`          // 商品规格, 直接对Infos进行处理
 	Infos      []*DoorSkuImageInfoInfoDTO `json:"doorSkuImageInfos"` // 商品详情, 通过正则表达式提取, 图片+文字
 }
 

@@ -1,0 +1,1661 @@
+{
+    "skuInfo": {
+        "seller": {
+            "creditLevel": "0",
+            "evaluates": [
+                {
+                    "level": "0",
+                    "levelText": "平",
+                    "score": "0.0",
+                    "title": "宝贝描述",
+                    "type": "desc"
+                },
+                {
+                    "level": "0",
+                    "levelText": "平",
+                    "score": "0.0",
+                    "title": "卖家服务",
+                    "type": "serv"
+                },
+                {
+                    "level": "0",
+                    "levelText": "平",
+                    "score": "0.0",
+                    "title": "物流服务",
+                    "type": "post"
+                }
+            ],
+            "pcShopUrl": "//shop169026917.taobao.com",
+            "sellerId": "3683936899",
+            "sellerNick": "tb8407561168",
+            "sellerType": "C",
+            "shopIcon": "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01UCfiag20pnTcwHlOw_!!3683936899.jpg",
+            "shopId": "169026917",
+            "shopName": "桥南新潮男装",
+            "userId": "3683936899"
+        },
+        "item": {
+            "bottomIcons": [],
+            "images": [
+                "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01USYkDB20pnTl1nQMz_!!3683936899.jpg",
+                "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01zdDzUX20pnTl1nMF1_!!3683936899.jpg",
+                "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01mXg9Xp20pnTkMNizv_!!3683936899.jpg",
+                "https://img.alicdn.com/imgextra/i3/3683936899/O1CN017PgpRi20pnTlYp5sg_!!3683936899.jpg",
+                "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01C6lKii20pnTjL8noP_!!3683936899.jpg"
+            ],
+            "itemId": "864073465826",
+            "pcADescUrl": "//market.m.taobao.com/app/detail-project/desc/index.html?id=864073465826&descVersion=7.0&type=1&f=icoss!0864073465826!12171351349&sellerType=C",
+            "qrCode": "https://h5.m.taobao.com/awp/core/detail.htm?id=864073465826",
+            "spuId": "0",
+            "title": "2025春季小众设计感大码贴标潮长袖衬衫外套男",
+            "titleIcon": "",
+            "useWirelessDesc": "true",
+            "vagueSellCount": "0"
+        },
+        "feature": {
+            "pcResistDetail": "false",
+            "tmwOverseasScene": "false",
+            "pcIdentityRisk": "false"
+        },
+        "plusViewVO": {
+            "leftButtonStyleVO": {
+                "bizCode": "",
+                "ext": {
+                    "sizeChange": "true",
+                    "hasQuan": "false"
+                },
+                "hit": "true",
+                "logParams": {
+                    "catId": "30",
+                    "styleCode": "sizeOnly",
+                    "priceRange": "0-100"
+                }
+            },
+            "guessLikeVO": {
+                "bizCode": "",
+                "hit": "true"
+            },
+            "headAtmosphereBeltVO": {
+                "bizCode": "",
+                "hit": "true",
+                "valid": "false"
+            },
+            "commentListVO": {
+                "bizCode": "",
+                "ext": {
+                    "countShow": "\"false\""
+                },
+                "hit": "true"
+            },
+            "pcFrontSkuQuantityLimitVO": {
+                "bizCode": "",
+                "hit": "true"
+            },
+            "buyParamVO": {
+                "bizCode": "",
+                "ext": {
+                    "autoApplCoupSource": "pcDetailOrder",
+                    "needAutoApplCoup": "true"
+                },
+                "hit": "true",
+                "spm": "aliabtest582366_724531"
+            }
+        },
+        "skuCore": {
+            "sku2info": {
+                "0": {
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "true",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "200",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243987": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243986": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243985": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243984": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243989": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243988": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243979": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243978": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243977": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243976": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243983": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243982": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243981": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243980": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243971": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243970": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243969": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243975": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243974": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243973": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                },
+                "5855536243972": {
+                    "cartParam": {
+                        "addCartCheck": "true"
+                    },
+                    "logisticsTime": "承诺48小时内发货，晚发必赔",
+                    "moreQuantity": "false",
+                    "price": {
+                        "priceColorNew": "#7A7A7A",
+                        "priceMoney": "6700",
+                        "priceText": "67",
+                        "priceTitle": "优惠前"
+                    },
+                    "quantity": "99",
+                    "quantityDisplayValue": "1",
+                    "quantityText": "有货",
+                    "subPrice": {
+                        "priceBgColor": "#FF5000",
+                        "priceColor": "#FFFFFF",
+                        "priceColorNew": "#FF5000",
+                        "priceMoney": "6499",
+                        "priceText": "64.99",
+                        "priceTitle": "折后",
+                        "priceTitleColor": "#FFFFFF"
+                    }
+                }
+            },
+            "skuItem": {
+                "itemStatus": "0",
+                "renderSku": "true",
+                "unitBuy": "1"
+            }
+        },
+        "params": {
+            "aplusParams": "[]",
+            "trackParams": {
+                "detailabtestdetail": ""
+            },
+            "userAbtestDetail": "365560_447259"
+        },
+        "skuBase": {
+            "components": [],
+            "props": [
+                {
+                    "comboProperty": "false",
+                    "hasImage": "true",
+                    "name": "颜色",
+                    "nameDesc": "（3）",
+                    "packProp": "false",
+                    "pid": "1627207",
+                    "values": [
+                        {
+                            "comboPropertyValue": "false",
+                            "image": "https://gw.alicdn.com/bao/uploaded/i2/3683936899/O1CN01x86DPF20pnTiwJs1w_!!3683936899.jpg",
+                            "name": "黑色",
+                            "sortOrder": "0",
+                            "vid": "28341"
+                        },
+                        {
+                            "comboPropertyValue": "false",
+                            "image": "https://gw.alicdn.com/bao/uploaded/i2/3683936899/O1CN01To8PYO20pnTj9V1cj_!!3683936899.jpg",
+                            "name": "白色",
+                            "sortOrder": "8",
+                            "vid": "28320"
+                        },
+                        {
+                            "comboPropertyValue": "false",
+                            "image": "https://gw.alicdn.com/bao/uploaded/i4/3683936899/O1CN01bENvU120pnTkIoBc4_!!3683936899.jpg",
+                            "name": "灰色",
+                            "sortOrder": "9",
+                            "vid": "28334"
+                        }
+                    ]
+                },
+                {
+                    "comboProperty": "false",
+                    "hasImage": "false",
+                    "name": "尺码",
+                    "packProp": "false",
+                    "pid": "20509",
+                    "values": [
+                        {
+                            "comboPropertyValue": "false",
+                            "name": "M",
+                            "sortOrder": "1",
+                            "vid": "28315"
+                        },
+                        {
+                            "comboPropertyValue": "false",
+                            "name": "L",
+                            "sortOrder": "2",
+                            "vid": "28316"
+                        },
+                        {
+                            "comboPropertyValue": "false",
+                            "name": "XL",
+                            "sortOrder": "3",
+                            "vid": "28317"
+                        },
+                        {
+                            "comboPropertyValue": "false",
+                            "name": "2XL",
+                            "sortOrder": "4",
+                            "vid": "6145171"
+                        },
+                        {
+                            "comboPropertyValue": "false",
+                            "name": "3XL",
+                            "sortOrder": "5",
+                            "vid": "115781"
+                        },
+                        {
+                            "comboPropertyValue": "false",
+                            "name": "4XL",
+                            "sortOrder": "6",
+                            "vid": "3727387"
+                        },
+                        {
+                            "comboPropertyValue": "false",
+                            "name": "5XL",
+                            "sortOrder": "7",
+                            "vid": "7539404"
+                        }
+                    ]
+                }
+            ],
+            "skus": [
+                {
+                    "propPath": "1627207:28341;20509:28315",
+                    "skuId": "5855536243969"
+                },
+                {
+                    "propPath": "1627207:28341;20509:28316",
+                    "skuId": "5855536243970"
+                },
+                {
+                    "propPath": "1627207:28341;20509:28317",
+                    "skuId": "5855536243971"
+                },
+                {
+                    "propPath": "1627207:28341;20509:6145171",
+                    "skuId": "5855536243972"
+                },
+                {
+                    "propPath": "1627207:28341;20509:115781",
+                    "skuId": "5855536243973"
+                },
+                {
+                    "propPath": "1627207:28341;20509:3727387",
+                    "skuId": "5855536243974"
+                },
+                {
+                    "propPath": "1627207:28341;20509:7539404",
+                    "skuId": "5855536243975"
+                },
+                {
+                    "propPath": "1627207:28320;20509:28315",
+                    "skuId": "5855536243976"
+                },
+                {
+                    "propPath": "1627207:28320;20509:28316",
+                    "skuId": "5855536243977"
+                },
+                {
+                    "propPath": "1627207:28320;20509:28317",
+                    "skuId": "5855536243978"
+                },
+                {
+                    "propPath": "1627207:28320;20509:6145171",
+                    "skuId": "5855536243979"
+                },
+                {
+                    "propPath": "1627207:28320;20509:115781",
+                    "skuId": "5855536243980"
+                },
+                {
+                    "propPath": "1627207:28320;20509:3727387",
+                    "skuId": "5855536243981"
+                },
+                {
+                    "propPath": "1627207:28320;20509:7539404",
+                    "skuId": "5855536243982"
+                },
+                {
+                    "propPath": "1627207:28334;20509:28315",
+                    "skuId": "5855536243983"
+                },
+                {
+                    "propPath": "1627207:28334;20509:28316",
+                    "skuId": "5855536243984"
+                },
+                {
+                    "propPath": "1627207:28334;20509:28317",
+                    "skuId": "5855536243985"
+                },
+                {
+                    "propPath": "1627207:28334;20509:6145171",
+                    "skuId": "5855536243986"
+                },
+                {
+                    "propPath": "1627207:28334;20509:115781",
+                    "skuId": "5855536243987"
+                },
+                {
+                    "propPath": "1627207:28334;20509:3727387",
+                    "skuId": "5855536243988"
+                },
+                {
+                    "propPath": "1627207:28334;20509:7539404",
+                    "skuId": "5855536243989"
+                }
+            ]
+        },
+        "pcTrade": {
+            "bizDataBuyParams": {},
+            "buyNowUrl": "//buy.taobao.com/auction/buy_now.jhtml",
+            "pcBuyParams": {
+                "virtual": "false",
+                "buy_now": "67.00",
+                "auction_type": "b",
+                "x-uid": "",
+                "title": "2025春季小众设计感大码贴标潮长袖衬衫外套男",
+                "buyer_from": "ecity",
+                "page_from_type": "main_site_pc",
+                "detailIsLimit": "false",
+                "who_pay_ship": "卖家承担运费",
+                "rootCatId": "30",
+                "auto_post1": null,
+                "routeToNewPc": "1",
+                "auto_post": "false",
+                "seller_nickname": "桥南新潮男装",
+                "photo_url": "i3/3683936899/O1CN01USYkDB20pnTl1nQMz_!!3683936899.jpg",
+                "current_price": "67.00",
+                "region": "浙江杭州",
+                "seller_id": "d1644a53c35ffc15dafc4c53cabc47fa",
+                "etm": ""
+            },
+            "pcCartParam": {
+                "areaId": "310000"
+            },
+            "tradeType": "1"
+        },
+        "componentsVO": {
+            "headerVO": {
+                "buttons": [
+                    {
+                        "background": {
+                            "alpha": "1.0",
+                            "disabledAlpha": "1.0"
+                        },
+                        "disabled": "false",
+                        "events": [
+                            {
+                                "fields": {
+                                    "url": "//s.taobao.com/search"
+                                },
+                                "type": "onClick"
+                            }
+                        ],
+                        "subTitle": {},
+                        "title": {
+                            "text": "搜索"
+                        },
+                        "type": "search_in_taobao"
+                    },
+                    {
+                        "background": {
+                            "alpha": "1.0",
+                            "disabledAlpha": "1.0"
+                        },
+                        "disabled": "false",
+                        "events": [
+                            {
+                                "fields": {
+                                    "url": "//shop169026917.taobao.com/search.htm"
+                                },
+                                "type": "onClick"
+                            }
+                        ],
+                        "subTitle": {},
+                        "title": {
+                            "text": "搜本店"
+                        },
+                        "type": "search_in_store"
+                    }
+                ],
+                "logoJumpUrl": "https://www.taobao.com",
+                "mallLogo": "https://gw.alicdn.com/imgextra/i1/O1CN01z163bz1lHF5yQ50CC_!!6000000004793-2-tps-172-108.png",
+                "searchText": "搜索宝贝"
+            },
+            "headImageVO": {
+                "images": [
+                    "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01USYkDB20pnTl1nQMz_!!3683936899.jpg",
+                    "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01zdDzUX20pnTl1nMF1_!!3683936899.jpg",
+                    "https://img.alicdn.com/imgextra/i3/3683936899/O1CN01mXg9Xp20pnTkMNizv_!!3683936899.jpg",
+                    "https://img.alicdn.com/imgextra/i3/3683936899/O1CN017PgpRi20pnTlYp5sg_!!3683936899.jpg",
+                    "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01C6lKii20pnTjL8noP_!!3683936899.jpg"
+                ],
+                "videos": []
+            },
+            "storeCardVO": {
+                "buttons": [
+                    {
+                        "disabled": "false",
+                        "image": {
+                            "gifAnimated": "false",
+                            "imageUrl": "https://img.alicdn.com/imgextra/i1/O1CN016DNujx1yMMj6NMXVv_!!6000000006564-55-tps-24-24.svg"
+                        },
+                        "title": {
+                            "text": "联系客服"
+                        },
+                        "type": "customer_service"
+                    },
+                    {
+                        "disabled": "false",
+                        "events": [
+                            {
+                                "fields": {
+                                    "url": "//shop169026917.taobao.com"
+                                },
+                                "type": "openUrl"
+                            }
+                        ],
+                        "image": {
+                            "gifAnimated": "false",
+                            "imageUrl": "https://img.alicdn.com/imgextra/i4/O1CN01jn67ow1ZhYeiTJlZn_!!6000000003226-55-tps-24-24.svg"
+                        },
+                        "title": {
+                            "text": "进入店铺"
+                        },
+                        "type": "enter_shop"
+                    }
+                ],
+                "creditLevel": "0",
+                "evaluates": [
+                    {
+                        "level": "0",
+                        "levelText": "平",
+                        "score": "0.0",
+                        "title": "宝贝描述",
+                        "type": "desc"
+                    },
+                    {
+                        "level": "0",
+                        "levelText": "平",
+                        "score": "0.0",
+                        "title": "卖家服务",
+                        "type": "serv"
+                    },
+                    {
+                        "level": "0",
+                        "levelText": "平",
+                        "score": "0.0",
+                        "title": "物流服务",
+                        "type": "post"
+                    }
+                ],
+                "labelList": [
+                    {
+                        "contentDesc": "服务体验良好"
+                    }
+                ],
+                "overallScore": "4.4",
+                "sellerType": "C",
+                "shopIcon": "https://img.alicdn.com/imgextra/i1/3683936899/O1CN01UCfiag20pnTcwHlOw_!!3683936899.jpg",
+                "shopName": "桥南新潮男装",
+                "shopUrl": "//shop169026917.taobao.com"
+            },
+            "titleVO": {
+                "salesDesc": "已售0",
+                "subTitles": [],
+                "title": {
+                    "title": "2025春季小众设计感大码贴标潮长袖衬衫外套男"
+                }
+            },
+            "debugVO": {
+                "host": "taodetail033008164144.center.na620@33.8.164.144",
+                "traceId": "2147814017350979514312090e1c97"
+            },
+            "umpPriceLogVO": {
+                "bcType": "c",
+                "bs": "businessScenario",
+                "dumpInvoke": "0",
+                "map": "{5855536243987:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243986:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243985:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243984:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243989:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243988:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243979:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243978:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243977:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243976:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243983:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243982:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243981:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243980:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243971:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243970:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243969:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243975:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243974:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243973:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"},5855536243972:{\"channelKeyD\":\"empty\",\"fpChannelKeyD\":\"empty\",\"price1\":\"67.00\",\"price2\":\"64.99\",\"price3\":\"67.00\",\"sourceTypeKeyD\":\"4_null\",\"utcDNow\":\"12_201\",\"utcDPre\":\"noProm\"}}",
+                "sellerId": "3683936899",
+                "sid": "0",
+                "traceId": "2147814017350979514312090e1c97",
+                "type": "99",
+                "umpCreateTime": "2024-12-2511:39:11",
+                "version": "2.1",
+                "xobjectId": "864073465826"
+            },
+            "deliveryVO": {
+                "agingDesc": "承诺48小时内发货，晚发必赔",
+                "areaId": "310000",
+                "deliverToCity": "上海",
+                "deliveryFromAddr": "浙江杭州",
+                "deliveryToAddr": "上海黄浦南京东路",
+                "deliveryToDistrict": "黄浦",
+                "freight": "快递:免运费"
+            },
+            "o2oVo": {
+                "enableJzLocalizationProduct": "false"
+            },
+            "bottomBarVO": {
+                "buyInMobile": "false",
+                "leftButtons": [
+                    {
+                        "background": {
+                            "alpha": "1.0",
+                            "disabledAlpha": "1.0",
+                            "disabledColor": [
+                                "#ff7700",
+                                "#ff4900"
+                            ],
+                            "gradientColor": [
+                                "#ff7700",
+                                "#ff4900"
+                            ]
+                        },
+                        "disabled": "false",
+                        "title": {
+                            "alpha": "1.0",
+                            "bold": "true",
+                            "color": "#ffffff",
+                            "disabledAlpha": "0.2",
+                            "disabledColor": "#80ffffff",
+                            "fontSize": "16",
+                            "text": "立即购买"
+                        },
+                        "type": "buy_now"
+                    },
+                    {
+                        "background": {
+                            "alpha": "1.0",
+                            "disabledAlpha": "1.0",
+                            "disabledColor": [
+                                "#ffcb00",
+                                "#ff9402"
+                            ],
+                            "gradientColor": [
+                                "#ffcb00",
+                                "#ff9402"
+                            ]
+                        },
+                        "disabled": "false",
+                        "title": {
+                            "alpha": "1.0",
+                            "bold": "true",
+                            "color": "#ffffff",
+                            "disabledAlpha": "0.2",
+                            "disabledColor": "#33ffffff",
+                            "fontSize": "16",
+                            "text": "加入购物车"
+                        },
+                        "type": "add_cart"
+                    }
+                ],
+                "rightButtons": [
+                    {
+                        "disabled": "false",
+                        "icon": {
+                            "alpha": "1.0",
+                            "color": "#666666",
+                            "disabledAlpha": "1.0",
+                            "disabledColor": "#dddddd",
+                            "iconFontName": "뀚",
+                            "size": "14"
+                        },
+                        "title": {
+                            "alpha": "1.0",
+                            "bold": "false",
+                            "color": "#666666",
+                            "disabledAlpha": "1.0",
+                            "disabledColor": "#666666",
+                            "fontSize": "14",
+                            "text": "收藏"
+                        },
+                        "type": "collect"
+                    }
+                ]
+            },
+            "extensionInfoVO": {
+                "infos": [
+                    {
+                        "items": [
+                            {
+                                "text": [
+                                    "淘金币已抵2.01元"
+                                ]
+                            },
+                            {
+                                "text": [
+                                    "店铺券满300减40"
+                                ]
+                            }
+                        ],
+                        "title": "优惠",
+                        "type": "DAILY_COUPON"
+                    },
+                    {
+                        "items": [
+                            {
+                                "text": [
+                                    "退货宝",
+                                    "7天无理由退货",
+                                    "极速退款"
+                                ]
+                            }
+                        ],
+                        "title": "保障",
+                        "type": "GUARANTEE"
+                    },
+                    {
+                        "items": [
+                            {
+                                "text": [
+                                    "无品牌/无注册商标"
+                                ],
+                                "title": "品牌"
+                            },
+                            {
+                                "text": [
+                                    "3XL,2XL,M,L,XL,4XL,5XL"
+                                ],
+                                "title": "尺码"
+                            },
+                            {
+                                "text": [
+                                    "翻领"
+                                ],
+                                "title": "领型"
+                            },
+                            {
+                                "text": [
+                                    "黑色,白色,灰色"
+                                ],
+                                "title": "颜色"
+                            },
+                            {
+                                "text": [
+                                    "C871"
+                                ],
+                                "title": "货号"
+                            },
+                            {
+                                "text": [
+                                    "潮"
+                                ],
+                                "title": "细分风格"
+                            },
+                            {
+                                "text": [
+                                    "青春流行"
+                                ],
+                                "title": "基础风格"
+                            },
+                            {
+                                "text": [
+                                    "秋季"
+                                ],
+                                "title": "适用季节"
+                            },
+                            {
+                                "text": [
+                                    "2024年秋季"
+                                ],
+                                "title": "上市年份季节"
+                            },
+                            {
+                                "text": [
+                                    "长袖"
+                                ],
+                                "title": "袖长"
+                            },
+                            {
+                                "text": [
+                                    "常规"
+                                ],
+                                "title": "厚薄"
+                            },
+                            {
+                                "text": [
+                                    "其他休闲"
+                                ],
+                                "title": "适用场景"
+                            },
+                            {
+                                "text": [
+                                    "宽松型"
+                                ],
+                                "title": "版型"
+                            },
+                            {
+                                "text": [
+                                    "免烫处理"
+                                ],
+                                "title": "服饰工艺"
+                            },
+                            {
+                                "text": [
+                                    "青年"
+                                ],
+                                "title": "适用对象"
+                            }
+                        ],
+                        "title": "参数",
+                        "type": "BASE_PROPS"
+                    }
+                ]
+            },
+            "rightBarVO": {
+                "buyerButtons": [
+                    {
+                        "disabled": "false",
+                        "href": "//huodong.taobao.com/wow/z/tbhome/default/extension-download-guide?spm=a21bo.jianhua/a.20220530.1.6e742a89RInddJ&bc_fl_src=tbsite_YxOHU7Kn",
+                        "icon": "//gw.alicdn.com/imgextra/i1/O1CN01qhNNbf1y3aVWMZJgU_!!6000000006523-2-tps-56-56.png",
+                        "label": "官方插件",
+                        "priority": "201",
+                        "type": "plugin"
+                    },
+                    {
+                        "disabled": "false",
+                        "icon": "//gw.alicdn.com/imgextra/i3/O1CN01CEAqor1T5Bm2U3Ccm_!!6000000002330-2-tps-48-44.png",
+                        "label": "联系客服",
+                        "priority": "200",
+                        "type": "webww2"
+                    },
+                    {
+                        "disabled": "false",
+                        "href": "//cart.taobao.com",
+                        "icon": "//gw.alicdn.com/imgextra/i3/O1CN01Od2GJC1fxwVlcd1UA_!!6000000004074-2-tps-56-56.png",
+                        "label": "购物车",
+                        "priority": "199",
+                        "type": "cart2"
+                    },
+                    {
+                        "disabled": "false",
+                        "href": "https://h5.m.taobao.com/awp/core/detail.htm?id=864073465826",
+                        "icon": "//gw.alicdn.com/imgextra/i1/O1CN01D84lgZ1zRgxZVZYLE_!!6000000006711-55-tps-28-28.svg",
+                        "label": "商品码",
+                        "priority": "198",
+                        "type": "qrcode"
+                    },
+                    {
+                        "disabled": "false",
+                        "icon": "//gw.alicdn.com/imgextra/i3/O1CN01qyqd6N271bIfKZwyt_!!6000000007737-2-tps-56-56.png",
+                        "priority": "196",
+                        "type": "feedback"
+                    },
+                    {
+                        "disabled": "false",
+                        "href": "//jubao.taobao.com/index.htm?itemId=864073465826&spm=a1z6q.7847058",
+                        "icon": "//gw.alicdn.com/imgextra/i3/O1CN01eCrL4620CrY63DlJF_!!6000000006814-2-tps-48-48.png",
+                        "label": "举报",
+                        "priority": "99",
+                        "type": "report"
+                    },
+                    {
+                        "disabled": "false",
+                        "priority": "1",
+                        "type": "backTop"
+                    }
+                ],
+                "sellerButtons": []
+            },
+            "priceVO": {
+                "extraPrice": {
+                    "hiddenPrice": "false",
+                    "priceBgColor": "#FF5000",
+                    "priceColor": "#FFFFFF",
+                    "priceColorNew": "#FF5000",
+                    "priceMoney": "6499",
+                    "priceText": "64.99",
+                    "priceTitle": "折后",
+                    "priceTitleColor": "#FFFFFF",
+                    "priceUnit": "￥"
+                },
+                "isNewStyle": "true",
+                "price": {
+                    "hiddenPrice": "false",
+                    "priceColor": "#FF4F00",
+                    "priceColorNew": "#7A7A7A",
+                    "priceMoney": "6700",
+                    "priceText": "67",
+                    "priceTitle": "优惠前",
+                    "priceTitleColor": "#FF4F00",
+                    "priceUnit": "￥"
+                }
+            },
+            "webfontVO": {
+                "enableWebfont": "false"
+            },
+            "tabVO": {
+                "tabList": [
+                    {
+                        "icon": "https://img.alicdn.com/imgextra/i1/O1CN016DNujx1yMMj6NMXVv_!!6000000006564-55-tps-24-24.svg",
+                        "name": "comments",
+                        "sort": "1",
+                        "title": "用户评价"
+                    },
+                    {
+                        "icon": "https://img.alicdn.com/imgextra/i1/O1CN016DNujx1yMMj6NMXVv_!!6000000006564-55-tps-24-24.svg",
+                        "name": "base_drops",
+                        "sort": "2",
+                        "title": "参数信息"
+                    },
+                    {
+                        "icon": "https://img.alicdn.com/imgextra/i1/O1CN016DNujx1yMMj6NMXVv_!!6000000006564-55-tps-24-24.svg",
+                        "name": "desc",
+                        "sort": "3",
+                        "title": "图文详情"
+                    },
+                    {
+                        "icon": "https://img.alicdn.com/imgextra/i1/O1CN016DNujx1yMMj6NMXVv_!!6000000006564-55-tps-24-24.svg",
+                        "name": "recommends",
+                        "sort": "4",
+                        "title": "本店推荐"
+                    },
+                    {
+                        "name": "guessULike",
+                        "sort": "5",
+                        "title": "看了又看"
+                    }
+                ]
+            }
+        }
+    },
+    "skuDetail": {
+        "components": {
+            "layout": [
+                {
+                    "ID": "desc_richtext_pc",
+                    "key": "desc_richtext"
+                },
+                {
+                    "ID": "detail_pic_tmallPriceDesc",
+                    "key": "desc_single_image"
+                }
+            ],
+            "componentData": {
+                "division_blank_id": {
+                    "model": {
+                        "text": ""
+                    },
+                    "styles": {
+                        "topLine": "double",
+                        "bgcolor": "#eeeeee",
+                        "type": "blank"
+                    }
+                },
+                "desc_richtext_pc": {
+                    "model": {
+                        "text": "<divclass=\"sell-miniapp-desc-value\"style=\"font-size:14.0px;\"><div><p><imgsrc=\"https://img.alicdn.com/imgextra/i3/3683936899/O1CN01mxhJGF20pnTjz7k1z_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i3/3683936899/O1CN01BUfxuN20pnTkMPbQV_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i4/3683936899/O1CN01hLXFK520pnThgiw9X_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i2/3683936899/O1CN01NNgBis20pnTgy8L5J_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i1/3683936899/O1CN010eWDNh20pnThgj4SL_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i2/3683936899/O1CN01KVbPDr20pnTjheAil_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i4/3683936899/O1CN01MtATQ320pnTkyVXJZ_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i2/3683936899/O1CN01oKUGfu20pnTkIoJvq_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i3/3683936899/O1CN01wpPM0a20pnThtuq4B_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i3/3683936899/O1CN01lgcMWc20pnTl1m5GK_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i1/3683936899/O1CN01FkugeP20pnTjz8Tl8_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i2/3683936899/O1CN01fJIEvP20pnTjLBDVL_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i3/3683936899/O1CN018qRqv120pnTjL9wVm_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i1/3683936899/O1CN01R6xQL520pnTkMNFtb_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i3/3683936899/O1CN01IgUDq920pnThtsl9o_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i2/3683936899/O1CN010NnJTb20pnTjhclRC_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i1/3683936899/O1CN01l2Kn1F20pnTjheVVy_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i4/3683936899/O1CN01DJPzCD20pnTlYocmA_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i3/3683936899/O1CN01fLhHI420pnThtuVGX_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i4/3683936899/O1CN01YakAc020pnTkyXgJP_!!3683936899.jpg\"></p><p><imgsrc=\"https://img.alicdn.com/imgextra/i3/3683936899/O1CN01sWS9pS20pnThgiKlD_!!3683936899.jpg\"></p></div></div>"
+                    }
+                },
+                "division_id": {
+                    "model": {
+                        "text": "已经到最底了"
+                    },
+                    "styles": {
+                        "topLine": "double",
+                        "bgcolor": "#eeeeee",
+                        "type": "text"
+                    }
+                },
+                "detail_pic_tmallPriceDesc": {
+                    "children": [],
+                    "model": {
+                        "picUrl": "//img.alicdn.com/imgextra/i3/O1CN01MsWlBa29wVnysxUvn_!!6000000008132-2-tps-750-880.png",
+                        "locateId": "1690748715"
+                    },
+                    "styles": {
+                        "size": {
+                            "width": "375",
+                            "height": "440"
+                        }
+                    },
+                    "actions": [
+                        "utOpenBigPic"
+                    ]
+                }
+            },
+            "componentActions": {
+                "utHotArea": {
+                    "params": {
+                        "trackParams": {
+                            "spm": "a2141.7631564.1999060322.${componentId}",
+                            "scm": "${scm}"
+                        },
+                        "trackNamePre": "Button-",
+                        "trackName": "DESC-Hotarea"
+                    },
+                    "key": "user_track"
+                },
+                "utGotoVideoTimeline": {
+                    "params": {
+                        "trackParams": {
+                            "spm": "a2141.7631564.2017922",
+                            "item_id": "${itemId}",
+                            "seller_id": "${sellerId}"
+                        },
+                        "trackNamePre": "Button-",
+                        "trackName": "ShopVideo"
+                    },
+                    "key": "user_track"
+                },
+                "utFetchCoupons": {
+                    "params": {
+                        "trackParams": {
+                            "spm": "a2141.7631564.1999019704",
+                            "coupon_id": "${couponId}",
+                            "coupon_price": "${price}",
+                            "scm": "${scm}"
+                        },
+                        "trackNamePre": "Button-",
+                        "trackName": "DESC-GetCoupon"
+                    },
+                    "key": "user_track"
+                },
+                "utGotoDetailRec": {
+                    "params": {
+                        "trackParams": {
+                            "rec_item_id": "${itemId}",
+                            "pvid": "${pvid}",
+                            "match_type": "${matchType}",
+                            "index": "${index}"
+                        },
+                        "trackNamePre": "Button-",
+                        "trackName": "DESC-GotoDetail"
+                    },
+                    "key": "user_track"
+                },
+                "utOpenStoreList": {
+                    "params": {
+                        "trackNamePre": "Button-",
+                        "trackName": "MiaoTong-Desc-More"
+                    },
+                    "key": "user_track"
+                },
+                "utGotoActivityPage": {
+                    "params": {
+                        "trackParams": {
+                            "spm": "a2141.7631564.1999019700",
+                            "activity_id": "${activityId}",
+                            "scm": "${scm}"
+                        },
+                        "trackNamePre": "Button-",
+                        "trackName": "DESC-activity"
+                    },
+                    "key": "user_track"
+                },
+                "utExposureRcmdVideo": {
+                    "params": {
+                        "spm": "a2141.7631564.2017922",
+                        "trackPage": "Page_Detail_Show_ShopVideo",
+                        "item_id": "${itemId}",
+                        "seller_id": "${sellerId}"
+                    },
+                    "key": "ut_exposure"
+                },
+                "utSkuBar": {
+                    "params": {
+                        "trackParams": {
+                            "spm": "a2141.7631564.1999073209.${path}",
+                            "scm": "${scm}"
+                        },
+                        "trackNamePre": "Button-",
+                        "trackName": "DESC-SKU"
+                    },
+                    "key": "user_track"
+                },
+                "OpenPageWeex": {
+                    "params": {
+                        "urlParams": {
+                            "itemId": "${itemId}",
+                            "spm": "a2141.7631564.2315538",
+                            "showId": "${pgcId}",
+                            "sellerId": "${sellerId}",
+                            "from": "detail",
+                            "type": "${type}",
+                            "pgcId": "${pgcId}"
+                        },
+                        "url": "https://market.m.taobao.com/apps/market/detailrax/usertalk-detail.html?wh_weex=true"
+                    },
+                    "key": "open_url"
+                },
+                "utExposureWeexComponent": {
+                    "params": {
+                        "spm": "${utParams.spm}",
+                        "trackPage": "Page_Detail_Show_ProductDetail",
+                        "item_id": "${utParams.item_id}",
+                        "seller_id": "${utParams.seller_id}"
+                    },
+                    "key": "ut_exposure"
+                },
+                "utCharity": {
+                    "params": {
+                        "spm": "${utParams.spm}",
+                        "trackPage": "Page_Detail_Show_ProductDetail",
+                        "item_id": "${utParams.item_id}",
+                        "seller_id": "${utParams.seller_id}"
+                    },
+                    "key": "ut_exposure"
+                },
+                "gotoPage": {
+                    "params": {
+                        "url": "${jumpUrl}"
+                    },
+                    "key": "open_url"
+                },
+                "utExposureRcmd": {
+                    "params": {
+                        "rec_item_id": "${rec_item_id}",
+                        "trackPage": "Page_Detail_Show_ProductDetail",
+                        "pvid": "${pvid}",
+                        "index": "${index}",
+                        "match_type": "${matchType}"
+                    },
+                    "key": "ut_exposure"
+                },
+                "utGotoDetail": {
+                    "params": {
+                        "trackParams": {
+                            "spm": "a2141.7631564.1999019701.${index}",
+                            "rec_item_id": "${itemId}",
+                            "pvid": "${pvid}",
+                            "index": "${index}",
+                            "scm": "${scm}",
+                            "rn": "${rn}",
+                            "av_type": "SellerRecommend"
+                        },
+                        "trackNamePre": "Button-",
+                        "trackName": "DESC-GotoDetail"
+                    },
+                    "key": "user_track"
+                },
+                "utOpenBigPic": {
+                    "params": {
+                        "trackParams": {
+                            "spm": "a2141.7631564.1999020244.${componentId}",
+                            "scm": "${scm}"
+                        },
+                        "trackNamePre": "Button-",
+                        "trackName": "DESC-BigPic"
+                    },
+                    "key": "user_track"
+                },
+                "utGotoService": {
+                    "params": {
+                        "trackParams": {
+                            "spm": "a2141.7631564.1999070259"
+                        },
+                        "trackNamePre": "Button-",
+                        "trackName": "DESC-Servicewldesc_service_miaoshifu_Component1"
+                    },
+                    "key": "user_track"
+                },
+                "utGotoSpecification": {
+                    "params": {
+                        "trackNamePre": "Button-",
+                        "trackName": "DESC-Serviceservice_miaoshifu"
+                    },
+                    "key": "user_track"
+                },
+                "utOpenStore": {
+                    "params": {
+                        "trackNamePre": "Button-",
+                        "trackName": "MiaoTong-Desc-Item"
+                    },
+                    "key": "user_track"
+                },
+                "utOpenThreeD": {
+                    "params": {
+                        "trackNamePre": "Button-",
+                        "trackName": "DESC-view-3D"
+                    },
+                    "key": "user_track"
+                },
+                "utCinemaGraph": {
+                    "params": {
+                        "spm": "${utParams.spm}",
+                        "shop_id": "${utParams.shop_id}",
+                        "trackPage": "Page_Detail_Show_ProductDetail",
+                        "mediaType": "${utParams.mediaType}",
+                        "page": "${utParams.page}",
+                        "seller_id": "${utParams.seller_id}",
+                        "video_id": "${utParams.video_id}"
+                    },
+                    "key": "ut_exposure"
+                },
+                "utExposureUserTalk": {
+                    "params": {
+                        "spm": "a2141.7631564.1999230121.${pgcId}",
+                        "trackPage": "Page_Detail_Show_ProductDetail",
+                        "pcg_id": "${pgcId}"
+                    },
+                    "key": "ut_exposure"
+                },
+                "utOpenFans": {
+                    "params": {
+                        "trackNamePre": "Button-",
+                        "trackName": "Tmall-Fans-Party"
+                    },
+                    "key": "user_track"
+                },
+                "utUserTalk": {
+                    "params": {
+                        "trackParams": {
+                            "spm": "a2141.7631564.2315538",
+                            "pgc_id": "${pgcId}"
+                        },
+                        "trackNamePre": "Button-",
+                        "trackName": "UserTalkEntry"
+                    },
+                    "key": "user_track"
+                }
+            }
+        },
+        "abtestParam": "",
+        "page": {
+            "pageActions": [
+                {
+                    "params": {
+                        "spm": "a2141.7631564.1999077549",
+                        "trackPage": "Page_Detail_Show_ProductDetail",
+                        "isNative": "yes"
+                    },
+                    "key": "ut_exposure"
+                }
+            ]
+        },
+        "weexData": {}
+    }
+}

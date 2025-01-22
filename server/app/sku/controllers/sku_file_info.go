@@ -34,7 +34,7 @@ func GetSkuFile(ctx *gin.Context) {
 		controller.Error(ctx, err.Error())
 		return
 	}
-	result, err := services.GetSkuFileInfo(skuId)
+	result, err := services.GetSkuFileDetail(skuId)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return

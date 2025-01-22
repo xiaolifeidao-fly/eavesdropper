@@ -103,6 +103,18 @@ export abstract class Monitor<T = any> {
         this.onceEnvet();
     }
 
+    public needHeaderData(): boolean{
+        return false;
+    }
+
+    public needUrl(): boolean{
+        return false;
+    }
+
+    public needRequestBody(): boolean{
+        return false;
+    }
+
     async _doCallback(doorEntity: DoorEntity<T>, request: Request | undefined = undefined, response : Response | undefined = undefined) : Promise<void>{
         try{
             await this.doCallback(doorEntity, request, response);

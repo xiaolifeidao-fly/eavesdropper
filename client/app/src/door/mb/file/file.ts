@@ -3,6 +3,7 @@ import { MbEngine } from "../mb.engine";
 import { getStringHash } from "@utils/crypto.util";
 import { getDoorFileRecordByKey } from "@api/door/file.api";
 import { MbSkuFileUploadMonitor } from "@src/door/monitor/mb/sku/mb.sku.file.upload.monitor";
+import { getSkuFiles } from "@api/sku/sku.file";
 
 const code = `
 
@@ -103,10 +104,11 @@ async function getUnUploadFile(source : string, resourceId : number, paths: stri
 }
 
 
-export async function uploadFile(resourceId : number, paths: string[], monitor : MbFileUploadMonitor){
+export async function uploadFile(resourceId : number, skuId : number, paths: string[], monitor : MbFileUploadMonitor){
     const unUploadFiles = await getUnUploadFile(monitor.getType(), resourceId, paths);
     if(unUploadFiles.length === 0){
-        return;
+        const skuFiles = await getSkuFiles(skuId);
+        return skuFiles;
     }
     const mbEngine = new MbEngine(resourceId, false);
     const page = await mbEngine.init("https://qn.taobao.com/home.htm/sucai-tu/home");
@@ -123,6 +125,8 @@ export async function uploadFile(resourceId : number, paths: string[], monitor :
         for(let path of unUploadFiles){
             await monitor.waitForAction();
         }
+        const skuFiles = await getSkuFiles(skuId);
+        return skuFiles;
     }finally{
         if(page){
             await page.waitForTimeout(1500);

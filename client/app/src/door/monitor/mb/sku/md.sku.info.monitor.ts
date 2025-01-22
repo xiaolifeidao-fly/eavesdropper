@@ -43,6 +43,16 @@ export class MbShopDetailMonitorChain extends MbMonitorChain<{}>{
         return undefined;
     }
 
+}
 
+
+export class MbSkuPublishDraffMonitor extends MbMonitorResponse<{}>{
+
+    getApiName(): string[] {
+        return ["draftOp/add.json", "draftOp/update.json"]
+    }
+    getKey(): string {
+        throw new Error("Method not implemented.");
+    }
 
 }
