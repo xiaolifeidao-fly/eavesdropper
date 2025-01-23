@@ -1,18 +1,25 @@
 package handler
 
 import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"server/internal/door/services/dto"
 	"testing"
 )
 
 func TestDoorInfoParse(t *testing.T) {
-	// // 读取文件
-	// doorInfoJson, _ := os.ReadFile("door_info.json")
+	// 读取文件
+	doorInfoJson, _ := os.ReadFile("door_info.json")
 
-	// doorSkuDTO := &dto.DoorSkuDTO{}
-	// doorInfoMap := MBParseDoorInfo(doorInfoJson)
+	var doorInfoMap map[string]interface{}
+	json.Unmarshal(doorInfoJson, &doorInfoMap)
+
+	doorSkuDTO := &dto.DoorSkuDTO{}
+	doorSkuDTO = MBParseDoorInfo(&doorInfoMap)
 
 	// doorInfoMapJson, _ := json.Marshal(doorInfoMap)
 	// json.Unmarshal(doorInfoMapJson, doorSkuDTO)
 
-	// fmt.Println(doorSkuDTO)
+	fmt.Println(doorSkuDTO)
 }

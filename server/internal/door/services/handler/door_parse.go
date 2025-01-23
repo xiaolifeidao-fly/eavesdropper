@@ -78,12 +78,18 @@ func mbParseDoorSkuSaleInfoSalesAttrs(doorSkuSaleInfoValueMap map[string]interfa
 
 		salesAttrValue := map[string]interface{}{}
 		salesAttrValue["label"] = salesAttrValueMap["name"]
+		salesAttrValue["hasImage"] = salesAttrValueMap["hasImage"]
+		salesAttrValue["comboProperty"] = salesAttrValueMap["comboProperty"]
+		salesAttrValue["packPro"] = salesAttrValueMap["packProp"]
+		salesAttrValue["pid"] = salesAttrValueMap["pid"]
 
 		salesAttrValues := []map[string]interface{}{}
 		for _, propsValue := range propsValues {
 			salesAttrValue := map[string]interface{}{
-				"text":  propsValue["name"],
-				"value": propsValue["vid"],
+				"text":      propsValue["name"],
+				"value":     propsValue["vid"],
+				"image":     propsValue["image"],
+				"sortOrder": propsValue["sortOrder"],
 			}
 			salesAttrValues = append(salesAttrValues, salesAttrValue)
 		}
@@ -140,6 +146,10 @@ func mbParseDoorSkuSaleInfoSalesSkus(doorSkuSaleInfoValueMap map[string]interfac
 
 // 解析商品详情中的图片信息
 func mbParseDoorSkuImageInfo(doorSkuImageInfoValeMap map[string]interface{}) map[string]interface{} {
+	if doorSkuImageInfoValeMap == nil || doorSkuImageInfoValeMap["doorSkuImageInfos"] == nil {
+		return nil
+	}
+
 	doorSkuImageInfosHtml := doorSkuImageInfoValeMap["doorSkuImageInfos"].(string)
 	if len(doorSkuImageInfosHtml) > 0 {
 		doorSkuImageInfosHtml = strings.ReplaceAll(doorSkuImageInfosHtml, "\\", "")
