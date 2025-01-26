@@ -67,6 +67,7 @@ export default function ResourceManage() {
     {
       title: '来源',
       dataIndex: 'source',
+      key : "source",
       align: 'center',
       valueType: 'select',
       valueEnum: sourceEnum,
@@ -82,6 +83,7 @@ export default function ResourceManage() {
     {
       title: '标签',
       dataIndex: 'tag',
+      key : "tag",
       search: false,
       align: 'center',
       width: 100,
@@ -99,6 +101,7 @@ export default function ResourceManage() {
     {
       title: '昵称',
       dataIndex: 'nick',
+      key : "nick",
       align: 'center',
       search: false,
     },
@@ -106,6 +109,7 @@ export default function ResourceManage() {
       title: '备注',
       dataIndex: 'remark',
       align: 'center',
+      key : "remark",
       width: 200,
       search: false,
       render: (_, record) => (

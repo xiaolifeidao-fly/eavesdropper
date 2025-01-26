@@ -40,6 +40,7 @@ export default function ShopManage() {
     {
       title: '店铺账号',
       dataIndex: 'account',
+      key: 'account',
       align: 'center',
       width: 150,
       search: false,
@@ -47,6 +48,7 @@ export default function ShopManage() {
     {
       title: '店铺名称',
       dataIndex: 'name',
+      key: 'name',
       search: false,
       width: 200,
       align: 'center',
@@ -54,6 +56,7 @@ export default function ShopManage() {
     {
       title: '备注',
       dataIndex: 'remark',
+      key: 'remark',
       align: 'center',
       search: false,
       render: (_, record) => (
@@ -69,6 +72,7 @@ export default function ShopManage() {
     {
       title: '更新时间',
       dataIndex: 'updatedAt',
+      key: 'updatedAt',
       align: 'center',
       width: 200,
       search: false,
