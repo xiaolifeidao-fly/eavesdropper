@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StepsForm } from '@ant-design/pro-components';
 import { Modal, message, Button, Form, Select } from 'antd';
 
@@ -10,6 +10,8 @@ import type { SkuUrl } from './SkuPushProgress';
 import SukPushConfirm from './SkuPushConfirm';
 import type { PublishResult } from './SkuPushConfirm';
 import { StoreApi } from '@eleapi/store/store';
+import { getMainResourceList } from '@api/resource/resource.api';
+import { LabelValue } from '@model/base/base';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -28,6 +30,8 @@ interface PushSkuStepsFormProps {
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
 
   const [sourceAccount, setSourceAccount] = useState<number>(0);
+  const [sourceList, setSourceList] = useState<{}[]>([]);
+
   const [pushSkuFlag, setPushSkuFlag] = useState(false);
   const [current, setCurrent] = useState(0);
   const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
@@ -36,6 +40,24 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   const [taskId, setTaskId] = useState<number>(0);
 
   const store = new StoreApi();
+
+  useEffect(() => {
+    initSourceAccount();
+  }, []);
+
+  const initSourceAccount = async() => {
+    const sourceResources = await getMainResourceList();
+    const sourceList : {}[] = [];
+    for(const sourceResource of sourceResources){
+      sourceList.push({
+        value : sourceResource.id,
+        label : sourceResource.account
+      })
+    }
+    setSourceList(sourceList);
+  }
+
+
 
   const onCancel = () => {
     if (taskId > 0) {
@@ -111,7 +133,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
         >
           <Select
             placeholder="请选择资源账号"
-            options={[{ label: '资源账号1', value: 1 }, { label: '资源账号2', value: 2 }]}
+            options={sourceList}
             onChange={(value) => setSourceAccount(value)}
             style={{ width: '100%', margin: 0, padding: 0 }}
           />

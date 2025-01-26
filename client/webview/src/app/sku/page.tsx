@@ -98,6 +98,9 @@ export default function SkuManage() {
       width: 150,
       render: (_, record) => [
         <Button key="edit" type="link" style={{ paddingRight: 0 }} onClick={() => { window.open(record.url, '_blank'); }}>浏览源商品</Button>,
+        <Button onClick={async () => { await navigator.clipboard.writeText(record.url || '') }}>
+        复制链接
+      </Button>
         // <Button key="delete" type="link" danger style={{ paddingLeft: 0 }} onClick={async () => {
         //   message.success('删除成功');
         //   refreshPage(actionRef, true, 1);

@@ -21,6 +21,7 @@ type SkuDTO struct {
 
 type SkuPageParamDTO struct {
 	page.Query `search:"-"`
+	UserId     uint64 `search:"type:eq;table:sku;column:user_id"`
 	// ShopName   string      `search:"type:eq;table:sku;column:shop_name"`
 	SkuName string      `search:"type:eq;table:sku;column:sku_name"`
 	_       string      `search:"type:order;table:sku;column:id;default:desc"`

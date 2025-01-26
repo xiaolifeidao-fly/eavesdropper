@@ -50,10 +50,10 @@ func GetSkuByPublishResourceIdAndSourceSkuId(publishResourceId uint64, sourceSku
 	return database.ToDTO[dto.SkuDTO](sku), nil
 }
 
-func PageSku(param *dto.SkuPageParamDTO) (*page.Page[dto.SkuPageDTO], error) {
+func PageSku(param *dto.SkuPageParamDTO, userID uint64) (*page.Page[dto.SkuPageDTO], error) {
 	var err error
 	skuRepository := repositories.SkuRepository
-
+	param.UserId = userID
 	var count = int64(0)
 	var pageData = make([]*dto.SkuPageDTO, 0)
 	if err = skuRepository.Page(&models.Sku{}, *param, param.Query, &pageData, &count); err != nil {

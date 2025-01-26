@@ -445,10 +445,8 @@ async function fillCategoryList(skuItemDTO: DoorSkuDTO, draftData: { [key: strin
                 continue;
             }
         }
-        console.log("catProp is ", catProp);
         if (!("dataSource" in catProp)) {
             newCatProp[key] = value[0];
-            console.log("dataSource not found in catProp is ", newCatProp[key]);
             continue;
         }
         //特殊处理
@@ -789,7 +787,7 @@ async function updateDraftData(catId: string, draftId: string, result: DoorEntit
         console.log("res is not success ", res.data);
         return false;
     }
-    console.log("draftData is ", JSON.stringify(draftData));
+    // console.log("draftData is ", JSON.stringify(draftData));
     return true;
 }
 

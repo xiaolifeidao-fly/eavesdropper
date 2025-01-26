@@ -1,12 +1,14 @@
 package controllers
 
 import (
+	"fmt"
 	"server/app/sku/vo"
 	"server/common"
 	"server/common/base/page"
 	"server/common/converter"
 	"server/common/middleware/logger"
 	"server/common/server/controller"
+	"server/common/server/middleware"
 	"server/internal/sku/services"
 	"server/internal/sku/services/dto"
 
@@ -17,9 +19,9 @@ import (
 func LoadSkuRouter(router *gin.RouterGroup) {
 	r := router.Group("/sku")
 	{
-		r.Use().POST("", AddSku)
-		r.Use().GET("/check-existence", CheckSkuExistence)
-		r.Use().GET("/page", PageSku)
+		r.Use(middleware.Authorization()).POST("", AddSku)
+		r.Use(middleware.Authorization()).GET("/check-existence", CheckSkuExistence)
+		r.Use(middleware.Authorization()).GET("/page", PageSku)
 	}
 }
 
@@ -40,7 +42,7 @@ func AddSku(ctx *gin.Context) {
 	skuDTO.UserID = userID
 	skuDTO.CreatedBy = userID
 	skuDTO.UpdatedBy = userID
-
+	fmt.Println("add sku userID is ", userID)
 	var skuID uint64
 	if skuID, err = services.CreateSku(skuDTO); err != nil {
 		logger.Errorf("SaveSku failed, with error is %v", err)
@@ -89,10 +91,11 @@ func PageSku(ctx *gin.Context) {
 		controller.Error(ctx, err.Error())
 		return
 	}
+	userID := common.GetLoginUserID()
 
 	param := converter.ToDTO[dto.SkuPageParamDTO](&req)
 	var pageDTO *page.Page[dto.SkuPageDTO]
-	if pageDTO, err = services.PageSku(param); err != nil {
+	if pageDTO, err = services.PageSku(param, userID); err != nil {
 		logger.Errorf("Page failed, with error is %v", err)
 		controller.Error(ctx, err.Error())
 		return
