@@ -7,6 +7,7 @@ import Image from 'next/image';
 import styles from './index.module.less';
 import CaptchaInput from './CaptchaInput';
 import { useAuth } from '@/context/AuthContext';
+import { StoreApi } from '@eleapi/store/store';
 
 type FieldType = {
   nickname?: string;
@@ -25,12 +26,18 @@ export default function Home() {
   const [form] = Form.useForm();
   const router = useRouter();
 
+  const [browserPath, setBrowserPath] = useState("");
+
   useEffect(() => {
     if (hasCheckedAuth.current) return;
     hasCheckedAuth.current = true;
     if (loginToken) {
       router.push("/dashboard");
     }
+    const storeApi = new StoreApi();
+    storeApi.getItem("browserPath").then((value) => {
+      setBrowserPath(value);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -73,6 +80,7 @@ export default function Home() {
 
   // 登录表单
   const LoginForm = () => (
+
     <>
       <Form.Item<FieldType>
         name="mobile"
@@ -171,6 +179,16 @@ export default function Home() {
       <div className={styles.content}>
         <div className={styles.innerContent}>
           <h1>欢迎登录 TaoTao 中后台管理系统</h1>
+          <div>
+          <Input value={browserPath} placeholder="请输入浏览器路径" onChange={(e) => setBrowserPath(e.target.value)} ></Input>
+          <Button onClick={() => {
+              const storeApi = new StoreApi();
+              storeApi.setItem("browserPath", browserPath);
+              message.success("保存成功");
+            }}>保存</Button>
+          </div>
+          <div>
+
           <Segmented<string>
             options={mode.map(item => ({ label: item, value: item }))} // 注册按钮禁用
             size="large"
@@ -194,6 +212,7 @@ export default function Home() {
           >
             {curMode === mode[0] ? <LoginForm /> : <RegisterForm />}
           </Form>
+          </div>
         </div>
       </div>
     </main>

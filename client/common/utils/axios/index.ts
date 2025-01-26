@@ -27,17 +27,14 @@ function rejectHttpError(message: string, code?: any): Promise<never> {
 
 function getBaseUrl() {
   try{
-    console.log("process.env.APP_URL_PREFIX", "start ");
     // @ts-ignore
     if(window != undefined){
       //@ts-ignore
       return process.env.APP_URL_PREFIX;
     }
-    console.log("process.env.APP_URL_PREFIX", "dddd");
     //@ts-ignore
     return process.env.APP_URL_PREFIX;
   }catch(e){
-    console.log("process.env.SERVER_TARGET", e);
     //@ts-ignore
     return process.env.SERVER_TARGET + process.env.APP_URL_PREFIX;
   }
@@ -46,8 +43,7 @@ function getBaseUrl() {
 const instance: AxiosInstance = axios.create({
   timeout: 60000,
   // baseURL: '',
-  //@ts-ignore
-  baseURL: "http://101.43.28.195:8081/api",
+  baseURL: getBaseUrl(),
   withCredentials: true,
   // 登录成功后，设置请求头 Authorization
   // headers: {

@@ -5,9 +5,7 @@ import { AddSkuTaskReq, UpdateSkuTaskReq } from '@model/sku/skuTask'
 
 // 添加任务
 export const addSkuTask = async (req: AddSkuTaskReq) => {
-  console.log("start addSkuTask ")
   const result = await instance.post(`/sku/task`, req)
-  console.log("end addSkuTask ")
   return plainToClass(Number, result)
 }
 

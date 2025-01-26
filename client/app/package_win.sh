@@ -1,2 +1,3 @@
 sh package.sh
-electron-builder --win
+cp .env ./dist/
+electron-builder --win --x64

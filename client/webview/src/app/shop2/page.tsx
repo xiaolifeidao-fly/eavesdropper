@@ -116,7 +116,7 @@ export default function Clip() {
 
   async function getSkuInfo(){
     const shopApi = new MbSkuApi();
-    const result = await shopApi.findMbSkuInfo("https://item.taobao.com/item.htm?id=862817545814&time=1734319603010");
+    const result = await shopApi.findMbSkuInfo(1, "https://item.taobao.com/item.htm?id=862817545814&time=1734319603010");
     console.log("window.skuApi " , result )
   }
 

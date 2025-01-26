@@ -9,6 +9,7 @@ import log from 'electron-log';
 import { ActionChain, ActionResult } from './element/element';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
 import { DoorRecord } from '@model/door/door';
+import { getItem } from '@utils/store/web';
 
 const browserMap = new Map<string, Browser>();
 
@@ -383,9 +384,14 @@ export abstract class DoorEngine<T = any> {
         if(browserMap.has(key)){
             return browserMap.get(key);
         }
+        let storeBrowserPath = await get("browserPath");
+        if(!storeBrowserPath){
+            storeBrowserPath = this.chromePath;
+        }
+        console.log("storeBrowserPath", storeBrowserPath);
         const browser = await chromium.launch({
             headless: this.headless,
-            executablePath: this.chromePath,
+            executablePath: storeBrowserPath,
             args: [
                 '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
                 '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式

@@ -9,8 +9,8 @@ export class MbSkuApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async findMbSkuInfo(url : string) {
-        return await this.invokeApi("findMbSkuInfo", url);
+    async findMbSkuInfo(publishResourceId : number, url : string) {
+        return await this.invokeApi("findMbSkuInfo", publishResourceId, url);
     }
 
     @InvokeType(Protocols.INVOKE)

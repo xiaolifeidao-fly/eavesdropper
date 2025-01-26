@@ -17,7 +17,6 @@ import {
   AddSkuTaskItemReq,
   SkuTaskItemStatus
 } from '@model/sku/skuTask'
-import sharp from 'sharp';
 import { plainToClass } from 'class-transformer'
 import { parseSku } from "@api/door/door.api";
 import { DoorSkuDTO } from "@model/door/sku";
@@ -34,8 +33,8 @@ export class MbSkuApiImpl extends MbSkuApi {
 
 
     @InvokeType(Protocols.INVOKE)
-    async findMbSkuInfo(url: string) {
-        const engine = new MbEngine(1);
+    async findMbSkuInfo(publishResourceId : number, url: string) {
+        const engine = new MbEngine(publishResourceId);
         try{
             const monitorChain = new MbShopDetailMonitorChain();
             const page = await engine.init();
@@ -48,12 +47,12 @@ export class MbSkuApiImpl extends MbSkuApi {
         }  
     }
 
-    async getSkuInfo(skuUrl : string){
+    async getSkuInfo(publishResourceId : number, skuUrl : string){
         let requestSuccess = false;
         let requestCount = 0;
         let skuResult : DoorEntity<any> |undefined = undefined;
         while(!requestSuccess && requestCount <=1 ){
-            skuResult = await this.findMbSkuInfo(skuUrl);
+            skuResult = await this.findMbSkuInfo(publishResourceId, skuUrl);
             if(!skuResult || !skuResult.code){
                 console.log("findMbSkuInfo error", skuResult);
                 requestCount++;
@@ -130,12 +129,12 @@ export class MbSkuApiImpl extends MbSkuApi {
 
             const bgResponse = await axios.get(url, { responseType: 'arraybuffer', headers:headers});
             const imageBuffer = Buffer.from(bgResponse.data, 'binary');
-            if(needResize){
-                await sharp(imageBuffer)
-                .resize(800, 800) // 设置宽高
-                .toFile(imagePath); // 保存图片到指定路径
-                return imagePath;
-            }
+            // if(needResize){
+            //     await sharp(imageBuffer)
+            //     .resize(800, 800) // 设置宽高
+            //     .toFile(imagePath); // 保存图片到指定路径
+            //     return imagePath;
+            // }
             fs.writeFileSync(imagePath, imageBuffer);
             return imagePath;
         } catch (error) {
@@ -181,7 +180,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             }
 
             //获取商品信息
-            const skuResult = await this.getSkuInfo(skuUrl);
+            const skuResult = await this.getSkuInfo(publishResourceId, skuUrl);
             if(!skuResult || !skuResult.code){
                 skuPublishResult.status = SkuStatus.ERROR;
                 skuPublishResult.remark = "获取商品信息失败";

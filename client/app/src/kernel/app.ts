@@ -47,7 +47,7 @@ export async function createWindow(windowId : string, url : string) {
   windowInstance.loadURL(url); // 假设NestJS服务运行在本地3000端口
 
   // 打开开发者工具
-  windowInstance.webContents.openDevTools();
+  // windowInstance.webContents.openDevTools();
   //@ts-ignore
   windowInstance.webContents.windowId = windowId;
   return windowInstance;
