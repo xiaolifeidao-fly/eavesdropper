@@ -2,6 +2,9 @@ import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestCo
 import { plainToClass,plainToInstance } from 'class-transformer';
 import { getItem } from '@utils/store/web';
 const REQUEST_HEADER_TOKEN = 'Authorization'
+import * as dotenv from 'dotenv';
+const path = require('path');
+dotenv.config({path: path.join(__dirname, '.env')}); // 加载 .env 文件中的环境变量
 
 // 定义一个 HttpError 类，扩展自 Error
 class HttpError extends Error {
@@ -24,14 +27,17 @@ function rejectHttpError(message: string, code?: any): Promise<never> {
 
 function getBaseUrl() {
   try{
+    console.log("process.env.APP_URL_PREFIX", "start ");
     // @ts-ignore
     if(window != undefined){
       //@ts-ignore
       return process.env.APP_URL_PREFIX;
     }
+    console.log("process.env.APP_URL_PREFIX", "dddd");
     //@ts-ignore
     return process.env.APP_URL_PREFIX;
   }catch(e){
+    console.log("process.env.SERVER_TARGET", e);
     //@ts-ignore
     return process.env.SERVER_TARGET + process.env.APP_URL_PREFIX;
   }
@@ -40,7 +46,8 @@ function getBaseUrl() {
 const instance: AxiosInstance = axios.create({
   timeout: 60000,
   // baseURL: '',
-  baseURL: getBaseUrl(),
+  //@ts-ignore
+  baseURL: "http://101.43.28.195:8081/api",
   withCredentials: true,
   // 登录成功后，设置请求头 Authorization
   // headers: {

@@ -18,7 +18,7 @@ func (entity *ServerEntity) Default() {
 		entity.Name = "server"
 	}
 	if entity.Host == "" {
-		entity.Host = "127.0.0.1"
+		entity.Host = ""
 	}
 	if entity.Port == "" {
 		entity.Port = "8080"

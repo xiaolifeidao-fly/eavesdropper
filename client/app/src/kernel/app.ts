@@ -17,7 +17,7 @@ async function createDefaultWindow() {
   try {
     const store = new Store();
     init(store);
-    const mainWindow = await createWindow('main', process.env.WEBVIEW_URL || "http://localhost:8899/shop");
+    const mainWindow = await createWindow('main', process.env.WEBVIEW_URL || "");
     checkUpdate(mainWindow);
     setMainWindow(mainWindow);
   } catch (e) {
