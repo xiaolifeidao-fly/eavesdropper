@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -39,7 +38,7 @@ func LoadRouterAndMiddleware(entity *ServerEntity, routers []func(router *gin.Ro
 
 func Run(entity *ServerEntity) {
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("%s:%s", entity.Host, entity.Port),
+		Addr:    ":" + entity.Port,
 		Handler: Router,
 	}
 
