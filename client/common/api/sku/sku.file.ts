@@ -1,8 +1,8 @@
 import { SkuFile, SkuFileDetail } from "@model/sku/sku.file";
 import { instance, getDataList } from "@utils/axios";
 
-export const getSkuFiles = (skuId : number) => {
-    return getDataList(SkuFileDetail, `/sku/file/get?skuId=${skuId}`);
+export const getSkuFiles = (skuItemId : string) => {
+    return getDataList(SkuFileDetail, `/sku/file/get?skuItemId=${skuItemId}`);
 }
 
 export const saveSkuFile = (skuFile : SkuFile) => {

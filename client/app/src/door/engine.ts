@@ -56,9 +56,6 @@ export abstract class DoorEngine<T = any> {
     }
 
     public async init(url : string|undefined = undefined) : Promise<Page | undefined> {
-        if(this.browser){
-            return undefined;
-        }
         this.browser = await this.createBrowser();
         if(!this.context){
             this.context = await this.createContext();
@@ -143,7 +140,6 @@ export abstract class DoorEngine<T = any> {
             if(!await monitor.doMatchResponse(response)){
                 continue;
             }
-            const data = await responseMonitor.getResponseData(response);
             let headerData = {};
             const request = response.request();
             if(responseMonitor.needHeaderData()){
@@ -162,6 +158,7 @@ export abstract class DoorEngine<T = any> {
                     requestBody = Object.fromEntries(params.entries());
                 }
             }
+            const data = await responseMonitor.getResponseData(response);
             const doorEntity = new DoorEntity<T>(data ? true : false, data, url, headerData, requestBody);
             responseMonitor._doCallback(doorEntity, response.request(), response);
             responseMonitor.setFinishTag(true);
@@ -354,10 +351,24 @@ export abstract class DoorEngine<T = any> {
             context = await this.browser?.newContext({
                 storageState: sessionPath, // 加载上次保存的状态
                 bypassCSP: true,
+                // userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 
+                extraHTTPHeaders: {
+                    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+                    'sec-ch-ua-mobile': '?0', // 设置为移动设备
+                    'sec-ch-ua-platform': '"macOS"',
+                },
+                locale: 'zh-CN', 
             });
         } else {
             context = await this.browser?.newContext({
-                bypassCSP: true
+                bypassCSP: true,
+                // userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 
+                extraHTTPHeaders: {
+                    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+                    'sec-ch-ua-mobile': '?0', // 设置为移动设备
+                    'sec-ch-ua-platform': '"macOS"',
+                },
+                locale: 'zh-CN', 
             }); // 创建一个新的上下文
         }
         contextMap.set(key, context);
@@ -376,6 +387,9 @@ export abstract class DoorEngine<T = any> {
             headless: this.headless,
             executablePath: this.chromePath,
             args: [
+                '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
+                '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
+                '--disable-setuid-sandbox',
                 '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
               ]
         });

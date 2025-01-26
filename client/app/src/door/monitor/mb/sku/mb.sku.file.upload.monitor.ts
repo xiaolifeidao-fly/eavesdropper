@@ -5,12 +5,12 @@ import { saveSkuFile } from "@api/sku/sku.file";
 
 export class MbSkuFileUploadMonitor extends MbFileUploadMonitor {
 
-    skuId: number;
+    skuItemId: string;
 
 
-    constructor(resourceId: number, skuId: number, fileInfos: { [key: string]: FileInfo }) {
+    constructor(resourceId: number, skuItemId: string, fileInfos: { [key: string]: FileInfo }) {
         super(resourceId, fileInfos);
-        this.skuId = skuId;
+        this.skuItemId = skuItemId;
     }
 
     async uploadFileCallBack(doorFileRecord: DoorFileRecord): Promise<void> {
@@ -22,7 +22,7 @@ export class MbSkuFileUploadMonitor extends MbFileUploadMonitor {
         if(!fileInfo){  
             return;
         }
-        const skuFile = new SkuFile(undefined, this.skuId, doorFileRecord.id, doorFileRecord.fileType, fileInfo.sortId);
+        const skuFile = new SkuFile(undefined, doorFileRecord.id, doorFileRecord.fileType, fileInfo.sortId, this.skuItemId);
         skuFile.sortId = fileInfo.sortId;
         await saveSkuFile(skuFile);
     }

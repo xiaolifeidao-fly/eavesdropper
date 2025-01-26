@@ -2,6 +2,17 @@
 import { Type } from 'class-transformer';
 
 
+export class SkuItem {
+    value: string;
+    text: string[];
+
+    constructor(value: string, text: string[]) {
+        this.value = value;
+        this.text = text;
+    }
+}
+
+
 export class DoorSkuBaseInfoDTO {
     itemId: string;
     skuType: string;
@@ -11,7 +22,10 @@ export class DoorSkuBaseInfoDTO {
     categoryAttr: string;
     procurementLocation: string;
 
-    constructor(itemId: string, skuType: string, mainImages: string[], title: string, guideTitle: string, categoryAttr: string, procurementLocation: string) {
+    @Type(() => SkuItem)
+    skuItems: SkuItem[];
+
+    constructor(itemId: string, skuType: string, mainImages: string[], title: string, guideTitle: string, categoryAttr: string, procurementLocation: string, skuItems: SkuItem[]) {
         this.itemId = itemId;
         this.skuType = skuType;
         this.mainImages = mainImages;
@@ -19,6 +33,7 @@ export class DoorSkuBaseInfoDTO {
         this.guideTitle = guideTitle;
         this.categoryAttr = categoryAttr;
         this.procurementLocation = procurementLocation;
+        this.skuItems = skuItems;
     }
 }
 
@@ -37,21 +52,34 @@ export class ShelfTimeDTO {
 export class SalesAttrValue {
     text: string;
     value: string;
+    image: string;
+    sortOrder: string;
 
-    constructor(text: string, value: string) {
+    constructor(text: string, value: string, image: string, sortOrder: string) {
         this.text = text;
         this.value = value;
+        this.image = image;
+        this.sortOrder = sortOrder;
     }
 }
 
 export class SalesAttr {
+    hasImage: string;
+    comboProperty: string;
+    packPro : string;
     label: string;
+    pid : string;
+    isSaleAddValues: boolean = false;
     @Type(() => SalesAttrValue)
     values: SalesAttrValue[];
 
-    constructor(label: string, values: SalesAttrValue[]) {
+    constructor(label: string, values: SalesAttrValue[], hasImage: string, comboProperty: string, packPro: string, pid: string) {
         this.label = label;
         this.values = values;
+        this.hasImage = hasImage;
+        this.comboProperty = comboProperty;
+        this.packPro = packPro;
+        this.pid = pid;
     }
 }
 

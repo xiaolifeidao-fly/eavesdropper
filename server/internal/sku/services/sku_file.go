@@ -9,16 +9,16 @@ import (
 
 var skuFileInfoRepository = database.NewRepository[repositories.SkuFileInfoRepository]()
 
-func GetSkuFileInfo(skuId uint64) ([]*dto.SkuFileInfoDTO, error) {
-	skuFileInfos, err := skuFileInfoRepository.FindBySkuId(skuId)
+func GetSkuFileInfo(skuItemId string) ([]*dto.SkuFileInfoDTO, error) {
+	skuFileInfos, err := skuFileInfoRepository.FindBySkuItemId(skuItemId)
 	if err != nil {
 		return nil, err
 	}
 	return database.ToDTOs[dto.SkuFileInfoDTO](skuFileInfos), nil
 }
 
-func GetSkuFileDetail(skuId uint64) ([]*dto.SkuFileDetailDTO, error) {
-	skuFileInfos, err := skuFileInfoRepository.FindDetailBySkuId(skuId)
+func GetSkuFileDetail(skuItemId string) ([]*dto.SkuFileDetailDTO, error) {
+	skuFileInfos, err := skuFileInfoRepository.FindDetailBySkuItemId(skuItemId)
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func GetSkuFileDetail(skuId uint64) ([]*dto.SkuFileDetailDTO, error) {
 }
 
 func SaveSkuFileInfo(skuFileInfoDTO *dto.SkuFileInfoDTO) (*dto.SkuFileInfoDTO, error) {
-	skuFileInfo, err := skuFileInfoRepository.FindBySkuIdAndFileId(skuFileInfoDTO.SkuId, skuFileInfoDTO.FileId)
+	skuFileInfo, err := skuFileInfoRepository.FindBySkuItemIdAndFileId(skuFileInfoDTO.SkuItemId, skuFileInfoDTO.FileId)
 	if err != nil {
 		return nil, err
 	}

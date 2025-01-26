@@ -1,4 +1,18 @@
-
-const dd = `<img style="display: block;width: 100.0%;" src="https://img.alicdn.com/imgextra/i1/695637589/O1CN01DoFyCU25volvWAMWz_!!695637589.webp">`
-
-console.log(dd);
+function splitArray(array, size) {
+  const result = [];
+  for (let i = 0; i < array.length; i += size) {
+      let end = i + size;
+      if(end > array.length){
+          end = array.length;
+      }
+      result.push(array.slice(i, end));
+  }
+  return result;
+}
+const array = [];
+for(let i = 0; i < 26; i++){
+    array.push(i);
+}
+console.log(array);
+const result = splitArray(array, 20);
+console.log(result);

@@ -20,5 +20,6 @@ func GetAppRouters() []func(g *gin.RouterGroup) {
 	AppRouters = append(AppRouters, skuControllers.LoadSkuTaskRouter)       // 添加sku-task路由
 	AppRouters = append(AppRouters, resourceControllers.LoadResourceRouter) // 添加resource路由
 	AppRouters = append(AppRouters, shopControllers.LoadShopRouter)         // 添加shop路由
+	AppRouters = append(AppRouters, skuControllers.LoadSkuDraftInfoRouter)  // 添加sku-draft-info路由
 	return AppRouters
 }

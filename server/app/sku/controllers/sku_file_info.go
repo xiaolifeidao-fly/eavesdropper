@@ -4,7 +4,6 @@ import (
 	"server/common/server/controller"
 	"server/internal/sku/services"
 	"server/internal/sku/services/dto"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,12 +28,8 @@ func SaveSkuFile(ctx *gin.Context) {
 }
 
 func GetSkuFile(ctx *gin.Context) {
-	skuId, err := strconv.ParseUint(ctx.Query("skuId"), 10, 64)
-	if err != nil {
-		controller.Error(ctx, err.Error())
-		return
-	}
-	result, err := services.GetSkuFileDetail(skuId)
+	skuItemId := ctx.Query("skuItemId")
+	result, err := services.GetSkuFileDetail(skuItemId)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return

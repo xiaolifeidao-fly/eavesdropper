@@ -10,7 +10,7 @@ export class FileData {
     folderId: string;
     pix: string;
     fileName: string;
-    size: number;
+    size: string;
     url: string;
 
     constructor(data: any){
@@ -42,12 +42,30 @@ export class FileInfo {
     fileName : string;
     sortId : number;
     fileType : string;
+    filePath : string;
 
-    constructor(fileName: string, sortId: number, fileType: string) {
+    constructor(fileName: string, sortId: number, fileType: string, filePath: string) {
         this.fileName = fileName;
         this.sortId = sortId;
         this.fileType = fileType;
+        this.filePath = filePath;
     }
+}
+
+export class MbFileQueryMonitor extends MbMonitorResponse<FileData> {
+
+    getApiName(): string {
+        return "mtop.taobao.picturecenter.console.file.query";
+    }
+
+    getKey(): string {
+        return "file.query.api";
+    }
+
+    public needHeaderData(): boolean {
+        return true;
+    }
+
 }
 
 export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
@@ -74,6 +92,7 @@ export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
         try{
             const data = await response.json();
             if(!data || data.success == false){
+                console.log("MbFileUploadMonitor getResponseData error ", data);
                 return undefined;
             }
             return data.object;
@@ -110,14 +129,4 @@ export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
 
     }
 
-}
-
-export class MbFileQueryMonitor extends MbMonitorResponse<FileData> {
-
-    getApiName(): string {
-        return "mtop.taobao.picturecenter.console.file.query";
-    }
-    getKey(): string {
-        return "fileQuery";
-    }
 }

@@ -46,8 +46,8 @@ func (d *DoorSkuDTO) ToExtractorRule() map[string]interface{} {
 }
 
 // SetRequiredDefault 设置必填字段默认值
-func (d *DoorSkuDTO) SetRequiredDefault() {
-	d.BaseInfo.SetRequiredDefault()
+func (d *DoorSkuDTO) SetRequiredDefault(doorInfoValueMap map[string]interface{}) {
+	d.BaseInfo.SetRequiredDefault(doorInfoValueMap["baseInfo"].(map[string]interface{}))
 	d.DoorSkuSaleInfo.SetRequiredDefault()
 	d.DoorSkuLogisticsInfo.SetRequiredDefault()
 	d.DoorSkuImageInfo.SetRequiredDefault()
@@ -55,37 +55,50 @@ func (d *DoorSkuDTO) SetRequiredDefault() {
 
 // DoorSkuBaseInfoDTO 商品基础信息
 type DoorSkuBaseInfoDTO struct {
-	ItemId              string                 `json:"itemId"`              // 商品ID
-	SkuType             string                 `json:"skuType"`             // 宝贝类型, 必填（自动填充）, 全新 5,二手 6
-	MainImages          []string               `json:"mainImages"`          // 宝贝主图, 必填
-	Title               string                 `json:"title"`               // 宝贝标题, 必填
-	GuideTitle          string                 `json:"guideTitle"`          // 导购标题
-	CategoryAttr        map[string]interface{} `json:"categoryAttr"`        // 类目属性, 必填, 填充: 无品牌
-	ProcurementLocation string                 `json:"procurementLocation"` // 采购地, 必填, 中国内地（大陆）,中国港澳台地区及其他国家和地区
+	ItemId              string     `json:"itemId"`              // 商品ID
+	SkuType             string     `json:"skuType"`             // 宝贝类型, 必填（自动填充）, 全新 5,二手 6
+	MainImages          []string   `json:"mainImages"`          // 宝贝主图, 必填
+	Title               string     `json:"title"`               // 宝贝标题, 必填
+	GuideTitle          string     `json:"guideTitle"`          // 导购标题
+	SkuItems            []*SkuItem `json:"skuItems"`            // 商品规格, 直接对Infos进行处理
+	ProcurementLocation string     `json:"procurementLocation"` // 采购地, 必填, 中国内地（大陆）,中国港澳台地区及其他国家和地区
 }
 
 func (d *DoorSkuBaseInfoDTO) ToExtractorRule() map[string]interface{} {
 	return map[string]interface{}{
-		"mainImages": "skuInfo.item.images",
-		"title":      "skuInfo.item.title",
-		"guideTitle": "skuInfo.item.title",
-		"itemId":     "skuInfo.item.itemId",
+		"mainImages":  "skuInfo.item.images",
+		"title":       "skuInfo.item.title",
+		"guideTitle":  "skuInfo.item.title",
+		"itemId":      "skuInfo.item.itemId",
+		"skuItemInfo": "skuInfo.componentsVO.extensionInfoVO.infos",
 	}
 }
 
 // SetRequiredDefault 设置必填字段默认值
-func (d *DoorSkuBaseInfoDTO) SetRequiredDefault() {
+func (d *DoorSkuBaseInfoDTO) SetRequiredDefault(doorInfoValueMap map[string]interface{}) {
+	skuItemInfos := doorInfoValueMap["skuItemInfo"].([]interface{})
+	skuItems := []*SkuItem{}
+	for _, skuItemInfo := range skuItemInfos {
+		skuItemInfoMap := skuItemInfo.(map[string]interface{})
+		itemType := skuItemInfoMap["type"]
+		if itemType == "BASE_PROPS" {
+			items := skuItemInfoMap["items"].([]interface{})
+			for _, item := range items {
+				itemMap := item.(map[string]interface{})
+				skuItem := &SkuItem{}
+				skuItem.Title = itemMap["title"].(string)
+				texts := itemMap["text"].([]interface{})
+				skuItem.Text = make([]string, len(texts))
+				for i, text := range texts {
+					skuItem.Text[i] = text.(string)
+				}
+				skuItems = append(skuItems, skuItem)
+			}
+		}
+	}
+	d.SkuItems = skuItems
 	// 宝贝类型, 默认全新5, 二手6
 	d.SkuType = "5"
-
-	// 类目属性, 本身是一个大项， 具有n个小项， {"p-20000":{"text":"无品牌","value":"3246379"}}
-	// 剩下的值在通过商品ID创建发布商品时会自动填充一部分, 无品牌可以保证该字段必填通过
-	d.CategoryAttr = map[string]interface{}{
-		"p-20000": map[string]interface{}{
-			"text":  "无品牌",
-			"value": 3246379,
-		},
-	}
 
 	// 采购地, 默认中国内地（大陆）, 选择其他地区具有复杂的数据结构
 	d.ProcurementLocation = "globalStock_1"
@@ -197,7 +210,6 @@ type DoorSkuImageInfoDTO struct {
 	Images     []string                   `json:"images"`            // 3:4主图, 直接对Infos进行处理
 	Videos     []string                   `json:"videos"`            // 视频, 直接对Infos进行处理
 	LongImages []string                   `json:"longImages"`        // 长图, 直接对Infos进行处理
-	SkuItems   []string                   `json:"skuItems"`          // 商品规格, 直接对Infos进行处理
 	Infos      []*DoorSkuImageInfoInfoDTO `json:"doorSkuImageInfos"` // 商品详情, 通过正则表达式提取, 图片+文字
 }
 
@@ -205,7 +217,7 @@ func (d *DoorSkuImageInfoDTO) ToExtractorRule() map[string]interface{} {
 
 	// 商品详情: 获取到的数据是一段html, 需要通过正则表达式提取，查看函数 mbParseDoorSkuImageInfo
 	return map[string]interface{}{
-		"doorSkuImageInfos": "skuDetail.components.componentData.desc_richtext_pc.model.text",
+		"doorSkuImageInfos": "skuDetail.components",
 	}
 }
 

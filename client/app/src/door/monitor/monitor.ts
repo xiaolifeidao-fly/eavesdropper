@@ -94,7 +94,6 @@ export abstract class Monitor<T = any> {
     listenEvent(){
         if(this.allowRepeat && !this.hadListen){
             this.eventEmitter.on(this.getEventKey(), async (result: DoorEntity<T>) => {
-                console.log("result ", result);
                 await this.waitResolve(result);
             });
             this.hadListen = true;
@@ -161,7 +160,8 @@ export abstract class MonitorResponse<T> extends Monitor<T> {
     public async getResponseData(response: Response): Promise<any>{
         const contentType = response.headers()['content-type'];
         if(contentType.includes('application/json')){
-            return await response.json();
+            const result =  await response.json();
+            return result;
         }
         if (contentType && contentType.includes('text/html')) {
             return await response.text();

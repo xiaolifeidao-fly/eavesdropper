@@ -1,0 +1,380 @@
+{
+    "frontDataLog": {
+        "identityId": "general-taobao-100",
+        "mainCategoryId": 50002766,
+        "fromSmart": false,
+        "fromStandardSpuPublish": false,
+        "fromSearch": false,
+        "fromSpuMatch": false,
+        "fromImageSearch": false,
+        "fromSuggestion": false,
+        "fromStandardCategory": false,
+        "fromSpuBasePublish": false,
+        "fromAIPublish": false,
+        "fromAICategory": false,
+        "fromAIImage": false,
+        "traceId": "215046a717376494820577210e1011",
+        "gpfRenderTraceId": "215046a717376494820577210e1011",
+        "trueItemId": 880777655457,
+        "isEdit": false,
+        "pageUniqueId": "pc",
+        "newPublish": true
+    },
+    "auctionType": "b",
+    "sevenDayDefaultValue": 1,
+    "id": 880777655457,
+    "copyItemMode": 0,
+    "postCouponPromotionId": null,
+    "spuMatch": null,
+    "croRule": "{\"url\":\"asyncOpt.htm?optType=croRuleAsyncCheck&catId=126492001\",\"input\":[\"id\",\"userId\",\"catId\",\"title\",\"desc\",\"descForShenbiPc\",\"sku\",\"price\",\"catProp\",\"saleProp\",\"descType\",\"shopping_title\",\"skuPublishSuggest\"]}",
+    "itemWithScProductItem": null,
+    "multiDiscountPromotionId": null,
+    "batchInventoryTemplateId": null,
+    "guideMaterialEnable": 1,
+    "afterSaleVideo_videoId": null,
+    "sevenDayGray": -1,
+    "catSuggest": {
+        "empty": false
+    },
+    "fakeCreditSubmit": false,
+    "ifdWarningSubmit": false,
+    "riskWarningSubmit": false,
+    "feedbackSubmit_catErrorWarningSubmit": false,
+    "taobaoMarketTransform": null,
+    "taobaoMarketClean": null,
+    "snapshotId": null,
+    "showDraft": 1,
+    "newDescVersion": 1,
+    "descRepublicEnable": 1,
+    "skyLightRule": null,
+    "recommendInfo": null,
+    "dbDraftId": "",
+    "draftIdKey": "dbDraftId",
+    "firstStartTime": null,
+    "itemdiagnoseInfo": "{\"showNewVersion\":true}",
+    "diagnoseInvokeId": null,
+    "diagnoseSource": null,
+    "aliColorEnable": null,
+    "mediaCenterEnable": null,
+    "newMaterialEnable": null,
+    "foodSecuritySubmit": false,
+    "foodExtend": null,
+    "catId": 126492001,
+    "userId": 695637589,
+    "base-card": {},
+    "stuffStatus": {
+        "value": 5
+    },
+    "catProp": {
+        "p-20000": {
+            "value": 135301975,
+            "text": "笑辣辣"
+        },
+        "p-21299": {
+            "value": 27772,
+            "text": "中国大陆"
+        },
+        "p-6939376": {
+            "value": 28407,
+            "text": "包装"
+        },
+        "p-1626691": {
+            "value": 136135,
+            "text": "袋装"
+        },
+        "p-3344920": "150g"
+    },
+    "attrPropTable": [],
+    "assignUserAgreement": 1,
+    "spuConfirm": 1,
+    "globalStock": {
+        "value": "globalStock_0"
+    },
+    "logisticsMode": {
+        "value": 2529666
+    },
+    "sale-card": {},
+    "saleProp": {},
+    "deliveryTimeType": {
+        "value": 0
+    },
+    "sku": [],
+    "quantity": 1,
+    "multiDiscountPromotion": {
+        "type": 1,
+        "value": 9,
+        "enable": false
+    },
+    "sizeinfo-card": {},
+    "desc-card": {},
+    "mainImagesGroup": {},
+    "auctionVideos": [],
+    "desc": "<div><img src=\"https://img.alicdn.com/imgextra/i3/2200810848436/O1CN01hpZ18m2CBk5aYr9kH_!!0-item_pic.jpg\" /></div>\n\n<div><img src=\"https://img.alicdn.com/imgextra/i3/2200810848436/O1CN01hpZ18m2CBk5aYr9kH_!!0-item_pic.jpg\" /></div>\n\n<div><img src=\"https://img.alicdn.com/imgextra/i3/2200810848436/O1CN01hpZ18m2CBk5aYr9kH_!!0-item_pic.jpg\" /></div>\n",
+    "descForShenbiPc": {},
+    "descForShenbiMobile": {},
+    "descRepublicOfSell": {
+        "descPageCommitParam": {
+            "opt": 2,
+            "clientType": 1,
+            "bizSource": "sell",
+            "userId": 695637589,
+            "itemId": 880777655457,
+            "templateId": 0,
+            "version": 0,
+            "freeTry": 0,
+            "needServerComposite": false,
+            "batchPut": false,
+            "detailHeight": 0,
+            "params": "params",
+            "maxHeight": 100000,
+            "articleId": 0,
+            "bsellerBack2OldVersion": false,
+            "sell": false,
+            "smart": false,
+            "fliggyItem": false,
+            "newItem": true,
+            "changed": true,
+            "catId": 126492001,
+            "descDomain": "//g.alicdn.com",
+            "descVersion": "1.1.53",
+            "bseller": false,
+            "templateContent": "{\"groups\":[],\"sellergroups\":[]}",
+            "sourceAgent": "sell",
+            "editType": "lite"
+        },
+        "descPageRenderParam": {
+            "userId": 695637589,
+            "itemId": 880777655457,
+            "templateId": 0,
+            "clientType": 1,
+            "catId": 126492001,
+            "bizSource": "sell",
+            "descDomain": "//g.alicdn.com",
+            "descVersion": "1.1.53",
+            "smart": false,
+            "newItem": true,
+            "bseller": false
+        },
+        "descPageRenderModel": {
+            "wholeConfigBO": {
+                "width": 620,
+                "maxHeight": 100000,
+                "splitHeight": 960,
+                "ratio": 2,
+                "canCoverFromTmall": false,
+                "userId": 695637589,
+                "liteCannotEdit": false,
+                "renderWhite": false
+            },
+            "extendFields": "{}",
+            "extendConfig": {
+                "wangpuEditorConfig": {
+                    "type": "iframe",
+                    "params": {
+                        "isAdescription": 1,
+                        "catId": 0,
+                        "itemId": 880777655457,
+                        "clientType": 1,
+                        "isV3": "true"
+                    },
+                    "url": "https://sell.xiangqing.taobao.com/new_user_panel.htm"
+                },
+                "httpRequestUrlConfig": {
+                    "imageSelectUrl": "//market.m.taobao.com/app/crs-qn/sucai-selector-ng/index",
+                    "tokenUrl": "https://xiangqing.wangpu.taobao.com/GetToken.do",
+                    "mtopHost": "h5api.m.taobao.com",
+                    "mediaUploadUrl": [
+                        "stream.xiangqing.taobao.com",
+                        "stream-xiangqing.taobao.com"
+                    ],
+                    "httpHost": "sell.xiangqing.taobao.com",
+                    "url": "https://xiangqing.wangpu.taobao.com/template/ajax/commit_item_description.do"
+                },
+                "functionConfig": {
+                    "showPreview": true,
+                    "seniorEditDisabled": false,
+                    "showDistinguish": false,
+                    "backOldDiscardDraft": false,
+                    "showBackOldVersion": true,
+                    "showTemplate": true,
+                    "showFastAddText": true,
+                    "bSeller": false,
+                    "foreverDisableEdit": false,
+                    "showWangpuEditor": true
+                },
+                "imagePluginConfig": {
+                    "appkey": "tu",
+                    "url": "https://market.m.taobao.com/app/crs-qn/sucai-selector-ng/index"
+                },
+                "imageConfig": {
+                    "usePreDraw": true,
+                    "mustCutImage": false,
+                    "useCutThreshold": true,
+                    "cutImageConfig": {
+                        "cutWidthThreshold": 1500,
+                        "cutHeightThreshold": 2000,
+                        "cutMinWidth": 620,
+                        "cutMinHeight": 0
+                    }
+                },
+                "uploadConfig": {
+                    "localFile": false,
+                    "picUploadApi": "picUploadApi",
+                    "params": {
+                        "folderId": "folderId"
+                    }
+                }
+            }
+        }
+    },
+    "shopcat": [],
+    "payment-card": {},
+    "subStock": {
+        "value": 1
+    },
+    "deliver-card": {},
+    "tbExtractWay": {
+        "value": [
+            "2"
+        ],
+        "template": "64715049640"
+    },
+    "regionLimitSale": {
+        "value": "regionLimitSale_0"
+    },
+    "post-sale-service-card": {},
+    "sevenDaySupport": 1,
+    "guaranteeService": [
+        {
+            "value": "IND-SEC-brokenComp",
+            "text": "破损包退"
+        }
+    ],
+    "startTime": {
+        "type": 0
+    },
+    "riskWarning": false,
+    "feedbackSubmit_catErrorWarning": false,
+    "home-service-card": {},
+    "aiFood-card": {},
+    "product-card": {},
+    "foodNutrientTable": {
+        "measurement": {
+            "unit": "hundredGram"
+        }
+    },
+    "foodNutrientOCRContent": {},
+    "foodOrganic": {
+        "value": 0
+    },
+    "isGreenFood": {
+        "value": 0
+    },
+    "afterSaleVideoNew": {
+        "afterSaleVideo_sub_1": {
+            "name": "afterSaleVideo_sub_1",
+            "uiType": "videos",
+            "required": false,
+            "mediaType": "afterSaleVideo",
+            "appKey": "42",
+            "version": null,
+            "otherParams": {
+                "from": "pc_sell_afterbuyvideo",
+                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
+                "minDuration": "30",
+                "size": "1GB",
+                "maxDuration": "420"
+            },
+            "aspectRatio": "(3:4,1:1,9:16,16:9)"
+        },
+        "afterSaleVideo_sub_2": {
+            "name": "afterSaleVideo_sub_2",
+            "uiType": "videos",
+            "required": false,
+            "mediaType": "afterSaleVideo",
+            "appKey": "42",
+            "version": null,
+            "otherParams": {
+                "from": "pc_sell_afterbuyvideo",
+                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
+                "minDuration": "30",
+                "size": "1GB",
+                "maxDuration": "420"
+            },
+            "aspectRatio": "(3:4,1:1,9:16,16:9)"
+        },
+        "afterSaleVideo_sub_3": {
+            "name": "afterSaleVideo_sub_3",
+            "uiType": "videos",
+            "required": false,
+            "mediaType": "afterSaleVideo",
+            "appKey": "42",
+            "version": null,
+            "otherParams": {
+                "from": "pc_sell_afterbuyvideo",
+                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
+                "minDuration": "30",
+                "size": "1GB",
+                "maxDuration": "420"
+            },
+            "aspectRatio": "(3:4,1:1,9:16,16:9)"
+        },
+        "afterSaleVideo_sub_4": {
+            "name": "afterSaleVideo_sub_4",
+            "uiType": "videos",
+            "required": false,
+            "mediaType": "afterSaleVideo",
+            "appKey": "42",
+            "version": null,
+            "otherParams": {
+                "from": "pc_sell_afterbuyvideo",
+                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
+                "minDuration": "30",
+                "size": "1GB",
+                "maxDuration": "420"
+            },
+            "aspectRatio": "(3:4,1:1,9:16,16:9)"
+        },
+        "afterSaleVideo_sub_5": {
+            "name": "afterSaleVideo_sub_5",
+            "uiType": "videos",
+            "required": false,
+            "mediaType": "afterSaleVideo",
+            "appKey": "42",
+            "version": null,
+            "otherParams": {
+                "from": "pc_sell_afterbuyvideo",
+                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
+                "minDuration": "30",
+                "size": "1GB",
+                "maxDuration": "420"
+            },
+            "aspectRatio": "(3:4,1:1,9:16,16:9)"
+        }
+    },
+    "descType": {
+        "text": "使用文本编辑",
+        "value": 0
+    },
+    "wirelessDescType": {
+        "text": "使用文本编辑",
+        "value": 0
+    },
+    "wirelessDesc": [
+        {
+            "type": "image",
+            "value": "https://img.alicdn.com/imgextra/i3/2200810848436/O1CN01hpZ18m2CBk5aYr9kH_!!0-item_pic.jpg",
+            "size": 168214
+        },
+        {
+            "type": "image",
+            "value": "https://img.alicdn.com/imgextra/i3/2200810848436/O1CN01hpZ18m2CBk5aYr9kH_!!0-item_pic.jpg",
+            "size": 168214
+        },
+        {
+            "type": "image",
+            "value": "https://img.alicdn.com/imgextra/i3/2200810848436/O1CN01hpZ18m2CBk5aYr9kH_!!0-item_pic.jpg",
+            "size": 168214
+        }
+    ]
+}

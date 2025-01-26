@@ -1,6 +1,6 @@
 import { MbMonitorChain, MbMonitorResponse } from "@src/door/monitor/mb/mb.monitor";
 import { Monitor, MonitorChain } from "../../monitor";
-
+import {Response} from 'playwright'
 
 
 export class MbSkuInfoMonitor extends MbMonitorResponse<{}>{
@@ -52,7 +52,31 @@ export class MbSkuPublishDraffMonitor extends MbMonitorResponse<{}>{
         return ["draftOp/add.json", "draftOp/update.json"]
     }
     getKey(): string {
-        throw new Error("Method not implemented.");
+        return "sku_publish"
+    }
+
+    public needHeaderData(): boolean {
+        return true;
+    }
+
+    public needRequestBody(): boolean {
+        return true;
+    }
+
+    public needUrl(): boolean {
+        return true;
+    }
+
+    public async getResponseData(response: Response): Promise<any>{
+        const contentType = response.headers()['content-type'];
+        if(contentType.includes('application/json')){
+            const result =  await response.json();
+            return result;
+        }
+        if (contentType && contentType.includes('text/html')) {
+            return await response.text();
+        }
+        return await response.body();
     }
 
 }

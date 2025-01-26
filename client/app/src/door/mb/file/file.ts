@@ -1,9 +1,8 @@
-import { FileData, getFileKey, MbFileUploadMonitor } from "@src/door/monitor/mb/file/file";
+import { getFileKey, MbFileUploadMonitor } from "@src/door/monitor/mb/file/file";
 import { MbEngine } from "../mb.engine";
-import { getStringHash } from "@utils/crypto.util";
 import { getDoorFileRecordByKey } from "@api/door/file.api";
-import { MbSkuFileUploadMonitor } from "@src/door/monitor/mb/sku/mb.sku.file.upload.monitor";
 import { getSkuFiles } from "@api/sku/sku.file";
+
 
 const code = `
 
@@ -90,7 +89,7 @@ return async function doHandler(page, params, preResult){
 
 `
 
-async function getUnUploadFile(source : string, resourceId : number, paths: string[]){
+export async function getUnUploadFile(source : string, resourceId : number, paths: string[]){
     const unUploadFiles = [];
     for(let path of paths){
         const fileKey = getFileKey(path);
@@ -104,10 +103,10 @@ async function getUnUploadFile(source : string, resourceId : number, paths: stri
 }
 
 
-export async function uploadFile(resourceId : number, skuId : number, paths: string[], monitor : MbFileUploadMonitor){
+export async function uploadFile(resourceId : number, skuItemId : string, paths: string[], monitor : MbFileUploadMonitor){
     const unUploadFiles = await getUnUploadFile(monitor.getType(), resourceId, paths);
     if(unUploadFiles.length === 0){
-        const skuFiles = await getSkuFiles(skuId);
+        const skuFiles = await getSkuFiles(skuItemId);
         return skuFiles;
     }
     const mbEngine = new MbEngine(resourceId, false);
@@ -125,12 +124,14 @@ export async function uploadFile(resourceId : number, skuId : number, paths: str
         for(let path of unUploadFiles){
             await monitor.waitForAction();
         }
-        const skuFiles = await getSkuFiles(skuId);
+        const skuFiles = await getSkuFiles(skuItemId);
         return skuFiles;
     }finally{
         if(page){
-            await page.waitForTimeout(1500);
+            console.log("page upload finished")
+            await page.waitForTimeout(5000);
             // await mbEngine.closePage();
         }
     }
 }
+
