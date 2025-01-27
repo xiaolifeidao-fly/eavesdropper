@@ -33,3 +33,5 @@ webview/.next
 client/resource/**/*
 
 nohup.outout
+
+static/**/*

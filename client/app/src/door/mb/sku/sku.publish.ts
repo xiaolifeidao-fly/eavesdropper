@@ -7,7 +7,7 @@ import axios from "axios";
 import { DoorSkuDTO, SalesAttr, SkuItem } from "@model/door/sku";
 import { SkuFile, SkuFileDetail } from "@model/sku/sku.file";
 import { getSkuDraft, activeSkuDraft, expireSkuDraft } from "@api/sku/sku.draft";
-
+import log from "electron-log";
 
 function handlerPeriod(dataSource: { [key: string]: any }[], catValue: string){
     const first = dataSource[0];
@@ -92,13 +92,13 @@ async function confirmProtocol(page: Page) {
             return true;
         });
         if(!protocolButtonElement){
-            console.log("protocolButton not found");
+            log.info("protocolButton not found");
             return;
         }
         const protocolButton = await page.locator(".next-dialog-btn");
         await protocolButton.first().click();
     } catch (e) {
-        console.log("confirmProtocol error", e);
+        log.error("confirmProtocol error", e);
     }
 }
 
@@ -110,26 +110,26 @@ async function fillDetailImage(page: Page, imageFileList: SkuFileDetail[]) {
     const detailImages = imageFileList.filter(file => file.fileName?.includes("detail"));
     const detailImageButton = page.locator(".buttonText--EU7NI").first();
     if (!detailImageButton) {
-        console.log("detailImageButton not found");
+        log.info("detailImageButton not found");
         return false;
     }
     await detailImageButton.click();
     await page.waitForTimeout(2000);
     const imageFrame = await getFrame(page, "app/crs-qn/sucai-selector-ng/index");
     if (!imageFrame) {
-        console.log("imageFrame not found");
+        log.info("imageFrame not found");
         return false;
     }
     const imageSearchInput = await imageFrame.locator(".next-search-input input").first();
     if (!imageSearchInput) {
-        console.log("imageSearchInput not found");
+        log.info("imageSearchInput not found");
         return false;
     }
-    console.log("imageSearchInput ", await imageSearchInput.getAttribute("role"))
+    log.info("imageSearchInput ", await imageSearchInput.getAttribute("role"))
     const detailImage = detailImages[0];
     const fileName = detailImage.fileName;
     if (!fileName) {
-        console.log("fileName not found");
+        log.info("fileName not found");
         return false;
     }
     const requestPromise = page.waitForResponse(response =>
@@ -138,25 +138,25 @@ async function fillDetailImage(page: Page, imageFileList: SkuFileDetail[]) {
     );
 
     const imageName = fileName.substring(0, fileName.lastIndexOf("_"));
-    console.log("imageName ", imageName);
+    log.info("imageName ", imageName);
     await imageSearchInput.fill(imageName);
     const imageSearchButton = await imageFrame.locator(".next-input-inner.next-after i").first();
     if (!imageSearchButton) {
-        console.log("imageSearchButton not found");
+        log.info("imageSearchButton not found");
         return false;
     }
     await imageSearchButton.click();
     const result = await requestPromise.catch(() => null);
     if(!result){
-        console.log("search result error")
+        log.info("search result error")
         return false;
     }
     await page.waitForTimeout(1000);
-    console.log("search click success")
+    log.info("search click success")
     detailImages.sort((a, b) => (a.sortId ?? 0) - (b.sortId ?? 0));
     const imageCheckboxs = await imageFrame.locator(".PicList_pic_background__pGTdV").all();
     if (!imageCheckboxs) {
-        console.log("imageCheckboxs not found");
+        log.info("imageCheckboxs not found");
         return false;
     }
     for (const detailImage of detailImages) {
@@ -172,7 +172,7 @@ async function fillDetailImage(page: Page, imageFileList: SkuFileDetail[]) {
     }
     const imageConfirmButton = await imageFrame.locator(".Footer_selectOk__nEl3N").first();
     if (!imageConfirmButton) {
-        console.log("imageConfirmButton not found");
+        log.info("imageConfirmButton not found");
         return false;
     }
     await imageConfirmButton.click();
@@ -229,10 +229,10 @@ export async function publishFromTb(imageFileList: SkuFileDetail[], skuItem: Doo
         }
         return publishResult;
     } catch (error) {
-        console.error(error);
+        log.error(error);
         return false;
     } finally {
-        // await mbEngine.closePage();
+        await mbEngine.closePage();
     }
 }
 
@@ -292,27 +292,22 @@ async function activeDraft(resourceId: number, skuItemId: string, skuDraftId: st
 async function publishSkuByDoor(imageFileList: SkuFileDetail[], resourceId: number, skuDraftId: string | undefined, skuItem: DoorSkuDTO, result: DoorEntity<any>, page: Page) {
     const newSkuDraftId = getSkuDraftIdFromData(skuDraftId, result);
     if (!newSkuDraftId) {
-        console.log("newSkuDraftId not found ", newSkuDraftId);
+        log.info("newSkuDraftId not found ", newSkuDraftId);
         return false;
     }
     await activeDraft(resourceId, skuItem.baseInfo.itemId, newSkuDraftId);
     const commonData = await getCommonData(page);
     if (!commonData) {
-        console.log("commonData not found ", commonData);
-    }
-    const csrfToken = commonData.csrfToken;
-    if (!csrfToken) {
-        console.log("csrfToken not found ", csrfToken);
-        return false;
+        log.info("commonData not found ", commonData);
     }
     const startTraceId = getStartTraceId(commonData);
     if (!startTraceId) {
-        console.log("startTraceId not found ", startTraceId);
+        log.info("startTraceId not found ", startTraceId);
         return false;
     }
     const catId = getCatIdFromUrl(result);
     if (!catId) {
-        console.log("catId not found ", catId);
+        log.info("catId not found ", catId);
         return false;
     }
     const draftData = JSON.parse(result.requestBody.jsonBody);
@@ -324,18 +319,18 @@ async function publishSkuByDoor(imageFileList: SkuFileDetail[], resourceId: numb
     await fillSellInfo(commonData, skuItem, draftData);
     const updateResult = await updateDraftData(catId, newSkuDraftId, result, startTraceId, draftData);
     if (!updateResult) {
-        console.log("updateDraftData failed ", updateResult);
+        log.info("updateDraftData failed ", updateResult);
         return false;
     }
     const publishResult = await clickPublishButton(page, newSkuDraftId);
     if (!publishResult) {
-        console.log("clickPublishButton failed ", publishResult);
+        log.info("clickPublishButton failed ", publishResult);
         return false;
     }
-    console.log("publishResult success ");
+    log.info("publishResult success ");
     const deleteResult = await deleteDraft(result, catId, newSkuDraftId, startTraceId);
     if (!deleteResult) {
-        console.log("deleteDraft failed ", deleteResult);
+        log.info("deleteDraft failed ", deleteResult);
         return false;
     }
     return true;
@@ -359,11 +354,11 @@ async function deleteDraft(result: DoorEntity<any>, catId: string, draftId: stri
         headers: requestHeader
     })
     if (!res.data || (typeof (res.data) == 'string' && res.data == '')) {
-        console.log("delete draft res is empty", res.data);
+        log.info("delete draft res is empty", res.data);
         return false;
     }
     if (!res.data.success) {
-        console.log("delete draft res is not success ", res.data);
+        log.info("delete draft res is not success ", res.data);
         return false;
     }
     return true;
@@ -582,7 +577,7 @@ function fixSaleProp(commonData: { data: any }, skuItem: DoorSkuDTO) {
         if (!salesAttr) {
             continue;
         }
-        console.log("fixSaleProp key is ", key);
+        log.info("fixSaleProp key is ", key);
         const salesAttrValues = salesAttr.values;
         if (!(key in salePropSubItems)) {
             continue;
@@ -615,7 +610,7 @@ function choseSubItem(subItems: { [key: string]: any }[], salesAttr: SalesAttr) 
     for (const subItem of subItems) {
         for (const key in subItem.dataSource) {
             const subItemValues = subItem[key];
-            console.log("subItemValues ", subItemValues);
+            log.info("subItemValues ", subItemValues);
             if (!subItemValues || !Array.isArray(subItemValues)) {
                 continue;
             }
@@ -780,14 +775,14 @@ async function updateDraftData(catId: string, draftId: string, result: DoorEntit
         headers: requestHeader
     })
     if (!res.data || (typeof (res.data) == 'string' && res.data == '')) {
-        console.log("res is empty", res.data);
+        log.info("res is empty", res.data);
         return false;
     }
     if (!res.data.success) {
-        console.log("res is not success ", res.data);
+        log.info("res is not success ", res.data);
         return false;
     }
-    // console.log("draftData is ", JSON.stringify(draftData));
+    // log.info("draftData is ", JSON.stringify(draftData));
     return true;
 }
 
@@ -892,7 +887,7 @@ async function fillMultiDiscountPromotion(page: Page) {
         return true;
     });
     if(!multiDiscountPromotionElement){
-        console.log("multiDiscountPromotionElement not found");
+        log.info("multiDiscountPromotionElement not found");
         return;
     }
     const multiDiscountPromotion = page.locator(".sell-component-multi-discount-promotion .next-checkbox-input");
@@ -912,12 +907,12 @@ async function clickPublishButton(page: Page, draftId: string) {
     try{
         await fillMultiDiscountPromotion(page);
     }catch(e){
-        console.log("multiDiscountPromotion error", e);
+        log.info("multiDiscountPromotion error", e);
     }
     try {
         await confirmProtocol(page);
     } catch (e) {
-        console.log("confirmProtocol error", e);
+        log.info("confirmProtocol error", e);
     }
     await page.waitForTimeout(1000);
     const requestPromise = page.waitForResponse(response =>
@@ -932,14 +927,14 @@ async function clickPublishButton(page: Page, draftId: string) {
     if(response){
         try{
             const responseData = await response.json();
-            console.log("responseData is ", responseData);
+            log.info("responseData is ", responseData);
             const type = responseData.models?.globalMessage?.type;
             if(!type){
-                console.log("publish is error by ", responseData);
+                log.info("publish is error by ", responseData);
                 return false;
             }
             if(type == "error"){
-                console.log("publish is error by ", responseData);
+                log.info("publish is error by ", responseData);
                 return false;
             }
             if(type == "success"){
@@ -947,7 +942,7 @@ async function clickPublishButton(page: Page, draftId: string) {
             }
             return false;
         }catch(e){
-            console.log("response json error", e);
+            log.info("response json error", e);
             return false;
         }
     }
@@ -967,7 +962,6 @@ async function getCommonData(page: Page) {
             csrfToken: window.csrfToken.tokenValue
         };
     });
-    console.log("commonData.userAgent is ", commonData.userAgent);
     return commonData;
 }
 

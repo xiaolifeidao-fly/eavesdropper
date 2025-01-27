@@ -21,6 +21,7 @@ func LoadShopRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).DELETE("/:id", DeleteShop)
 		r.Use(middleware.Authorization()).GET("/page", PageShop)
 		r.Use(middleware.Authorization()).POST("/:id/sync", SyncShop)
+		r.Use(middleware.Authorization()).GET("/list", GetShopInfos)
 	}
 }
 
@@ -75,6 +76,17 @@ func PageShop(ctx *gin.Context) {
 
 	pageResp := page.BuildPage(pageDTO.PageInfo, pageData)
 	controller.OK(ctx, pageResp)
+}
+
+func GetShopInfos(ctx *gin.Context) {
+	userID := common.GetLoginUserID()
+	shopInfos, err := services.GetShopInfos(userID)
+	if err != nil {
+		logger.Errorf("GetShopInfos failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, shopInfos)
 }
 
 // SyncShop

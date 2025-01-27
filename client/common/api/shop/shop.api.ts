@@ -1,5 +1,5 @@
 import { plainToClass } from 'class-transformer'
-import { instance } from '@utils/axios'
+import { getDataList, instance } from '@utils/axios'
 
 import { BasePageResp } from '@model/base/base'
 import { ShopPageReq, ShopPageResp, SyncShopReq } from '@model/shop/shop'
@@ -20,4 +20,8 @@ export const getShopPage = async (req: ShopPageReq) => {
 export const syncShop = async (id: number, req: SyncShopReq) => {
     const result = await instance.post(`/shop/${id}/sync`, req)
     return plainToClass(String, result)
+}
+
+export const getShopList = async () => {
+    return getDataList(ShopPageResp, "/shop/list")
 }

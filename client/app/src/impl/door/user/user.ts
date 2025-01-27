@@ -5,6 +5,7 @@ import { MbUserApi } from "@eleapi/door/user/user";
 
 import { MbEngine } from "@src/door/mb/mb.engine";
 import { MbUserInfoMonitor } from "@src/door/monitor/mb/user/md.user.monitor";
+import log from "electron-log";
 
 
 export class MbUserApiImpl extends MbUserApi {
@@ -19,7 +20,9 @@ export class MbUserApiImpl extends MbUserApi {
             if(!page){ 
                 return;
             }
-            return await engine.openWaitMonitor(page, "https://www.taobao.com/", monitor);
+            const result = await engine.openWaitMonitor(page, "https://www.taobao.com/", monitor);
+            log.info("user result is ", result);
+            return result;
         }finally{
             await engine.closePage();
         }  

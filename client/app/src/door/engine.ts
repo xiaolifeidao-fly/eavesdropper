@@ -6,11 +6,8 @@ import { app } from 'electron';
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from './monitor/monitor';
 import { DoorEntity } from './entity';
 import log from 'electron-log';
-import { ActionChain, ActionResult } from './element/element';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
 import { DoorRecord } from '@model/door/door';
-import { getItem } from '@utils/store/web';
-
 const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
@@ -33,7 +30,7 @@ export abstract class DoorEngine<T = any> {
 
     page : Page | undefined;
 
-    constructor(resourceId : number, headless: boolean = true, chromePath: string = ""){
+    constructor(resourceId : number, headless: boolean = false, chromePath: string = ""){
         this.resourceId = resourceId;
         if(chromePath){
             this.chromePath = chromePath;
@@ -77,6 +74,17 @@ export abstract class DoorEngine<T = any> {
     public async closePage(){
         if(this.page){
             await this.page.close();
+        }
+    }
+
+    public async release(){
+        const browserKey = this.getBrowserKey();
+        if(browserMap.has(browserKey)){
+            const browser = browserMap.get(browserKey);
+            if(browser){
+                await browser.close();
+            }
+            browserMap.delete(browserKey);
         }
     }
 
@@ -317,13 +325,21 @@ export abstract class DoorEngine<T = any> {
 
     async getSessionPath(){
         let sessionPath = get(this.getKey())
-        return sessionPath;
+        if(fs.existsSync(sessionPath)){
+            return sessionPath;
+        }
+        return undefined;
     }
 
     getSessionDir(){
         const sessionFileName = Date.now().toString() + ".json";
         const name = this.constructor.name;
-        return path.join(path.dirname(app.getAppPath()),'resource','session',this.getNamespace(), this.resourceId.toString(), sessionFileName);
+        const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource','session',this.getNamespace(), this.resourceId.toString());
+        if(!fs.existsSync(sessionDirPath)){
+            fs.mkdirSync(sessionDirPath, { recursive: true });
+        }
+        const sessionDir = path.join(sessionDirPath, sessionFileName);
+        return sessionDir;
     }
 
     abstract getNamespace(): string;
@@ -334,7 +350,6 @@ export abstract class DoorEngine<T = any> {
         }
         const sessionDir = this.getSessionDir();
         set(this.getKey(), sessionDir);
-        console.log("saveContextState ", sessionDir);
         await this.context.storageState({ path: sessionDir});
       }
 
@@ -346,49 +361,72 @@ export abstract class DoorEngine<T = any> {
         if(contextMap.has(key)){
             return contextMap.get(key);
         }
-        const sessionPath = await this.getSessionPath();
-        let context;
-        if (fs.existsSync(sessionPath)) {
-            context = await this.browser?.newContext({
-                storageState: sessionPath, // 加载上次保存的状态
-                bypassCSP: true,
-                // userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 
-                extraHTTPHeaders: {
-                    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-                    'sec-ch-ua-mobile': '?0', // 设置为移动设备
-                    'sec-ch-ua-platform': '"macOS"',
-                },
-                locale: 'zh-CN', 
-            });
-        } else {
-            context = await this.browser?.newContext({
-                bypassCSP: true,
-                // userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36', 
-                extraHTTPHeaders: {
-                    'sec-ch-ua': '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
-                    'sec-ch-ua-mobile': '?0', // 设置为移动设备
-                    'sec-ch-ua-platform': '"macOS"',
-                },
-                locale: 'zh-CN', 
-            }); // 创建一个新的上下文
+        // let context;
+        const storeBrowserPath = await this.getRealChromePath();
+        const platform = await getPlatform();
+        const contextConfig : any = {
+            bypassCSP : true,
+            locale: 'zh-CN'
         }
+        log.info("storeBrowserPath is ", storeBrowserPath);
+        if(storeBrowserPath){
+            contextConfig.executablePath = storeBrowserPath;
+        }
+        log.info("platform is ", JSON.stringify(platform));
+        if(platform){
+            contextConfig.userAgent = platform.userAgent;
+            contextConfig.extraHTTPHeaders = {
+                'sec-ch-ua': getSecChUa(platform),
+                'sec-ch-ua-mobile': '?0', // 设置为移动设备
+                'sec-ch-ua-platform': `"${platform.userAgentData.platform}"`,
+            };
+        }
+        const sessionPath = await this.getSessionPath();
+        if(sessionPath){
+            contextConfig.storageState = sessionPath;
+        }
+        const context = await this.browser?.newContext(contextConfig);
         contextMap.set(key, context);
         return context;
     }
 
-    async createBrowser(){
+    async getRealChromePath(){
+        // if(this.chromePath && this.chromePath != ""){
+        //     return this.chromePath;
+        // }
+        // return get("browserPath");
+        const platform = process.platform;
+        // 判断是否是打包环境
+        if(platform != "darwin"){
+            const isPackaged = app.isPackaged;
+            if (isPackaged) {
+                // 打包后的路径 (在 resources/app.asar 或 resources/app 目录下)
+                const chromeBinPath = path.join(path.dirname(app.getAppPath()),'Chrome-bin','chrome.exe');
+                if(fs.existsSync(chromeBinPath)){
+                    return chromeBinPath;
+                }
+                // 如果不在 asar 中，则使用：
+                // return path.join(process.resourcesPath, 'app', 'Chrome-bin');
+            }
+        }
+        return undefined;
+    }
+
+    getBrowserKey(){
         let key = this.headless.toString();
         if (this.chromePath) {
             key += "_" + this.chromePath;
         }
+        return key;
+    }
+
+    async createBrowser(){
+        let key = this.getBrowserKey();
+        log.info("browser key is ", key);
         if(browserMap.has(key)){
             return browserMap.get(key);
         }
-        let storeBrowserPath = await get("browserPath");
-        if(!storeBrowserPath){
-            storeBrowserPath = this.chromePath;
-        }
-        console.log("storeBrowserPath", storeBrowserPath);
+        let storeBrowserPath = await this.getRealChromePath();
         const browser = await chromium.launch({
             headless: this.headless,
             executablePath: storeBrowserPath,
@@ -405,3 +443,33 @@ export abstract class DoorEngine<T = any> {
 
 }
 
+function getSecChUa(platform : any){
+    const brands = platform.userAgentData.brands;
+    const result = [];
+    for(const brand of brands){
+        result.push(`"${brand.brand}";v="${brand.version}"`);
+    }
+    return result.join(", ");
+}
+
+export async function setPlatform(page : Page){
+    const platform = await page.evaluate(() => {
+        // @ts-ignore
+        const navigatorObj = navigator;
+        const result : any = {};
+        for(let key in navigatorObj){
+            result[key] = navigatorObj[key];
+        }
+        return result;
+    });
+    set("browserPlatform", JSON.stringify(platform));
+    return platform;
+}
+
+export async function getPlatform(){
+    const browserPlatform = await get("browserPlatform");
+    if(browserPlatform){
+        return JSON.parse(browserPlatform);
+    }
+    return undefined;
+}

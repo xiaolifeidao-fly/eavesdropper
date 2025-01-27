@@ -179,14 +179,14 @@ export default function Home() {
       <div className={styles.content}>
         <div className={styles.innerContent}>
           <h1>欢迎登录 TaoTao 中后台管理系统</h1>
-          <div>
+          {/* <div>
           <Input value={browserPath} placeholder="请输入浏览器路径" onChange={(e) => setBrowserPath(e.target.value)} ></Input>
           <Button onClick={() => {
               const storeApi = new StoreApi();
               storeApi.setItem("browserPath", browserPath);
               message.success("保存成功");
             }}>保存</Button>
-          </div>
+          </div> */}
           <div>
 
           <Segmented<string>

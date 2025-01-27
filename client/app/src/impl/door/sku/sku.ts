@@ -28,7 +28,7 @@ import { FileInfo } from "@src/door/monitor/mb/file/file";
 import { publishFromTb } from "@src/door/mb/sku/sku.publish";
 import { uploadByFileApi } from "@src/door/mb/file/file.api";
 import { DoorEntity } from "@src/door/entity";
-
+import { app } from "electron";
 export class MbSkuApiImpl extends MbSkuApi {
 
 
@@ -42,8 +42,11 @@ export class MbSkuApiImpl extends MbSkuApi {
                 return;
             }
             return await engine.openWaitMonitorChain(page, url, monitorChain);
+        }catch(error){
+            log.error("findMbSkuInfo error", error);
+            return undefined;
         }finally{
-            await engine.closePage();
+            // await engine.closePage();
         }  
     }
 
@@ -54,7 +57,7 @@ export class MbSkuApiImpl extends MbSkuApi {
         while(!requestSuccess && requestCount <=1 ){
             skuResult = await this.findMbSkuInfo(publishResourceId, skuUrl);
             if(!skuResult || !skuResult.code){
-                console.log("findMbSkuInfo error", skuResult);
+                log.info("findMbSkuInfo error", skuResult);
                 requestCount++;
                 continue;
             }
@@ -92,41 +95,41 @@ export class MbSkuApiImpl extends MbSkuApi {
         try {
             const newMainImages = [];
             const newDetailImages = [];
-            if (!fs.existsSync(path.join(__dirname, "images", itemId.toString()))) {
-                fs.mkdirSync(path.join(__dirname, "images", itemId.toString()), { recursive: true });
+            const imagePath = path.join(path.dirname(app.getAppPath()),'images',itemId.toString());
+            log.info("imagePath is ", imagePath);
+            if(!fs.existsSync(imagePath)){
+                fs.mkdirSync(imagePath, { recursive: true });
             }
             const headers = {
                 "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
             }
             for(let index = 0; index < mainImages.length; index++){
                 const mainImage = mainImages[index];
-                const bgPath = await this.downloadImages(mainImage, headers, "main", itemId, index, true);
+                const bgPath = await this.downloadImages(imagePath, mainImage, headers, "main", itemId, index, true);
                 if(bgPath){
                     newMainImages.push(bgPath);
                 }
             }
             for(let index = 0; index < detailImages.length; index++){
                 const detailImage = detailImages[index];
-                const bgPath = await this.downloadImages(detailImage, headers, "detail", itemId, index, false);
+                const bgPath = await this.downloadImages(imagePath, detailImage, headers, "detail", itemId, index, false);
                 if(bgPath){
                     newDetailImages.push(bgPath);
                 }
             }
             return { newMainImages, newDetailImages };
         } catch (error) {
-            console.error('Error downloading images:', error);
+            log.error('Error downloading images:', error);
             return { newMainImages: [], newDetailImages: [] };
         }
     }
 
-    async downloadImages(url : string, headers : any, type : string, itemId : string, index : number, needResize : boolean = false){
+    async downloadImages(imageFilePath : string, url : string, headers : any, type : string, itemId : string, index : number, needResize : boolean = false){
         try {
-            const imagePath = path.join(__dirname, "images", itemId, `${type}_${itemId}_${index}.jpg`);
+            const imagePath = path.join(imageFilePath, `${type}_${itemId}_${index}.jpg`);
             if (fs.existsSync(imagePath)) {
                 return imagePath;
             }
-            fs.mkdirSync(path.join(__dirname, "images", itemId.toString()), { recursive: true });
-
             const bgResponse = await axios.get(url, { responseType: 'arraybuffer', headers:headers});
             const imageBuffer = Buffer.from(bgResponse.data, 'binary');
             // if(needResize){
@@ -138,7 +141,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             fs.writeFileSync(imagePath, imageBuffer);
             return imagePath;
         } catch (error) {
-            console.error('Error downloading images:', url);
+            log.error('Error downloading images:', url);
             return undefined;
         }
     }
@@ -171,14 +174,6 @@ export class MbSkuApiImpl extends MbSkuApi {
         skuPublishResult.url = skuUrl;
 
         try {
-            const engine = new MbEngine(publishResourceId);
-            const page = await engine.init();
-            if(!page){ 
-                skuPublishResult.status = SkuStatus.ERROR;
-                skuPublishResult.remark = "页面初始化失败";
-                return skuPublishResult;
-            }
-
             //获取商品信息
             const skuResult = await this.getSkuInfo(publishResourceId, skuUrl);
             if(!skuResult || !skuResult.code){
@@ -321,4 +316,5 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
 }
+
 

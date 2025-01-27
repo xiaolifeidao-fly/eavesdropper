@@ -19,3 +19,7 @@ func (r *shopRepository) FindByUserIDAndResourceID(userID uint64, resourceID uin
 	}
 	return shop, nil
 }
+
+func (r *shopRepository) FindByUserID(userID uint64) ([]*models.Shop, error) {
+	return r.GetList("select * from shop where user_id = ? and deleted_at is null", userID)
+}

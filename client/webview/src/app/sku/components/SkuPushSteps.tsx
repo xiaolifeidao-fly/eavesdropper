@@ -12,6 +12,7 @@ import type { PublishResult } from './SkuPushConfirm';
 import { StoreApi } from '@eleapi/store/store';
 import { getMainResourceList } from '@api/resource/resource.api';
 import { LabelValue } from '@model/base/base';
+import { getShopList } from '@api/shop/shop.api';
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -46,12 +47,12 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   }, []);
 
   const initSourceAccount = async() => {
-    const sourceResources = await getMainResourceList();
+    const shopList = await getShopList();
     const sourceList : {}[] = [];
-    for(const sourceResource of sourceResources){
+    for(const shop of shopList){
       sourceList.push({
-        value : sourceResource.id,
-        label : sourceResource.account
+        value : shop.resourceId,
+        label : shop.name
       })
     }
     setSourceList(sourceList);

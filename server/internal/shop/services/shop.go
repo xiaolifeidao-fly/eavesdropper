@@ -36,6 +36,18 @@ func DeleteShop(id uint64) error {
 	return nil
 }
 
+func GetShopInfos(userID uint64) ([]*dto.ShopDTO, error) {
+	var err error
+	shopRepository := repositories.ShopRepository
+
+	shops, err := shopRepository.FindByUserID(userID)
+	if err != nil {
+		logger.Errorf("GetShopInfos failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+	return database.ToDTOs[dto.ShopDTO](shops), nil
+}
+
 func PageShop(param *dto.ShopPageParamDTO) (*page.Page[dto.ShopPageDTO], error) {
 	var err error
 	shopRepository := repositories.ShopRepository

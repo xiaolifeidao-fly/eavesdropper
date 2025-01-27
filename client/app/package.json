@@ -18,7 +18,13 @@
       "node_modules/**/*",
       "package.json"
     ],
-    "extraResources": [],
+    "extraResources": [
+      {
+        "from": "static/Chrome-bin",
+        "to": "Chrome-bin",
+        "filter": ["**/*"]
+      }
+    ],
     "asar": true,
     "directories": {
       "output": "package"
