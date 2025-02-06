@@ -15,7 +15,8 @@ import {
   SkuPublishStatitic,
   SkuTaskStatus,
   AddSkuTaskItemReq,
-  SkuTaskItemStatus
+  SkuTaskItemStatus,
+  SkuPublishConfig
 } from '@model/sku/skuTask'
 import { plainToClass } from 'class-transformer'
 import { parseSku } from "@api/door/door.api";
@@ -202,16 +203,20 @@ export class MbSkuApiImpl extends MbSkuApi {
             skuPublishResult.sourceSkuId = skuItem.baseInfo.itemId;
             skuPublishResult.publishSkuId = skuItem.baseInfo.itemId;
             skuPublishResult.publishTime = formatDate(new Date());
+            const imageFileList = await this.uploadSkuImages(publishResourceId, skuItem, 1 ); // skuId TODO
+            if(imageFileList && imageFileList.length > 0){
+                const result = await publishFromTb(imageFileList, skuItem, publishResourceId, skuItem.baseInfo.itemId);
+                if(!result){
+                    skuPublishResult.status = SkuStatus.ERROR;
+                    skuPublishResult.remark = "发布商品失败";
+                    return skuPublishResult;
+                }
+            }
+            skuPublishResult.status = SkuStatus.SUCCESS;
             const addSkuReq = plainToClass(AddSkuReq, skuPublishResult);
             const skuId = await addSku(addSkuReq) as number;
             skuPublishResult.id = skuId;
-            const imageFileList = await this.uploadSkuImages(publishResourceId, skuItem,skuId );
-            if(imageFileList && imageFileList.length > 0){
-                const result = await publishFromTb(imageFileList, skuItem, publishResourceId, skuItem.baseInfo.itemId);
-                if(result){
-                    skuPublishResult.status = SkuStatus.SUCCESS;
-                }
-            }
+
             // 发布商品ID
             return skuPublishResult;
         } catch (error: any) {
@@ -223,10 +228,11 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async batchPublishSkus(publishResourceId : number, skuUrls : string[]) : Promise<SkuTask|undefined>{
+    async batchPublishSkus(publishResourceId : number, publishConfig: SkuPublishConfig, skuUrls : string[]) : Promise<SkuTask|undefined>{
         // 1. 创建task记录
         const count = skuUrls.length;
-        const req = new AddSkuTaskReq(count, publishResourceId);
+        const priceRate = publishConfig.priceRate;
+        const req = new AddSkuTaskReq(count, publishResourceId, priceRate);
         const taskId = await addSkuTask(req) as number;
 
         const skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId);

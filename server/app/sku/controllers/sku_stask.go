@@ -6,6 +6,7 @@ import (
 	"server/common/converter"
 	"server/common/middleware/logger"
 	"server/common/server/controller"
+	"server/common/server/middleware"
 	"server/internal/sku/services"
 	"server/internal/sku/services/dto"
 
@@ -16,8 +17,8 @@ import (
 func LoadSkuTaskRouter(router *gin.RouterGroup) {
 	r := router.Group("/sku/task")
 	{
-		r.Use().POST("", AddSkuTask)
-		r.Use().PUT("/:id", UpdateSkuTask)
+		r.Use(middleware.Authorization()).POST("", AddSkuTask)
+		r.Use(middleware.Authorization()).PUT("/:id", UpdateSkuTask)
 	}
 }
 

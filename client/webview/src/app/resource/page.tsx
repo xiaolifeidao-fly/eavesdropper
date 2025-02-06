@@ -138,20 +138,20 @@ export default function ResourceManage() {
       }
 
       // 获取用户信息
-      // const userApi = new MbUserApi();
-      // const userInfo = await userApi.getUserInfo(resourceId);
-      // if (userInfo.code === false) {
-      //   message.error('绑定失败');
-      //   return;
-      // }
+      const userApi = new MbUserApi();
+      const userInfo = await userApi.getUserInfo(resourceId);
+      if (userInfo.code === false) {
+        message.error('绑定失败');
+        return;
+      }
 
-      // const userInfoData = userInfo.data;
-      // const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
-      // const bindResult = await bindResourceApi(resourceId, bindResourceReq);
-      // if (!bindResult) {
-      //   message.error('绑定失败');
-      //   return;
-      // }
+      const userInfoData = userInfo.data;
+      const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
+      const bindResult = await bindResourceApi(resourceId, bindResourceReq);
+      if (!bindResult) {
+        message.error('绑定失败');
+        return;
+      }
       message.success('绑定成功');
     } finally {
       setLoading(false);

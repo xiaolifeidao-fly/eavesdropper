@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"server/app/sku/vo"
 	"server/common"
 	"server/common/base/page"
@@ -42,7 +41,6 @@ func AddSku(ctx *gin.Context) {
 	skuDTO.UserID = userID
 	skuDTO.CreatedBy = userID
 	skuDTO.UpdatedBy = userID
-	fmt.Println("add sku userID is ", userID)
 	var skuID uint64
 	if skuID, err = services.CreateSku(skuDTO); err != nil {
 		logger.Errorf("SaveSku failed, with error is %v", err)
@@ -106,8 +104,6 @@ func PageSku(ctx *gin.Context) {
 
 	pageDataMock := make([]*vo.SkuPageResp, 0)
 	for _, v := range pageData {
-		v.ResourceAccount = "a13576525293"
-		v.ShopName = "测试店铺"
 		pageDataMock = append(pageDataMock, &v)
 	}
 

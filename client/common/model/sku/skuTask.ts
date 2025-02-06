@@ -19,6 +19,14 @@ export class SkuTask {
   }
 }
 
+export class SkuPublishConfig {
+  constructor(
+    public priceRate: string,
+  ) {
+    this.priceRate = priceRate
+  }
+}
+
 export class SkuPublishStatitic {
   constructor(
     public taskId: number,
@@ -39,11 +47,13 @@ export class AddSkuTaskReq {
   constructor(
     public count: number,
     public publishResourceId: number,
+    public priceRate: string,
     public remark?: string
   ) {
     this.count = count
     this.publishResourceId = publishResourceId
     this.remark = remark
+    this.priceRate = priceRate
   }
 }
 

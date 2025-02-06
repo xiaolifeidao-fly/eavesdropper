@@ -69,7 +69,7 @@ function skuPageRespConvertDataType(resp: SkuPageResp[]): DataType[] {
     let status = 0;
     if (item.status === 'success') {
       status = 1;
-    } else if (item.status === 'error') {
+    } else {
       status = 0;
     }
 
@@ -103,7 +103,7 @@ export default function SkuManage() {
       width: 150,
       render: (_, record) => [
         <Button key="edit" type="link" style={{ paddingRight: 0 }} onClick={() => { window.open(record.url, '_blank'); }}>浏览源商品</Button>,
-        <Button key="copy" onClick={async () => { await navigator.clipboard.writeText(record.url || '') }}>
+        <Button key="copy" type="link"style={{ paddingLeft: 0 }}  onClick={async () => { await navigator.clipboard.writeText(record.url || '') }}>
           复制链接
         </Button>
         // <Button key="delete" type="link" danger style={{ paddingLeft: 0 }} onClick={async () => {

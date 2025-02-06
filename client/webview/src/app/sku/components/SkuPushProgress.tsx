@@ -6,7 +6,7 @@ import type { TableColumnsType } from 'antd';
 import type { PublishResult } from "./SkuPushConfirm";
 import { MbSkuApi } from '@eleapi/door/sku/mb.sku';
 import { SkuPublishResult } from "@model/sku/sku";
-import { SkuPublishStatitic } from "@model/sku/skuTask";
+import { SkuPublishStatitic, SkuPublishConfig } from "@model/sku/skuTask";
 import { SkuStatus } from "@model/sku/sku";
 import { SkuTask, SkuTaskStatus } from "@model/sku/skuTask";
 
@@ -30,6 +30,7 @@ export interface SkuUrl {
 
 interface SkuPushProgressProps {
   publishResourceId: number;
+  priceRate: string | null;
   urls: SkuUrl[];
   onPublishFinish: (finish: boolean) => void;
   setTaskId: (taskId: number) => void;
@@ -131,7 +132,13 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
       const urls = props.urls.map(item => item.url);
 
       // 监听任务完成之后批量发布商品
-      mbSkuApi.batchPublishSkus(props.publishResourceId, urls).then((task?: SkuTask) => {
+      let priceRate = props.priceRate;
+      if (!priceRate) {
+        priceRate = "1";
+      }
+
+      const publishConfig = new SkuPublishConfig(priceRate);
+      mbSkuApi.batchPublishSkus(props.publishResourceId, publishConfig, urls).then((task?: SkuTask) => {
         console.log("batchPublishSkus task: ", task);
         if (task) {
           props.setTaskId(task.id as number);

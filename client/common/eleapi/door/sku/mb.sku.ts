@@ -1,6 +1,6 @@
 import { SkuPublishResult } from "@model/sku/sku";
 import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
-import { SkuTask, SkuPublishStatitic } from "@model/sku/skuTask";
+import { SkuTask, SkuPublishStatitic, SkuPublishConfig } from "@model/sku/skuTask";
 
 export class MbSkuApi extends ElectronApi {
 
@@ -19,8 +19,8 @@ export class MbSkuApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async batchPublishSkus(publishResourceId : number, skuUrls : string[]) : Promise<SkuTask|undefined>{
-        return await this.invokeApi("batchPublishSkus", publishResourceId, skuUrls);
+    async batchPublishSkus(publishResourceId : number, publishConfig: SkuPublishConfig, skuUrls : string[]) : Promise<SkuTask|undefined>{
+        return await this.invokeApi("batchPublishSkus", publishResourceId, publishConfig, skuUrls);
     }
 
     @InvokeType(Protocols.TRRIGER)

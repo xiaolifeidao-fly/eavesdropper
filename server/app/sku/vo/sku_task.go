@@ -8,6 +8,7 @@ type AddSkuTaskReq struct {
 	PublishResourceID int    `json:"publishResourceId" binding:"required"`
 	Count             int    `json:"count" binding:"required"`
 	Remark            string `json:"remark"`
+	PriceRate         string `json:"priceRate"`
 }
 
 type UpdateSkuTaskReq struct {

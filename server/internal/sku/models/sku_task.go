@@ -9,6 +9,7 @@ type SkuTask struct {
 	Status            string `json:"status"`
 	Remark            string `json:"remark"`
 	Count             int    `json:"count"`
+	PriceRate         string `json:"priceRate"`
 }
 
 func (s *SkuTask) TableName() string {

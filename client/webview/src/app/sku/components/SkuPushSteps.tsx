@@ -1,7 +1,8 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { StepsForm } from '@ant-design/pro-components';
-import { Modal, message, Button, Form, Select } from 'antd';
+import type { InputNumberProps } from 'antd';
+import { Modal, message, Button, Form, Select, InputNumber } from 'antd';
 
 import ImportSku from './SkuLinkUpload';
 import type { LinkInfo } from './SkuLinkUpload';
@@ -31,6 +32,7 @@ interface PushSkuStepsFormProps {
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
 
   const [sourceAccount, setSourceAccount] = useState<number>(0);
+  const [priceRate, setpriceRate] = useState<string | null>("1");
   const [sourceList, setSourceList] = useState<{}[]>([]);
 
   const [pushSkuFlag, setPushSkuFlag] = useState(false);
@@ -46,13 +48,13 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
     initSourceAccount();
   }, []);
 
-  const initSourceAccount = async() => {
+  const initSourceAccount = async () => {
     const shopList = await getShopList();
-    const sourceList : {}[] = [];
-    for(const shop of shopList){
+    const sourceList: {}[] = [];
+    for (const shop of shopList) {
       sourceList.push({
-        value : shop.resourceId,
-        label : shop.name
+        value: shop.resourceId,
+        label: shop.name
       })
     }
     setSourceList(sourceList);
@@ -138,6 +140,16 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
             onChange={(value) => setSourceAccount(value)}
             style={{ width: '100%', margin: 0, padding: 0 }}
           />
+          <InputNumber<string>
+            style={{ width: '100%', marginTop: 10, padding: 0 }}
+            defaultValue="1"
+            placeholder="输入价格浮动率"
+            min="1"
+            max="100000"
+            step="0.01"
+            stringMode
+            onChange={(value) => setpriceRate(value)}
+          />
           <ImportSku uploadUrlList={uploadUrlList} setUploadUrlList={setUploadUrlList} />
         </StepsForm.StepForm>
 
@@ -154,6 +166,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
         >
           <SkuPushProgress
             publishResourceId={sourceAccount}
+            priceRate={priceRate}
             urls={urls}
             onPublishFinish={setOnPublishFinish}
             setTaskId={setTaskId}
