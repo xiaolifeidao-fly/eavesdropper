@@ -1,13 +1,14 @@
 "use client"
 import dynamic from "next/dynamic";
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { message } from 'antd';
 import { useRouter } from 'next/navigation';
 
 import { LoginReq, RegisterReq } from '@model/auth/auth';
 import { login as loginApi, register as registerApi, getLoginUserInfo as getLoginUserInfoApi, logout as logoutApi } from '@api/auth/auth.api'
 import { encryptRSA } from '@utils/auth'
 import { instance } from '@utils/axios'
-import { getItem, removeItem, setItem } from "../../../common/utils/store/web";
+import { getItem, removeItem, setItem } from "@utils/store/web";
 
 export type UserInfo = {
   id: number,
@@ -37,10 +38,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   useEffect(() => {
     // 加载登录用户信息
-    // if (!loginToken) {
-    //   router.push("/auth/login");
-    //   return;
-    // }
+    if (!loginToken) {
+      if (window.location.pathname !== "/auth/login") {
+        message.error("请先登录");
+      }
+      router.push("/auth/login");
+      return;
+    }
     fetchUserInfo();
   }, [loginToken, router])
 

@@ -45,11 +45,11 @@ const getNavList = () => {
             icon: <LayoutOutlined />,
             label: '商品管理'
         },
-        {
-            key: '/shop2',
-            icon: <LayoutOutlined />,
-            label: '店铺管理2'
-        },
+        // {
+        //     key: '/shop2',
+        //     icon: <LayoutOutlined />,
+        //     label: '店铺管理2'
+        // },
         
     ]
 }

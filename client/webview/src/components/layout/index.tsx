@@ -89,7 +89,7 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
             theme={curTheme ? "dark" : "light"}
             mode="inline"
             inlineCollapsed={collapsed}
-            defaultSelectedKeys={[curActive]}
+            defaultSelectedKeys={["dashboard"]}
             items={navList}
             defaultOpenKeys={defaultOpen}
             onSelect={handleSelect}
