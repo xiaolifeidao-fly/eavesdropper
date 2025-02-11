@@ -13,7 +13,7 @@ export class MbLoginApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.TRRIGER)
-    async onMonitorLoginResult(callback : (result : boolean) => void){
+    async onMonitorLoginResult(callback : (resourceId : number, result : boolean) => void){
         return await this.onMessage("onMonitorLoginResult", callback);
     }
 

@@ -46,6 +46,8 @@ export default function ResourceManage() {
 
   const [loading, setLoading] = useState(false);
   const [qrCodeLoading, setQrCodeLoading] = useState(false);
+  const [qrCodeTip, setQrCodeTip] = useState("加载中");
+
   useEffect(() => {
     getResourceSourceListApi().then((res) => {
       const valueEnum: Record<string, any> = {}
@@ -62,9 +64,28 @@ export default function ResourceManage() {
       setTagList(res)
     })
     const mbLoginApi = new MbLoginApi();
-    mbLoginApi.onMonitorLoginResult(async (result) => {
-      setOpen(false);
-      message.success('绑定成功');
+    mbLoginApi.onMonitorLoginResult(async (resourceId : number, result : boolean) => {
+      if(!result){
+        message.error('绑定失败');
+        return;
+      }
+      try{
+        setQrCodeLoading(true);
+        // 获取用户信息
+        const userApi = new MbUserApi();
+        const userInfo = await userApi.getUserInfo(resourceId);
+        setQrCodeTip("绑定用户信息中...")
+      if (userInfo.code) {
+        const userInfoData = userInfo.data;
+        const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
+          await bindResourceApi(resourceId, bindResourceReq);
+        }
+        message.success('绑定成功');
+        setOpen(false);
+        refreshPage(actionRef, true);
+      } finally {
+        setQrCodeLoading(false);
+      }
     });
   }, [])
 
@@ -154,15 +175,6 @@ export default function ResourceManage() {
       setQrCodeLoading(true);
       const qrCodeFilePath = qrCodeData['fileUrl'];
       setQrCodeFilePath(qrCodeFilePath);
-      // 获取用户信息
-      const userApi = new MbUserApi();
-      const userInfo = await userApi.getUserInfo(resourceId);
-      if (userInfo.code) {
-        const userInfoData = userInfo.data;
-        const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
-        await bindResourceApi(resourceId, bindResourceReq);
-      }
-      message.success('绑定成功');
     } finally {
       setLoading(false);
       setQrCodeLoading(false);
@@ -232,7 +244,7 @@ export default function ResourceManage() {
         />
       </Spin>
       <Modal open={open} onCancel={() => setOpen(false)} onOk={() => setOpen(false)}>
-        <Spin spinning={qrCodeLoading} tip="加载中">
+        <Spin spinning={qrCodeLoading} tip={qrCodeTip}>
           <div style={{textAlign: 'center'}}>请在1分钟内扫码完毕</div>
           <div style={{textAlign: 'center'}}>
             <img src={qrCodeFilePath} />

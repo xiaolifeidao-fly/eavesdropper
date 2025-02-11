@@ -64,7 +64,7 @@ export class MbLoginApiImpl extends MbLoginApi {
             const result = await engine.openNotWaitMonitor(page, url, monitor, {}, openLoginPageAction);
             const qrCodeData : { [key: string]: string; } | undefined = result.getData();
             setTimeout(async () => {
-                this.handlerLoginResult(engine, page, monitor, result, qrCodeData);
+                this.handlerLoginResult(engine, resourceId, monitor, result, qrCodeData);
             }, 1000);
             return result;
         }catch(error){
@@ -72,18 +72,20 @@ export class MbLoginApiImpl extends MbLoginApi {
         }
     }
 
-    async handlerLoginResult(engine: MbEngine<{}>,page: Page, monitor: MdLoginMonitor, result: DoorEntity<{}>, qrCodeData : { [key: string]: string; } | undefined){
+    async handlerLoginResult(engine: MbEngine<{}>,resourceId : number, monitor: MdLoginMonitor, result: DoorEntity<{}>, qrCodeData : { [key: string]: string; } | undefined){
         try{
             const monitorResult = await monitor.waitForAction();
             // fs 删除二维码图片
             if(!result.getCode() || !qrCodeData){
+                this.send("onMonitorLoginResult", resourceId, false); // 发送登录接过
                 return;
             }
             if(Object.keys(qrCodeData).length == 0){
+                this.send("onMonitorLoginResult", resourceId, false); // 发送登录接过
                 return;
             }
             log.info("login result is ", monitorResult);
-            this.send("onMonitorLoginResult", true); // 发送登录接过
+            this.send("onMonitorLoginResult", resourceId, true); // 发送登录接过
             const qrCodeFilePath = qrCodeData['qrCodeFilePath'];
             if(qrCodeFilePath && fs.existsSync(qrCodeFilePath as string)){
                 fs.unlinkSync(qrCodeFilePath as string);
