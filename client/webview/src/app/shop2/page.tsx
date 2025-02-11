@@ -122,7 +122,7 @@ export default function Clip() {
 
   async function login(){
     const mbLoginApi = new MbLoginApi();
-    const result = await mbLoginApi.login(1, "https://login.taobao.com/member/login.jhtml");
+    const result = await mbLoginApi.login(1);
     console.log("window.shopApi1 " , result);
   }
 
