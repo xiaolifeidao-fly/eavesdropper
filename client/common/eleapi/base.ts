@@ -93,6 +93,13 @@ abstract class ElectronApi {
   }
 
   async onMessage(functionName : string, callback : (...args: any) => void, topic : string|undefined = undefined){
+    var functionNameExecuted = `${functionName}Executed`;
+    // @ts-ignore
+    if (typeof window[functionNameExecuted] != 'undefined') {
+      return {};
+    }
+    // @ts-ignore
+    window[functionNameExecuted] = true; // 标记为已执行
     if(topic == undefined){
       topic = functionName;
     }

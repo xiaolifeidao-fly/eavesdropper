@@ -8,7 +8,13 @@ export class MbLoginApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async login(resourceId: number, url: string) {
-        return await this.invokeApi("login", resourceId, url);
+    async login(resourceId: number) {
+        return await this.invokeApi("login", resourceId);
     }
+
+    @InvokeType(Protocols.TRRIGER)
+    async onMonitorLoginResult(callback : (result : boolean) => void){
+        return await this.onMessage("onMonitorLoginResult", callback);
+    }
+
 }

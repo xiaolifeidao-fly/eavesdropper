@@ -10,6 +10,7 @@ import log from 'electron-log';
 import { registerRpc } from './register/rpc';
 import { init } from './store';
 import Store from 'electron-store';
+import { initPlatform } from '@src/door/engine';
 
 
 log.info("app load")
@@ -20,6 +21,7 @@ async function createDefaultWindow() {
     const mainWindow = await createWindow('main', process.env.WEBVIEW_URL || "");
     checkUpdate(mainWindow);
     setMainWindow(mainWindow);
+    initPlatform();
   } catch (e) {
     log.error("createDefaultWindow error", e);
   }
@@ -33,6 +35,7 @@ export async function createWindow(windowId : string, url : string) {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       webviewTag: true, // 启用 webview 标签
+      // devTools: true,
       webSecurity: false,
       nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
     }
@@ -108,5 +111,6 @@ export const start = () => {
       }
     });
 }
+
 
 

@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState, useEffect } from 'react';
-import { Button, message, Tag, Space, Popconfirm, Tooltip, Spin } from 'antd';
+import { Button, message, Tag, Space, Popconfirm, Tooltip, Spin, Modal } from 'antd';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
 
@@ -45,7 +45,7 @@ export default function ResourceManage() {
   const [tagList, setTagList] = useState<LabelValue[]>([]);
 
   const [loading, setLoading] = useState(false);
-
+  const [qrCodeLoading, setQrCodeLoading] = useState(false);
   useEffect(() => {
     getResourceSourceListApi().then((res) => {
       const valueEnum: Record<string, any> = {}
@@ -61,7 +61,14 @@ export default function ResourceManage() {
     getResourceTagListApi().then((res) => {
       setTagList(res)
     })
+    const mbLoginApi = new MbLoginApi();
+    mbLoginApi.onMonitorLoginResult(async (result) => {
+      setOpen(false);
+      message.success('绑定成功');
+    });
   }, [])
+
+  
 
   const baseColumns: ProColumns<DataType>[] = [
     {
@@ -124,37 +131,41 @@ export default function ResourceManage() {
     },
   ]
 
+  const [open, setOpen] = useState(false);
+  const [qrCodeFilePath, setQrCodeFilePath] = useState<string | undefined>(undefined);
+
   const bindResource = async (record: DataType) => {
     try {
       setLoading(true);
       const resourceId = record.id;
 
       const mbLoginApi = new MbLoginApi();
-      const url = "https://login.taobao.com/member/login.jhtml";
-      const loginResult = await mbLoginApi.login(resourceId, url); // TODO,获取资源登录地址
+      const loginResult = await mbLoginApi.login(resourceId);
       if (loginResult.code === false) {
         message.error('绑定失败');
         return;
       }
-
+      const qrCodeData = loginResult.data;
+      if(!qrCodeData || Object.keys(qrCodeData).length === 0){
+        message.success('绑定成功');
+        return;
+      }
+      setOpen(true);
+      setQrCodeLoading(true);
+      const qrCodeFilePath = qrCodeData['fileUrl'];
+      setQrCodeFilePath(qrCodeFilePath);
       // 获取用户信息
       const userApi = new MbUserApi();
       const userInfo = await userApi.getUserInfo(resourceId);
-      if (userInfo.code === false) {
-        message.error('绑定失败');
-        return;
-      }
-
-      const userInfoData = userInfo.data;
-      const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
-      const bindResult = await bindResourceApi(resourceId, bindResourceReq);
-      if (!bindResult) {
-        message.error('绑定失败');
-        return;
+      if (userInfo.code) {
+        const userInfoData = userInfo.data;
+        const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
+        await bindResourceApi(resourceId, bindResourceReq);
       }
       message.success('绑定成功');
     } finally {
       setLoading(false);
+      setQrCodeLoading(false);
     }
   }
 
@@ -220,6 +231,14 @@ export default function ResourceManage() {
           }}
         />
       </Spin>
+      <Modal open={open} onCancel={() => setOpen(false)} onOk={() => setOpen(false)}>
+        <Spin spinning={qrCodeLoading} tip="加载中">
+          <div style={{textAlign: 'center'}}>请在1分钟内扫码完毕</div>
+          <div style={{textAlign: 'center'}}>
+            <img src={qrCodeFilePath} />
+          </div>
+        </Spin>
+      </Modal>
     </Layout>
   )
 }

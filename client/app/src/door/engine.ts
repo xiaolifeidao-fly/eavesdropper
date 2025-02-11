@@ -30,7 +30,7 @@ export abstract class DoorEngine<T = any> {
 
     page : Page | undefined;
 
-    constructor(resourceId : number, headless: boolean = false, chromePath: string = ""){
+    constructor(resourceId : number, headless: boolean = true, chromePath: string = ""){
         this.resourceId = resourceId;
         if(chromePath){
             this.chromePath = chromePath;
@@ -195,6 +195,19 @@ export abstract class DoorEngine<T = any> {
             await this.saveCache(url, monitor.getKey(), monitor.getType(), itemKey, doorEntity);
         }
         return doorEntity;
+    }
+
+    public async openNotWaitMonitor(page : Page,  url: string, monitor : Monitor<T | any>, headers: Record<string, string> = {}, doAction: (page: Page, ...doActionParams: any[]) => Promise<DoorEntity<T>>, ...doActionParams: any[]){
+        const itemKey = monitor.getItemKeys(url);
+        const cache = await this.fromCacheByMonitor(url, itemKey, monitor);
+        if(cache){
+            return cache;
+        }
+        this.addMonitor(monitor);
+        await this.startMonitor();
+        await page.goto(url, headers);
+        const result = await doAction(page, ...doActionParams);
+        return result;
     }
 
     public async saveCache(url : string, monitorKey : string, type : string, itemKey : string, doorEntity: DoorEntity<T>){
@@ -450,6 +463,38 @@ function getSecChUa(platform : any){
         result.push(`"${brand.brand}";v="${brand.version}"`);
     }
     return result.join(", ");
+}
+
+export async function initPlatform(){
+    let browser : Browser | undefined = undefined;
+    try{
+        let platform = await getPlatform();
+        log.info("get login platform is ", JSON.stringify(platform));
+        if(platform){
+            return platform;
+        }
+        browser = await chromium.launch({
+            headless: false,
+            args: [
+            '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
+            '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
+            '--disable-setuid-sandbox',
+            '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
+          ]
+         });
+        const context = await browser.newContext();
+        const page = await context.newPage();
+        await page.goto("https://www.baidu.com");
+        platform = await setPlatform(page);
+        log.info("login platform is ", JSON.stringify(platform));
+        return platform;
+    }catch(error){
+        log.error("initPlatform error", error);
+    }finally{
+        if(browser){
+            await browser.close();
+        }
+    }
 }
 
 export async function setPlatform(page : Page){

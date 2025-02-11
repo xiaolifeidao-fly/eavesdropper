@@ -35,4 +35,4 @@ client/images/**/*
 
 nohup.outout
 
-static/**/*
+client/app/static/**/*
