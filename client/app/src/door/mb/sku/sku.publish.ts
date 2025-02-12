@@ -8,6 +8,7 @@ import { DoorSkuDTO, SalesAttr, SkuItem } from "@model/door/sku";
 import { SkuFile, SkuFileDetail } from "@model/sku/sku.file";
 import { getSkuDraft, activeSkuDraft, expireSkuDraft } from "@api/sku/sku.draft";
 import log from "electron-log";
+import { getOrSaveTemplateId } from "../logistics/logistics";
 
 function handlerPeriod(dataSource: { [key: string]: any }[], catValue: string){
     const first = dataSource[0];
@@ -66,16 +67,16 @@ async function doAction(page: Page, ...doActionParams: any[]) {
     await confirmProtocol(page);
     const imageFileList = doActionParams[0];
     const skuDraftId = doActionParams[1];
-    if (!skuDraftId) {
-        if(imageFileList.length <= 20){
-            await fillDetailImage(page, imageFileList);
-        }else{
-            const splitImageFileList = splitArray(imageFileList, 20);
-            for(const imageFileList of splitImageFileList){
-                await fillDetailImage(page, imageFileList);
-            }
-        }
-    }
+    // if (!skuDraftId) {
+    //     if(imageFileList.length <= 20){
+    //         await fillDetailImage(page, imageFileList);
+    //     }else{
+    //         const splitImageFileList = splitArray(imageFileList, 20);
+    //         for(const imageFileList of splitImageFileList){
+    //             await fillDetailImage(page, imageFileList);
+    //         }
+    //     }
+    // }
     await clickSaveDraf(page);
 }
 
@@ -197,7 +198,11 @@ export async function getSkuDraftIdFromDB(resourceId: number, skuItemId: string)
         return undefined;
     }
     if (skuDraft.status == "active") {
-        return skuDraft.skuDraftId;
+        const skuDraftId = skuDraft.skuDraftId;
+        if(skuDraftId == 'undefined'){
+            return undefined;
+        }
+        return skuDraftId;
     }
     return undefined;
 }
@@ -210,15 +215,15 @@ function getPublishUrl(skuDraftId: string | undefined, itemId: string) {
 }
 
 export async function publishFromTb(imageFileList: SkuFileDetail[], skuItem: DoorSkuDTO, resourceId: number, itemId: string) {
-    const mbEngine = new MbEngine(resourceId);
+    const mbEngine = new MbEngine(resourceId, false);
     try {
         const page = await mbEngine.init();
         if (!page) {
             return false;
         }
         // 发布商品url
-        const skuDraftId = await getSkuDraftIdFromDB(resourceId, itemId);
-        const url = getPublishUrl(skuDraftId, itemId);
+        let skuDraftId = await getSkuDraftIdFromDB(resourceId, itemId);
+        let url = getPublishUrl(skuDraftId, itemId);
         const result = await mbEngine.openWaitMonitor(page, url, new MbSkuPublishDraffMonitor(), {}, doAction, imageFileList, skuDraftId);
         if (!result) {
             return false;
@@ -232,7 +237,7 @@ export async function publishFromTb(imageFileList: SkuFileDetail[], skuItem: Doo
         log.error(error);
         return false;
     } finally {
-        await mbEngine.closePage();
+        // await mbEngine.closePage();
     }
 }
 
@@ -265,7 +270,10 @@ async function getCategoryInfo(categoryCode: string, result: DoorEntity<any>, ca
 
 function getStartTraceId(commonData: { data: any }) {
     try {
+        const components = commonData.data.components;
+        console.log("components.fakeCredit.props.icmp.global.value.frontDataLog is ", components.fakeCredit.props.icmp.global.value.frontDataLog);
         const startTraceId = commonData.data.components.fakeCredit.props.icmp.global.value.frontDataLog.traceId;
+        console.log("components.fakeCredit.props.icmp.global.value.frontDataLog.traceId is ", startTraceId);
         return startTraceId;
     } catch (e) {
         return undefined;
@@ -299,8 +307,11 @@ async function publishSkuByDoor(imageFileList: SkuFileDetail[], resourceId: numb
     const commonData = await getCommonData(page);
     if (!commonData) {
         log.info("commonData not found ", commonData);
+        return false;
     }
+    // console.log("commonData is ", JSON.stringify(commonData));
     const startTraceId = getStartTraceId(commonData);
+    log.info("startTraceId is  ", startTraceId);
     if (!startTraceId) {
         log.info("startTraceId not found ", startTraceId);
         return false;
@@ -322,7 +333,7 @@ async function publishSkuByDoor(imageFileList: SkuFileDetail[], resourceId: numb
         log.info("updateDraftData failed ", updateResult);
         return false;
     }
-    const publishResult = await clickPublishButton(page, newSkuDraftId);
+    const publishResult = await clickPublishButton(resourceId, page, newSkuDraftId, skuItem, draftData, result, catId, startTraceId);
     if (!publishResult) {
         log.info("clickPublishButton failed ", publishResult);
         return false;
@@ -371,8 +382,8 @@ function getCatPro(skuItem: SkuItem, catProps: any) {
         return undefined;
     }
     for (const catProp of catProps) {
-        const lable = catProp.label;
-        if (lable == skuItem.value) {
+        const label = catProp.label;
+        if (label == skuItem.value) {
             return catProp;
         }
     }
@@ -779,10 +790,10 @@ async function updateDraftData(catId: string, draftId: string, result: DoorEntit
         return false;
     }
     if (!res.data.success) {
-        log.info("res is not success ", res.data);
+        // log.info("res is not success ", res.data);
         return false;
     }
-    // log.info("draftData is ", JSON.stringify(draftData));
+    log.info("draftData is ", JSON.stringify(draftData));
     return true;
 }
 
@@ -876,6 +887,16 @@ function fillPropExt(commendItem: { [key: string]: any }, skuItem: DoorSkuDTO, d
     }
 }
 
+async function fillLogisticsMode(resourceId : number, skuItemDTO : DoorSkuDTO, draftData: { [key: string]: any }) {
+    const templateId = await getOrSaveTemplateId(resourceId, skuItemDTO);
+    draftData.tbExtractWay = {
+        "template": templateId,
+        "value": [
+            "2"
+        ]
+    };
+}
+
 async function fillMultiDiscountPromotion(page: Page) {
     await page.waitForTimeout(1000);
     const multiDiscountPromotionElement = await page.evaluate(() => {
@@ -900,20 +921,31 @@ async function fillMultiDiscountPromotion(page: Page) {
     }
 }
 
-async function clickPublishButton(page: Page, draftId: string) {
+async function clickPublishButton(resourceId : number, page: Page, draftId: string, skuItem: DoorSkuDTO, draftData: { [key: string]: any }, result: DoorEntity<any>, catId: string, startTraceId: string) {
     const url = "https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=" + draftId;
     await page.goto(url);
     await page.waitForTimeout(1000);
-    try{
-        await fillMultiDiscountPromotion(page);
-    }catch(e){
-        log.info("multiDiscountPromotion error", e);
+    const commonData = await getCommonData(page);
+    await fillCategoryList(skuItem, draftData, commonData, result, catId, startTraceId);
+    await fillLogisticsMode(resourceId, skuItem, draftData);
+    const updateResult = await updateDraftData(catId, draftId, result, startTraceId, draftData);
+    if (!updateResult) {
+        log.info("updateDraftData failed ", updateResult);
+        return false;
     }
+    await page.reload();
+
     try {
         await confirmProtocol(page);
     } catch (e) {
         log.info("confirmProtocol error", e);
     }
+    // try{
+    //     await fillMultiDiscountPromotion(page);
+    // }catch(e){
+    //     log.info("multiDiscountPromotion error", e);
+    // }
+ 
     await page.waitForTimeout(1000);
     const requestPromise = page.waitForResponse(response =>
         response.request().url().includes("sell/v2/submit.htm"),

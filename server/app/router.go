@@ -1,6 +1,7 @@
 package app
 
 import (
+	addressControllers "server/app/address/controllers"
 	authControllers "server/app/auth/controllers"
 	doorControllers "server/app/door/controllers"
 	resourceControllers "server/app/resource/controllers"
@@ -21,5 +22,6 @@ func GetAppRouters() []func(g *gin.RouterGroup) {
 	AppRouters = append(AppRouters, resourceControllers.LoadResourceRouter) // 添加resource路由
 	AppRouters = append(AppRouters, shopControllers.LoadShopRouter)         // 添加shop路由
 	AppRouters = append(AppRouters, skuControllers.LoadSkuDraftInfoRouter)  // 添加sku-draft-info路由
+	AppRouters = append(AppRouters, addressControllers.LoadAddressRouter)   // 添加address路由
 	return AppRouters
 }

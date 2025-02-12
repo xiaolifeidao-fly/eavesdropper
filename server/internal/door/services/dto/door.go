@@ -3,6 +3,7 @@ package dto
 import (
 	"server/common/base"
 	"server/common/base/dto"
+	"strings"
 )
 
 type DoorRecordDTO struct {
@@ -42,6 +43,7 @@ func (d *DoorSkuDTO) ToExtractorRule() map[string]interface{} {
 		"baseInfo":         d.BaseInfo.ToExtractorRule(),
 		"doorSkuSaleInfo":  d.DoorSkuSaleInfo.ToExtractorRule(),
 		"doorSkuImageInfo": d.DoorSkuImageInfo.ToExtractorRule(),
+		"deliveryVO":       "skuInfo.componentsVO.deliveryVO",
 	}
 }
 
@@ -49,7 +51,7 @@ func (d *DoorSkuDTO) ToExtractorRule() map[string]interface{} {
 func (d *DoorSkuDTO) SetRequiredDefault(doorInfoValueMap map[string]interface{}) {
 	d.BaseInfo.SetRequiredDefault(doorInfoValueMap["baseInfo"].(map[string]interface{}))
 	d.DoorSkuSaleInfo.SetRequiredDefault()
-	d.DoorSkuLogisticsInfo.SetRequiredDefault()
+	d.DoorSkuLogisticsInfo.SetRequiredDefault(doorInfoValueMap["deliveryVO"].(map[string]interface{}))
 	d.DoorSkuImageInfo.SetRequiredDefault()
 }
 
@@ -182,23 +184,21 @@ type ShelfTimeDTO struct {
 
 // DoorSkuLogisticsInfoDTO 商品物流信息
 type DoorSkuLogisticsInfoDTO struct {
-	DispatchTimeframe    string `json:"dispatchTimeframe"`    // 发货时效, 必填（自动填充）, 24小时内发货,48小时内发货,大于48小时发货
-	PickupMode           string `json:"pickupMode"`           // 提取方式, 必填, 使用物流配置, 选择：使用物流配送 -> 运费模板:系统模版-商家默认模版
-	RegionalRestrictions string `json:"regionalRestrictions"` // 区域限制, 不设置商品维度区域限售模板,选择商品维度区域限售模板
-	PostSaleSupport      string `json:"postSaleSupport"`      // 售后支持, 保修服务
+	DeliveryFromAddr string `json:"deliveryFromAddr"` // 发货地址
+	IsFreeShipping   bool   `json:"isFreeShipping"`   //是否包邮
+}
+
+func (d *DoorSkuLogisticsInfoDTO) SetRequiredDefault(deliveryVO map[string]interface{}) {
+	d.DeliveryFromAddr = deliveryVO["deliveryFromAddr"].(string)
+	freight := deliveryVO["freight"].(string)
+	if strings.Contains(freight, "免运费") {
+		d.IsFreeShipping = true
+	} else {
+		d.IsFreeShipping = false
+	}
 }
 
 // SetRequiredDefault 设置必填字段默认值
-func (d *DoorSkuLogisticsInfoDTO) SetRequiredDefault() {
-	// 发货时效, 默认48小时内发货->0, 24小时内发货->3, 大于48小时发货->2
-	d.DispatchTimeframe = "0"
-
-	// 提取方式, 选择：使用物流配送 -> 运费模板:系统模版-商家默认模版 （64723339970）
-	d.PickupMode = "64723339970"
-
-	// 区域限售, 默认不限制
-	d.RegionalRestrictions = "regionLimitSale_1"
-}
 
 type SkuItem struct {
 	Text  []string `json:"text"`  // 属性值列表

@@ -1,11 +1,11 @@
 cd client/app
-pnpm install
+npm install
 
 cd ../common
-pnpm install
+npm install
 
 cd ../webview
-pnpm install
+npm install
 
 
 

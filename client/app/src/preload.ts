@@ -4,6 +4,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 import log from 'electron-log';
 import { ElectronApi, Protocols } from '@eleapi/base';
 import { registerApi } from '@eleapi/register';
+import 'reflect-metadata';
 
  // 定义一个类型，将暴露给渲染进程的 API 类型化
 type ExposedApi = {
@@ -31,7 +32,7 @@ function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
         }else{
             console.log("exposeApi trigger ", apiName);
             (exposedConfig as any)[methodName] = (callback: (...args: any) => void) => {
-              ipcRenderer.on(`${apiName}.${methodName}`, (event, ...args: any) => {
+              ipcRenderer.on(`${apiName}.${methodName}`, (event : any, ...args: any) => {
                   callback(...args); // 将参数传递给回调函数
               });
             };

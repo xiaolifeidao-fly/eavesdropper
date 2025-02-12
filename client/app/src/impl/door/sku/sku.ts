@@ -30,6 +30,7 @@ import { publishFromTb } from "@src/door/mb/sku/sku.publish";
 import { uploadByFileApi } from "@src/door/mb/file/file.api";
 import { DoorEntity } from "@src/door/entity";
 import { app } from "electron";
+import sharp from "sharp";
 export class MbSkuApiImpl extends MbSkuApi {
 
 
@@ -133,12 +134,12 @@ export class MbSkuApiImpl extends MbSkuApi {
             }
             const bgResponse = await axios.get(url, { responseType: 'arraybuffer', headers:headers});
             const imageBuffer = Buffer.from(bgResponse.data, 'binary');
-            // if(needResize){
-            //     await sharp(imageBuffer)
-            //     .resize(800, 800) // 设置宽高
-            //     .toFile(imagePath); // 保存图片到指定路径
-            //     return imagePath;
-            // }
+            if(needResize){
+                await sharp(imageBuffer)
+                .resize(800, 800) // 设置宽高
+                .toFile(imagePath); // 保存图片到指定路径
+                return imagePath;
+            }
             fs.writeFileSync(imagePath, imageBuffer);
             return imagePath;
         } catch (error) {

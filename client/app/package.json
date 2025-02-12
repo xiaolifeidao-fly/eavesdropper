@@ -22,7 +22,9 @@
       {
         "from": "static/Chrome-bin",
         "to": "Chrome-bin",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "asar": true,
@@ -81,7 +83,6 @@
     "follow-redirects": "^1.15.9",
     "form-data": "^4.0.1",
     "fs-extra": "^11.2.0",
-    "g2@5.1.15-beta.4": "link:antv/g2@5.1.15-beta.4",
     "graceful-fs": "^4.2.11",
     "https-proxy-agent": "^7.0.6",
     "js-yaml": "^4.1.0",
@@ -101,10 +102,10 @@
     "reflect-metadata": "^0.2.2",
     "sax": "^1.4.1",
     "semver": "^7.6.3",
+    "sharp": "^0.33.5",
     "typed-emitter": "^2.1.0",
     "universalify": "^2.0.1",
     "url": "^0.11.3",
-    "utils@1.13.0": "link:daybrush/utils@1.13.0",
     "uuid": "^11.0.3",
     "xlsx": "0.18.5"
   },
@@ -112,6 +113,7 @@
     "@types/adm-zip": "^0.5.5",
     "@types/axios": "^0.14.0",
     "@types/node": "^20.14.5",
+    "@types/reflect-metadata": "^0.0.5",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",

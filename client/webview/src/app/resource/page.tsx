@@ -71,17 +71,18 @@ export default function ResourceManage() {
       }
       try{
         setQrCodeLoading(true);
+        setQrCodeTip("绑定用户信息中...")
         // 获取用户信息
         const userApi = new MbUserApi();
         const userInfo = await userApi.getUserInfo(resourceId);
-        setQrCodeTip("绑定用户信息中...")
-      if (userInfo.code) {
-        const userInfoData = userInfo.data;
-        const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
+        if (userInfo.code) {
+          const userInfoData = userInfo.data;
+          const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
           await bindResourceApi(resourceId, bindResourceReq);
         }
-        message.success('绑定成功');
+        setQrCodeTip("绑定完成...")
         setOpen(false);
+        message.success('绑定成功');
         refreshPage(actionRef, true);
       } finally {
         setQrCodeLoading(false);
@@ -245,7 +246,7 @@ export default function ResourceManage() {
       </Spin>
       <Modal open={open} onCancel={() => setOpen(false)} onOk={() => setOpen(false)}>
         <Spin spinning={qrCodeLoading} tip={qrCodeTip}>
-          <div style={{textAlign: 'center'}}>请在1分钟内扫码完毕</div>
+          <div style={{textAlign: 'center'}}>请在1分钟内扫码完毕,扫码完毕后请待耐心等待20s左右,不要关闭此窗口</div>
           <div style={{textAlign: 'center'}}>
             <img src={qrCodeFilePath} />
           </div>

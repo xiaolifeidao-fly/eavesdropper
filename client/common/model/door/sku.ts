@@ -122,16 +122,13 @@ export class DoorSkuSaleInfoDTO {
 
 
 export class DoorSkuLogisticsInfoDTO {
-    dispatchTimeframe: string;
-    pickupMode: string;
-    regionalRestrictions: string;
-    postSaleSupport: string;
 
-    constructor(dispatchTimeframe: string, pickupMode: string, regionalRestrictions: string, postSaleSupport: string) {
-        this.dispatchTimeframe = dispatchTimeframe;
-        this.pickupMode = pickupMode;
-        this.regionalRestrictions = regionalRestrictions;
-        this.postSaleSupport = postSaleSupport;
+    deliveryFromAddr: string;
+    isFreeShipping: boolean;
+
+    constructor(deliveryFromAddr: string, isFreeShipping: boolean) {
+        this.deliveryFromAddr = deliveryFromAddr;
+        this.isFreeShipping = isFreeShipping;
     }
 }
 

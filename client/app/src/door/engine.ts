@@ -197,7 +197,7 @@ export abstract class DoorEngine<T = any> {
         return doorEntity;
     }
 
-    public async openNotWaitMonitor(page : Page,  url: string, monitor : Monitor<T | any>, headers: Record<string, string> = {}, doAction: (page: Page, ...doActionParams: any[]) => Promise<DoorEntity<T>>, ...doActionParams: any[]){
+    public async openNotWaitMonitor(page : Page,  url: string, monitor : Monitor<T | any>, headers: Record<string, string> = {}, doAction: (page: Page, ...doActionParams: any[]) => Promise<any>, ...doActionParams: any[]){
         const itemKey = monitor.getItemKeys(url);
         const cache = await this.fromCacheByMonitor(url, itemKey, monitor);
         if(cache){
