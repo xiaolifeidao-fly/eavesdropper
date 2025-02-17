@@ -1,33 +1,58 @@
-request 
-
-
-valuation: 0
-fromType: fromPublishGpfTaobao
-templateName: 浙江金华
-pageVersion: 
-event_submit_do_save_template: 1
-addressId: 1,330000,330700
-bearFreight: 2
-unique: 
-auctionids: 
-templateId: 
-action: user/template_setting_action
-_tb_token_: e8ab73794bb3a
-categoryid: 
-type: 
-forceSellerPay: 
-auctionid: 
-selectedPostageid: 
-normalTemplate: {"checkboxGroup":[{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"快递","defaultFee":false,"checked":true,"disabled":false,"value":"-4"},{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"同城配送","defaultFee":false,"checked":false,"disabled":false,"value":"26000"},{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"EMS","defaultFee":false,"checked":false,"disabled":false,"value":"-7"},{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"平邮","defaultFee":false,"checked":false,"disabled":false,"value":"-1"}],"title":"运送方式：","tips":["除指定地区外，其余地区的运费采用“默认运费”"]}
-promotionTemplate: {"template":{},"checked":false,"title":"指定条件包邮","value":"0","tips":"<img src='//img.alicdn.com/tps/i1/TB1Sw5KFVXXXXb7XFXX1xhnFFXX-23-12.png'>可选"}
-
-
-response 
-
 {
-    "redirect": "https://adpmanager.taobao.com/user/template_list.htm?fromType=fromPublishGpfTaobao",
-    "resultData": {
-      "templateId": 65142844640
-    },
-    "success": true
-},
+  "groups": [
+    {
+      "type": "group",
+      "hide": false,
+      "bizCode": 0,
+      "propertyPanelVisible": true,
+      "level": 1,
+      "boxStyle": {
+        "background-color": "#ffffff",
+        "width": 620,
+        "height": 889
+      },
+      "position": "middle",
+      "groupName": "模块",
+      "scenario": "wde",
+      "components": [
+        {
+          "type": "component",
+          "level": 2,
+          "sellerEditable": true,
+          "boxStyle": {
+            "rotate": 0,
+            "z-index": 0,
+            "top": 0,
+            "left": 0,
+            "width": 620,
+            "height": 889,
+            "background-image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01iP9Eyq25vomCONV8u_!!695637589.jpg"
+          },
+          "componentName": "图片组件",
+          "clipType": "rect",
+          "imgStyle": {
+            "top": 0,
+            "left": 0,
+            "width": 620,
+            "height": 889
+          },
+          "picMeta": {
+            "width": 790,
+            "height": 1133,
+            "size": 53634,
+            "id": 1758908368981783000
+          },
+          "isEdit": false,
+          "componentType": "pic",
+          "componentId": "component1739502621568",
+          "groupId": "group1739502621567",
+          "selected": false
+        }
+      ],
+      "groupId": "group1739502621567",
+      "id": "group1739502621567",
+      "bizName": "图文模块"
+    }
+  ],
+  "sellergroups": []
+}

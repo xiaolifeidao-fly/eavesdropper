@@ -1,0 +1,20 @@
+<html></html>
+
+<head>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const iframeUrl = params.get("iframeUrl");
+        const iframe = document.createElement("iframe");
+        iframe.src = iframeUrl;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        document.body.appendChild(iframe);
+    </script>
+    
+</head>
+
+<body>
+
+</body>
+
+</html>

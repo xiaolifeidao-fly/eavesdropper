@@ -17,8 +17,8 @@ func GetSkuFileInfo(skuItemId string) ([]*dto.SkuFileInfoDTO, error) {
 	return database.ToDTOs[dto.SkuFileInfoDTO](skuFileInfos), nil
 }
 
-func GetSkuFileDetail(skuItemId string) ([]*dto.SkuFileDetailDTO, error) {
-	skuFileInfos, err := skuFileInfoRepository.FindDetailBySkuItemId(skuItemId)
+func GetSkuFileDetail(skuItemId string, resourceId uint64) ([]*dto.SkuFileDetailDTO, error) {
+	skuFileInfos, err := skuFileInfoRepository.FindDetailBySkuItemIdAndResourceId(skuItemId, resourceId)
 	if err != nil {
 		return nil, err
 	}

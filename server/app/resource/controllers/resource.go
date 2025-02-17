@@ -10,6 +10,7 @@ import (
 	"server/common/server/middleware"
 	"server/internal/resource/services"
 	"server/internal/resource/services/dto"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -32,7 +33,18 @@ func LoadResourceRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).GET("/source", GetResourceSourceList)
 		r.Use(middleware.Authorization()).GET("/tag", GetResourceTagList)
 		r.Use(middleware.Authorization()).GET("/main", GetMainResourceList)
+		r.Use().GET("/:id/userId", GetUserIdByResourceId)
 	}
+}
+
+func GetUserIdByResourceId(ctx *gin.Context) {
+	resourceId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	resourceTaobaoDTO, err := services.GetResourceTaobaoByResourceID(resourceId)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, resourceTaobaoDTO.UserNumId)
 }
 
 // AddResource

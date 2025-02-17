@@ -10,10 +10,13 @@ import (
 var addressRepository = database.NewRepository[repositories.AddressRepository]()
 var addressTemplateRepository = database.NewRepository[repositories.AddressTemplateRepository]()
 
-func GetAddressByKeywordsAndResourceId(keywords string, resourceId uint64) (*dto.AddressTemplateDTO, error) {
-	addressTemplate, err := addressTemplateRepository.GetByKeywordsAndResourceId(keywords, resourceId)
+func GetAddressByKeywordsAndUserNumId(keywords string, userNumId string) (*dto.AddressTemplateDTO, error) {
+	addressTemplate, err := addressTemplateRepository.GetByKeywordsAndUserNumId(keywords, userNumId)
 	if err != nil {
 		return nil, err
+	}
+	if addressTemplate == nil {
+		return nil, nil
 	}
 	return database.ToDTO[dto.AddressTemplateDTO](addressTemplate), nil
 }
@@ -23,11 +26,14 @@ func GetAddressByKeywords(keywords string) (*dto.AddressDTO, error) {
 	if err != nil {
 		return nil, err
 	}
+	if address == nil {
+		return nil, nil
+	}
 	return database.ToDTO[dto.AddressDTO](address), nil
 }
 
 func SaveAddressTemplate(addressTemplateDTO *dto.AddressTemplateDTO) (*dto.AddressTemplateDTO, error) {
-	addressTemplate, err := addressTemplateRepository.GetByAddressIdAndResourceId(addressTemplateDTO.AddressId, addressTemplateDTO.ResourceId)
+	addressTemplate, err := addressTemplateRepository.GetByAddressIdAndUserNumId(addressTemplateDTO.AddressId, addressTemplateDTO.UserNumId)
 	if err != nil {
 		return nil, err
 	}

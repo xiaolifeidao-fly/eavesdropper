@@ -5,7 +5,7 @@ import { Page } from "playwright";
 import { MbAddressQueryMonitor } from "@src/door/monitor/mb/address/address";
 import axios from "axios";
 import { AddressTemplate } from "@model/address/address";
-
+import log from "electron-log";
 
 export async function getOrSaveTemplateId(resourceId: number, skuItem: DoorSkuDTO) {
     const logisticsMode = skuItem.doorSkuLogisticsInfo;
@@ -26,10 +26,29 @@ async function doAction(page: Page) {
 
 async function postAddress(resourceId : number, tbToken: string, skuItem: DoorSkuDTO, headerData: {[ket : string] : any}) {
     headerData['content-type'] = "application/x-www-form-urlencoded";
-    const keywords = skuItem.doorSkuLogisticsInfo.deliveryFromAddr
+    const header = {
+        "accept": "*/*",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+        "origin": "https://adpmanager.taobao.com",
+        "pragma": "no-cache",
+        "bx-v": "2.5.28",
+        "priority": "u=1,i",
+        "referer": "https://adpmanager.taobao.com/user/template_setting.htm?fromType=fromPublishGpfTaobao&toolAuth=cm-tool-manage",
+        "sec-ch-uaa": headerData['sec-ch-ua'],
+        "sec-ch-ua-mobile": headerData['sec-ch-ua-mobile'],
+        "sec-ch-ua-platform": headerData['sec-ch-ua-platform'],
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site",
+        "cookie": headerData['cookie'],
+        "user-agent": headerData['user-agent']
+    }
+    const keywords = skuItem.doorSkuLogisticsInfo.deliveryFromAddr;
     const address = await getAddressByKeywords(keywords);
+    const defaultTemplateId = "64723339970";
     if(!address){
-        return "64723339970";
+        return defaultTemplateId;
     }
     const addressId = `${address.countryCode},${address.provinceCode},${address.cityCode}`;
     const body = {
@@ -47,20 +66,22 @@ async function postAddress(resourceId : number, tbToken: string, skuItem: DoorSk
         _tb_token_: tbToken,
         categoryid: "",
         type: "",
-        normalTemplate: {"checkboxGroup":[{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"快递","defaultFee":false,"checked":true,"disabled":false,"value":"-4"},{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"同城配送","defaultFee":false,"checked":false,"disabled":false,"value":"26000"},{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"EMS","defaultFee":false,"checked":false,"disabled":false,"value":"-7"},{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"平邮","defaultFee":false,"checked":false,"disabled":false,"value":"-1"}],"title":"运送方式：","tips":["除指定地区外，其余地区的运费采用“默认运费”"]},
-        promotionTemplate: {"template":{},"checked":false,"title":"指定条件包邮","value":"0","tips":"<img src='//img.alicdn.com/tps/i1/TB1Sw5KFVXXXXb7XFXX1xhnFFXX-23-12.png'>可选"}
+        forceSellerPay: "",
+        auctionid: "",
+        selectedPostageid: "",
+        normalTemplate: JSON.stringify({"checkboxGroup":[{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"快递","defaultFee":false,"checked":true,"disabled":false,"value":"-4"},{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"同城配送","defaultFee":false,"checked":false,"disabled":false,"value":"26000"},{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"EMS","defaultFee":false,"checked":false,"disabled":false,"value":"-7"},{"template":{"defaultConfig":[{"name":"startStandard","addonAfter":"{unit}内","value":"1"},{"name":"startFee","addonAfter":"元，","value":""},{"name":"addStandard","label":"每增加","addonAfter":"{unit}，","value":"1"},{"name":"addFee","label":"增加运费","addonAfter":"元","value":""}],"title":"默认运费"},"title":"平邮","defaultFee":false,"checked":false,"disabled":false,"value":"-1"}],"title":"运送方式：","tips":["除指定地区外，其余地区的运费采用“默认运费”"]}),
+        promotionTemplate: JSON.stringify({"template":{},"checked":false,"title":"指定条件包邮","value":"0","tips":"<img src='//img.alicdn.com/tps/i1/TB1Sw5KFVXXXXb7XFXX1xhnFFXX-23-12.png'>可选"})
     }
     const response = await axios.post("https://adpmanager.taobao.com/user/template_setting.htm?%2Fuser%2Ftemplate_setting.htm=", body, {
-        headers:headerData
+        headers:header
     });
     const data = await response.data;
-    console.log("post data is ", data);
     if(data.success){
-        const templateId = data.resultData.templateId;
+        const templateId = String(data.resultData.templateId);
         await saveAddress(resourceId, address.id, templateId)
         return templateId;
     }
-    return "64723339970";
+    return defaultTemplateId;
 }
 
 async function saveAddress(resourceId : number, addressId : number | undefined, templateId  : string){
@@ -78,14 +99,13 @@ async function saveAddressByPage(resourceId: number, skuItem: DoorSkuDTO) {
         const monitor = new MbAddressQueryMonitor();
         if(page){
            const tbToken = await engine.openNotWaitMonitor(page, "https://wuliu.taobao.com/user/logis_tools.htm?tabSource=carriageTemplate&fromType=fromPublishGpfTaobao&forceSellerPay=false", monitor, {}, doAction)
-           console.log("tbToken : ", tbToken);
            if(!tbToken){
-              console.log("tbToken is null");
+              log.warn("saveAddressByPage tbToken is null");
               return undefined;
            }
            const result = await monitor.waitForAction();
            if(!result || !result.code){
-              console.log("result is null");
+              log.log("saveAddressByPage result is null");
               return undefined;
            }
            const headerData = result.getHeaderData();

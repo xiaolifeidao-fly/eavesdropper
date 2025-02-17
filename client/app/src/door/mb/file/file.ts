@@ -106,7 +106,7 @@ export async function getUnUploadFile(source : string, resourceId : number, path
 export async function uploadFile(resourceId : number, skuItemId : string, paths: string[], monitor : MbFileUploadMonitor){
     const unUploadFiles = await getUnUploadFile(monitor.getType(), resourceId, paths);
     if(unUploadFiles.length === 0){
-        const skuFiles = await getSkuFiles(skuItemId);
+        const skuFiles = await getSkuFiles(skuItemId, resourceId);
         return skuFiles;
     }
     const mbEngine = new MbEngine(resourceId, false);
@@ -124,7 +124,7 @@ export async function uploadFile(resourceId : number, skuItemId : string, paths:
         for(let path of unUploadFiles){
             await monitor.waitForAction();
         }
-        const skuFiles = await getSkuFiles(skuItemId);
+        const skuFiles = await getSkuFiles(skuItemId, resourceId);
         return skuFiles;
     }finally{
         if(page){

@@ -80,3 +80,18 @@ export class MbSkuPublishDraffMonitor extends MbMonitorResponse<{}>{
     }
 
 }
+
+export class MbSkuPublishMonitor extends MbSkuPublishDraffMonitor{
+
+    async filter(url: string, resourceType: string, method: string, headers: { [key: string]: string; }): Promise<boolean> {
+        if(resourceType != "image"){
+            return false;
+        }
+        return url.includes("https://img.alicdn.com/imgextra/i1");
+    }
+
+    getApiName(): string[] {
+        return ["sell/v2/submit.htm"];
+    }
+
+}
