@@ -13,10 +13,10 @@ type PriceRangeConfigReq struct {
 }
 
 type AddSkuTaskReq struct {
-	PublishResourceID int                  `json:"publishResourceId" binding:"required"`
-	Count             int                  `json:"count" binding:"required"`
-	Remark            string               `json:"remark"`
-	PriceRange        *PriceRangeConfigReq `json:"priceRange"`
+	PublishResourceID int                    `json:"publishResourceId" binding:"required"`
+	Count             int                    `json:"count" binding:"required"`
+	Remark            string                 `json:"remark"`
+	PriceRange        []*PriceRangeConfigReq `json:"priceRange"`
 }
 
 type UpdateSkuTaskReq struct {

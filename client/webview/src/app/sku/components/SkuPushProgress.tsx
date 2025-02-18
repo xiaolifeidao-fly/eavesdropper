@@ -133,6 +133,8 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
       return;
     }
 
+    console.log(props.publishResourceId, props.publishConfig);
+
     const callback = (sku : SkuPublishResult | undefined, statistic : SkuPublishStatitic) => {
       onPublishSkuMessage({sku, statistic})
     } 

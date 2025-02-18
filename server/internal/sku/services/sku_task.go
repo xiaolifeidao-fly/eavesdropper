@@ -91,7 +91,7 @@ func getSkuTask(id uint64) (*dto.SkuTaskDTO, error) {
 	return skuTaskDTO, nil
 }
 
-func GetSkuTaskPriceRangeConfigByTaskID(id uint64) (*dto.PriceRangeConfigDTO, error) {
+func GetSkuTaskPriceRangeConfigByTaskID(id uint64) ([]*dto.PriceRangeConfigDTO, error) {
 	var err error
 	skuRepository := repositories.SkuTaskRepository
 
@@ -109,10 +109,10 @@ func GetSkuTaskPriceRangeConfigByTaskID(id uint64) (*dto.PriceRangeConfigDTO, er
 		return nil, nil
 	}
 
-	priceRangeConfig := &dto.PriceRangeConfigDTO{}
-	if err = json.Unmarshal([]byte(priceRateStr), priceRangeConfig); err != nil {
+	priceRangeConfigs := make([]*dto.PriceRangeConfigDTO, 0)
+	if err = json.Unmarshal([]byte(priceRateStr), priceRangeConfigs); err != nil {
 		return nil, errors.New("价格区间配置转换失败")
 	}
 
-	return priceRangeConfig, nil
+	return priceRangeConfigs, nil
 }

@@ -1,5 +1,6 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import type { ProFormInstance } from '@ant-design/pro-components';
 import { StepsForm } from '@ant-design/pro-components';
 import { Modal, message, Button } from 'antd';
 
@@ -19,10 +20,9 @@ interface PushSkuStepsFormProps {
 
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
 
-  const [pushConfig, setPushConfig] = useState<SkuPublishConfig>(new SkuPublishConfig());
   const [sourceAccount, setSourceAccount] = useState<number>(0);
-  const [priceRangeConfig, setPriceRangeConfig] = useState<PriceRangeConfig | undefined>();
-
+  const [pushConfig, setPushConfig] = useState<SkuPublishConfig>(new SkuPublishConfig());
+  const priceRangeConfigFormRef = useRef<ProFormInstance>();
   const [pushSkuFlag, setPushSkuFlag] = useState(false);
   const [current, setCurrent] = useState(0);
   const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
@@ -37,11 +37,14 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
       store.removeItem(`task_${taskId}`);
     }
     props.setVisible(false);
+    setTaskId(0);
     setCurrent(0);
     setUploadUrlList([]);
     setPushSkuFlag(false);
     setUrls([]);
     setOnPublishFinish(false);
+    setPushConfig(new SkuPublishConfig());
+    setSourceAccount(0);
     props.onClose(); // 关闭弹窗
   }
 
@@ -113,17 +116,47 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
               message.error('请选择资源账号');
               return false;
             }
+
+            // 加价区间数据校验
+            let isValid = true;
+            const data = priceRangeConfigFormRef.current?.getFieldsFormatValue?.();
+            const priceRangeList = data.priceRangeList;
+
+            if (Array.isArray(priceRangeList)) {
+              // 遍历 priceRangeList 中的每个元素
+              priceRangeList.forEach((item, index) => {
+                if (
+                  item.minPrice === undefined ||
+                  item.maxPrice === undefined ||
+                  item.priceMultiplier === undefined ||
+                  item.fixedAddition === undefined ||
+                  item.roundTo === undefined
+                ) {
+                  isValid = false;
+                  console.error(`第 ${index + 1} 项数据不完整`, item);
+                }
+              })
+            }
+
+            if (!isValid) {
+              message.error('请确保所有加价区间数据都已填写完整');
+              return;
+            }
+
             if (pushSkuFlag) {
               return true;
             }
             setPushSkuFlag(true);
 
-            pushConfig.priceRate = priceRangeConfig;
+            pushConfig.priceRate = priceRangeList;
             setPushConfig(pushConfig);
             return true;
           }}
         >
-          <SukPushConfig setSourceAccount={setSourceAccount} priceRangeConfig={priceRangeConfig} setPriceRangeConfig={setPriceRangeConfig}/>
+          <SukPushConfig
+            setSourceAccount={setSourceAccount}
+            priceRangeConfigFormRef={priceRangeConfigFormRef}
+          />
         </StepsForm.StepForm>
 
         {/* 第二步： 发布进度 */}

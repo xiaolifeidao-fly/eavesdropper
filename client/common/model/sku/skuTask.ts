@@ -37,7 +37,7 @@ export class PriceRangeConfig {
 
 export class SkuPublishConfig {
   constructor(
-    public priceRate?: PriceRangeConfig,
+    public priceRate?: PriceRangeConfig[],
   ) {
     this.priceRate = priceRate
   }
