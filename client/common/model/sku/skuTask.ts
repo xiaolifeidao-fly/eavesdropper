@@ -64,7 +64,7 @@ export class AddSkuTaskReq {
     public count: number,
     public publishResourceId: number,
     public remark?: string,
-    public priceRange?: PriceRangeConfig,
+    public priceRange?: PriceRangeConfig[],
   ) {
     this.count = count
     this.publishResourceId = publishResourceId
