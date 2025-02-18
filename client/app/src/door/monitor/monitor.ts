@@ -28,6 +28,10 @@ export abstract class Monitor<T = any> {
         });
     }
 
+    async filter(url : string, resourceType : string, method: string, headers: {[key: string]: string;}){
+        return false;
+    }
+    
     setMonitorTimeout(timeout: number){
         this.timeout = timeout;
     }

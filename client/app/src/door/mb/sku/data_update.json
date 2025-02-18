@@ -13,16 +13,16 @@
         "fromAIPublish": false,
         "fromAICategory": false,
         "fromAIImage": false,
-        "traceId": "2150439d17392865999221108e0ed3",
-        "gpfRenderTraceId": "2150439d17392865999221108e0ed3",
-        "trueItemId": 886355966818,
+        "traceId": "215046f317394988442694233e110e",
+        "gpfRenderTraceId": "215046f317394988442694233e110e",
+        "trueItemId": 887815781939,
         "isEdit": false,
         "pageUniqueId": "pc",
         "newPublish": true
     },
     "auctionType": "b",
     "sevenDayDefaultValue": 1,
-    "id": 886355966818,
+    "id": 887815781939,
     "copyItemMode": 0,
     "postCouponPromotionId": null,
     "spuMatch": null,
@@ -49,7 +49,7 @@
     "descRepublicEnable": 1,
     "skyLightRule": null,
     "recommendInfo": "{\"fromAiPublish\":false,\"fromNewImagePublish\":false,\"hasStructTitle\":false}",
-    "dbDraftId": "1185354802",
+    "dbDraftId": "1186817638",
     "draftIdKey": "dbDraftId",
     "firstStartTime": null,
     "itemdiagnoseInfo": "{\"showNewVersion\":true}",
@@ -608,31 +608,31 @@
     "mainImagesGroup": {
         "images": [
             {
-                "url": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01gKwtfl25vomAHbHQq_!!695637589.jpg",
-                "pix": "640x640",
-                "name": "_0.7875644300367484副本_.jpg",
-                "originUrl": "//img.alicdn.com/imgextra/i2/695637589/O1CN018UizmL25vom1qRZZQ_!!695637589.jpg"
-            },
-            {
-                "url": "//img.alicdn.com/imgextra/i3/695637589/O1CN014VtM7S25vom8kBJQ3_!!695637589.jpg",
-                "pix": "750x1000",
-                "width": "750",
-                "height": "1000"
-            },
-            {
-                "url": "//img.alicdn.com/imgextra/i4/695637589/O1CN015JOXSq25vom24Yg06_!!695637589.jpg",
+                "url": "//img.alicdn.com/imgextra/i4/695637589/O1CN01lEWIPS25vomDk5PkB_!!695637589.jpg",
                 "pix": "800x800",
                 "width": "800",
                 "height": "800"
             },
             {
-                "url": "//img.alicdn.com/imgextra/i2/695637589/O1CN01y4uCwv25vom841Mla_!!695637589.jpg",
-                "pix": "750x1000",
-                "width": "750",
-                "height": "1000"
+                "url": "//img.alicdn.com/imgextra/i2/695637589/O1CN01b1ebTC25vomCOGmzI_!!695637589.jpg",
+                "pix": "800x800",
+                "width": "800",
+                "height": "800"
             },
             {
-                "url": "//img.alicdn.com/imgextra/i3/695637589/O1CN01PIvZzW25vom1xPWmh_!!695637589.jpg",
+                "url": "//img.alicdn.com/imgextra/i3/695637589/O1CN019KC4Ta25vomCG4r72_!!695637589.jpg",
+                "pix": "800x800",
+                "width": "800",
+                "height": "800"
+            },
+            {
+                "url": "//img.alicdn.com/imgextra/i3/695637589/O1CN01uhxmcr25vomBwTNXZ_!!695637589.jpg",
+                "pix": "800x800",
+                "width": "800",
+                "height": "800"
+            },
+            {
+                "url": "//img.alicdn.com/imgextra/i3/695637589/O1CN010j8dU025vomBwSVTn_!!695637589.jpg",
                 "pix": "800x800",
                 "width": "800",
                 "height": "800"
@@ -655,12 +655,12 @@
             "userId": 695637589,
             "itemId": 0,
             "templateId": 0,
-            "templateContent": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":650},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":650,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01ZJ7XWx25vomBAXMFL_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":650},\"picMeta\":{\"width\":790,\"height\":828,\"size\":133752,\"id\":1758908367861130500},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1739286905867\",\"groupId\":\"group1739286904848\",\"selected\":false}],\"groupId\":\"group1739286904848\",\"id\":\"group1739286904848\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":960},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":960,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01P1dlDl25vom83zYUG_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":960},\"picMeta\":{\"width\":2480,\"height\":3840,\"size\":406610,\"id\":1758908365016018000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1739286907769\",\"groupId\":\"group1739286906576\",\"selected\":false}],\"groupId\":\"group1739286906576\",\"id\":\"group1739286906576\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}",
+            "templateContent": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01iP9Eyq25vomCONV8u_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":790,\"height\":1133,\"size\":53634,\"id\":1758908368981783000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1739498865470\",\"groupId\":\"group1739498866120\",\"selected\":false}],\"groupId\":\"group1739498866120\",\"id\":\"group1739498866120\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}",
             "version": 0,
             "freeTry": 0,
             "needServerComposite": false,
             "batchPut": false,
-            "detailHeight": 1610,
+            "detailHeight": 889,
             "params": "params",
             "maxHeight": 100000,
             "articleId": 0,
@@ -672,7 +672,7 @@
             "changed": true,
             "catId": 50025787,
             "bizSource": "sell",
-            "draftKey": "sell_695637589_12512_225125",
+            "draftKey": "sell_695637589_12515_10659",
             "descDomain": "//g.alicdn.com",
             "descVersion": "1.1.53",
             "bseller": false,
@@ -687,12 +687,12 @@
             "clientType": 1,
             "catId": 50025787,
             "bizSource": "sell",
-            "draftKey": "sell_695637589_12512_225125",
+            "draftKey": "sell_695637589_12515_10659",
             "descDomain": "//g.alicdn.com",
             "descVersion": "1.1.53",
-            "bseller": false,
             "smart": false,
-            "newItem": true
+            "newItem": true,
+            "bseller": false
         },
         "descPageRenderModel": {
             "wholeConfigBO": {
@@ -780,7 +780,7 @@
         "value": [
             "2"
         ],
-        "template": "64715049640"
+        "template": "65179480960"
     },
     "regionLimitSale": {
         "value": "regionLimitSale_0"
@@ -790,7 +790,7 @@
     "sevenDayOptional": 0,
     "startTime": {
         "type": 0,
-        "shelfTime": 1739285485239
+        "shelfTime": 1739498819872
     },
     "ysbCheckTask": {
         "value": 0
@@ -882,14 +882,5 @@
             "aspectRatio": "(3:4,1:1,9:16,16:9)"
         }
     },
-    "threeToFourImages": [
-        {},
-        {
-            "url": "//img.alicdn.com/imgextra/i3/695637589/O1CN01WT1yfk25vom8UlS3V_!!695637589.jpg",
-            "source": "algo"
-        },
-        {},
-        {},
-        {}
-    ]
+    "diagnoseViolationWarning": false
 }

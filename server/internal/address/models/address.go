@@ -13,7 +13,7 @@ type Address struct {
 
 type AddressTemplate struct {
 	database.BaseEntity
-	ResourceId uint64 `json:"resource_id"`
+	UserNumId  string `json:"user_num_id"`
 	AddressId  uint64 `json:"address_id"`
 	TemplateId string `json:"template_id"`
 }

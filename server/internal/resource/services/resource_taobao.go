@@ -49,7 +49,9 @@ func GetResourceTaobaoByResourceID(resourceID uint64) (*dto.ResourceTaobaoDTO, e
 		logger.Errorf("GetResourceTaobaoByResourceID failed, with error is %v", err)
 		return nil, errors.New("数据库操作失败")
 	}
-
+	if resourceTaobao == nil {
+		return nil, nil
+	}
 	taobaoDTO := database.ToDTO[dto.ResourceTaobaoDTO](resourceTaobao)
 	return taobaoDTO, nil
 }

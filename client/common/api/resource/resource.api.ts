@@ -62,3 +62,9 @@ export const getResourceTagList = async () => {
 export const getMainResourceList = async () => {
   return getDataList(ResourceResp, "/resource/main");
 }
+
+
+export const getUserIdByResourceId = async (resourceId: number) => {
+  const result = await instance.get(`/resource/${resourceId}/userId`)
+  return plainToClass(String, result)
+}

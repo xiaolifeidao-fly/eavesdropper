@@ -13,6 +13,7 @@ type AddressDTO struct {
 
 type AddressTemplateDTO struct {
 	dto.BaseDTO
+	UserNumId  string `json:"userNumId"`
 	ResourceId uint64 `json:"resourceId"`
 	AddressId  uint64 `json:"addressId"`
 	TemplateId string `json:"templateId"`

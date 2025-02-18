@@ -12,6 +12,7 @@ import { MbFileQueryMonitor } from "@src/door/monitor/mb/file/file";
 import { MbEngine } from "../mb.engine";
 import { saveDoorFileRecord } from "@api/door/file.api";
 import { Page } from "playwright";
+import log from "electron-log";
 
 function getFilePaths(skuFileNames: { [key: string]: FileInfo } = {}){
     const filePaths = [];
@@ -22,29 +23,45 @@ function getFilePaths(skuFileNames: { [key: string]: FileInfo } = {}){
     return filePaths;
 }
 
-export async function uploadByFileApi(resourceId : number, skuItemId : string, skuFileNames: { [key: string]: FileInfo } = {}){
+export async function uploadByFileApi(resourceId : number, skuItemId : string, skuFileNames: { [key: string]: FileInfo } = {}) {
     const fileQueryMonitor = new MbFileQueryMonitor();
     const paths = getFilePaths(skuFileNames);
     const unUploadFiles = await getUnUploadFile(fileQueryMonitor.getType(), resourceId, paths);
     if(unUploadFiles.length === 0){
-        const skuFiles = await getSkuFiles(skuItemId);
-        return skuFiles;
+        const skuFiles = await getSkuFiles(skuItemId, resourceId);
+        return {
+            skuFiles : skuFiles,
+            validateUrl : undefined,
+            header : undefined
+        };
     }
     const mbEngine = new MbEngine(resourceId);
     try{
         const page = await mbEngine.init();
         if(!page){
-            return [];
+            return {
+                skuFiles : [],
+                validateUrl : undefined,
+                header : undefined
+            };
         }
         mbEngine.addMonitor(fileQueryMonitor);
         const result = await mbEngine.openWaitMonitor(page, "https://qn.taobao.com/home.htm/sucai-tu/home", fileQueryMonitor);
         if(!result.code){
-            return [];
+            return {
+                skuFiles : [],
+                validateUrl : undefined,
+                header : undefined
+            };
         }
         const headerData = result.getHeaderData();
-        await uploadFileByFileApi(fileQueryMonitor.getType(), resourceId, skuItemId, unUploadFiles, skuFileNames, headerData);
-        const skuFiles = await getSkuFiles(skuItemId);
-        return skuFiles;
+        const uploadResult = await uploadFileByFileApi(fileQueryMonitor.getType(), resourceId, skuItemId, unUploadFiles, skuFileNames, headerData);
+        const skuFiles = await getSkuFiles(skuItemId, resourceId);
+        return {
+            skuFiles : skuFiles,
+            validateUrl : uploadResult,
+            header : headerData
+        };
     }finally{
         await mbEngine.closePage();
     }
@@ -59,8 +76,14 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
         const headers = {
             ...headerData,
             ...form.getHeaders(),
+            ...{
+                "Origin" : "https://qn.taobao.com",
+                "Connection" : "keep-alive",
+                "Sec-Fetch-Dest" : "empty",
+                "Sec-Fetch-Mode" : "cors",
+                "Sec-Fetch-Site" : "same-site"
+            }
         }
-        // 读取图片文件并添加到 FormData 中
         form.append('file', fs.createReadStream(filePath), path.basename(filePath));
         // 发送 POST 请求
         const response = await axios.post("https://stream-upload.taobao.com/api/upload.api?_input_charset=utf-8&appkey=tu&folderId=0&picCompress=true&watermark=false", form, {
@@ -69,17 +92,24 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
         });
         const data = await response.data;
         if(typeof(data) == 'string'){
-            console.log("MbFileUploadMonitor getResponseData error ", data);
-            return;
-        }
-        if('ret' in data){
-            console.log("MbFileUploadMonitor getResponseData error ", data);
-            return;
-        }
-        if(!data || data.success == false){
-            console.log("MbFileUploadMonitor getResponseData error ", data);
+            log.warn("MbFileUploadMonitor getResponseData error ", data);
             continue;
         }
+        if('ret' in data){
+            const ret = data.ret;
+            if(Array.isArray(ret)){
+                const retCode = ret[0];
+                if(retCode == 'FAIL_SYS_USER_VALIDATE'){
+                    log.error("MbFileUploadMonitor getResponseData error ", data);
+                    return data.data.url;
+                }
+            }
+        }
+        if(!data || data.success == false){
+            log.warn("MbFileUploadMonitor getResponseData error ", data);
+            continue;
+        }
+        log.info("MbFileUploadMonitor getResponseData success ", data);
         const fileData : FileData = data.object;
         const doorFileRecord = await saveDoorFileRecordByResult(source, "IMAGE", resourceId, fileData);
         const fileName = doorFileRecord.fileName;
@@ -89,6 +119,7 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
         const fileInfo = skuFileNames[fileName];
         await uploadFileCallBack(doorFileRecord, fileInfo.sortId, skuItemId);
     }
+    return undefined;
 }
 
 async function uploadFileCallBack(doorFileRecord: DoorFileRecord, sortId : number, skuItemId : string): Promise<void> {

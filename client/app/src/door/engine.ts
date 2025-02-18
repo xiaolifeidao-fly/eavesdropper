@@ -8,7 +8,7 @@ import { DoorEntity } from './entity';
 import log from 'electron-log';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
 import { DoorRecord } from '@model/door/door';
-const browserMap = new Map<string, Browser>();
+// const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
 
@@ -54,10 +54,10 @@ export abstract class DoorEngine<T = any> {
     }
 
     public async init(url : string|undefined = undefined) : Promise<Page | undefined> {
-        this.browser = await this.createBrowser();
-        if(!this.context){
-            this.context = await this.createContext();
-        }
+        this.context = await this.createBrowser();
+        // if(!this.context){
+        //     this.context = await this.createContext();
+        // }
         if(!this.context){
             return undefined;
         }
@@ -78,22 +78,29 @@ export abstract class DoorEngine<T = any> {
     }
 
     public async release(){
-        const browserKey = this.getBrowserKey();
-        if(browserMap.has(browserKey)){
-            const browser = browserMap.get(browserKey);
-            if(browser){
-                await browser.close();
-            }
-            browserMap.delete(browserKey);
-        }
+        // const browserKey = this.getBrowserKey();
+        // if(browserMap.has(browserKey)){
+        //     const browser = browserMap.get(browserKey);
+        //     if(browser){
+        //         await browser.close();
+        //     }
+        //     browserMap.delete(browserKey);
+        // }
     }
 
 
-    public async doBeforeRequest(request: Request, headers: { [key: string]: string; }){
+    public async doBeforeRequest(router : Route, request: Request, headers: { [key: string]: string; }){
+        let isFilter = false;
         for(const monitor of this.monitors){
+            if(await monitor.filter(request.url(), request.resourceType(), request.method(), headers)){
+                await router.abort();
+                isFilter = true;
+                continue;
+            }
             if(monitor.finishTag){
                 continue;
             }
+            
             if(!(monitor instanceof MonitorRequest)){
                 continue;
             }
@@ -125,6 +132,7 @@ export abstract class DoorEngine<T = any> {
             monitor._doCallback(new DoorEntity(data ? true : false, data, url, headerData, requestBody));
             monitor.setFinishTag(true);
         }
+        return isFilter;
     }
 
     public async onRequest(page : Page){
@@ -132,7 +140,10 @@ export abstract class DoorEngine<T = any> {
             // 获取请求对象
             const request = router.request();
             const headers = await request.allHeaders();
-            await this.doBeforeRequest(request, headers);
+            const isFilter = await this.doBeforeRequest(router, request, headers);
+            if(isFilter){
+                return;
+            }
             router.continue();
         });
     }
@@ -355,6 +366,15 @@ export abstract class DoorEngine<T = any> {
         return sessionDir;
     }
 
+    getUserDataDir(){
+        const name = this.constructor.name;
+        const userDataDir = path.join(path.dirname(app.getAppPath()),'resource','userDataDir',this.getNamespace(), this.resourceId.toString());
+        if(!fs.existsSync(userDataDir)){
+            fs.mkdirSync(userDataDir, { recursive: true });
+        }
+        return userDataDir;
+    }
+
     abstract getNamespace(): string;
 
     public async saveContextState() {
@@ -436,11 +456,13 @@ export abstract class DoorEngine<T = any> {
     async createBrowser(){
         let key = this.getBrowserKey();
         log.info("browser key is ", key);
-        if(browserMap.has(key)){
-            return browserMap.get(key);
+        if(contextMap.has(key)){
+            return contextMap.get(key);
         }
         let storeBrowserPath = await this.getRealChromePath();
-        const browser = await chromium.launch({
+        const userDataDir = this.getUserDataDir();
+        const platform = await getPlatform();
+        const context = await chromium.launchPersistentContext(userDataDir,{
             headless: this.headless,
             executablePath: storeBrowserPath,
             args: [
@@ -448,10 +470,29 @@ export abstract class DoorEngine<T = any> {
                 '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
                 '--disable-setuid-sandbox',
                 '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
-              ]
-        });
-        browserMap.set(key, browser);
-        return browser;
+            ],
+            extraHTTPHeaders: {
+                'sec-ch-ua': getSecChUa(platform),
+                'sec-ch-ua-mobile': '?0', // 设置为移动设备
+                'sec-ch-ua-platform': `"${platform.userAgentData.platform}"`,
+            },
+            userAgent: platform.userAgent,
+            bypassCSP : true,
+            locale: 'zh-CN',
+        })
+        // const browser = await chromium.launch({
+        //     headless: this.headless,
+        //     executablePath: storeBrowserPath,
+        //     args: [
+        //         '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
+        //         '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
+        //         '--disable-setuid-sandbox',
+        //         '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
+        //       ]
+        // });
+        // browserMap.set(key, browser);
+        contextMap.set(key, context);
+        return context;
     }
 
 }

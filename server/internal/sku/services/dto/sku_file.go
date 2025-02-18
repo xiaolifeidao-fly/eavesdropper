@@ -15,6 +15,7 @@ type SkuFileDetailDTO struct {
 	ItemFileId string `json:"itemFileId"`
 	FileType   string `json:"fileType"`
 	FileUrl    string `json:"fileUrl"`
+	FileSize   uint64 `json:"fileSize"`
 	FileName   string `json:"fileName"`
 	SortId     uint32 `json:"sortId"`
 	SkuItemId  string `json:"skuItemId"`

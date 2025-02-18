@@ -31,6 +31,7 @@ import { uploadByFileApi } from "@src/door/mb/file/file.api";
 import { DoorEntity } from "@src/door/entity";
 import { app } from "electron";
 import sharp from "sharp";
+import { validate } from "@src/validator/image.validator";
 export class MbSkuApiImpl extends MbSkuApi {
 
 
@@ -68,8 +69,8 @@ export class MbSkuApiImpl extends MbSkuApi {
         return skuResult;
     }
 
-    async uploadSkuImages(publishResourceId : number, skuItem : DoorSkuDTO, skuId : number){
-        const { newMainImages, newDetailImages } = await this.downloadSkuImages(skuItem, skuId);
+    async uploadSkuImages(publishResourceId : number, skuItem : DoorSkuDTO){
+        const { newMainImages, newDetailImages } = await this.downloadSkuImages(skuItem);
         const skuFileNames: { [key: string]: FileInfo } = {};
         for (let index = 0; index < newMainImages.length; index++){
             const mainImage = newMainImages[index];
@@ -93,7 +94,7 @@ export class MbSkuApiImpl extends MbSkuApi {
         return await uploadByFileApi(publishResourceId, skuItemId, skuFileNames);
     }
 
-    async getImage(mainImages : string[], detailImages : string[], skuId : number, itemId : string) {
+    async getImage(mainImages : string[], detailImages : string[], itemId : string) {
         try {
             const newMainImages = [];
             const newDetailImages = [];
@@ -134,14 +135,29 @@ export class MbSkuApiImpl extends MbSkuApi {
             }
             const bgResponse = await axios.get(url, { responseType: 'arraybuffer', headers:headers});
             const imageBuffer = Buffer.from(bgResponse.data, 'binary');
+            const imageSharp = sharp(imageBuffer);
             if(needResize){
-                await sharp(imageBuffer)
+                await imageSharp
                 .resize(800, 800) // 设置宽高
                 .toFile(imagePath); // 保存图片到指定路径
                 return imagePath;
             }
-            fs.writeFileSync(imagePath, imageBuffer);
-            return imagePath;
+            const metadata = await imageSharp.metadata();
+            let { width, height } = metadata;
+            if(width && width > 2000){
+                width = 2000;
+            }
+            if(height && height > 1600){
+                height = 1600;
+            }
+            if(width && height){
+                log.info("resize image", width, height);
+                await imageSharp
+                .resize(width, height) // 设置宽高
+                .toFile(imagePath); // 保存图片到指定路径
+                return imagePath;
+            }
+            return undefined;
         } catch (error) {
             log.error('Error downloading images:', url);
             return undefined;
@@ -149,7 +165,7 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
 
-    async downloadSkuImages(skuItem : DoorSkuDTO, skuId : number){
+    async downloadSkuImages(skuItem : DoorSkuDTO){
         const mainImages = skuItem.baseInfo.mainImages;
         const infos = skuItem.doorSkuImageInfo.doorSkuImageInfos;
         const detailImages = [];
@@ -160,7 +176,7 @@ export class MbSkuApiImpl extends MbSkuApi {
                 detailImages.push(content);
             }
         }
-        return this.getImage(mainImages, detailImages, skuId, skuItem.baseInfo.itemId);
+        return this.getImage(mainImages, detailImages, skuItem.baseInfo.itemId);
     }
 
 
@@ -168,6 +184,26 @@ export class MbSkuApiImpl extends MbSkuApi {
         const fileNames ={};
         // const monitor = new MbSkuFileUploadMonitor(publishResourceId, skuId, fileNames);
         // uploadFile(publishResourceId, paths, monitor);
+    }
+
+    async uploadImages(publishResourceId : number, skuItem : DoorSkuDTO, retryNum : number = 0){
+        if (retryNum >= 3){
+            return [];
+        }
+        const uplodaData = await this.uploadSkuImages(publishResourceId, skuItem); // skuId TODO
+        if (!uplodaData){
+            return [];
+        }
+        if(uplodaData.validateUrl && uplodaData.header){
+            const result = await validate(publishResourceId, uplodaData.header, uplodaData.validateUrl);
+            console.log('validate result', result);
+            const skuFiles = await this.uploadImages(publishResourceId, skuItem, retryNum + 1);
+            if(skuFiles){
+                return uplodaData.skuFiles;
+            }
+            return [];
+        }
+        return uplodaData.skuFiles;
     }
 
     @InvokeType(Protocols.INVOKE)
@@ -204,7 +240,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             skuPublishResult.sourceSkuId = skuItem.baseInfo.itemId;
             skuPublishResult.publishSkuId = skuItem.baseInfo.itemId;
             skuPublishResult.publishTime = formatDate(new Date());
-            const imageFileList = await this.uploadSkuImages(publishResourceId, skuItem, 1 ); // skuId TODO
+            const imageFileList = await this.uploadImages(publishResourceId, skuItem); // skuId TODO
             if(imageFileList && imageFileList.length > 0){
                 const result = await publishFromTb(imageFileList, skuItem, publishResourceId, skuItem.baseInfo.itemId);
                 if(!result){
@@ -212,12 +248,15 @@ export class MbSkuApiImpl extends MbSkuApi {
                     skuPublishResult.remark = "发布商品失败";
                     return skuPublishResult;
                 }
+                skuPublishResult.status = SkuStatus.SUCCESS;
+                skuPublishResult.remark = "发布商品成功";
+            }else{
+                skuPublishResult.status = SkuStatus.ERROR;
+                skuPublishResult.remark = "上传图片失败";
             }
-            skuPublishResult.status = SkuStatus.SUCCESS;
             const addSkuReq = plainToClass(AddSkuReq, skuPublishResult);
             const skuId = await addSku(addSkuReq) as number;
             skuPublishResult.id = skuId;
-
             // 发布商品ID
             return skuPublishResult;
         } catch (error: any) {

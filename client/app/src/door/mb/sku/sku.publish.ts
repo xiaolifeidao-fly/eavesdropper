@@ -1,4 +1,4 @@
-import { MbShopDetailMonitorChain, MbSkuPublishDraffMonitor } from "@src/door/monitor/mb/sku/md.sku.info.monitor";
+import { MbShopDetailMonitorChain, MbSkuPublishDraffMonitor, MbSkuPublishMonitor } from "@src/door/monitor/mb/sku/md.sku.info.monitor";
 import { MbEngine } from "../mb.engine";
 import { Page } from "playwright";
 import { DoorEngine } from "@src/door/engine";
@@ -9,15 +9,13 @@ import { SkuFile, SkuFileDetail } from "@model/sku/sku.file";
 import { getSkuDraft, activeSkuDraft, expireSkuDraft } from "@api/sku/sku.draft";
 import log from "electron-log";
 import { getOrSaveTemplateId } from "../logistics/logistics";
-
+import { getUserIdByResourceId } from "@api/resource/resource.api";
 function handlerPeriod(dataSource: { [key: string]: any }[], catValue: string){
     const first = dataSource[0];
     if(!first){
         return undefined;
     }
     const text = first.text;
-    const numbers = text.match(/\d+/g); // 提取所有数字
-    
     if(text.includes("天") && catValue.includes("天")){
         for(const data of dataSource){
             if(data.text == catValue){
@@ -69,11 +67,11 @@ async function doAction(page: Page, ...doActionParams: any[]) {
     const skuDraftId = doActionParams[1];
     // if (!skuDraftId) {
     //     if(imageFileList.length <= 20){
-    //         await fillDetailImage(page, imageFileList);
+    //         await fillDetailImageByPage(page, imageFileList);
     //     }else{
     //         const splitImageFileList = splitArray(imageFileList, 20);
     //         for(const imageFileList of splitImageFileList){
-    //             await fillDetailImage(page, imageFileList);
+    //             await fillDetailImageByPage(page, imageFileList);
     //         }
     //     }
     // }
@@ -103,7 +101,7 @@ async function confirmProtocol(page: Page) {
     }
 }
 
-async function fillDetailImage(page: Page, imageFileList: SkuFileDetail[]) {
+async function fillDetailImageByPage(page: Page, imageFileList: SkuFileDetail[]) {
     if (imageFileList.length == 0) {
         return false;
     }
@@ -215,7 +213,7 @@ function getPublishUrl(skuDraftId: string | undefined, itemId: string) {
 }
 
 export async function publishFromTb(imageFileList: SkuFileDetail[], skuItem: DoorSkuDTO, resourceId: number, itemId: string) {
-    const mbEngine = new MbEngine(resourceId, false);
+    const mbEngine = new MbEngine(resourceId);
     try {
         const page = await mbEngine.init();
         if (!page) {
@@ -270,10 +268,7 @@ async function getCategoryInfo(categoryCode: string, result: DoorEntity<any>, ca
 
 function getStartTraceId(commonData: { data: any }) {
     try {
-        const components = commonData.data.components;
-        console.log("components.fakeCredit.props.icmp.global.value.frontDataLog is ", components.fakeCredit.props.icmp.global.value.frontDataLog);
         const startTraceId = commonData.data.components.fakeCredit.props.icmp.global.value.frontDataLog.traceId;
-        console.log("components.fakeCredit.props.icmp.global.value.frontDataLog.traceId is ", startTraceId);
         return startTraceId;
     } catch (e) {
         return undefined;
@@ -296,6 +291,7 @@ async function activeDraft(resourceId: number, skuItemId: string, skuDraftId: st
         skuDraftId: skuDraftId
     });
 }
+
 
 async function publishSkuByDoor(imageFileList: SkuFileDetail[], resourceId: number, skuDraftId: string | undefined, skuItem: DoorSkuDTO, result: DoorEntity<any>, page: Page) {
     const newSkuDraftId = getSkuDraftIdFromData(skuDraftId, result);
@@ -328,12 +324,7 @@ async function publishSkuByDoor(imageFileList: SkuFileDetail[], resourceId: numb
     await fillPropExt(commonData, skuItem, draftData);
     await fillMainImage(imageFileList, draftData);
     await fillSellInfo(commonData, skuItem, draftData);
-    const updateResult = await updateDraftData(catId, newSkuDraftId, result, startTraceId, draftData);
-    if (!updateResult) {
-        log.info("updateDraftData failed ", updateResult);
-        return false;
-    }
-    const publishResult = await clickPublishButton(resourceId, page, newSkuDraftId, skuItem, draftData, result, catId, startTraceId);
+    const publishResult = await clickPublishButton(resourceId, imageFileList, page, newSkuDraftId, skuItem, draftData, result, catId, startTraceId);
     if (!publishResult) {
         log.info("clickPublishButton failed ", publishResult);
         return false;
@@ -790,10 +781,10 @@ async function updateDraftData(catId: string, draftId: string, result: DoorEntit
         return false;
     }
     if (!res.data.success) {
-        // log.info("res is not success ", res.data);
+        log.info("res is not success ", res.data);
         return false;
     }
-    log.info("draftData is ", JSON.stringify(draftData));
+    // log.info("draftData is ", JSON.stringify(draftData));
     return true;
 }
 
@@ -895,6 +886,9 @@ async function fillLogisticsMode(resourceId : number, skuItemDTO : DoorSkuDTO, d
             "2"
         ]
     };
+    draftData.deliveryTimeType = {
+        "value": "0"
+    };
 }
 
 async function fillMultiDiscountPromotion(page: Page) {
@@ -921,64 +915,160 @@ async function fillMultiDiscountPromotion(page: Page) {
     }
 }
 
-async function clickPublishButton(resourceId : number, page: Page, draftId: string, skuItem: DoorSkuDTO, draftData: { [key: string]: any }, result: DoorEntity<any>, catId: string, startTraceId: string) {
-    const url = "https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=" + draftId;
-    await page.goto(url);
-    await page.waitForTimeout(1000);
-    const commonData = await getCommonData(page);
-    await fillCategoryList(skuItem, draftData, commonData, result, catId, startTraceId);
-    await fillLogisticsMode(resourceId, skuItem, draftData);
-    const updateResult = await updateDraftData(catId, draftId, result, startTraceId, draftData);
-    if (!updateResult) {
-        log.info("updateDraftData failed ", updateResult);
-        return false;
+import sharp from 'sharp';
+async function fillImageDetail(draftData: { [key: string]: any }, imageFileList: SkuFileDetail[]) {
+    const groupImage: { [key: string]: any }[] = [];
+    let groupId = new Date().getTime();
+    const headers = {
+        "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
-    await page.reload();
+    for(const imageFile of imageFileList){
+        groupId = groupId + 1;
+        const componentId = groupId+1;
+        const bgResponse = await axios.get(String(imageFile.fileUrl), { responseType: 'arraybuffer', headers:headers});
+        const imageBuffer = Buffer.from(bgResponse.data, 'binary');
+        const imageSharp = sharp(imageBuffer);
+        const metadata = await imageSharp.metadata();
+        let { width, height } = metadata;
+        const imageJson = {
+            "type": "group",
+            "hide": false,
+            "bizCode": 0,
+            "propertyPanelVisible": true,
+            "level": 1,
+            "boxStyle": {
+              "background-color": "#ffffff",
+              "width": 620,
+              "height": 889
+            },
+            "position": "middle",
+            "groupName": "模块",
+            "scenario": "wde",
+            "components": [
+              {
+                "type": "component",
+                "level": 2,
+                "sellerEditable": true,
+                "boxStyle": {
+                  "rotate": 0,
+                  "z-index": 0,
+                  "top": 0,
+                  "left": 0,
+                  "width": 620,
+                  "height": 889,
+                  "background-image": imageFile.fileUrl
+                },
+                "componentName": "图片组件",
+                "clipType": "rect",
+                "imgStyle": {
+                  "top": 0,
+                  "left": 0,
+                  "width": 620,
+                  "height": 889
+                },
+                "picMeta": {
+                  "width": width,
+                  "height": height,
+                  "size": imageFile.fileSize,
+                  "id": Number(imageFile.itemFileId)
+                },
+                "isEdit": false,
+                "componentType": "pic",
+                "componentId": "component" + componentId,
+                "groupId": "group" + groupId,
+                "selected": false
+              }
+            ],
+            "groupId": "group" + groupId,
+            "id": "group" + groupId,
+            "bizName": "图文模块"
+        }
+        groupImage.push(imageJson);
+    }
+    const detailJson = {
+        "groups": groupImage,
+        "sellergroups": []
+    }
+    const templateContent = JSON.stringify(detailJson);
+    draftData.descRepublicOfSell.descPageCommitParam.templateContent = templateContent;
+}
 
+async function submitDraft(skuItem: DoorSkuDTO, draftData: { [key: string]: any }, result: DoorEntity<any>, catId: string, startTraceId: string) {
+    const url = "https://item.upload.taobao.com/sell/v2/submit.htm";
+    const data = {
+        "catId": catId,
+        "itemId": skuItem.baseInfo.itemId,
+        "jsonBody": JSON.stringify(draftData),
+        "copyItemMode" : 0,
+        "globalExtendInfo": JSON.stringify({ "startTraceId": startTraceId })
+    };
+    const requestHeader = result.getHeaderData();
+    console.log("requestHeader is ", requestHeader);
+    const res = await axios.post(url, data, {
+        headers: requestHeader
+    })
+    console.log("res is ", JSON.stringify(res.data));
+
+}
+
+
+async function clickPublishButtonByPage(page: Page, ...doActionParams: any[]){
     try {
         await confirmProtocol(page);
     } catch (e) {
         log.info("confirmProtocol error", e);
     }
-    // try{
-    //     await fillMultiDiscountPromotion(page);
-    // }catch(e){
-    //     log.info("multiDiscountPromotion error", e);
-    // }
- 
-    await page.waitForTimeout(1000);
-    const requestPromise = page.waitForResponse(response =>
-        response.request().url().includes("sell/v2/submit.htm"),
-        { timeout: 10000 }
-    );
+    log.info("clickPublishButton start ");
     const publishButton = await page.locator("button[_id='button-submit']").first();
     await publishButton.click();
-    const response = await requestPromise.catch(e => {
-        return null;
-    });
-    if(response){
-        try{
-            const responseData = await response.json();
-            log.info("responseData is ", responseData);
-            const type = responseData.models?.globalMessage?.type;
-            if(!type){
-                log.info("publish is error by ", responseData);
-                return false;
-            }
-            if(type == "error"){
-                log.info("publish is error by ", responseData);
-                return false;
-            }
-            if(type == "success"){
-                return true;
-            }
-            return false;
-        }catch(e){
-            log.info("response json error", e);
+    log.info("clickPublishButton end ");
+}
+
+async function clickPublishButton(resourceId : number, imageFileList: SkuFileDetail[], page: Page, draftId: string, skuItem: DoorSkuDTO, draftData: { [key: string]: any }, result: DoorEntity<any>, catId: string, startTraceId: string) {
+    const commonData = await getCommonData(page);
+    await fillCategoryList(skuItem, draftData, commonData, result, catId, startTraceId);
+    await fillLogisticsMode(resourceId, skuItem, draftData);
+    await fillImageDetail(draftData, imageFileList);
+    const updateResult = await updateDraftData(catId, draftId, result, startTraceId, draftData);
+    if (!updateResult) {
+        log.info("updateDraftData failed ", updateResult);
+        return false;
+    }
+    const engine = new MbEngine(resourceId);
+    const newPage = await engine.init();
+    if(!newPage){
+        log.info("newPage is null");
+        return false;
+    }
+    try{
+        await confirmProtocol(newPage);
+        const url = "https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=" + draftId;
+        const newResult = await engine.openWaitMonitor(newPage, url, new MbSkuPublishMonitor(), {}, clickPublishButtonByPage);
+        if(!newResult){
+            log.info("newResult is null");
             return false;
         }
+        const responseData = newResult.getData();
+        log.info("responseData is ", responseData);
+        const type = responseData.models?.globalMessage?.type;
+        if(!type){
+            log.info("publish is error by ", responseData);
+            return false;
+        }
+        if(type == "error"){
+            log.info("publish is error by ", JSON.stringify(responseData));
+            return false;
+        }
+        if(type == "success"){
+            return true;
+        }
+        return false;
+    }catch(e){
+        log.info("confirmProtocol error", e);
+        return false;
+    } finally{
+        await engine.closePage();
     }
-    return false;
 }
 
 
@@ -1001,3 +1091,4 @@ async function clickSaveDraf(page: Page) {
     // 保存草稿
     await page.locator(".sell-draft-save-btn button").click();
 }
+

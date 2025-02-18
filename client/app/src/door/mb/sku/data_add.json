@@ -1,7 +1,7 @@
 {
     "frontDataLog": {
         "identityId": "general-taobao-100",
-        "mainCategoryId": 50016348,
+        "mainCategoryId": 30,
         "fromSmart": false,
         "fromStandardSpuPublish": false,
         "fromSearch": false,
@@ -13,20 +13,25 @@
         "fromAIPublish": false,
         "fromAICategory": false,
         "fromAIImage": false,
-        "traceId": "215046cc17392683763485822e13b8",
-        "gpfRenderTraceId": "215046cc17392683763485822e13b8",
-        "trueItemId": 886978488510,
+        "traceId": "2150473a17394587086018533e0d2b",
+        "gpfRenderTraceId": "2150473a17394587086018533e0d2b",
+        "trueItemId": 887011063013,
         "isEdit": false,
         "pageUniqueId": "pc",
         "newPublish": true
     },
     "auctionType": "b",
     "sevenDayDefaultValue": 1,
-    "id": 886978488510,
+    "id": 887011063013,
     "copyItemMode": 0,
     "postCouponPromotionId": null,
     "spuMatch": null,
-    "croRule": "{\"url\":\"asyncOpt.htm?optType=croRuleAsyncCheck&catId=50025787\",\"input\":[\"id\",\"userId\",\"catId\",\"title\",\"desc\",\"descForShenbiPc\",\"sku\",\"price\",\"catProp\",\"saleProp\",\"descType\",\"shopping_title\",\"skuPublishSuggest\"]}",
+    "croRule": "{\"url\":\"asyncOpt.htm?optType=croRuleAsyncCheck&catId=50011165\",\"input\":[\"id\",\"userId\",\"catId\",\"title\",\"desc\",\"descForShenbiPc\",\"sku\",\"price\",\"catProp\",\"saleProp\",\"descType\",\"shopping_title\",\"skuPublishSuggest\"]}",
+    "subSizeRecommend": null,
+    "subSizeMapping": {
+        "supportSizeReference": true
+    },
+    "subSizeModelTryInfo": null,
     "itemWithScProductItem": null,
     "multiDiscountPromotionId": null,
     "batchInventoryTemplateId": null,
@@ -43,6 +48,7 @@
     "feedbackSubmit_catErrorWarningSubmit": false,
     "taobaoMarketTransform": null,
     "taobaoMarketClean": null,
+    "xiaoxin": null,
     "snapshotId": null,
     "showDraft": 1,
     "newDescVersion": 1,
@@ -58,68 +64,78 @@
     "aliColorEnable": "p-1627207",
     "mediaCenterEnable": null,
     "newMaterialEnable": null,
-    "catId": 50025787,
+    "catId": 50011165,
     "userId": 695637589,
     "base-card": {},
     "stuffStatus": {
         "value": 5
     },
     "catProp": {
-        "p-148818081": {
-            "value": 29148,
-            "text": "欧洲"
+        "p-122216347": {
+            "value": 16019865786,
+            "text": "2024年冬季"
         },
-        "p-148818081-148810019": {
-            "value": 27413,
-            "text": "德国"
+        "p-122216562": {
+            "value": 40626789,
+            "text": "常规款"
+        },
+        "p-122216586": {
+            "value": 4042331,
+            "text": "宽松型"
+        },
+        "p-20663": {
+            "value": 29541,
+            "text": "立领"
+        },
+        "p-31611": {
+            "value": 115481,
+            "text": "拉链"
+        },
+        "p-122216588": {
+            "value": 129555,
+            "text": "印花"
         },
         "p-20019": {
-            "value": 36683608,
-            "text": "除螨杀菌"
+            "value": 4194098,
+            "text": "保暖"
         },
-        "p-1626518": {
-            "value": 50288,
-            "text": "通用"
+        "p-122216515": {
+            "value": 29535,
+            "text": "其他休闲"
         },
-        "p-16050426": {
-            "value": 32442894,
-            "text": "粘扣式"
+        "p-122216608": {
+            "value": 3267959,
+            "text": "青年"
         },
-        "p-9769346": {
-            "value": 7484237,
-            "text": "超细纤维"
+        "p-122276336": {
+            "value": 190810599,
+            "text": "侧缝插袋"
         },
-        "p-17451350": {
-            "value": 493280753,
-            "text": "80%(含)-90%(不含)"
+        "p-122216507": {
+            "value": 113060,
+            "text": "加厚"
         },
-        "p-9698492": {
-            "value": 493280757,
-            "text": "10s以下"
+        "p-42722636": {
+            "value": 248572013,
+            "text": "青春流行"
         },
-        "p-17450836": {
-            "value": 493280740,
-            "text": "8级(含)-8.9级(含)"
+        "p-42718685": {
+            "value": 178914558,
+            "text": "潮"
         },
-        "p-17451043": {
-            "value": 46308072,
-            "text": "10KG以上"
+        "p-20603": {
+            "value": 14863995,
+            "text": "其他/other"
         },
-        "p-19185976": {
-            "value": 3612252,
-            "text": "铝"
-        },
-        "p-31514": {
-            "value": 84901,
-            "text": "手动"
-        },
-        "p-148060595": "41.5×14×134cm",
-        "p-20000": {
-            "value": 91181364,
-            "text": "简简风"
+        "p-122216629": {
+            "value": 3267927,
+            "text": "免烫处理"
         }
     },
     "spuConfirm": 1,
+    "customize": {
+        "value": "customize_0"
+    },
     "globalStock": {
         "value": "globalStock_0"
     },
@@ -128,606 +144,36 @@
     },
     "sale-card": {},
     "saleProp": {
-        "p-1627207": [
-            {
-                "value": "-33996498556",
-                "text": "2024德国水喷雾拖把★41型【共1块原装拖布】",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN01296hEC1Ymlap4sM1b_!!2210344783102.jpg"
-            },
-            {
-                "value": "-33657242864",
-                "text": "2024德国水喷雾拖把-41型【共2块原装拖布】",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN01QVHVqR1YmlamaeAvB_!!2210344783102.jpg"
-            },
-            {
-                "value": "-33657557420",
-                "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i4/2210344783102/O1CN01D3QDfD1YmlanaD2rk_!!2210344783102.jpg"
-            },
-            {
-                "value": "-34501036010",
-                "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i3/2210344783102/O1CN01ADQa6T1YmlcrBxfWt_!!2210344783102.png"
-            },
-            {
-                "value": "-33657557421",
-                "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯+地板专用清洁剂*500ml",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i4/2210344783102/O1CN01t7hJgy1Ymlap4xeeU_!!2210344783102.jpg"
-            },
-            {
-                "value": "-33657557422",
-                "text": "2024德国水喷雾拖把-41型【共3块原装拖布】+刮刀+量杯+地板专用清洁剂*500ml",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i2/2210344783102/O1CN0183oe9R1YmlajfFSks_!!2210344783102.jpg"
-            },
-            {
-                "value": "-34501036011",
-                "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯+3瓶地板专用清洁剂*500ml",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN010K3YMy1Ymlam1QovF_!!2210344783102.jpg"
-            },
-            {
-                "value": "-34501036012",
-                "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯+3瓶地板专用清洁剂*500ml",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN01PFT2ov1YmlcsCh2b1_!!2210344783102.png"
-            },
-            {
-                "value": "-34501036013",
-                "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯+6瓶地板专用清洁剂*500ml",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i3/2210344783102/O1CN01EpxQ0w1YmlcsCc0ek_!!2210344783102.png"
-            },
-            {
-                "value": "-34501036014",
-                "text": "6瓶简简风德国拖把专用地板清洁剂",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN014NbmsU1YmlamWlhaF_!!2210344783102.jpg"
-            },
-            {
-                "value": "-35201967933",
-                "text": "7块德国细纤维原装拖布（不包含拖把）",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN01cWBmWq1YmlcglDpaP_!!2210344783102.png"
-            },
-            {
-                "value": "-35201967934",
-                "text": "5块德国细纤维原装拖布+1瓶德国拖把地板清洁剂（不包含拖把）",
-                "pix": "800x871",
-                "img": "https://gw.alicdn.com/bao/uploaded/i4/2210344783102/O1CN01rkWBR81Ymlcim7brY_!!2210344783102.png"
+        "p-20509": {
+            "selectedSizeGroupId": {
+                "text": "中国号型A",
+                "value": "136553091-men_tops",
+                "subName": "sizeGroup_136553091-men_tops",
+                "sizeGroupType": "men_tops"
             }
-        ]
+        }
+    },
+    "sizeMappingV3": {
+        "sizeRecommend": {
+            "supportOneDim": true,
+            "disabled": false
+        },
+        "sizeMapping": {
+            "disabled": false
+        },
+        "sizeModelTryInfo": {
+            "disabled": false
+        }
     },
     "deliveryTimeType": {
         "value": 0
     },
-    "sku": [
-        {
-            "cspuId": 0,
-            "skuPrice": "127",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-33996498556",
-                    "text": "2024德国水喷雾拖把★41型【共1块原装拖布】",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN01296hEC1Ymlap4sM1b_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--33996498556",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "137",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 59,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-33657242864",
-                    "text": "2024德国水喷雾拖把-41型【共2块原装拖布】",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN01QVHVqR1YmlamaeAvB_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--33657242864",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "147",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-33657557420",
-                    "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i4/2210344783102/O1CN01D3QDfD1YmlanaD2rk_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--33657557420",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "178",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-34501036010",
-                    "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i3/2210344783102/O1CN01ADQa6T1YmlcrBxfWt_!!2210344783102.png",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--34501036010",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "162",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-33657557421",
-                    "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯+地板专用清洁剂*500ml",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i4/2210344783102/O1CN01t7hJgy1Ymlap4xeeU_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--33657557421",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "175",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-33657557422",
-                    "text": "2024德国水喷雾拖把-41型【共3块原装拖布】+刮刀+量杯+地板专用清洁剂*500ml",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i2/2210344783102/O1CN0183oe9R1YmlajfFSks_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--33657557422",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "198",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-34501036011",
-                    "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯+3瓶地板专用清洁剂*500ml",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN010K3YMy1Ymlam1QovF_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--34501036011",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "228",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-34501036012",
-                    "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯+3瓶地板专用清洁剂*500ml",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN01PFT2ov1YmlcsCh2b1_!!2210344783102.png",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--34501036012",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "288",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-34501036013",
-                    "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯+6瓶地板专用清洁剂*500ml",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i3/2210344783102/O1CN01EpxQ0w1YmlcsCc0ek_!!2210344783102.png",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--34501036013",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "128",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-34501036014",
-                    "text": "6瓶简简风德国拖把专用地板清洁剂",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN014NbmsU1YmlamWlhaF_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--34501036014",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "99",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-35201967933",
-                    "text": "7块德国细纤维原装拖布（不包含拖把）",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i1/2210344783102/O1CN01cWBmWq1YmlcglDpaP_!!2210344783102.png",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--35201967933",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "99",
-            "skuBatchInventory": null,
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "skuCustomize": {
-                "text": "否",
-                "value": 0
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": "-35201967934",
-                    "text": "5块德国细纤维原装拖布+1瓶德国拖把地板清洁剂（不包含拖把）",
-                    "pix": "800x871",
-                    "img": "https://gw.alicdn.com/bao/uploaded/i4/2210344783102/O1CN01rkWBR81Ymlcim7brY_!!2210344783102.png",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--35201967934",
-            "errorInfo": {},
-            "skuSpecification": null,
-            "skuTitle": null
-        }
-    ],
-    "quantity": "2259",
-    "multiDiscountPromotion": {
-        "type": 1,
-        "value": 9.5,
-        "enable": false
-    },
+    "deliveryTimeSetBySku": 0,
+    "sku": [],
+    "quantity": 1,
     "sizeinfo-card": {},
     "desc-card": {},
-    "mainImagesGroup": {
-        "images": [
-            {
-                "url": "https://img.alicdn.com/imgextra/i2/695637589/O1CN018UizmL25vom1qRZZQ_!!695637589.jpg",
-                "pix": "800x800"
-            },
-            {
-                "url": "https://img.alicdn.com/imgextra/i3/695637589/O1CN014VtM7S25vom8kBJQ3_!!695637589.jpg",
-                "pix": "800x800"
-            },
-            {
-                "url": "https://img.alicdn.com/imgextra/i4/695637589/O1CN015JOXSq25vom24Yg06_!!695637589.jpg",
-                "pix": "800x800"
-            },
-            {
-                "url": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01y4uCwv25vom841Mla_!!695637589.jpg",
-                "pix": "800x800"
-            },
-            {
-                "url": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01PIvZzW25vom1xPWmh_!!695637589.jpg",
-                "pix": "800x800"
-            },
-            {
-                "url": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RRcgbr25vomCDvLp3_!!695637589.jpg",
-                "pix": "800x800"
-            },
-            {
-                "url": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01xBHJkk25vom2pvxPz_!!695637589.jpg",
-                "pix": "800x800"
-            },
-            {
-                "url": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01VsTzZg25vom8k4wD8_!!695637589.jpg",
-                "pix": "800x800"
-            },
-            {
-                "url": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01nluLMU25vom1bZHhK_!!695637589.jpg",
-                "pix": "800x800"
-            },
-            {
-                "url": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01hLThku25vomAkc5fy_!!695637589.jpg",
-                "pix": "800x800"
-            }
-        ]
-    },
+    "mainImagesGroup": {},
     "auctionVideos": [],
     "desc": "",
     "descForShenbiPc": {
@@ -743,7 +189,7 @@
             "clientType": 1,
             "bizSource": "sell",
             "userId": 695637589,
-            "itemId": 886978488510,
+            "itemId": 887011063013,
             "templateId": 0,
             "version": 0,
             "freeTry": 0,
@@ -754,12 +200,12 @@
             "maxHeight": 100000,
             "articleId": 0,
             "sell": false,
-            "bsellerBack2OldVersion": false,
-            "fliggyItem": false,
-            "newItem": true,
             "smart": false,
+            "bsellerBack2OldVersion": false,
+            "newItem": true,
             "changed": true,
-            "catId": 50025787,
+            "fliggyItem": false,
+            "catId": 50011165,
             "descDomain": "//g.alicdn.com",
             "descVersion": "1.1.53",
             "bseller": false,
@@ -769,16 +215,16 @@
         },
         "descPageRenderParam": {
             "userId": 695637589,
-            "itemId": 886978488510,
+            "itemId": 887011063013,
             "templateId": 0,
             "clientType": 1,
-            "catId": 50025787,
+            "catId": 50011165,
             "bizSource": "sell",
             "descDomain": "//g.alicdn.com",
             "descVersion": "1.1.53",
-            "newItem": true,
+            "smart": false,
             "bseller": false,
-            "smart": false
+            "newItem": true
         },
         "descPageRenderModel": {
             "wholeConfigBO": {
@@ -798,7 +244,7 @@
                     "params": {
                         "isAdescription": 1,
                         "catId": 0,
-                        "itemId": 886978488510,
+                        "itemId": 887011063013,
                         "clientType": 1,
                         "isV3": "true"
                     },
@@ -858,7 +304,12 @@
         "value": 1
     },
     "deliver-card": {},
-    "tbExtractWay": {},
+    "tbExtractWay": {
+        "value": [
+            "2"
+        ],
+        "template": "65179480960"
+    },
     "regionLimitSale": {
         "value": "regionLimitSale_0"
     },
@@ -875,88 +326,7 @@
     "home-service-card": {},
     "aiFood-card": {},
     "product-card": {},
-    "afterSaleVideoNew": {
-        "afterSaleVideo_sub_1": {
-            "name": "afterSaleVideo_sub_1",
-            "uiType": "videos",
-            "required": false,
-            "mediaType": "afterSaleVideo",
-            "appKey": "42",
-            "version": null,
-            "otherParams": {
-                "from": "pc_sell_afterbuyvideo",
-                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
-                "minDuration": "30",
-                "size": "1GB",
-                "maxDuration": "420"
-            },
-            "aspectRatio": "(3:4,1:1,9:16,16:9)"
-        },
-        "afterSaleVideo_sub_2": {
-            "name": "afterSaleVideo_sub_2",
-            "uiType": "videos",
-            "required": false,
-            "mediaType": "afterSaleVideo",
-            "appKey": "42",
-            "version": null,
-            "otherParams": {
-                "from": "pc_sell_afterbuyvideo",
-                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
-                "minDuration": "30",
-                "size": "1GB",
-                "maxDuration": "420"
-            },
-            "aspectRatio": "(3:4,1:1,9:16,16:9)"
-        },
-        "afterSaleVideo_sub_3": {
-            "name": "afterSaleVideo_sub_3",
-            "uiType": "videos",
-            "required": false,
-            "mediaType": "afterSaleVideo",
-            "appKey": "42",
-            "version": null,
-            "otherParams": {
-                "from": "pc_sell_afterbuyvideo",
-                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
-                "minDuration": "30",
-                "size": "1GB",
-                "maxDuration": "420"
-            },
-            "aspectRatio": "(3:4,1:1,9:16,16:9)"
-        },
-        "afterSaleVideo_sub_4": {
-            "name": "afterSaleVideo_sub_4",
-            "uiType": "videos",
-            "required": false,
-            "mediaType": "afterSaleVideo",
-            "appKey": "42",
-            "version": null,
-            "otherParams": {
-                "from": "pc_sell_afterbuyvideo",
-                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
-                "minDuration": "30",
-                "size": "1GB",
-                "maxDuration": "420"
-            },
-            "aspectRatio": "(3:4,1:1,9:16,16:9)"
-        },
-        "afterSaleVideo_sub_5": {
-            "name": "afterSaleVideo_sub_5",
-            "uiType": "videos",
-            "required": false,
-            "mediaType": "afterSaleVideo",
-            "appKey": "42",
-            "version": null,
-            "otherParams": {
-                "from": "pc_sell_afterbuyvideo",
-                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
-                "minDuration": "30",
-                "size": "1GB",
-                "maxDuration": "420"
-            },
-            "aspectRatio": "(3:4,1:1,9:16,16:9)"
-        }
-    },
-    "title": "简简风百货平板喷水拖把寝室德国2024新款家用拖地神器懒人地拖布",
-    "price": "99"
+    "diagnoseViolationWarning": false,
+    "customizeBySku": 0,
+    "sevenDayNotSupport": null
 }
