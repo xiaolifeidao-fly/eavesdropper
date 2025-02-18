@@ -19,9 +19,25 @@ export class SkuTask {
   }
 }
 
+export class PriceRangeConfig {
+  constructor(
+    public minPrice: number,
+    public maxPrice: number,
+    public priceMultiplier: number,
+    public fixedAddition: number,
+    public roundTo: string
+  ) {
+    this.minPrice = minPrice // 最小价格
+    this.maxPrice = maxPrice // 最大价格
+    this.priceMultiplier = priceMultiplier // 价格乘以的系数
+    this.fixedAddition = fixedAddition // 加上固定值
+    this.roundTo = roundTo // 保留单位,元(yuan),角(jiao),分(fen)
+  }
+}
+
 export class SkuPublishConfig {
   constructor(
-    public priceRate: string,
+    public priceRate?: PriceRangeConfig,
   ) {
     this.priceRate = priceRate
   }
@@ -47,13 +63,13 @@ export class AddSkuTaskReq {
   constructor(
     public count: number,
     public publishResourceId: number,
-    public priceRate: string,
-    public remark?: string
+    public remark?: string,
+    public priceRange?: PriceRangeConfig,
   ) {
     this.count = count
     this.publishResourceId = publishResourceId
     this.remark = remark
-    this.priceRate = priceRate
+    this.priceRange = priceRange
   }
 }
 

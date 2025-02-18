@@ -4,11 +4,19 @@ import (
 	"server/internal/sku/services/dto"
 )
 
+type PriceRangeConfigReq struct {
+	MinPrice        float64 `json:"minPrice" binding:"required"`
+	MaxPrice        float64 `json:"maxPrice" binding:"required"`
+	PriceMultiplier float64 `json:"priceMultiplier" binding:"required"`
+	FixedAddition   float64 `json:"fixedAddition"`
+	RoundTo         string  `json:"roundTo"`
+}
+
 type AddSkuTaskReq struct {
-	PublishResourceID int    `json:"publishResourceId" binding:"required"`
-	Count             int    `json:"count" binding:"required"`
-	Remark            string `json:"remark"`
-	PriceRate         string `json:"priceRate"`
+	PublishResourceID int                  `json:"publishResourceId" binding:"required"`
+	Count             int                  `json:"count" binding:"required"`
+	Remark            string               `json:"remark"`
+	PriceRange        *PriceRangeConfigReq `json:"priceRange"`
 }
 
 type UpdateSkuTaskReq struct {

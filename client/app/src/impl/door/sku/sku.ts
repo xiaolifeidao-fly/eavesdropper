@@ -233,7 +233,7 @@ export class MbSkuApiImpl extends MbSkuApi {
         // 1. 创建task记录
         const count = skuUrls.length;
         const priceRate = publishConfig.priceRate;
-        const req = new AddSkuTaskReq(count, publishResourceId, priceRate);
+        const req = new AddSkuTaskReq(count, publishResourceId, "", priceRate);
         const taskId = await addSkuTask(req) as number;
 
         const skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId);

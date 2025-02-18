@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"server/app/sku/vo"
 	"server/common"
 	"server/common/converter"
@@ -36,6 +37,10 @@ func AddSkuTask(ctx *gin.Context) {
 
 	var taskID uint64
 	taskDTO := converter.ToDTO[dto.SkuTaskDTO](&req)
+	if req.PriceRange != nil {
+		priceRangeByte, _ := json.Marshal(req.PriceRange)
+		taskDTO.PriceRate = string(priceRangeByte)
+	}
 	taskDTO.Status = string(dto.SkuTaskStatusPending)
 	taskDTO.UserID = common.GetLoginUserID()
 	taskDTO.CreatedBy = common.GetLoginUserID()

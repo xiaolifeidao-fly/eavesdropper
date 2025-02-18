@@ -1,27 +1,15 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StepsForm } from '@ant-design/pro-components';
-import type { InputNumberProps } from 'antd';
-import { Modal, message, Button, Form, Select, InputNumber } from 'antd';
+import { Modal, message, Button } from 'antd';
 
 import ImportSku from './SkuLinkUpload';
 import type { LinkInfo } from './SkuLinkUpload';
 import SkuPushProgress from './SkuPushProgress';
 import type { SkuUrl } from './SkuPushProgress';
-import SukPushConfirm from './SkuPushConfirm';
-import type { PublishResult } from './SkuPushConfirm';
+import SukPushConfig from './SkuPushConfig';
 import { StoreApi } from '@eleapi/store/store';
-import { getMainResourceList } from '@api/resource/resource.api';
-import { LabelValue } from '@model/base/base';
-import { getShopList } from '@api/shop/shop.api';
-
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
+import { SkuPublishConfig, PriceRangeConfig } from "@model/sku/skuTask";
 
 interface PushSkuStepsFormProps {
   visible: boolean;
@@ -31,9 +19,9 @@ interface PushSkuStepsFormProps {
 
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
 
+  const [pushConfig, setPushConfig] = useState<SkuPublishConfig>(new SkuPublishConfig());
   const [sourceAccount, setSourceAccount] = useState<number>(0);
-  const [priceRate, setpriceRate] = useState<string | null>("1");
-  const [sourceList, setSourceList] = useState<{}[]>([]);
+  const [priceRangeConfig, setPriceRangeConfig] = useState<PriceRangeConfig | undefined>();
 
   const [pushSkuFlag, setPushSkuFlag] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -43,24 +31,6 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   const [taskId, setTaskId] = useState<number>(0);
 
   const store = new StoreApi();
-
-  useEffect(() => {
-    initSourceAccount();
-  }, []);
-
-  const initSourceAccount = async () => {
-    const shopList = await getShopList();
-    const sourceList: {}[] = [];
-    for (const shop of shopList) {
-      sourceList.push({
-        value: shop.resourceId,
-        label: shop.name
-      })
-    }
-    setSourceList(sourceList);
-  }
-
-
 
   const onCancel = () => {
     if (taskId > 0) {
@@ -84,11 +54,18 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
         }}
         submitter={{
           render: (props) => {
+            const lastStep = 2;
             const step = props.step;
             const buttons = [];
-            const buttonNextText = step === 1 ? "确认发布" : "下一步";
+            const buttonNextText = step === lastStep ? "确认发布" : "下一步";
             buttons.push(<Button key={`cancel-${step}`} onClick={() => { onCancel() }}>取消</Button>);
-            buttons.push(<Button type="primary" key={`submit-${step}`} onClick={() => props.onSubmit?.()} disabled={step === 1 && !onPublishFinish}>{buttonNextText}</Button>);
+            buttons.push(
+              <Button
+                type="primary" key={`submit-${step}`}
+                onClick={() => props.onSubmit?.()} disabled={step === lastStep && !onPublishFinish}>
+                {buttonNextText}
+              </Button>
+            );
             return buttons;
           }
         }}
@@ -114,43 +91,39 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           title="导入链接"
           style={{ height: '400px' }}
           onFinish={async () => {
-            if (sourceAccount === 0) {
-              message.error('请选择资源账号');
-              return false;
-            }
-
             if (uploadUrlList.length === 0) {
               message.error('请先导入链接');
               return false;
             }
-
-            if (pushSkuFlag) {
-              return true;
-            }
-
             const urls: SkuUrl[] = uploadUrlList.map(item => { return { url: item.url } });
             setUrls(urls);
-            setPushSkuFlag(true);
             return true;
           }}
         >
-          <Select
-            placeholder="请选择资源账号"
-            options={sourceList}
-            onChange={(value) => setSourceAccount(value)}
-            style={{ width: '100%', margin: 0, padding: 0 }}
-          />
-          <InputNumber<string>
-            style={{ width: '100%', marginTop: 10, padding: 0 }}
-            defaultValue="1"
-            placeholder="输入价格浮动率"
-            min="1"
-            max="100000"
-            step="0.01"
-            stringMode
-            onChange={(value) => setpriceRate(value)}
-          />
           <ImportSku uploadUrlList={uploadUrlList} setUploadUrlList={setUploadUrlList} />
+        </StepsForm.StepForm>
+
+        {/* 发布配置 */}
+        <StepsForm.StepForm
+          name="config"
+          title="发布配置"
+          style={{ height: '400px' }}
+          onFinish={async () => {
+            if (!sourceAccount || sourceAccount === 0) {
+              message.error('请选择资源账号');
+              return false;
+            }
+            if (pushSkuFlag) {
+              return true;
+            }
+            setPushSkuFlag(true);
+
+            pushConfig.priceRate = priceRangeConfig;
+            setPushConfig(pushConfig);
+            return true;
+          }}
+        >
+          <SukPushConfig setSourceAccount={setSourceAccount} priceRangeConfig={priceRangeConfig} setPriceRangeConfig={setPriceRangeConfig}/>
         </StepsForm.StepForm>
 
         {/* 第二步： 发布进度 */}
@@ -165,26 +138,14 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           }}
         >
           <SkuPushProgress
+            publishStatus={pushSkuFlag}
             publishResourceId={sourceAccount}
-            priceRate={priceRate}
+            publishConfig={pushConfig}
             urls={urls}
             onPublishFinish={setOnPublishFinish}
             setTaskId={setTaskId}
           />
         </StepsForm.StepForm>
-
-        {/* 第三步： 发布确认 */}
-        {/* <StepsForm.StepForm
-          name="time"
-          title="发布确认"
-          onFinish={async () => {
-            onCancel(); // 关闭弹窗
-            message.success('发布完成');
-            return false;
-          }}
-        >
-          <SukPushConfirm {...publishResult} />
-        </StepsForm.StepForm> */}
       </StepsForm>
     </>
   )

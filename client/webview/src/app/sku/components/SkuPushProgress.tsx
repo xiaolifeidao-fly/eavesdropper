@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Progress, Table, message, Tag, Button, Popover } from 'antd';
 import type { TableColumnsType } from 'antd';
 
-import type { PublishResult } from "./SkuPushConfirm";
 import { MbSkuApi } from '@eleapi/door/sku/mb.sku';
 import { SkuPublishResult } from "@model/sku/sku";
 import { SkuPublishStatitic, SkuPublishConfig } from "@model/sku/skuTask";
@@ -29,11 +28,17 @@ export interface SkuUrl {
 }
 
 interface SkuPushProgressProps {
+  publishStatus: boolean;
   publishResourceId: number;
-  priceRate: string | null;
+  publishConfig: SkuPublishConfig;
   urls: SkuUrl[];
   onPublishFinish: (finish: boolean) => void;
   setTaskId: (taskId: number) => void;
+}
+
+interface OnPublishSkuMessageParam {
+  sku: SkuPublishResult | undefined, 
+  statistic: SkuPublishStatitic
 }
 
 const mbSkuApi = new MbSkuApi();
@@ -85,7 +90,9 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     },
   ];
 
-  const onPublishSkuMessage: (sku: SkuPublishResult | undefined, statistic: SkuPublishStatitic) => void = (sku: SkuPublishResult | undefined, statistic: SkuPublishStatitic) => {
+  const onPublishSkuMessage: (param: OnPublishSkuMessageParam) => void = (param: OnPublishSkuMessageParam) => {
+    const sku = param.sku;
+    const statistic = param.statistic;
     console.log("onPublishSkuMessage: ", sku, statistic);
     if (sku == undefined){
       if (statistic.status == SkuTaskStatus.ERROR){
@@ -121,24 +128,22 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
   };
 
   useEffect(() => {
-    if (props.urls.length === 0) {
-      console.log("uploadUrlList is empty");
+    if (!props.publishStatus || props.urls.length === 0) {
+      console.log(props.publishStatus, props.urls.length);
       return;
     }
 
+    const callback = (sku : SkuPublishResult | undefined, statistic : SkuPublishStatitic) => {
+      onPublishSkuMessage({sku, statistic})
+    } 
+
     // 监听商品发布消息
-    mbSkuApi.onPublishSkuMessage(onPublishSkuMessage).then(() => {
+    mbSkuApi.onPublishSkuMessage(callback).then(() => {
 
       const urls = props.urls.map(item => item.url);
 
       // 监听任务完成之后批量发布商品
-      let priceRate = props.priceRate;
-      if (!priceRate) {
-        priceRate = "1";
-      }
-
-      const publishConfig = new SkuPublishConfig(priceRate);
-      mbSkuApi.batchPublishSkus(props.publishResourceId, publishConfig, urls).then((task?: SkuTask) => {
+      mbSkuApi.batchPublishSkus(props.publishResourceId, props.publishConfig, urls).then((task?: SkuTask) => {
         console.log("batchPublishSkus task: ", task);
         if (task) {
           props.setTaskId(task.id as number);
@@ -150,7 +155,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.urls]);
+  }, [props.publishStatus]);
 
   return (
     <>

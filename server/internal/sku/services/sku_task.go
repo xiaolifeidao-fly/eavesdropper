@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	"server/common"
 	"server/common/middleware/database"
@@ -88,4 +89,30 @@ func getSkuTask(id uint64) (*dto.SkuTaskDTO, error) {
 
 	skuTaskDTO := database.ToDTO[dto.SkuTaskDTO](skuTask)
 	return skuTaskDTO, nil
+}
+
+func GetSkuTaskPriceRangeConfigByTaskID(id uint64) (*dto.PriceRangeConfigDTO, error) {
+	var err error
+	skuRepository := repositories.SkuTaskRepository
+
+	skuTask, err := skuRepository.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if skuTask == nil || skuTask.ID <= 0 {
+		return nil, errors.New("任务不存在")
+	}
+
+	priceRateStr := skuTask.PriceRate
+	if priceRateStr == "" {
+		return nil, nil
+	}
+
+	priceRangeConfig := &dto.PriceRangeConfigDTO{}
+	if err = json.Unmarshal([]byte(priceRateStr), priceRangeConfig); err != nil {
+		return nil, errors.New("价格区间配置转换失败")
+	}
+
+	return priceRangeConfig, nil
 }

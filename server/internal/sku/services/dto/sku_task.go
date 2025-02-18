@@ -34,6 +34,14 @@ type SkuTaskDTO struct {
 	PriceRate         string `json:"priceRate"`
 }
 
+type PriceRangeConfigDTO struct {
+	MinPrice        float64 `json:"minPrice" binding:"required"`        // 最小值
+	MaxPrice        float64 `json:"maxPrice" binding:"required"`        // 最大值
+	PriceMultiplier float64 `json:"priceMultiplier" binding:"required"` // 价格乘率
+	FixedAddition   float64 `json:"fixedAddition"`                      // 加上
+	RoundTo         string  `json:"roundTo"`                            // 保留值单位
+}
+
 type UpdateSkuTaskDTO struct {
 	ID     uint64               `json:"id"`
 	Status string               `json:"status"`
