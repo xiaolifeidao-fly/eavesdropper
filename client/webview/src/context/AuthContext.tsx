@@ -37,16 +37,19 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const router = useRouter();
 
   useEffect(() => {
-    // 加载登录用户信息
-    if (!loginToken) {
-      if (window.location.pathname !== "/auth/login") {
-        message.error("请先登录");
+    getItem(REQUEST_HEADER_TOKEN).then((value: string) => {
+      if (value) {
+        setLoginToken(value);
+        fetchUserInfo();
+      } else {
+        if (window.location.pathname !== "/auth/login") {
+          message.error("请先登录");
+        }
+        router.push("/auth/login");
+        return;
       }
-      router.push("/auth/login");
-      return;
-    }
-    fetchUserInfo();
-  }, [loginToken, router])
+    })
+  }, [router])
 
   // 获取登录用户信息
   const fetchUserInfo = async () => {
@@ -94,11 +97,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       console.error(error);
     }
 
+    console.log("logout.....");
     clearUserLogin();
   }
 
   // 清除用户登录信息
   const clearUserLogin = async () => {
+    console.log("clearUserLogin.....");
     await removeItem(REQUEST_HEADER_TOKEN)
     setLoginToken(null);
     setUser(null);
