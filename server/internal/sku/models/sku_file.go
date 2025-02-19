@@ -19,6 +19,7 @@ type SkuFileDetail struct {
 	FileSize   uint64 `json:"file_size"`
 	FileName   string `json:"file_name"`
 	SortId     uint32 `json:"sort_id"`
+	Pix        string `json:"pix"`
 }
 
 func (f *SkuFileInfo) TableName() string {

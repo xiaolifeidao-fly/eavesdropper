@@ -36,3 +36,21 @@ type AddSkuTaskItemDTO struct {
 	Status string `json:"status"`
 	Remark string `json:"remark"`
 }
+
+var (
+	STEP_PENDING = "PENDING"
+	STEP_DONE    = "DONE"
+	STEP_ERROR   = "ERROR"
+	STEP_INIT    = "INIT"
+)
+
+type SkuTaskStepDTO struct {
+	dto.BaseDTO
+	StepKey     string `json:"StepKey"`
+	Status      string `json:"status"`
+	Code        string `json:"code"`
+	GroupCode   string `json:"groupCode"`
+	ValidateUrl string `json:"validateUrl"`
+	ResourceId  uint64 `json:"resourceId"`
+	Message     string `json:"message"`
+}

@@ -510,7 +510,6 @@ export async function initPlatform(){
     let browser : Browser | undefined = undefined;
     try{
         let platform = await getPlatform();
-        log.info("get login platform is ", JSON.stringify(platform));
         if(platform){
             return platform;
         }

@@ -28,6 +28,7 @@ type DoorFileRecordDTO struct {
 	FileUrl    string `json:"fileUrl"`
 	FileName   string `json:"fileName"`
 	FileKey    string `json:"fileKey"`
+	Pix        string `json:"pix"`
 }
 
 // DoorSkuDTO 商品信息

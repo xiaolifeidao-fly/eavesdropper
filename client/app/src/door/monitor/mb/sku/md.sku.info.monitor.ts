@@ -1,6 +1,7 @@
 import { MbMonitorChain, MbMonitorResponse } from "@src/door/monitor/mb/mb.monitor";
 import { Monitor, MonitorChain } from "../../monitor";
 import {Response} from 'playwright'
+import log from "electron-log";
 
 
 export class MbSkuInfoMonitor extends MbMonitorResponse<{}>{
@@ -69,14 +70,20 @@ export class MbSkuPublishDraffMonitor extends MbMonitorResponse<{}>{
 
     public async getResponseData(response: Response): Promise<any>{
         const contentType = response.headers()['content-type'];
+        log.info("contentType is ", contentType);
         if(contentType.includes('application/json')){
             const result =  await response.json();
+            log.info("json result is ", result);
             return result;
         }
         if (contentType && contentType.includes('text/html')) {
-            return await response.text();
+            const text = await response.text();
+            log.info("html result is ", text);
+            return text;
         }
-        return await response.body();
+        const body = await response.body();
+        log.info("other body result is ", body);
+        return body;
     }
 
 }
@@ -84,6 +91,9 @@ export class MbSkuPublishDraffMonitor extends MbMonitorResponse<{}>{
 export class MbSkuPublishMonitor extends MbSkuPublishDraffMonitor{
 
     async filter(url: string, resourceType: string, method: string, headers: { [key: string]: string; }): Promise<boolean> {
+        if(resourceType == 'xhr'){
+            console.log("MbSkuPublishMonitor url is ", url);
+        }
         if(resourceType != "image"){
             return false;
         }

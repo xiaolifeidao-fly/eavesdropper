@@ -22,12 +22,14 @@ export class SkuFileDetail extends SkuFile {
     fileSize : number|undefined;
     fileUrl : string|undefined;
     fileName : string|undefined;
-    constructor(id? : number, fileId? : number, type? : string, sortId? : number, itemFileId? : string, fileType? : string, fileUrl? : string, fileName? : string, fileSize? : number, skuItemId? : string) {
+    pix : string|undefined; 
+    constructor(id? : number, fileId? : number, type? : string, sortId? : number, itemFileId? : string, fileType? : string, fileUrl? : string, fileName? : string, fileSize? : number, skuItemId? : string, pix? : string) {
         super(id, fileId, type, sortId, skuItemId);
         this.itemFileId = itemFileId;
         this.fileType = fileType;
         this.fileUrl = fileUrl;
         this.fileName = fileName;
         this.fileSize = fileSize;
+        this.pix = pix;
     }
 }

@@ -58,8 +58,8 @@ func GetListByEntity[P any](db *gorm.DB, sql string, entity P, values ...interfa
 }
 
 // Execute 执行SQL
-func (r *Repository[T]) Execute(sql string, params map[string]interface{}) error {
-	return r.Db.Exec(sql, params).Error
+func (r *Repository[T]) Execute(sql string, params ...interface{}) error {
+	return r.Db.Exec(sql, params...).Error
 }
 
 // FindById 根据ID查找

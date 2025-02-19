@@ -23,8 +23,9 @@ export class DoorFileRecord {
     fileSize: number|undefined;
     folderId: string|undefined;
     fileKey: string|undefined;
+    pix: string|undefined;
 
-    constructor(id?: number, source?: string, fileId?: string, resourceId?: number, fileType?: string, fileName?: string, fileUrl?: string, fileSize?: number, folderId?: string, fileKey?: string) {
+    constructor(id?: number, source?: string, fileId?: string, resourceId?: number, fileType?: string, fileName?: string, fileUrl?: string, fileSize?: number, folderId?: string, fileKey?: string, pix?: string) {
         this.id = id;
         this.source = source;
         this.fileId = fileId;
@@ -35,6 +36,7 @@ export class DoorFileRecord {
         this.fileSize = fileSize;
         this.folderId = folderId;
         this.fileKey = fileKey;
+        this.pix = pix;
     }
 }
 

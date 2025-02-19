@@ -2,7 +2,7 @@ import { DoorEntity } from "@src/door/entity";
 import { Request, Response } from "playwright";
 import { MbMonitorResponse } from "../mb.monitor";
 import log from "electron-log";
-import { getDoorFileRecord, saveDoorFileRecord } from "@api/door/file.api";
+import { saveDoorFileRecord } from "@api/door/file.api";
 import { DoorFileRecord } from "@model/door/door";
 import { getStringHash } from "@utils/crypto.util";
 export class FileData {
@@ -119,8 +119,10 @@ export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
             return;
         }
         const url = data.url;
+        const pix = data.pix;
+        console.log("pix ", pix);
         const fileKey = getFileKey(fileName);
-        const doorFileRecord = new DoorFileRecord(undefined, this.getType(), fileId, this.resourceId, "IMAGE", fileName, url, Number(data.size), data.folderId, fileKey);
+        const doorFileRecord = new DoorFileRecord(undefined, this.getType(), fileId, this.resourceId, "IMAGE", fileName, url, Number(data.size), data.folderId, fileKey,pix);
         const result = await saveDoorFileRecord(doorFileRecord);
         await this.uploadFileCallBack(result);
     }

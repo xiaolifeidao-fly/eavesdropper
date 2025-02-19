@@ -32,6 +32,8 @@ import { DoorEntity } from "@src/door/entity";
 import { app } from "electron";
 import sharp from "sharp";
 import { validate } from "@src/validator/image.validator";
+import { getStringHash } from "@utils/crypto.util";
+import { SkuPublishHandler } from "@src/impl/step/publish/sku.publish.handler";
 export class MbSkuApiImpl extends MbSkuApi {
 
 
@@ -69,7 +71,7 @@ export class MbSkuApiImpl extends MbSkuApi {
         return skuResult;
     }
 
-    async uploadSkuImages(publishResourceId : number, skuItem : DoorSkuDTO){
+    async uploadSkuImages(publishResourceId : number, skuItem : DoorSkuDTO, headerData : { [key: string]: any }){
         const { newMainImages, newDetailImages } = await this.downloadSkuImages(skuItem);
         const skuFileNames: { [key: string]: FileInfo } = {};
         for (let index = 0; index < newMainImages.length; index++){
@@ -91,7 +93,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             skuFileNames[fileName] = new FileInfo(fileName, index, "detail", detailImage);
         }   
         const skuItemId = skuItem.baseInfo.itemId;
-        return await uploadByFileApi(publishResourceId, skuItemId, skuFileNames);
+        return await uploadByFileApi(publishResourceId, skuItemId, skuFileNames, headerData);
     }
 
     async getImage(mainImages : string[], detailImages : string[], itemId : string) {
@@ -186,18 +188,15 @@ export class MbSkuApiImpl extends MbSkuApi {
         // uploadFile(publishResourceId, paths, monitor);
     }
 
-    async uploadImages(publishResourceId : number, skuItem : DoorSkuDTO, retryNum : number = 0){
-        if (retryNum >= 3){
-            return [];
-        }
-        const uplodaData = await this.uploadSkuImages(publishResourceId, skuItem); // skuId TODO
+    async uploadImages(publishResourceId : number, skuItem : DoorSkuDTO, headerData : { [key: string]: any } = {}){
+        const uplodaData = await this.uploadSkuImages(publishResourceId, skuItem, headerData); // skuId TODO
         if (!uplodaData){
             return [];
         }
         if(uplodaData.validateUrl && uplodaData.header){
             const result = await validate(publishResourceId, uplodaData.header, uplodaData.validateUrl);
             console.log('validate result', result);
-            const skuFiles = await this.uploadImages(publishResourceId, skuItem, retryNum + 1);
+            const skuFiles = await this.uploadImages(publishResourceId, skuItem, headerData);
             if(skuFiles){
                 return uplodaData.skuFiles;
             }
@@ -208,6 +207,46 @@ export class MbSkuApiImpl extends MbSkuApi {
 
     @InvokeType(Protocols.INVOKE)
     async publishSku(publishResourceId : number, skuUrl : string, taskId : number) : Promise<SkuPublishResult>{
+        const skuPublishResult = new SkuPublishResult(taskId, publishResourceId, SkuStatus.PENDING);
+        skuPublishResult.url = skuUrl;
+
+        try {
+            // 校验商品是否存在
+            const checkSkuExistenceReq = new CheckSkuExistenceReq(skuUrl, publishResourceId);
+            const checkResult = await checkSkuExistence(checkSkuExistenceReq);
+            if(checkResult){ // 商品已存在
+                skuPublishResult.status = SkuStatus.ERROR;
+                skuPublishResult.remark = "商品已存在";
+                return skuPublishResult;
+            }
+            const withParams = {
+                "skuUrl" : skuUrl,
+                "resourceId" : publishResourceId
+            }
+            const skuUrlKey = getStringHash(skuUrl);
+            const publishHandler = new SkuPublishHandler(skuUrlKey, publishResourceId);
+            const result = await publishHandler.doStep(withParams);
+            if(!result || !result.result){
+                skuPublishResult.status = SkuStatus.ERROR;
+                skuPublishResult.remark = result?.message || "发布商品失败";
+                return skuPublishResult;
+            }
+            skuPublishResult.status = SkuStatus.SUCCESS;
+            skuPublishResult.remark = "发布商品成功";
+            const addSkuReq = plainToClass(AddSkuReq, skuPublishResult);
+            const skuId = await addSku(addSkuReq) as number;
+            skuPublishResult.id = skuId;
+            // 发布商品ID
+            return skuPublishResult;
+        } catch (error: any) {
+            log.error("publishSku error", error);
+            skuPublishResult.status = SkuStatus.ERROR;
+            skuPublishResult.remark = error.message;
+            return skuPublishResult;
+        }   
+    }
+
+    async publishSkuByOld(publishResourceId : number, skuUrl : string, taskId : number){
         const skuPublishResult = new SkuPublishResult(taskId, publishResourceId, SkuStatus.PENDING);
         skuPublishResult.url = skuUrl;
 

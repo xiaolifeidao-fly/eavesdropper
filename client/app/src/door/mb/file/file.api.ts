@@ -23,7 +23,7 @@ function getFilePaths(skuFileNames: { [key: string]: FileInfo } = {}){
     return filePaths;
 }
 
-export async function uploadByFileApi(resourceId : number, skuItemId : string, skuFileNames: { [key: string]: FileInfo } = {}) {
+export async function uploadByFileApi(resourceId : number, skuItemId : string, skuFileNames: { [key: string]: FileInfo } = {}, headerData : { [key: string]: any } = {}) {
     const fileQueryMonitor = new MbFileQueryMonitor();
     const paths = getFilePaths(skuFileNames);
     const unUploadFiles = await getUnUploadFile(fileQueryMonitor.getType(), resourceId, paths);
@@ -35,15 +35,32 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
             header : undefined
         };
     }
+    const header = await getHeaderData(resourceId, skuItemId, headerData, fileQueryMonitor);
+    if(!header){
+        return {
+            skuFiles : [],
+            validateUrl : undefined,
+            header : undefined
+        };
+    }
+    const uploadResult = await uploadFileByFileApi(fileQueryMonitor.getType(), resourceId, skuItemId, unUploadFiles, skuFileNames, header);
+    const skuFiles = await getSkuFiles(skuItemId, resourceId);
+    return {
+        skuFiles : skuFiles,
+        validateUrl : uploadResult,
+        header : header
+    };
+}
+
+async function getHeaderData(resourceId : number, skuItemId : string, headerData : { [key: string]: any }, fileQueryMonitor : MbFileQueryMonitor){
+    if(headerData && Object.keys(headerData).length > 0){
+        return headerData;
+    }
     const mbEngine = new MbEngine(resourceId);
     try{
         const page = await mbEngine.init();
         if(!page){
-            return {
-                skuFiles : [],
-                validateUrl : undefined,
-                header : undefined
-            };
+            return undefined;
         }
         mbEngine.addMonitor(fileQueryMonitor);
         const result = await mbEngine.openWaitMonitor(page, "https://qn.taobao.com/home.htm/sucai-tu/home", fileQueryMonitor);
@@ -54,14 +71,7 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
                 header : undefined
             };
         }
-        const headerData = result.getHeaderData();
-        const uploadResult = await uploadFileByFileApi(fileQueryMonitor.getType(), resourceId, skuItemId, unUploadFiles, skuFileNames, headerData);
-        const skuFiles = await getSkuFiles(skuItemId, resourceId);
-        return {
-            skuFiles : skuFiles,
-            validateUrl : uploadResult,
-            header : headerData
-        };
+        return result.getHeaderData();
     }finally{
         await mbEngine.closePage();
     }
@@ -141,6 +151,7 @@ export async function saveDoorFileRecordByResult(source : string, fileType : str
     }
     const url = data.url;
     const fileKey = getFileKey(fileName);
-    const doorFileRecord = new DoorFileRecord(undefined, source, fileId, resourceId, fileType, fileName, url, Number(data.size), data.folderId, fileKey);
+    const pix = data.pix;
+    const doorFileRecord = new DoorFileRecord(undefined, source, fileId, resourceId, fileType, fileName, url, Number(data.size), data.folderId, fileKey, pix);
     return await saveDoorFileRecord(doorFileRecord);
 }   

@@ -325,7 +325,7 @@ async function publishSkuByDoor(imageFileList: SkuFileDetail[], resourceId: numb
     await fillMainImage(imageFileList, draftData);
     await fillSellInfo(commonData, skuItem, draftData);
     const publishResult = await clickPublishButton(resourceId, imageFileList, page, newSkuDraftId, skuItem, draftData, result, catId, startTraceId);
-    if (!publishResult) {
+    if (!publishResult) { 
         log.info("clickPublishButton failed ", publishResult);
         return false;
     }

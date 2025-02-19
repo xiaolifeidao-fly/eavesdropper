@@ -1,0 +1,779 @@
+import { MbEngine } from "@src/door/mb/mb.engine";
+import { StepResult, StepUnit } from "../../step.unit";
+import { AbsPublishStep, confirmProtocol } from "./abs.publish";
+import { activeSkuDraft, getSkuDraft } from "@api/sku/sku.draft";
+import { MbSkuPublishDraffMonitor } from "@src/door/monitor/mb/sku/md.sku.info.monitor";
+import { Page } from "playwright-core";
+import log from "electron-log"
+import { SkuFileDetail } from "@model/sku/sku.file";
+import { DoorEntity } from "@src/door/entity";
+import { DoorSkuDTO, SkuItem } from "@model/door/sku";
+import axios from "axios";
+import { getOrSaveTemplateId } from "@src/door/mb/logistics/logistics";
+
+async function doAction(page: Page, ...doActionParams: any[]) {
+    await page.waitForTimeout(1000);
+    await confirmProtocol(page);
+    await clickSaveDraf(page);
+}
+
+async function clickSaveDraf(page: Page) {
+    // 保存草稿
+    await page.locator(".sell-draft-save-btn button").click();
+}
+
+function handlerPeriod(dataSource: { [key: string]: any }[], catValue: string){
+    const first = dataSource[0];
+    if(!first){
+        return undefined;
+    }
+    const text = first.text;
+    if(text.includes("天") && catValue.includes("天")){
+        for(const data of dataSource){
+            if(data.text == catValue){
+                return {
+                    value: data.value,
+                    text: data.text
+                }
+            }
+        }
+        return undefined;
+    }
+    if(text.includes("月") && catValue.includes("月")){
+        for(const data of dataSource){
+            if(data.text == catValue){
+                return {
+                    value: data.value,
+                    text: data.text
+                }
+            }
+        }
+        return undefined;
+    }
+    return undefined;
+}
+
+const specialCatProHandler: { [key: string]: (dataSource: { [key: string]: any }[], catValue: string) => any } = {
+    "保质期": handlerPeriod
+}
+
+
+export class SkuBuildDraftStep extends AbsPublishStep{
+
+
+    async doStep(): Promise<StepResult> {
+        const resourceId = this.getParams("resourceId");
+        const skuItem = this.getParams("skuItem");
+        const imageFileList = this.getParams("imageFileList");
+        const mbEngine = new MbEngine(resourceId);
+        try {
+            const page = await mbEngine.init();
+            if (!page) {
+                return new StepResult(false, "打开发布页面失败") ;
+            }
+            const itemId = skuItem.baseInfo.itemId;
+            let skuDraftId = await this.getSkuDraftIdFromDB(resourceId, itemId);
+            let url = this.getPublishUrl(skuDraftId, itemId);
+            const result = await mbEngine.openWaitMonitor(page, url, new MbSkuPublishDraffMonitor(), {}, doAction, imageFileList, skuDraftId);
+            if (!result) {
+                return new StepResult(false, "添加草稿失败") ;
+            }
+            const draftData = await this.buildDraftData(imageFileList, resourceId, skuDraftId, skuItem, result, page);
+            if(!draftData.draftData){
+                return new StepResult(false, draftData.message) ;
+            }
+            return new StepResult(true, "添加草稿成功", draftData.draftData, result.getHeaderData());
+        } catch (error) {
+            log.error(error);
+            return new StepResult(false, "添加草稿失败") ;
+        } finally {
+            await mbEngine.closePage();
+        }
+    }
+
+    async getCommonData(page: Page) {
+        // 获取window对象中 json 数据 
+        const commonData = await page.evaluate(() => {
+            return {
+                // @ts-ignore
+                data: window.Json,
+                // @ts-ignore
+                userAgent: navigator.userAgent,
+                // @ts-ignore
+                csrfToken: window.csrfToken.tokenValue
+            };
+        });
+        return commonData;
+    }
+    
+    async buildDraftData(imageFileList: SkuFileDetail[], resourceId: number, skuDraftId: string | undefined, skuItem: DoorSkuDTO, result: DoorEntity<any>, page: Page) {
+        const newSkuDraftId = this.getSkuDraftIdFromData(skuDraftId, result);
+        if (!newSkuDraftId) {
+            log.info("newSkuDraftId not found ", newSkuDraftId);
+            return {
+                draftData : undefined,
+                message : "newSkuDraftId not found"
+            };
+        }
+        await this.activeDraft(resourceId, skuItem.baseInfo.itemId, newSkuDraftId);
+        console.log("wait for networkidle start");
+        await page.waitForLoadState('networkidle');
+        console.log("wait for networkidle end");
+        let commonData = await this.getCommonData(page);
+        if (!commonData) {
+            log.info("commonData not found ", commonData);
+            return {
+                draftData : undefined,
+                message : "commonData not found"
+            };
+        }
+        const startTraceId = this.getStartTraceId(commonData);
+        log.info("startTraceId is  ", startTraceId);
+        if (!startTraceId) {
+            log.info("startTraceId not found ", startTraceId);
+            return {
+                draftData : undefined,
+                message : "startTraceId not found"
+            };
+        }
+        const catId = this.getCatIdFromUrl(result);
+        if (!catId) {
+            log.info("catId not found ", catId);
+            return {
+                draftData : undefined,
+                message : "catId not found"
+            };
+        }
+        const draftData = JSON.parse(result.requestBody.jsonBody);
+        await this.fixSaleProp(commonData, skuItem);
+        await this.fillTiltle(skuItem, draftData);
+        await this.fillCategoryList(skuItem, draftData, commonData, result, catId, startTraceId);
+        await this.fillPropExt(commonData, skuItem, draftData);
+        await this.fillMainImage(imageFileList, draftData);
+        await this.fillSellInfo(commonData, skuItem, draftData);
+        await this.fillLogisticsMode(resourceId, skuItem, draftData);
+        const imageDetailResult = await this.fillImageDetail(draftData, imageFileList);
+        if(!imageDetailResult){
+            return {
+                draftData : undefined,
+                message : "fillImageDetail failed"
+            };
+        }
+        return {
+            draftData :     {
+                catId: catId,
+                draftId: newSkuDraftId,
+                startTraceId: startTraceId,
+                draftData: draftData,
+                itemId: skuItem.baseInfo.itemId
+            },
+            message : "buildDraftData success"
+        }
+    }
+
+    async fillLogisticsMode(resourceId : number, skuItemDTO : DoorSkuDTO, draftData: { [key: string]: any }) {
+        const templateId = await getOrSaveTemplateId(resourceId, skuItemDTO);
+        draftData.tbExtractWay = {
+            "template": templateId,
+            "value": [
+                "2"
+            ]
+        };
+        draftData.deliveryTimeType = {
+            "value": "0"
+        };
+    }
+
+    async fillImageDetail(draftData: { [key: string]: any }, imageFileList: SkuFileDetail[]) {
+        const groupImage: { [key: string]: any }[] = [];
+        let groupId = new Date().getTime();
+        for(const imageFile of imageFileList){
+            groupId = groupId + 1;
+            const componentId = groupId+1;
+            const pix = imageFile.pix;
+            if(!pix){
+                return false;
+            }
+            const pixArray = pix.split("x");
+            const width = pixArray[0];
+            const height = pixArray[1];
+            const imageJson = {
+                "type": "group",
+                "hide": false,
+                "bizCode": 0,
+                "propertyPanelVisible": true,
+                "level": 1,
+                "boxStyle": {
+                  "background-color": "#ffffff",
+                  "width": 620,
+                  "height": 889
+                },
+                "position": "middle",
+                "groupName": "模块",
+                "scenario": "wde",
+                "components": [
+                  {
+                    "type": "component",
+                    "level": 2,
+                    "sellerEditable": true,
+                    "boxStyle": {
+                      "rotate": 0,
+                      "z-index": 0,
+                      "top": 0,
+                      "left": 0,
+                      "width": 620,
+                      "height": 889,
+                      "background-image": imageFile.fileUrl
+                    },
+                    "componentName": "图片组件",
+                    "clipType": "rect",
+                    "imgStyle": {
+                      "top": 0,
+                      "left": 0,
+                      "width": 620,
+                      "height": 889
+                    },
+                    "picMeta": {
+                      "width": width,
+                      "height": height,
+                      "size": imageFile.fileSize,
+                      "id": Number(imageFile.itemFileId)
+                    },
+                    "isEdit": false,
+                    "componentType": "pic",
+                    "componentId": "component" + componentId,
+                    "groupId": "group" + groupId,
+                    "selected": false
+                  }
+                ],
+                "groupId": "group" + groupId,
+                "id": "group" + groupId,
+                "bizName": "图文模块"
+            }
+            groupImage.push(imageJson);
+        }
+        const detailJson = {
+            "groups": groupImage,
+            "sellergroups": []
+        }
+        const templateContent = JSON.stringify(detailJson);
+        draftData.descRepublicOfSell.descPageCommitParam.templateContent = templateContent;
+        return true;
+    }
+
+    async fillSellInfo(commonData: { data: any }, skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[], saleProp: { [key: string]: { [key: string]: any }[] } }) {
+        draftData.price = skuItem.doorSkuSaleInfo.price;
+        draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
+        await this.fillSellProp(commonData, skuItem, draftData);
+        await this.fillSellSku(skuItem, draftData);
+    }
+
+    async fillSellSku(skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[] }) {
+        const salesSkus = skuItem.doorSkuSaleInfo.salesSkus;
+        const skuList: { [key: string]: any }[] = [];
+        let quantity = 0;
+        let minPrice = 0;
+        for (const sale of salesSkus) {
+            quantity += Number(sale.quantity);
+    
+            if (minPrice == 0 || Number(sale.price) < minPrice) {
+                minPrice = Number(sale.price);
+            }
+            skuList.push({
+                cspuId: 0,
+                skuPrice: sale.price,
+                skuBatchInventory: null,
+                action: { selected: true },
+                skuId: null,
+                skuStatus: 1,
+                skuStock: Number(sale.quantity),
+                skuQuality: { value: "mainSku", text: "单品", prefilled: true, prefilledText: { bottom: "<span style='color:#ff6600'>请确认分类</span>" } },
+                skuDetail: [],
+                skuCustomize: {
+                    "text": "否",
+                    "value": 0
+                },
+                disabled: false,
+                props: this.buildSalePros(sale.salePropPath, skuItem),
+                salePropKey: this.buildSalePropKey(sale.salePropPath),
+                errorInfo: {},
+                skuSpecification: null,
+                skuTitle: null
+            })
+        }
+        if (minPrice > 0) {
+            draftData.price = minPrice.toString();
+        }
+        if (quantity > 0) {
+            draftData.quantity = quantity.toString();
+        }
+        draftData.sku = skuList;
+    
+    }
+
+    buildSalePropKey(salePropPath: string) {
+        const saleProps = salePropPath.split(";");
+        const salePropKey = [];
+        for (const saleProp of saleProps) {
+            const salePropIds = saleProp.split(":");
+            salePropKey.push(salePropIds[0] + "-" + salePropIds[1]);
+        }
+        return salePropKey.join("_");
+    }
+
+    
+    buildSalePros(sellPropPath: string, skuItem: DoorSkuDTO) {
+        const saleItems: { [key: string]: any }[] = [];
+        const saleProps = sellPropPath.split(";")
+        for (const saleProp of saleProps) {
+            const salePropIds = saleProp.split(":");
+            const saleParentId = salePropIds[0];
+            const salePropId = salePropIds[1];
+            const saleItem = this.buildSaleItem(saleParentId, salePropId, skuItem);
+            if (saleItem) {
+                saleItems.push(saleItem);
+            }
+        }
+        return saleItems;
+    }
+
+    buildSaleItem(saleParentId: string, salePropId: string, skuItem: DoorSkuDTO) {
+        const salesAttrs = skuItem.doorSkuSaleInfo.salesAttr["p-" + saleParentId];
+        const saleProps = salesAttrs.values;
+        const saleItem: { [key: string]: any } = {};
+        for (const saleProp of saleProps) {
+            if (saleProp.value == salePropId) {
+                saleItem["name"] = "p-" + saleParentId;
+                saleItem["value"] = salePropId;
+                saleItem["text"] = saleProp.text;
+                if (salesAttrs.hasImage == 'true') {
+                    saleItem["pix"] = "800x871";
+                    saleItem["img"] = saleProp.image;
+                }
+                saleItem["label"] = salesAttrs.label;
+                return saleItem;
+            }
+        }
+        return undefined;
+    }
+    
+
+    async fillSellProp(commonData: { data: any }, skuItem: DoorSkuDTO, draftData: { [key: string]: any }) {
+        const salesAttrs = skuItem.doorSkuSaleInfo.salesAttr;
+        const salePropInfo: { [key: string]: any } = {};
+        for (let key in salesAttrs) {
+            const salesAttr = salesAttrs[key];
+            if (!salesAttr) {
+                continue;
+            }
+            const salePros: { [key: string]: any }[] = [];
+            const salesAttrValues = salesAttr.values;
+            for (let salesAttrValue of salesAttrValues) {
+                const salePro: { [key: string]: any } = {
+                    value: salesAttrValue.value,
+                    text: salesAttrValue.text,
+                }
+                if (salesAttr.hasImage == 'true') {
+                    salePro['pix'] = "800x871";
+                    salePro['img'] = salesAttrValue.image;
+                }
+                salePros.push(salePro);
+            }
+            const salePropValue: { [key: string]: any } = {
+                value: salePros
+            }
+            if(salesAttr.isSaleAddValues){
+                salePropInfo[key] = salePropValue;
+            } else {
+                salePropInfo[key] = salePros;
+            }
+        }
+        draftData.saleProp = salePropInfo;
+    }
+    
+
+    async fillMainImage(imageFileList: SkuFileDetail[], draftData: { mainImagesGroup: { images: { url: string, pix: string }[] } }) {
+        const mainImages = this.getAndSortImage(imageFileList, "main");
+        const mainImageList: { url: string, pix: string }[] = [];
+        for (const file of mainImages) {
+            let url = file.fileUrl;
+            if (!url) {
+                url = "";
+            }
+            mainImageList.push({
+                url: url,
+                pix: "800x800",
+            })
+        }
+        draftData.mainImagesGroup = {
+            images: mainImageList
+        }
+    }
+
+    getAndSortImage(imageFileList: SkuFileDetail[], type: string) {
+        // 获取主图 并排序
+        const mainImages = imageFileList.filter(file => file.fileName?.includes(type));
+        mainImages.sort((a, b) => (a.sortId ?? 0) - (b.sortId ?? 0));
+        return mainImages;
+    }
+
+    
+    async fillPropExt(commendItem: { [key: string]: any }, skuItem: DoorSkuDTO, draftData: { [key: string]: any }) {
+        const fields = commendItem.data.models.__fields__;
+        const commonData = commendItem.data;
+        const componentsData = commonData.components;
+        for(const field in fields){
+            const props = this.getProps(componentsData, field);
+            if(!props || props.length == 0){
+                continue;
+            }
+            const value = this.getPropValue(props, skuItem);
+            if(value){
+                draftData[field] = value;
+            }
+        }
+    }
+
+    getPropValue(props: { [key: string]: any }, skuItem: DoorSkuDTO) {
+        const fieldLabel = props.label;
+        const fieldType = props.uiType;
+        const skuItems = skuItem.baseInfo.skuItems;
+        for(const skuItem of skuItems){
+            const skuItemValue = skuItem.value;
+            if(skuItemValue && fieldLabel && (skuItemValue.includes(fieldLabel) || fieldLabel.includes(skuItemValue))){
+                const text = skuItem.text;
+                if(!text){
+                    return undefined;
+                }
+                if(text.length == 1){
+                    if(fieldType == "input"){
+                        return text[0];
+                    }
+                    if(fieldType == "number"){
+                        const numbers = text[0].match(/\d+/g); // 提取所有数字
+                        if(numbers && numbers.length > 0){
+                            return Number(numbers[0]);
+                        }
+                    }
+                    if(fieldType == "rangePicker"){
+                        const range = text[0].split("至");
+                        if(range.length == 2){
+                            const startDate = this.convertDateFormat(range[0]);
+                            const endDate = this.convertDateFormat(range[1]);
+                            return startDate + "," + endDate;
+                        }
+                    }
+                    return text[0];
+                }
+                return text;
+            }
+        }
+        if(!props.required){
+            return undefined;
+        }
+        if(props.uiType == "multiDiscountPromotion"){
+            const value = props.value;
+            if(!value){
+                return undefined;
+            }
+            value.enable = true;
+            return value;
+        }
+        return this.getSkuPropFromDefault(props)
+    }
+
+    getSkuPropFromDefault(props: { [key: string]: any }){
+        const defaultProps : { [key: string]: any } = {"barcode": "0000000000000"};
+        if (props.name in defaultProps){
+            return defaultProps[props.name];
+        }
+        return undefined;
+    } 
+
+    convertDateFormat(str: string) {
+        // 正则表达式提取出 "YYYY年MM月DD日" 这样的日期
+        const match = str.match(/(\d{4})年(\d{2})月(\d{2})日/);
+        if (match) {
+          const [, year, month, day] = match;
+          return `${year}-${month}-${day}`; // 返回 "YYYY-MM-DD" 格式
+        }
+        return null; // 如果没有匹配到日期，返回 null
+    }
+    
+
+    getProps(componentsData: { [key: string]: any }, field: string){
+        if (!(field in componentsData)){
+            for(const key in componentsData){
+                const fieldData = componentsData[key];
+                const props = fieldData.props;
+                if(!props || props.length == 0){
+                    continue;
+                }
+                return props;
+    
+            }
+            return undefined;
+        }
+        const fieldData = componentsData[field];
+        return fieldData.props;
+    }
+    
+
+    getCatPro(skuItem: SkuItem, catProps: any) {
+        const value = skuItem.text;
+        if (!value || value.length == 0) {
+            return undefined;
+        }
+        for (const catProp of catProps) {
+            const label = catProp.label;
+            if (label == skuItem.value) {
+                return catProp;
+            }
+        }
+        return undefined;
+    }
+
+    async fillCategoryList(skuItemDTO: DoorSkuDTO, draftData: { [key: string]: any }, commonData: { [key: string]: any }, result: DoorEntity<any>, catId: string, startTraceId: string) {
+        const excludeList = [""];
+        const skuItems = skuItemDTO.baseInfo.skuItems;
+        const newCatProp = draftData.catProp;
+        const catProps = commonData.data.models.catProp.dataSource;
+        for (const skuItem of skuItems) {
+            const catProp = this.getCatPro(skuItem, catProps);
+            if (!catProp) {
+                continue;
+            }
+            const key = catProp.name;
+            if (excludeList.includes(key)) {
+                delete newCatProp[key];
+                continue;
+            }
+            const value = skuItem.text;
+            if (key in newCatProp) {
+                const newCatValue = newCatProp[key];
+                if (!("dataSource" in catProp)) {
+                    if (!newCatValue || newCatValue.length == 0) {
+                        newCatProp[key] = value[0];
+                        continue;
+                    }
+                }
+                if (newCatValue && newCatValue.length > 0) {
+                    continue;
+                }
+            }
+            if (!("dataSource" in catProp)) {
+                newCatProp[key] = value[0];
+                continue;
+            }
+            //特殊处理
+            if(catProp.label in specialCatProHandler){
+                const newValues = specialCatProHandler[catProp.label](catProp.dataSource, value[0]);
+                if(newValues){
+                    newCatProp[key] = newValues;
+                    continue;
+                }
+                continue;
+            }
+            const dataSource = catProp.dataSource;
+            const switchValues = await this.switchCatPropValue(key, dataSource, value, result, catId, startTraceId, skuItemDTO);
+            newCatProp[key] = switchValues
+        }
+        draftData.catProp = newCatProp;
+    }
+
+    async fillTiltle(skuItem: DoorSkuDTO, draftData: { [key: string]: any }) {
+        const title = skuItem.baseInfo.title;
+        draftData.title = title;
+    }
+
+    async getCategoryInfo(categoryCode: string, result: DoorEntity<any>, catId: string, startTraceId: string, itemId: string, categoryKeyword: string) {
+        const requestHeader = result.getHeaderData();
+        requestHeader['content-type'] = "application/x-www-form-urlencoded";
+        requestHeader['origin'] = "https://item.upload.taobao.com";
+        requestHeader['referer'] = "https://item.upload.taobao.com/sell/v2/publish.htm?commendItem=true&commendItemId=" + itemId;
+        const requestData = {
+            keyword: categoryKeyword,
+            pid: categoryCode,
+            queryType: "query",
+            globalExtendInfo: JSON.stringify({
+                startTraceId: startTraceId
+            })
+        }
+        const response = await axios.post("https://item.upload.taobao.com/sell/v2/asyncOpt.htm?optType=taobaoBrandQuery&queryType=query&catId=" + catId, requestData, {
+            headers: requestHeader,
+        });
+        const data = response.data;
+        if (!data.success || !data.data.success) {
+            return undefined;
+        }
+        const dataSource = data.data.dataSource;
+        if (!dataSource || dataSource.length == 0) {
+            return undefined;
+        }
+        return dataSource[0];
+    }
+
+    async switchCatPropValue(proKey: string, dataSource: { [key: string]: any }[], value: string[], result: DoorEntity<any>, catId: string, startTraceId: string, skuItem: DoorSkuDTO) {
+        // const newValues: { value: string, text: string }[] = [];
+        let newValues: any = {};
+        for (const catValue of value) {
+            let hasFound = false;
+            for (const data of dataSource) {
+                if (data.text == catValue) {
+                    hasFound = true;
+                    newValues = {
+                        value: data.value,
+                        text: data.text
+                    }
+                }
+            }
+            if (!hasFound) {
+                const categoryInfo = await this.getCategoryInfo(proKey, result, catId, startTraceId, skuItem.baseInfo.itemId, catValue);
+                if (categoryInfo) {
+                    newValues = {
+                        value: categoryInfo.value,
+                        text: categoryInfo.text
+                    };
+                }else{
+                    newValues = {
+                        value: -1,
+                        text: catValue
+                    };
+                }
+            
+            }
+        }
+        return newValues;
+    }
+
+    async fixSaleProp(commonData: { data: any }, skuItem: DoorSkuDTO) {
+        const salesAttrs = skuItem.doorSkuSaleInfo.salesAttr;
+        const salePropSubItems = commonData.data.components.saleProp.props.subItems;
+         for (let key in salesAttrs) {
+            const salesAttr = salesAttrs[key];
+            if (!salesAttr) {
+                continue;
+            }
+            log.info("fixSaleProp key is ", key);
+            const salesAttrValues = salesAttr.values;
+            if (!(key in salePropSubItems)) {
+                continue;
+            }
+            const salePropSubItem = salePropSubItems[key];
+            if ('subItems' in salePropSubItem) {
+                salesAttr.isSaleAddValues = true;
+            }
+            for (let salesAttrValue of salesAttrValues) {
+                salesAttrValue.value = this.getFixValue(salePropSubItem, salesAttrValue.value);
+            }
+        }
+        const salesSkus = skuItem.doorSkuSaleInfo.salesSkus;
+        for(let saleSku of salesSkus) {
+            const salePropPath = saleSku.salePropPath;
+            const saleProps = salePropPath.split(";");
+            const salePropKey = [];
+            for (const saleProp of saleProps) {
+                const salePropIds = saleProp.split(":");
+                const key = "p-" + salePropIds[0];
+                const salePropSubItem = salePropSubItems[key];
+                const newValue = this.getFixValue(salePropSubItem, salePropIds[1]);
+                salePropKey.push(salePropIds[0] + ":" + newValue);
+            }
+            saleSku.salePropPath = salePropKey.join(";");
+        }
+    }
+    
+    getFixValue(salePropSubItem: { [key: string]: any }, value: string) {
+        const subItems = salePropSubItem.subItems;
+        if (!subItems || subItems.length == 0) {
+            if ('dataSource' in salePropSubItem) {
+                const dataSource = salePropSubItem.dataSource;
+                return this.getRealValue(dataSource, value);
+            }
+            return value;
+        }
+        for (const subItem of subItems) {
+            const dataSource = subItem.dataSource;
+            if (dataSource.length == 0) {
+                continue;
+            }
+            return this.getRealValue(dataSource, value);
+        }
+        return value;
+    }
+
+    
+    getRealValue(dataSource: { [key: string]: any }[], value: string) {
+        for (const data of dataSource) {
+            for(const key in data) {
+                const subItemValues = data[key];
+                if (!subItemValues || !Array.isArray(subItemValues)) {
+                    continue;
+                }
+                for (const subItemValue of subItemValues) {
+                    if (value == subItemValue.value) {
+                        return value;
+                    }
+                }
+            }
+        }
+        return String(-Number(value));
+    }
+
+    getStartTraceId(commonData: { data: any }) {
+        try {
+            const startTraceId = commonData.data.components.fakeCredit.props.icmp.global.value.frontDataLog.traceId;
+            return startTraceId;
+        } catch (e) {
+            return undefined;
+        }
+    }
+
+    getSkuDraftIdFromData(skuItemId: string | undefined, result: DoorEntity<any>) {
+        if (skuItemId) {
+            return skuItemId;
+        }
+        return String(result.data.dbDraftId);
+    }
+
+    getCatIdFromUrl(result: DoorEntity<any>) {
+        const requestUrl = result.getUrl();
+        const urlObj = new URL(requestUrl);
+        const urlParams = new URLSearchParams(urlObj.search);
+        return urlParams.get("catId");
+    }
+    
+
+    getPublishUrl(skuDraftId: string | undefined, itemId: string) {
+        if (!skuDraftId) {
+            return "https://item.upload.taobao.com/sell/v2/publish.htm?commendItem=true&commendItemId=" + itemId;
+        }
+        return "https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=" + skuDraftId;
+    }
+
+    async getSkuDraftIdFromDB(resourceId: number, skuItemId: string) {
+        const skuDraft = await getSkuDraft(resourceId, skuItemId);
+        if (!skuDraft) {
+            return undefined;
+        }
+        if (skuDraft.status == "active") {
+            const skuDraftId = skuDraft.skuDraftId;
+            if(skuDraftId == 'undefined'){
+                return undefined;
+            }
+            return skuDraftId;
+        }
+        return undefined;
+    }
+
+    async activeDraft(resourceId: number, skuItemId: string, skuDraftId: string) {
+        await activeSkuDraft({
+            id: undefined,
+            status: "ACTIVE",
+            resourceId: resourceId,
+            skuItemId: skuItemId,
+            skuDraftId: skuDraftId
+        });
+    }
+
+}

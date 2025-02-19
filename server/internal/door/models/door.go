@@ -31,6 +31,7 @@ type DoorFileRecord struct {
 	FileUrl    string `json:"file_url"`
 	FileName   string `json:"file_name"`
 	FileKey    string `json:"file_key"`
+	Pix        string `json:"pix"`
 }
 
 func (f *DoorFileRecord) TableName() string {

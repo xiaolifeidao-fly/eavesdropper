@@ -47,3 +47,36 @@ func batchSaveSkuTaskItem(itemDTOs []*dto.SkuTaskItemDTO) ([]*dto.SkuTaskItemDTO
 	itemDTOs = database.ToDTOs[dto.SkuTaskItemDTO](items)
 	return itemDTOs, nil
 }
+
+var skuTaskStepRepository = database.NewRepository[repositories.SkuTaskStepRepository]()
+
+func SaveSkuTaskStep(stepDTO *dto.SkuTaskStepDTO) (*dto.SkuTaskStepDTO, error) {
+	dbStep, err := skuTaskStepRepository.FindByKeyAndResourceIdAndCode(stepDTO.StepKey, stepDTO.ResourceId, stepDTO.Code)
+	if err != nil {
+		return nil, err
+	}
+	if dbStep != nil {
+		dbStep.ValidateUrl = stepDTO.ValidateUrl
+		dbStep.Status = stepDTO.Status
+		dbStep.Message = stepDTO.Message
+	} else {
+		dbStep = database.ToPO[models.SkuTaskStep](stepDTO)
+	}
+	saveStep, err := skuTaskStepRepository.SaveOrUpdate(dbStep)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTO[dto.SkuTaskStepDTO](saveStep), nil
+}
+
+func FindSkuTaskStepByKeyAndResourceIdAndGroupCode(key string, resourceId uint64, groupCode string) ([]*dto.SkuTaskStepDTO, error) {
+	steps, err := skuTaskStepRepository.FindByKeyAndResourceIdAndGroupCode(key, resourceId, groupCode)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTOs[dto.SkuTaskStepDTO](steps), nil
+}
+
+func DeleteSkuTaskStepByKeyAndResourceIdAndGroupCode(key string, resourceId uint64, groupCode string) error {
+	return skuTaskStepRepository.DeleteByKeyAndResourceIdAndGroupCode(key, resourceId, groupCode)
+}

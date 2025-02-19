@@ -18,7 +18,7 @@ func (r *SkuFileInfoRepository) FindBySkuItemIdAndFileId(skuItemId string, fileI
 }
 
 func (r *SkuFileInfoRepository) FindDetailBySkuItemIdAndResourceId(skuItemId string, resourceId uint64) ([]*models.SkuFileDetail, error) {
-	sql := "select f.id, f.sku_item_id, f.file_id, r.file_id as item_file_id, f.sort_id, r.file_type, r.file_url, r.file_name, r.file_size from sku_file_info f left join door_file_record r on r.id = f.file_id where f.sku_item_id = ? and r.resource_id = ?"
+	sql := "select f.id, f.sku_item_id, f.file_id, r.file_id as item_file_id, f.sort_id, r.file_type, r.file_url, r.file_name, r.file_size, r.pix from sku_file_info f left join door_file_record r on r.id = f.file_id where f.sku_item_id = ? and r.resource_id = ?"
 	entities, err := database.GetListByEntity(r.Db, sql, &models.SkuFileDetail{}, skuItemId, resourceId)
 	if err != nil {
 		return nil, err

@@ -19,4 +19,5 @@ type SkuFileDetailDTO struct {
 	FileName   string `json:"fileName"`
 	SortId     uint32 `json:"sortId"`
 	SkuItemId  string `json:"skuItemId"`
+	Pix        string `json:"pix"`
 }

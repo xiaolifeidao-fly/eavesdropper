@@ -104,3 +104,30 @@ export class AddSkuTaskItemReq {
     this.remark = remark
   }
 }
+
+
+export class SkuTaskStep {
+  constructor(
+    public id: number|undefined,
+    public stepKey: string,
+    public resourceId: number,
+    public code: string,
+    public message: string|undefined,
+    public status: string|undefined,
+    public groupCode: string,
+    public validateUrl: string | undefined = undefined
+  ) {
+    this.id = id
+    this.stepKey = stepKey
+    this.resourceId = resourceId
+    this.code = code
+    this.message = message
+    this.status = status
+    this.groupCode = groupCode
+    this.validateUrl = validateUrl
+  }
+}
+export const STEP_INIT = "INIT"
+export const STEP_PENDING = "PENDING"
+export const STEP_DONE = "DONE"
+export const STEP_ERROR = "ERROR"
