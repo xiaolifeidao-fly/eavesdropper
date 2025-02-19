@@ -8,7 +8,7 @@ import { DoorEntity } from './entity';
 import log from 'electron-log';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
 import { DoorRecord } from '@model/door/door';
-// const browserMap = new Map<string, Browser>();
+const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
 
@@ -54,10 +54,11 @@ export abstract class DoorEngine<T = any> {
     }
 
     public async init(url : string|undefined = undefined) : Promise<Page | undefined> {
-        this.context = await this.createBrowser();
-        // if(!this.context){
-        //     this.context = await this.createContext();
-        // }
+        this.browser = await this.createBrowser();
+        if(!this.context){
+            this.context = await this.createContext();
+        }
+        // this.context = await this.createBrowser();
         if(!this.context){
             return undefined;
         }
@@ -456,31 +457,16 @@ export abstract class DoorEngine<T = any> {
     async createBrowser(){
         let key = this.getBrowserKey();
         log.info("browser key is ", key);
-        if(contextMap.has(key)){
-            return contextMap.get(key);
-        }
         let storeBrowserPath = await this.getRealChromePath();
-        const userDataDir = this.getUserDataDir();
-        const platform = await getPlatform();
-        const context = await chromium.launchPersistentContext(userDataDir,{
-            headless: this.headless,
-            executablePath: storeBrowserPath,
-            args: [
-                '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
-                '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
-                '--disable-setuid-sandbox',
-                '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
-            ],
-            extraHTTPHeaders: {
-                'sec-ch-ua': getSecChUa(platform),
-                'sec-ch-ua-mobile': '?0', // 设置为移动设备
-                'sec-ch-ua-platform': `"${platform.userAgentData.platform}"`,
-            },
-            userAgent: platform.userAgent,
-            bypassCSP : true,
-            locale: 'zh-CN',
-        })
-        // const browser = await chromium.launch({
+        if(browserMap.has(key)){
+            return browserMap.get(key);
+        }
+        // if(contextMap.has(key)){
+        //     return contextMap.get(key);
+        // }
+        // const userDataDir = this.getUserDataDir();
+        // const platform = await getPlatform();
+        // const context = await chromium.launchPersistentContext(userDataDir,{
         //     headless: this.headless,
         //     executablePath: storeBrowserPath,
         //     args: [
@@ -488,11 +474,31 @@ export abstract class DoorEngine<T = any> {
         //         '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
         //         '--disable-setuid-sandbox',
         //         '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
-        //       ]
-        // });
-        // browserMap.set(key, browser);
-        contextMap.set(key, context);
-        return context;
+        //     ],
+        //     extraHTTPHeaders: {
+        //         'sec-ch-ua': getSecChUa(platform),
+        //         'sec-ch-ua-mobile': '?0', // 设置为移动设备
+        //         'sec-ch-ua-platform': `"${platform.userAgentData.platform}"`,
+        //     },
+        //     userAgent: platform.userAgent,
+        //     bypassCSP : true,
+        //     locale: 'zh-CN',
+        // })
+        // contextMap.set(key, context);
+        // return context;
+
+        const browser = await chromium.launch({
+            headless: this.headless,
+            executablePath: storeBrowserPath,
+            args: [
+                '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
+                '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
+                '--disable-setuid-sandbox',
+                '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
+              ]
+        });
+        browserMap.set(key, browser);
+        return browser;
     }
 
 }

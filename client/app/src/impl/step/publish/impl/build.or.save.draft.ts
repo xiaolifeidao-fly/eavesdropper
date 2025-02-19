@@ -1,5 +1,5 @@
 import { MbEngine } from "@src/door/mb/mb.engine";
-import { StepResult, StepUnit } from "../../step.unit";
+import { StepResponse, StepResult, StepUnit } from "../../step.unit";
 import { AbsPublishStep, confirmProtocol } from "./abs.publish";
 import { activeSkuDraft, getSkuDraft } from "@api/sku/sku.draft";
 import { MbSkuPublishDraffMonitor } from "@src/door/monitor/mb/sku/md.sku.info.monitor";
@@ -22,43 +22,9 @@ async function clickSaveDraf(page: Page) {
     await page.locator(".sell-draft-save-btn button").click();
 }
 
-function handlerPeriod(dataSource: { [key: string]: any }[], catValue: string){
-    const first = dataSource[0];
-    if(!first){
-        return undefined;
-    }
-    const text = first.text;
-    if(text.includes("天") && catValue.includes("天")){
-        for(const data of dataSource){
-            if(data.text == catValue){
-                return {
-                    value: data.value,
-                    text: data.text
-                }
-            }
-        }
-        return undefined;
-    }
-    if(text.includes("月") && catValue.includes("月")){
-        for(const data of dataSource){
-            if(data.text == catValue){
-                return {
-                    value: data.value,
-                    text: data.text
-                }
-            }
-        }
-        return undefined;
-    }
-    return undefined;
-}
-
-const specialCatProHandler: { [key: string]: (dataSource: { [key: string]: any }[], catValue: string) => any } = {
-    "保质期": handlerPeriod
-}
-
 
 export class SkuBuildDraftStep extends AbsPublishStep{
+
 
 
     async doStep(): Promise<StepResult> {
@@ -82,34 +48,25 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             if(!draftData.draftData){
                 return new StepResult(false, draftData.message) ;
             }
-            return new StepResult(true, "添加草稿成功", draftData.draftData, result.getHeaderData());
+            return new StepResult(true, "添加草稿成功", [
+                new StepResponse("draftData", draftData.draftData.draftData),
+                new StepResponse("catId", draftData.draftData.catId),
+                new StepResponse("draftId", draftData.draftData.draftId),
+                new StepResponse("startTraceId", draftData.draftData.startTraceId),
+                new StepResponse("itemId", draftData.draftData.itemId),
+                new StepResponse("page", page, false)
+            ], result.getHeaderData());
         } catch (error) {
             log.error(error);
             return new StepResult(false, "添加草稿失败") ;
-        } finally {
-            await mbEngine.closePage();
         }
     }
 
-    async getCommonData(page: Page) {
-        // 获取window对象中 json 数据 
-        const commonData = await page.evaluate(() => {
-            return {
-                // @ts-ignore
-                data: window.Json,
-                // @ts-ignore
-                userAgent: navigator.userAgent,
-                // @ts-ignore
-                csrfToken: window.csrfToken.tokenValue
-            };
-        });
-        return commonData;
-    }
     
     async buildDraftData(imageFileList: SkuFileDetail[], resourceId: number, skuDraftId: string | undefined, skuItem: DoorSkuDTO, result: DoorEntity<any>, page: Page) {
         const newSkuDraftId = this.getSkuDraftIdFromData(skuDraftId, result);
         if (!newSkuDraftId) {
-            log.info("newSkuDraftId not found ", newSkuDraftId);
+            log.error("newSkuDraftId not found ", newSkuDraftId);
             return {
                 draftData : undefined,
                 message : "newSkuDraftId not found"
@@ -117,7 +74,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         }
         await this.activeDraft(resourceId, skuItem.baseInfo.itemId, newSkuDraftId);
         console.log("wait for networkidle start");
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('load');
         console.log("wait for networkidle end");
         let commonData = await this.getCommonData(page);
         if (!commonData) {
@@ -147,7 +104,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         const draftData = JSON.parse(result.requestBody.jsonBody);
         await this.fixSaleProp(commonData, skuItem);
         await this.fillTiltle(skuItem, draftData);
-        await this.fillCategoryList(skuItem, draftData, commonData, result, catId, startTraceId);
+        await this.fillCategoryList(skuItem, draftData, commonData, result.getHeaderData(), catId, startTraceId);
         await this.fillPropExt(commonData, skuItem, draftData);
         await this.fillMainImage(imageFileList, draftData);
         await this.fillSellInfo(commonData, skuItem, draftData);
@@ -159,13 +116,21 @@ export class SkuBuildDraftStep extends AbsPublishStep{
                 message : "fillImageDetail failed"
             };
         }
+        const updateResult = await this.updateDraftData(catId, newSkuDraftId, result.getHeaderData(), startTraceId, draftData);
+        if(!updateResult){
+            return {
+                draftData : undefined,
+                message : "updateDraftData failed"
+            };
+        }
+
         return {
-            draftData :     {
+            draftData : {
                 catId: catId,
                 draftId: newSkuDraftId,
                 startTraceId: startTraceId,
                 draftData: draftData,
-                itemId: skuItem.baseInfo.itemId
+                itemId: skuItem.baseInfo.itemId,
             },
             message : "buildDraftData success"
         }
@@ -519,131 +484,10 @@ export class SkuBuildDraftStep extends AbsPublishStep{
     }
     
 
-    getCatPro(skuItem: SkuItem, catProps: any) {
-        const value = skuItem.text;
-        if (!value || value.length == 0) {
-            return undefined;
-        }
-        for (const catProp of catProps) {
-            const label = catProp.label;
-            if (label == skuItem.value) {
-                return catProp;
-            }
-        }
-        return undefined;
-    }
-
-    async fillCategoryList(skuItemDTO: DoorSkuDTO, draftData: { [key: string]: any }, commonData: { [key: string]: any }, result: DoorEntity<any>, catId: string, startTraceId: string) {
-        const excludeList = [""];
-        const skuItems = skuItemDTO.baseInfo.skuItems;
-        const newCatProp = draftData.catProp;
-        const catProps = commonData.data.models.catProp.dataSource;
-        for (const skuItem of skuItems) {
-            const catProp = this.getCatPro(skuItem, catProps);
-            if (!catProp) {
-                continue;
-            }
-            const key = catProp.name;
-            if (excludeList.includes(key)) {
-                delete newCatProp[key];
-                continue;
-            }
-            const value = skuItem.text;
-            if (key in newCatProp) {
-                const newCatValue = newCatProp[key];
-                if (!("dataSource" in catProp)) {
-                    if (!newCatValue || newCatValue.length == 0) {
-                        newCatProp[key] = value[0];
-                        continue;
-                    }
-                }
-                if (newCatValue && newCatValue.length > 0) {
-                    continue;
-                }
-            }
-            if (!("dataSource" in catProp)) {
-                newCatProp[key] = value[0];
-                continue;
-            }
-            //特殊处理
-            if(catProp.label in specialCatProHandler){
-                const newValues = specialCatProHandler[catProp.label](catProp.dataSource, value[0]);
-                if(newValues){
-                    newCatProp[key] = newValues;
-                    continue;
-                }
-                continue;
-            }
-            const dataSource = catProp.dataSource;
-            const switchValues = await this.switchCatPropValue(key, dataSource, value, result, catId, startTraceId, skuItemDTO);
-            newCatProp[key] = switchValues
-        }
-        draftData.catProp = newCatProp;
-    }
 
     async fillTiltle(skuItem: DoorSkuDTO, draftData: { [key: string]: any }) {
         const title = skuItem.baseInfo.title;
         draftData.title = title;
-    }
-
-    async getCategoryInfo(categoryCode: string, result: DoorEntity<any>, catId: string, startTraceId: string, itemId: string, categoryKeyword: string) {
-        const requestHeader = result.getHeaderData();
-        requestHeader['content-type'] = "application/x-www-form-urlencoded";
-        requestHeader['origin'] = "https://item.upload.taobao.com";
-        requestHeader['referer'] = "https://item.upload.taobao.com/sell/v2/publish.htm?commendItem=true&commendItemId=" + itemId;
-        const requestData = {
-            keyword: categoryKeyword,
-            pid: categoryCode,
-            queryType: "query",
-            globalExtendInfo: JSON.stringify({
-                startTraceId: startTraceId
-            })
-        }
-        const response = await axios.post("https://item.upload.taobao.com/sell/v2/asyncOpt.htm?optType=taobaoBrandQuery&queryType=query&catId=" + catId, requestData, {
-            headers: requestHeader,
-        });
-        const data = response.data;
-        if (!data.success || !data.data.success) {
-            return undefined;
-        }
-        const dataSource = data.data.dataSource;
-        if (!dataSource || dataSource.length == 0) {
-            return undefined;
-        }
-        return dataSource[0];
-    }
-
-    async switchCatPropValue(proKey: string, dataSource: { [key: string]: any }[], value: string[], result: DoorEntity<any>, catId: string, startTraceId: string, skuItem: DoorSkuDTO) {
-        // const newValues: { value: string, text: string }[] = [];
-        let newValues: any = {};
-        for (const catValue of value) {
-            let hasFound = false;
-            for (const data of dataSource) {
-                if (data.text == catValue) {
-                    hasFound = true;
-                    newValues = {
-                        value: data.value,
-                        text: data.text
-                    }
-                }
-            }
-            if (!hasFound) {
-                const categoryInfo = await this.getCategoryInfo(proKey, result, catId, startTraceId, skuItem.baseInfo.itemId, catValue);
-                if (categoryInfo) {
-                    newValues = {
-                        value: categoryInfo.value,
-                        text: categoryInfo.text
-                    };
-                }else{
-                    newValues = {
-                        value: -1,
-                        text: catValue
-                    };
-                }
-            
-            }
-        }
-        return newValues;
     }
 
     async fixSaleProp(commonData: { data: any }, skuItem: DoorSkuDTO) {

@@ -9,12 +9,17 @@ export abstract class StepHandler {
 
     private stepConfig: StepConfig;
 
-    private context : StepContext = new StepContext();
+    private context : StepContext;
 
     constructor(private readonly key: string, private readonly resourceId: number) {
         this.key = key;
         this.resourceId = resourceId;
         this.stepConfig = this.buildStepConfig();
+        this.context = new StepContext(this.key, this.resourceId, this.getGroupCode());
+    }
+
+    public getParams(key: string) : any{
+        return this.context.getItem(this.getStoreKey(key));
     }
 
     abstract getGroupCode(): string;
@@ -30,6 +35,10 @@ export abstract class StepHandler {
             steps.push(stepUnit);
         }
         return steps;
+    }
+
+    getStoreKey(key : string) : string{
+        return `step_params_${key}`;
     }
 
     async init(){
@@ -50,9 +59,6 @@ export abstract class StepHandler {
             if(!result.result){
                 return result;
             }
-        }
-        if(result && result.result){
-            this.release();
         }
         return result;
     }

@@ -1,5 +1,5 @@
 import { DoorEntity } from "@src/door/entity";
-import { StepResult, StepUnit } from "../../step.unit";
+import { StepResponse, StepResult, StepUnit } from "../../step.unit";
 import  log from "electron-log";
 import { MbSkuApiImpl } from "@src/impl/door/sku/sku";
 import { DoorSkuDTO } from "@model/door/sku";
@@ -21,9 +21,9 @@ export class SkuGetStep extends StepUnit{
         if(!skuItem){
             return new StepResult(false, "商品信息解析失败");
         }
-        return new StepResult(skuResult.code, "", {
-            "skuItem" : skuItem
-        });
+        return new StepResult(skuResult.code, "", [
+            new StepResponse("skuItem", skuItem)
+        ]);
     }
 
     

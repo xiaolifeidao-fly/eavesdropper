@@ -4,14 +4,36 @@ import { get, set } from "@utils/store/electron";
 import log from "electron-log";
 import { StepContext } from "./step.context";
 
+export class StepResponse {
+    
+    private key : string;
+    private value : any;
+    private store : boolean;
+
+    constructor(key : string, value : any, store : boolean = true ){
+        this.key = key;
+        this.value = value;
+        this.store = store;
+    }
+    public getKey() : string{
+        return this.key;
+    }
+    public getValue() : any{
+        return this.value;
+    }
+    public isStore() : boolean{
+        return this.store;
+    }
+}
+
 export class StepResult {
 
     public result : boolean
     public message : string
-    public responseData : { [key: string]: any } | undefined
+    public responseData : StepResponse[];
     public header : { [key: string]: any } | undefined
     public validateUrl : string | undefined
-    constructor(result : boolean, message : string, responseData : { [key: string]: any } | undefined = undefined, header : { [key: string]: any } | undefined = undefined, validateUrl : string | undefined = undefined){
+    constructor(result : boolean, message : string, responseData : StepResponse[] = [], header : { [key: string]: any } | undefined = undefined, validateUrl : string | undefined = undefined){
         this.result = result
         this.message = message
         this.responseData = responseData
@@ -26,19 +48,19 @@ export abstract class StepUnit {
     private withParams : { [key: string]: any } | undefined;
     private header : { [key: string]: any } | undefined;
     private context : StepContext;
+    private key : string;
     private groupCode : string;
 
-    constructor(step : SkuTaskStep, context : StepContext, groupCode : string){
+    constructor(step : SkuTaskStep, context : StepContext, groupCode : string, key : string){
         this.step = step;
         this.context = context;
         this.groupCode = groupCode;
+        this.key = key;
     }
 
     public async init(saveFlag : boolean = true){
         if(saveFlag){
-            console.log("step init start", this.step);
             await saveSkuTaskStep(this.step);
-            console.log("step init end", this.step);
         }
     }
 
@@ -53,6 +75,16 @@ export abstract class StepUnit {
             this.context.putItem(storeParamKey, storeParamValue)
         }
         this.withParams = withParams
+    }
+
+    public setParamsByResponse(responseData : StepResponse[]){
+        for(const response of responseData){
+            const storeParamKey = this.getStoreParamKey(response.getKey());
+            if(!storeParamKey){
+                continue;
+            }
+            this.context.putItem(storeParamKey, response.getValue(), response.isStore())
+        }
     }
 
     public setHeader(header : { [key: string]: any }){
@@ -81,11 +113,11 @@ export abstract class StepUnit {
     }
 
     getStoreParamKey(key : string) : string{
-        return `step_params_${this.step.stepKey}_${this.step.groupCode}_${this.step.resourceId}_${key}`;
+        return `step_params_${key}`;
     }
 
     getHeaderKey(key : string) : string {
-        return `step_header_${this.step.stepKey}_${this.step.groupCode}_${this.step.resourceId}_${key}`;
+        return `step_header_${key}`;
     }
     
     getHeaderValue(key : string) : any {
@@ -97,7 +129,7 @@ export abstract class StepUnit {
     }
 
     getHeaderAllKey() : string {
-        return `step_header_${this.step.stepKey}_${this.step.resourceId}_${this.groupCode}`;
+        return `step_header_all`;
     }
 
     getHeader() : { [key: string]: any } {
@@ -124,8 +156,8 @@ export abstract class StepUnit {
                 this.step.status = STEP_ERROR;
                 this.step.message = result.message;
             }
-            if(result.responseData){
-                this.setWithParams(result.responseData);
+            if(result.responseData && result.responseData.length > 0){
+                this.setParamsByResponse(result.responseData);
             }
             if(result.header){
                 this.setHeader(result.header);

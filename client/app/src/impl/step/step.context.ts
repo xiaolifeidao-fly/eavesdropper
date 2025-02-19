@@ -5,19 +5,33 @@ export class StepContext {
 
     private cache : { [key : string] : any} = {};
 
-    public putItem(key : string, value : any){
-        this.cache[key] = value;
-        set(key, value);
+    private storeKey : string = "step_context"; 
+
+    constructor(key : string, resourceId : number, groupCode : string){
+        this.storeKey = `step_context_${key}_${resourceId}_${groupCode}`;
+    }
+
+    public putItem(key : string, value : any, store : boolean = true){
+        const storeKey = this.getStoreKey(key);
+        this.cache[storeKey] = value;
+        if(store){
+            set(storeKey, value);
+        }
+    }
+
+    public getStoreKey(key : string) : string{
+        return `${this.storeKey}_${key}`;
     }
 
     public getItem(key : string) : any{
-        const value = this.cache[key];
+        const storeKey = this.getStoreKey(key);
+        const value = this.cache[storeKey];
         if(value){
             return value;
         }
-        const item = get(key);
+        const item = get(storeKey);
         if(item){
-            this.cache[key] = item;
+            this.cache[storeKey] = item;
             return item;
         }
         return null;

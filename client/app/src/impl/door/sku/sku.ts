@@ -209,6 +209,7 @@ export class MbSkuApiImpl extends MbSkuApi {
     async publishSku(publishResourceId : number, skuUrl : string, taskId : number) : Promise<SkuPublishResult>{
         const skuPublishResult = new SkuPublishResult(taskId, publishResourceId, SkuStatus.PENDING);
         skuPublishResult.url = skuUrl;
+        skuPublishResult.publishResourceId = publishResourceId;
 
         try {
             // 校验商品是否存在
@@ -231,8 +232,16 @@ export class MbSkuApiImpl extends MbSkuApi {
                 skuPublishResult.remark = result?.message || "发布商品失败";
                 return skuPublishResult;
             }
+            const skuItem = publishHandler.getParams("skuItem");
+            if(skuItem){
+                skuPublishResult.name = skuItem.baseInfo.title;
+                skuPublishResult.sourceSkuId = skuItem.baseInfo.itemId;
+                skuPublishResult.publishSkuId = skuItem.baseInfo.itemId;
+            }
+            skuPublishResult.publishTime = formatDate(new Date());
             skuPublishResult.status = SkuStatus.SUCCESS;
             skuPublishResult.remark = "发布商品成功";
+            publishHandler.release();
             const addSkuReq = plainToClass(AddSkuReq, skuPublishResult);
             const skuId = await addSku(addSkuReq) as number;
             skuPublishResult.id = skuId;

@@ -1034,7 +1034,7 @@ async function clickPublishButton(resourceId : number, imageFileList: SkuFileDet
         log.info("updateDraftData failed ", updateResult);
         return false;
     }
-    const engine = new MbEngine(resourceId);
+    const engine = new MbEngine(resourceId, false);
     const newPage = await engine.init();
     if(!newPage){
         log.info("newPage is null");
@@ -1067,7 +1067,7 @@ async function clickPublishButton(resourceId : number, imageFileList: SkuFileDet
         log.info("confirmProtocol error", e);
         return false;
     } finally{
-        await engine.closePage();
+        // await engine.closePage();
     }
 }
 

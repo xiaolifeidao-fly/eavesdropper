@@ -1,5 +1,5 @@
 import { MbSkuApiImpl } from "@src/impl/door/sku/sku";
-import { StepResult, StepUnit } from "../../step.unit";
+import { StepResponse, StepResult, StepUnit } from "../../step.unit";
 
 
 export class SkuPublishFileUploadStep extends StepUnit{
@@ -17,13 +17,13 @@ export class SkuPublishFileUploadStep extends StepUnit{
         const validateUrl = uploadResult.validateUrl;
         const header = uploadResult.header;
         if(validateUrl){
-            return new StepResult(false, "上传图片[验证失败]", {
-                "imageFileList" : [],
-            }, header, validateUrl);
+            return new StepResult(false, "上传图片[验证失败]", [
+                new StepResponse("imageFileList", [])
+            ], header, validateUrl);
         }
-        return new StepResult(true, "上传成功", {
-            "imageFileList" : imageFileList
-        });
+        return new StepResult(true, "上传成功", [
+            new StepResponse("imageFileList", imageFileList)
+        ]);
     }
 
 }

@@ -8,15 +8,25 @@ import axios from "axios";
 import { expireSkuDraft } from "@api/sku/sku.draft";
 
 async function clickPublishButtonByPage(page: Page, ...doActionParams: any[]){
-    try {
-        await confirmProtocol(page);
+    await confirmProtocol(page);
+    await publishSkuByPage(page);
+}
+
+async function publishSkuByPage(page: Page, ...doActionParams: any[]){
+    try{
+        log.info("clickPublishButton start ");
+        const publishButton = page.locator("button[_id='button-submit']").first();
+        await publishButton.click();
+        await page.waitForTimeout(2000);
+        const elementSelector = ".next-btn.next-medium.next-btn-primary.next-dialog-btn";
+        if(elementSelector){
+            const directPublishButton = page.locator(elementSelector).first();
+            await directPublishButton.click();
+        }
+        log.info("clickPublishButton end ");
     } catch (e) {
-        log.info("confirmProtocol error", e);
+        log.info("publishSkuByPage error", e);
     }
-    log.info("clickPublishButton start ");
-    const publishButton = await page.locator("button[_id='button-submit']").first();
-    await publishButton.click();
-    log.info("clickPublishButton end ");
 }
 
 export class PublishSkuStep extends AbsPublishStep {
@@ -24,9 +34,7 @@ export class PublishSkuStep extends AbsPublishStep {
     async doStep(): Promise<StepResult> {
         const draftId = this.getParams("draftId");
         const resourceId = this.getParams("resourceId");
-        console.log("PublishSkuStep resourceId is ", resourceId);
-        console.log("PublishSkuStep draftId is ", draftId);
-        const engine = new MbEngine(resourceId, false);
+        const engine = new MbEngine(resourceId);
         const newPage = await engine.init();
         if(!newPage){
             log.info("newPage is null");
