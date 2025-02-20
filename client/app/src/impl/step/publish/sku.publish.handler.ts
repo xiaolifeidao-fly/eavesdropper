@@ -3,7 +3,7 @@ import { SkuTaskStep } from "@model/sku/skuTask";
 import { StepConfig } from "../step.config";
 import { StepUnit } from "../step.unit";
 import { SkuGetStep } from "./impl/sku.get";
-import { SkuPublishFileUploadStep } from "./impl/fil.upload";
+import { SkuPublishFileUploadStep } from "./impl/file.upload";
 import { UpdateDraftStep } from "./impl/update.draft";
 import { PublishSkuStep } from "./impl/publish.sku";
 import { SkuBuildDraftStep } from "./impl/build.or.save.draft";

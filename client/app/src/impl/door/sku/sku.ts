@@ -34,6 +34,7 @@ import sharp from "sharp";
 import { validate } from "@src/validator/image.validator";
 import { getStringHash } from "@utils/crypto.util";
 import { SkuPublishHandler } from "@src/impl/step/publish/sku.publish.handler";
+import { getUrlParameter } from "@utils/url.util";
 export class MbSkuApiImpl extends MbSkuApi {
 
 
@@ -182,24 +183,12 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
 
-    async getSkuImages(publishResourceId : number, data : {}, skuId : number){
-        const fileNames ={};
-        // const monitor = new MbSkuFileUploadMonitor(publishResourceId, skuId, fileNames);
-        // uploadFile(publishResourceId, paths, monitor);
-    }
-
     async uploadImages(publishResourceId : number, skuItem : DoorSkuDTO, headerData : { [key: string]: any } = {}){
         const uplodaData = await this.uploadSkuImages(publishResourceId, skuItem, headerData); // skuId TODO
         if (!uplodaData){
             return [];
         }
         if(uplodaData.validateUrl && uplodaData.header){
-            const result = await validate(publishResourceId, uplodaData.header, uplodaData.validateUrl);
-            console.log('validate result', result);
-            const skuFiles = await this.uploadImages(publishResourceId, skuItem, headerData);
-            if(skuFiles){
-                return uplodaData.skuFiles;
-            }
             return [];
         }
         return uplodaData.skuFiles;
@@ -212,8 +201,15 @@ export class MbSkuApiImpl extends MbSkuApi {
         skuPublishResult.publishResourceId = publishResourceId;
 
         try {
+            const urlParams = getUrlParameter(skuUrl);
+            const skuItemId = urlParams.get("id");
+            if(!skuItemId){
+                skuPublishResult.status = SkuStatus.ERROR;
+                skuPublishResult.remark = "商品链接未找到商品ID";
+                return skuPublishResult;
+            }
             // 校验商品是否存在
-            const checkSkuExistenceReq = new CheckSkuExistenceReq(skuUrl, publishResourceId);
+            const checkSkuExistenceReq = new CheckSkuExistenceReq(skuItemId, publishResourceId);
             const checkResult = await checkSkuExistence(checkSkuExistenceReq);
             if(checkResult){ // 商品已存在
                 skuPublishResult.status = SkuStatus.ERROR;
@@ -225,8 +221,7 @@ export class MbSkuApiImpl extends MbSkuApi {
                 "resourceId" : publishResourceId,
                 "priceRate" : publishConfig?.priceRate
             }
-            const skuUrlKey = getStringHash(skuUrl);
-            const publishHandler = new SkuPublishHandler(skuUrlKey, publishResourceId);
+            const publishHandler = new SkuPublishHandler(skuItemId, publishResourceId);
             const result = await publishHandler.doStep(withParams);
             if(!result || !result.result){
                 skuPublishResult.status = SkuStatus.ERROR;

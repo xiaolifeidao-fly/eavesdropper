@@ -1,6 +1,5 @@
 import { getSkuTaskSteps, initSkuStep, saveSkuTaskStep } from "@api/sku/skuTask.api"
 import { SkuTaskStep, STEP_DONE, STEP_ERROR, STEP_INIT, STEP_PENDING } from "@model/sku/skuTask"
-import log  from "electron-log"
 import { StepConfig } from "./step.config"
 import { StepResult, StepUnit } from "./step.unit";
 import { StepContext } from "./step.context";
@@ -23,6 +22,30 @@ export abstract class StepHandler {
         return this.context.getItem(this.getStoreKey(key));
     }
 
+    public setHeader(header : { [key: string]: any }){
+        const keys = Object.keys(header)
+        for(const key of keys){
+            const headerValue = header[key]
+            const storeHeaderKey = this.getHeaderKey(key);
+            if(!storeHeaderKey){
+                continue;
+            }
+            this.context.putItem(storeHeaderKey, headerValue)
+        }
+        const headerAllKey = this.getHeaderAllKey();    
+        if(headerAllKey){
+            this.context.putItem(headerAllKey, header)
+        }
+    }
+
+    getHeaderKey(key : string) : string {
+        return `step_header_${key}`;
+    }
+
+    getHeaderAllKey() : string {
+        return `step_header_all`;
+    }
+    
     abstract getGroupCode(): string;
 
     async buildSteps(): Promise<StepUnit[]>{
@@ -31,7 +54,7 @@ export abstract class StepHandler {
         const steps = []
         for (const stepCode of stepCodes) {
             const step = new SkuTaskStep(undefined, this.key, this.resourceId, stepCode, undefined, STEP_INIT, this.getGroupCode())
-            const stepUnit = this.stepConfig.buildStepUnit(step, this.context, this.getGroupCode());
+            const stepUnit = this.stepConfig.buildStepUnit(step, this.context);
             await stepUnit.init(true);
             steps.push(stepUnit);
         }
@@ -71,8 +94,15 @@ export abstract class StepHandler {
         if(!result.header || !result.validateUrl){
             return result;
         }
-        await validate(this.resourceId, result.header, result.validateUrl);
-        return await stepUnit.do();
+        const validateResult = await validate(this.resourceId, result.header, result.validateUrl);
+        if(!validateResult){
+            return result;
+        }
+        if(validateResult.result && validateResult.header){
+            this.setHeader(validateResult.header);
+            return await stepUnit.do();
+        }
+        return result;
     }
     
     release(){
@@ -90,7 +120,7 @@ export abstract class StepHandler {
         }
         const stepUnits = []
         for (const step of steps) {
-            const stepUnit = this.stepConfig.buildStepUnit(step, this.context, this.getGroupCode());
+            const stepUnit = this.stepConfig.buildStepUnit(step, this.context);
             stepUnits.push(stepUnit)
         }
         return this.rebuildSteps(stepUnits)

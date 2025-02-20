@@ -13,9 +13,9 @@ export class StepConfig {
         this.codes.push(stepCode)
     }
 
-    buildStepUnit(step : SkuTaskStep, context : StepContext, groupId : string) : StepUnit{
+    buildStepUnit(step : SkuTaskStep, context : StepContext) : StepUnit{
         const stepClass = this.steps[step.code];
-        return new stepClass(step, context, groupId);
+        return new stepClass(step, context);
     }
     
     getStepCodes() : string[]{

@@ -9,7 +9,8 @@ export class SkuPublishFileUploadStep extends StepUnit{
         const skuApi = new MbSkuApiImpl();
         const resourceId = this.getParams("resourceId");
         const skuItem = this.getParams("skuItem");
-        const uploadResult = await skuApi.uploadSkuImages(resourceId, skuItem, {}); // skuId TODO
+        const headerData = this.getHeader();
+        const uploadResult = await skuApi.uploadSkuImages(resourceId, skuItem, headerData); // skuId TODO
         const imageFileList = uploadResult.skuFiles;
         if(!imageFileList || imageFileList.length === 0){
             return new StepResult(false, "上传图片失败");

@@ -247,7 +247,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             }
             skuList.push({
                 cspuId: 0,
-                skuPrice: sale.price,
+                skuPrice: await this.getPrice(Number(sale.price)),
                 skuBatchInventory: null,
                 action: { selected: true },
                 skuId: null,
@@ -623,8 +623,6 @@ export class SkuBuildDraftStep extends AbsPublishStep{
 
     async getPrice(price : number){
         const priceRate : PriceRangeConfig[] | undefined = this.getParams("priceRate");
-        log.info("getPrice price: ", price);
-        log.info("getPrice priceRate: ", priceRate);
         if(!priceRate || priceRate.length == 0){
             return String(price);
         }
@@ -652,7 +650,6 @@ export class SkuBuildDraftStep extends AbsPublishStep{
                 finalPrice = Math.round(finalPrice * 100) / 100;
                 break;
         }
-        log.info("getPrice finalPrice: ", String(finalPrice));
         return String(finalPrice);
     }
 }
