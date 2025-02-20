@@ -12,15 +12,15 @@ export class SkuPublishFileUploadStep extends StepUnit{
         const headerData = this.getHeader();
         const uploadResult = await skuApi.uploadSkuImages(resourceId, skuItem, headerData); // skuId TODO
         const imageFileList = uploadResult.skuFiles;
-        if(!imageFileList || imageFileList.length === 0){
-            return new StepResult(false, "上传图片失败");
-        }
         const validateUrl = uploadResult.validateUrl;
         const header = uploadResult.header;
         if(validateUrl){
             return new StepResult(false, "上传图片[验证失败]", [
                 new StepResponse("imageFileList", [])
             ], header, validateUrl);
+        }
+        if(!imageFileList || imageFileList.length === 0){
+            return new StepResult(false, "上传图片失败");
         }
         return new StepResult(true, "上传成功", [
             new StepResponse("imageFileList", imageFileList)

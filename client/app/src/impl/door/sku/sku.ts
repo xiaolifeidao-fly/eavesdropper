@@ -31,8 +31,6 @@ import { uploadByFileApi } from "@src/door/mb/file/file.api";
 import { DoorEntity } from "@src/door/entity";
 import { app } from "electron";
 import sharp from "sharp";
-import { validate } from "@src/validator/image.validator";
-import { getStringHash } from "@utils/crypto.util";
 import { SkuPublishHandler } from "@src/impl/step/publish/sku.publish.handler";
 import { getUrlParameter } from "@utils/url.util";
 export class MbSkuApiImpl extends MbSkuApi {

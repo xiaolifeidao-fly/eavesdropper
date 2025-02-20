@@ -3,6 +3,7 @@ import { StepResult, StepUnit } from "../../step.unit";
 import log from "electron-log"
 import { AbsPublishStep } from "./abs.publish";
 import { MbEngine } from "@src/door/mb/mb.engine";
+import { SkuItem } from "@model/door/sku";
 
 export class UpdateDraftStep extends AbsPublishStep {
 
@@ -38,6 +39,7 @@ export class UpdateDraftStep extends AbsPublishStep {
                 return new StepResult(false, "获取请求头失败");
             }
             await this.fillCategoryList(skuItem, draftData, commonData, requestHeader, catId, startTraceId);
+            
             const updateResult = await this.updateDraftData(catId, draftId, requestHeader, startTraceId, draftData);
             if(!updateResult){
                 return new StepResult(false, "更新草稿失败");
@@ -54,6 +56,18 @@ export class UpdateDraftStep extends AbsPublishStep {
                 await page.close();
             }
         }
+    }
+
+    validateDraftData(draftData: { [key: string]: any }, skuItem: SkuItem, commonData: { [key: string]: any }){
+        const components = commonData.data.components;
+        for(const key in components){
+            const component = components[key];
+            if(!('props' in component)){
+                continue;
+            }
+            const props = component.props;
+        }
+        return true;
     }
 
 }

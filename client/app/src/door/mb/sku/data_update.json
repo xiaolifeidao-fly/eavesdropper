@@ -1,7 +1,7 @@
 {
     "frontDataLog": {
         "identityId": "general-taobao-100",
-        "mainCategoryId": 50016348,
+        "mainCategoryId": 50002766,
         "fromSmart": false,
         "fromStandardSpuPublish": false,
         "fromSearch": false,
@@ -13,26 +13,25 @@
         "fromAIPublish": false,
         "fromAICategory": false,
         "fromAIImage": false,
-        "traceId": "215046f317394988442694233e110e",
-        "gpfRenderTraceId": "215046f317394988442694233e110e",
-        "trueItemId": 887815781939,
+        "traceId": "213e01d017400409835187355e15cd",
+        "gpfRenderTraceId": "213e01d017400409835187355e15cd",
+        "trueItemId": 891119140880,
         "isEdit": false,
         "pageUniqueId": "pc",
         "newPublish": true
     },
     "auctionType": "b",
     "sevenDayDefaultValue": 1,
-    "id": 887815781939,
+    "id": 891119140880,
     "copyItemMode": 0,
     "postCouponPromotionId": null,
     "spuMatch": null,
-    "croRule": "{\"url\":\"asyncOpt.htm?optType=croRuleAsyncCheck&catId=50025787\",\"input\":[\"id\",\"userId\",\"catId\",\"title\",\"desc\",\"descForShenbiPc\",\"sku\",\"price\",\"catProp\",\"saleProp\",\"descType\",\"shopping_title\",\"skuPublishSuggest\"]}",
+    "croRule": "{\"url\":\"asyncOpt.htm?optType=croRuleAsyncCheck&catId=126492001\",\"input\":[\"id\",\"userId\",\"catId\",\"title\",\"desc\",\"descForShenbiPc\",\"sku\",\"price\",\"catProp\",\"saleProp\",\"descType\",\"shopping_title\",\"skuPublishSuggest\"]}",
     "itemWithScProductItem": null,
     "multiDiscountPromotionId": null,
     "batchInventoryTemplateId": null,
     "guideMaterialEnable": 1,
     "afterSaleVideo_videoId": null,
-    "guaranteeService": null,
     "sevenDayGray": -1,
     "catSuggest": {
         "empty": false
@@ -49,37 +48,37 @@
     "descRepublicEnable": 1,
     "skyLightRule": null,
     "recommendInfo": "{\"fromAiPublish\":false,\"fromNewImagePublish\":false,\"hasStructTitle\":false}",
-    "dbDraftId": "1186817638",
+    "dbDraftId": "1191045146",
     "draftIdKey": "dbDraftId",
     "firstStartTime": null,
     "itemdiagnoseInfo": "{\"showNewVersion\":true}",
     "diagnoseInvokeId": null,
     "diagnoseSource": null,
-    "aliColorEnable": "p-1627207",
+    "aliColorEnable": null,
     "mediaCenterEnable": null,
     "newMaterialEnable": null,
-    "catId": 50025787,
+    "foodSecuritySubmit": false,
+    "foodExtend": null,
+    "catId": 126492001,
     "userId": 695637589,
     "category": {
         "categorySelect": {
-            "id": 50025787,
-            "name": "平板拖把",
+            "id": 126492001,
+            "name": "面筋制品",
             "idpath": [
-                50016348,
-                50003949,
-                201831518,
-                50025787
+                50002766,
+                123248003,
+                126492001
             ],
             "path": [
-                "家庭/个人清洁工具",
-                "家务/地板清洁用具",
-                "拖把",
-                "平板拖把"
+                "零食/坚果/特产",
+                "豆干制品/蔬菜干",
+                "面筋制品"
             ],
             "brand": false,
             "leaf": true,
             "publish": true,
-            "submitId": 50025787,
+            "submitId": 126492001,
             "empty": false
         }
     },
@@ -87,63 +86,31 @@
     "stuffStatus": {
         "value": 5
     },
-    "title": "简简风百货平板喷水拖把寝室德国2024新款家用拖地神器懒人地拖布",
+    "title": "盛滋味大长筋辣条湖南特产学生宿舍经典怀旧网红爆款聚会解馋零食",
     "catProp": {
         "p-20000": {
-            "value": 91181364,
-            "text": "简简风"
+            "value": 7048041960,
+            "text": "盛滋味"
         },
-        "p-20000~1": "2024款喷雾拖把-41型",
-        "p-148818081": {
-            "value": 29148,
-            "text": "欧洲"
+        "p-21299": {
+            "value": 27772,
+            "text": "中国大陆"
         },
-        "p-148818081-148810019": {
-            "value": 27413,
-            "text": "德国"
+        "p-6939376": {
+            "value": 28407,
+            "text": "包装"
         },
-        "p-20019": {
-            "value": 36683608,
-            "text": "除螨杀菌"
+        "p-1626691": {
+            "value": 136135,
+            "text": "袋装"
         },
-        "p-1626518": {
-            "value": 50288,
-            "text": "通用"
-        },
-        "p-16050426": {
-            "value": 32442894,
-            "text": "粘扣式"
-        },
-        "p-9769346": {
-            "value": 7484237,
-            "text": "超细纤维"
-        },
-        "p-17451350": {
-            "value": 493280753,
-            "text": "80%(含)-90%(不含)"
-        },
-        "p-9698492": {
-            "value": 493280757,
-            "text": "10s以下"
-        },
-        "p-17450836": {
-            "value": 493280740,
-            "text": "8级(含)-8.9级(含)"
-        },
-        "p-17451043": {
-            "value": 46308072,
-            "text": "10KG以上"
-        },
-        "p-19185976": {
-            "value": 3612252,
-            "text": "铝"
-        },
-        "p-31514": {
-            "value": 84901,
-            "text": "手动"
-        },
-        "p-148060595": "41.5×14×134cm"
+        "p-259916348": "大长筋",
+        "p-227143751": "90g",
+        "p-186832700": "1包",
+        "p-3344920": "90g"
     },
+    "attrPropTable": [],
+    "assignUserAgreement": 1,
     "spuConfirm": 1,
     "globalStock": {
         "value": "globalStock_0"
@@ -156,82 +123,34 @@
     },
     "sale-card": {},
     "saleProp": {
-        "p-1627207": [
+        "p-31560": [
             {
-                "value": -33996498556,
-                "text": "2024德国水喷雾拖把★41型【共1块原装拖布】",
-                "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN01296hEC1Ymlap4sM1b_!!2210344783102.jpg"
+                "value": -36246494355,
+                "text": "【尝鲜】大长筋【90g*2包】",
+                "img": "//img.alicdn.com/imgextra/i2/2219107601308/O1CN01iXlryJ1LX75BnfTVj_!!2219107601308.png"
             },
             {
-                "value": -33657242864,
-                "text": "2024德国水喷雾拖把-41型【共2块原装拖布】",
-                "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN01QVHVqR1YmlamaeAvB_!!2210344783102.jpg"
-            },
-            {
-                "value": -33657557420,
-                "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯",
-                "img": "//img.alicdn.com/imgextra/i4/2210344783102/O1CN01D3QDfD1YmlanaD2rk_!!2210344783102.jpg"
-            },
-            {
-                "value": -34501036010,
-                "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯",
-                "img": "//img.alicdn.com/imgextra/i3/2210344783102/O1CN01ADQa6T1YmlcrBxfWt_!!2210344783102.png"
-            },
-            {
-                "value": -33657557421,
-                "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯+地板专用清洁剂*500ml",
-                "img": "//img.alicdn.com/imgextra/i4/2210344783102/O1CN01t7hJgy1Ymlap4xeeU_!!2210344783102.jpg"
-            },
-            {
-                "value": -33657557422,
-                "text": "2024德国水喷雾拖把-41型【共3块原装拖布】+刮刀+量杯+地板专用清洁剂*500ml",
-                "img": "//img.alicdn.com/imgextra/i2/2210344783102/O1CN0183oe9R1YmlajfFSks_!!2210344783102.jpg"
-            },
-            {
-                "value": -34501036011,
-                "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯+3瓶地板专用清洁剂*500ml",
-                "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN010K3YMy1Ymlam1QovF_!!2210344783102.jpg"
-            },
-            {
-                "value": -34501036012,
-                "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯+3瓶地板专用清洁剂*500ml",
-                "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN01PFT2ov1YmlcsCh2b1_!!2210344783102.png"
-            },
-            {
-                "value": -34501036013,
-                "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯+6瓶地板专用清洁剂*500ml",
-                "img": "//img.alicdn.com/imgextra/i3/2210344783102/O1CN01EpxQ0w1YmlcsCc0ek_!!2210344783102.png"
-            },
-            {
-                "value": -34501036014,
-                "text": "6瓶简简风德国拖把专用地板清洁剂",
-                "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN014NbmsU1YmlamWlhaF_!!2210344783102.jpg"
-            },
-            {
-                "value": -35201967933,
-                "text": "7块德国细纤维原装拖布（不包含拖把）",
-                "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN01cWBmWq1YmlcglDpaP_!!2210344783102.png"
-            },
-            {
-                "value": -35201967934,
-                "text": "5块德国细纤维原装拖布+1瓶德国拖把地板清洁剂（不包含拖把）",
-                "img": "//img.alicdn.com/imgextra/i4/2210344783102/O1CN01rkWBR81Ymlcim7brY_!!2210344783102.png"
+                "value": -36246494356,
+                "text": "【划算】大长筋【90g*5包】",
+                "img": "//img.alicdn.com/imgextra/i2/2219107601308/O1CN013ZEC1O1LX755re0bw_!!2219107601308.jpg"
             }
         ]
     },
-    "deliveryTimeType": {
-        "value": 0
+    "tmDeliveryTime": {
+        "type": "0",
+        "value": null,
+        "setBySku": false
     },
     "sku": [
         {
             "cspuId": 0,
-            "skuPrice": "127.00",
+            "skuPrice": "5.72",
             "action": {
                 "selected": true
             },
             "skuId": null,
             "skuStatus": 1,
-            "skuStock": 200,
+            "skuStock": 89,
             "skuQuality": {
                 "value": "mainSku",
                 "text": "单品",
@@ -244,25 +163,25 @@
             "disabled": false,
             "props": [
                 {
-                    "name": "p-1627207",
-                    "value": -33996498556,
-                    "text": "2024德国水喷雾拖把★41型【共1块原装拖布】",
-                    "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN01296hEC1Ymlap4sM1b_!!2210344783102.jpg",
-                    "label": "颜色分类"
+                    "name": "p-31560",
+                    "value": -36246494355,
+                    "text": "【尝鲜】大长筋【90g*2包】",
+                    "img": "//img.alicdn.com/imgextra/i2/2219107601308/O1CN01iXlryJ1LX75BnfTVj_!!2219107601308.png",
+                    "label": "口味"
                 }
             ],
-            "salePropKey": "1627207--33996498556",
+            "salePropKey": "31560--36246494355",
             "errorInfo": {}
         },
         {
             "cspuId": 0,
-            "skuPrice": "137.00",
+            "skuPrice": "10.12",
             "action": {
                 "selected": true
             },
             "skuId": null,
             "skuStatus": 1,
-            "skuStock": 59,
+            "skuStock": 104,
             "skuQuality": {
                 "value": "mainSku",
                 "text": "单品",
@@ -275,364 +194,54 @@
             "disabled": false,
             "props": [
                 {
-                    "name": "p-1627207",
-                    "value": -33657242864,
-                    "text": "2024德国水喷雾拖把-41型【共2块原装拖布】",
-                    "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN01QVHVqR1YmlamaeAvB_!!2210344783102.jpg",
-                    "label": "颜色分类"
+                    "name": "p-31560",
+                    "value": -36246494356,
+                    "text": "【划算】大长筋【90g*5包】",
+                    "img": "//img.alicdn.com/imgextra/i2/2219107601308/O1CN013ZEC1O1LX755re0bw_!!2219107601308.jpg",
+                    "label": "口味"
                 }
             ],
-            "salePropKey": "1627207--33657242864",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "147.00",
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": -33657557420,
-                    "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯",
-                    "img": "//img.alicdn.com/imgextra/i4/2210344783102/O1CN01D3QDfD1YmlanaD2rk_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--33657557420",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "178.00",
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": -34501036010,
-                    "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯",
-                    "img": "//img.alicdn.com/imgextra/i3/2210344783102/O1CN01ADQa6T1YmlcrBxfWt_!!2210344783102.png",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--34501036010",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "162.00",
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": -33657557421,
-                    "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯+地板专用清洁剂*500ml",
-                    "img": "//img.alicdn.com/imgextra/i4/2210344783102/O1CN01t7hJgy1Ymlap4xeeU_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--33657557421",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "175.00",
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": -33657557422,
-                    "text": "2024德国水喷雾拖把-41型【共3块原装拖布】+刮刀+量杯+地板专用清洁剂*500ml",
-                    "img": "//img.alicdn.com/imgextra/i2/2210344783102/O1CN0183oe9R1YmlajfFSks_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--33657557422",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "198.00",
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": -34501036011,
-                    "text": "2024德国水喷雾拖把-41型顶配【共2块原装拖布】+刮刀+量杯+3瓶地板专用清洁剂*500ml",
-                    "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN010K3YMy1Ymlam1QovF_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--34501036011",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "228.00",
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": -34501036012,
-                    "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯+3瓶地板专用清洁剂*500ml",
-                    "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN01PFT2ov1YmlcsCh2b1_!!2210344783102.png",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--34501036012",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "288.00",
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": -34501036013,
-                    "text": "2024德国水喷雾拖把-41型顶配【共5块原装拖布】+刮刀+量杯+6瓶地板专用清洁剂*500ml",
-                    "img": "//img.alicdn.com/imgextra/i3/2210344783102/O1CN01EpxQ0w1YmlcsCc0ek_!!2210344783102.png",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--34501036013",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "128.00",
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": -34501036014,
-                    "text": "6瓶简简风德国拖把专用地板清洁剂",
-                    "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN014NbmsU1YmlamWlhaF_!!2210344783102.jpg",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--34501036014",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "99.00",
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": -35201967933,
-                    "text": "7块德国细纤维原装拖布（不包含拖把）",
-                    "img": "//img.alicdn.com/imgextra/i1/2210344783102/O1CN01cWBmWq1YmlcglDpaP_!!2210344783102.png",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--35201967933",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": 0,
-            "skuPrice": "99.00",
-            "action": {
-                "selected": true
-            },
-            "skuId": null,
-            "skuStatus": 1,
-            "skuStock": 200,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品",
-                "prefilled": true,
-                "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
-                }
-            },
-            "skuDetail": [],
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-1627207",
-                    "value": -35201967934,
-                    "text": "5块德国细纤维原装拖布+1瓶德国拖把地板清洁剂（不包含拖把）",
-                    "img": "//img.alicdn.com/imgextra/i4/2210344783102/O1CN01rkWBR81Ymlcim7brY_!!2210344783102.png",
-                    "label": "颜色分类"
-                }
-            ],
-            "salePropKey": "1627207--35201967934",
+            "salePropKey": "31560--36246494356",
             "errorInfo": {}
         }
     ],
-    "price": "99.00",
-    "quantity": "2259",
+    "price": "5.72",
+    "quantity": "193",
     "multiDiscountPromotion": {
+        "value": "9.5",
         "type": 1,
-        "value": 9.5,
-        "enable": false
+        "enable": true
     },
     "sizeinfo-card": {},
     "desc-card": {},
     "mainImagesGroup": {
         "images": [
             {
-                "url": "//img.alicdn.com/imgextra/i4/695637589/O1CN01lEWIPS25vomDk5PkB_!!695637589.jpg",
+                "url": "//img.alicdn.com/imgextra/i1/695637589/O1CN01cZ8QEq25vomH8QMJU_!!695637589.jpg",
                 "pix": "800x800",
                 "width": "800",
                 "height": "800"
             },
             {
-                "url": "//img.alicdn.com/imgextra/i2/695637589/O1CN01b1ebTC25vomCOGmzI_!!695637589.jpg",
+                "url": "//img.alicdn.com/imgextra/i1/695637589/O1CN01NiIwJV25vomIYFiZs_!!695637589.jpg",
                 "pix": "800x800",
                 "width": "800",
                 "height": "800"
             },
             {
-                "url": "//img.alicdn.com/imgextra/i3/695637589/O1CN019KC4Ta25vomCG4r72_!!695637589.jpg",
+                "url": "//img.alicdn.com/imgextra/i4/695637589/O1CN01jldCEM25vomKyD3L8_!!695637589.jpg",
                 "pix": "800x800",
                 "width": "800",
                 "height": "800"
             },
             {
-                "url": "//img.alicdn.com/imgextra/i3/695637589/O1CN01uhxmcr25vomBwTNXZ_!!695637589.jpg",
+                "url": "//img.alicdn.com/imgextra/i1/695637589/O1CN01Rp5YH725vomIFoc32_!!695637589.jpg",
                 "pix": "800x800",
                 "width": "800",
                 "height": "800"
             },
             {
-                "url": "//img.alicdn.com/imgextra/i3/695637589/O1CN010j8dU025vomBwSVTn_!!695637589.jpg",
+                "url": "//img.alicdn.com/imgextra/i2/695637589/O1CN01h9Kz7c25vomHH8vWQ_!!695637589.jpg",
                 "pix": "800x800",
                 "width": "800",
                 "height": "800"
@@ -655,43 +264,41 @@
             "userId": 695637589,
             "itemId": 0,
             "templateId": 0,
-            "templateContent": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01iP9Eyq25vomCONV8u_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":790,\"height\":1133,\"size\":53634,\"id\":1758908368981783000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1739498865470\",\"groupId\":\"group1739498866120\",\"selected\":false}],\"groupId\":\"group1739498866120\",\"id\":\"group1739498866120\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}",
+            "templateContent": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01cZ8QEq25vomH8QMJU_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":149169,\"id\":1758908373326707000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869241\",\"groupId\":\"group1740040869240\",\"selected\":false}],\"groupId\":\"group1740040869240\",\"id\":\"group1740040869240\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01NiIwJV25vomIYFiZs_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":181285,\"id\":1758908374624488400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869242\",\"groupId\":\"group1740040869241\",\"selected\":false}],\"groupId\":\"group1740040869241\",\"id\":\"group1740040869241\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01jldCEM25vomKyD3L8_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":102317,\"id\":1758908376840303600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869243\",\"groupId\":\"group1740040869242\",\"selected\":false}],\"groupId\":\"group1740040869242\",\"id\":\"group1740040869242\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01Rp5YH725vomIFoc32_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":177874,\"id\":1758908374352054300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869244\",\"groupId\":\"group1740040869243\",\"selected\":false}],\"groupId\":\"group1740040869243\",\"id\":\"group1740040869243\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01h9Kz7c25vomHH8vWQ_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":146571,\"id\":1758908373455539200},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869245\",\"groupId\":\"group1740040869244\",\"selected\":false}],\"groupId\":\"group1740040869244\",\"id\":\"group1740040869244\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01f6y7Y725vomC8gxx5_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"2000\",\"height\":\"1600\",\"size\":229899,\"id\":1758908368750000600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869246\",\"groupId\":\"group1740040869245\",\"selected\":false}],\"groupId\":\"group1740040869245\",\"id\":\"group1740040869245\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01jvGKqi25vomIFp11a_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"2000\",\"height\":\"1600\",\"size\":179288,\"id\":1758908374352150300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869247\",\"groupId\":\"group1740040869246\",\"selected\":false}],\"groupId\":\"group1740040869246\",\"id\":\"group1740040869246\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01wchuUJ25vomKyEWpU_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"2000\",\"height\":\"1600\",\"size\":400446,\"id\":1758908376840655400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869248\",\"groupId\":\"group1740040869247\",\"selected\":false}],\"groupId\":\"group1740040869247\",\"id\":\"group1740040869247\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01mPAmii25vomIYHKND_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"2000\",\"height\":\"1600\",\"size\":266970,\"id\":1758908374624872000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869249\",\"groupId\":\"group1740040869248\",\"selected\":false}],\"groupId\":\"group1740040869248\",\"id\":\"group1740040869248\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01cDPPj725vomJ4L1nE_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"2000\",\"height\":\"1600\",\"size\":171244,\"id\":1758908375098596600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869250\",\"groupId\":\"group1740040869249\",\"selected\":false}],\"groupId\":\"group1740040869249\",\"id\":\"group1740040869249\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}",
             "version": 0,
             "freeTry": 0,
             "needServerComposite": false,
             "batchPut": false,
-            "detailHeight": 889,
+            "detailHeight": 0,
             "params": "params",
             "maxHeight": 100000,
             "articleId": 0,
-            "sell": false,
-            "smart": false,
             "bsellerBack2OldVersion": false,
             "fliggyItem": false,
             "newItem": true,
+            "sell": false,
+            "smart": false,
             "changed": true,
-            "catId": 50025787,
+            "catId": 126492001,
             "bizSource": "sell",
-            "draftKey": "sell_695637589_12515_10659",
+            "draftKey": "sell_695637589_12514_164129",
             "descDomain": "//g.alicdn.com",
             "descVersion": "1.1.53",
             "bseller": false,
-            "sourceAgent": "sell",
-            "editType": "lite",
-            "detailParam": ""
+            "editType": "lite"
         },
         "descPageRenderParam": {
             "userId": 695637589,
             "itemId": 0,
             "templateId": 0,
             "clientType": 1,
-            "catId": 50025787,
+            "catId": 126492001,
             "bizSource": "sell",
-            "draftKey": "sell_695637589_12515_10659",
+            "draftKey": "sell_695637589_12514_164129",
             "descDomain": "//g.alicdn.com",
             "descVersion": "1.1.53",
-            "smart": false,
             "newItem": true,
+            "smart": false,
             "bseller": false
         },
         "descPageRenderModel": {
@@ -707,7 +314,7 @@
             },
             "descPageDO": {
                 "templateId": 0,
-                "editRst": "{\"groups\":[],\"sellergroups\":[]}"
+                "editRst": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01cZ8QEq25vomH8QMJU_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":149169,\"id\":1758908373326707000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869241\",\"groupId\":\"group1740040869240\",\"selected\":false}],\"groupId\":\"group1740040869240\",\"id\":\"group1740040869240\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01NiIwJV25vomIYFiZs_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":181285,\"id\":1758908374624488400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869242\",\"groupId\":\"group1740040869241\",\"selected\":false}],\"groupId\":\"group1740040869241\",\"id\":\"group1740040869241\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01jldCEM25vomKyD3L8_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":102317,\"id\":1758908376840303600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869243\",\"groupId\":\"group1740040869242\",\"selected\":false}],\"groupId\":\"group1740040869242\",\"id\":\"group1740040869242\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01Rp5YH725vomIFoc32_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":177874,\"id\":1758908374352054300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869244\",\"groupId\":\"group1740040869243\",\"selected\":false}],\"groupId\":\"group1740040869243\",\"id\":\"group1740040869243\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01h9Kz7c25vomHH8vWQ_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":146571,\"id\":1758908373455539200},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869245\",\"groupId\":\"group1740040869244\",\"selected\":false}],\"groupId\":\"group1740040869244\",\"id\":\"group1740040869244\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01f6y7Y725vomC8gxx5_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"2000\",\"height\":\"1600\",\"size\":229899,\"id\":1758908368750000600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869246\",\"groupId\":\"group1740040869245\",\"selected\":false}],\"groupId\":\"group1740040869245\",\"id\":\"group1740040869245\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01jvGKqi25vomIFp11a_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"2000\",\"height\":\"1600\",\"size\":179288,\"id\":1758908374352150300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869247\",\"groupId\":\"group1740040869246\",\"selected\":false}],\"groupId\":\"group1740040869246\",\"id\":\"group1740040869246\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01wchuUJ25vomKyEWpU_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"2000\",\"height\":\"1600\",\"size\":400446,\"id\":1758908376840655400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869248\",\"groupId\":\"group1740040869247\",\"selected\":false}],\"groupId\":\"group1740040869247\",\"id\":\"group1740040869247\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01mPAmii25vomIYHKND_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"2000\",\"height\":\"1600\",\"size\":266970,\"id\":1758908374624872000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869249\",\"groupId\":\"group1740040869248\",\"selected\":false}],\"groupId\":\"group1740040869248\",\"id\":\"group1740040869248\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01cDPPj725vomJ4L1nE_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"2000\",\"height\":\"1600\",\"size\":171244,\"id\":1758908375098596600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1740040869250\",\"groupId\":\"group1740040869249\",\"selected\":false}],\"groupId\":\"group1740040869249\",\"id\":\"group1740040869249\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}"
             },
             "extendFields": "{}",
             "extendConfig": {
@@ -745,10 +352,6 @@
                     "foreverDisableEdit": false,
                     "showWangpuEditor": true
                 },
-                "imagePluginConfig": {
-                    "appkey": "tu",
-                    "url": "https://market.m.taobao.com/app/crs-qn/sucai-selector-ng/index"
-                },
                 "imageConfig": {
                     "usePreDraw": true,
                     "mustCutImage": false,
@@ -760,6 +363,10 @@
                         "cutMinHeight": 0
                     }
                 },
+                "imagePluginConfig": {
+                    "appkey": "tu",
+                    "url": "https://market.m.taobao.com/app/crs-qn/sucai-selector-ng/index"
+                },
                 "uploadConfig": {
                     "localFile": false,
                     "picUploadApi": "picUploadApi",
@@ -767,6 +374,18 @@
                         "folderId": "folderId"
                     }
                 }
+            }
+        },
+        "wangpuEditorConfig": {
+            "url": "https://sell.xiangqing.taobao.com/new_user_panel.htm",
+            "params": {
+                "isAdescription": "1",
+                "catId": "126492001",
+                "itemId": "891119140880",
+                "hideSourceModuleAdd": "true",
+                "clientType": "1",
+                "isV3": "true",
+                "draftKey": "sell_695637589_12514_164129"
             }
         }
     },
@@ -780,7 +399,7 @@
         "value": [
             "2"
         ],
-        "template": "65179480960"
+        "template": "65205705430"
     },
     "regionLimitSale": {
         "value": "regionLimitSale_0"
@@ -788,9 +407,15 @@
     "post-sale-service-card": {},
     "sevenDaySupport": 1,
     "sevenDayOptional": 0,
+    "guaranteeService": [
+        {
+            "value": "IND-SEC-brokenComp",
+            "text": "破损包退"
+        }
+    ],
     "startTime": {
         "type": 0,
-        "shelfTime": 1739498819872
+        "shelfTime": 1740040888981
     },
     "ysbCheckTask": {
         "value": 0
@@ -800,6 +425,41 @@
     "home-service-card": {},
     "aiFood-card": {},
     "product-card": {},
+    "foodNutrientTable": {
+        "measurement": {
+            "unit": "hundredGram"
+        },
+        "fields": {
+            "p-226972430": {
+                "value": "",
+                "percent": null
+            },
+            "p-226969089": {
+                "value": "",
+                "percent": null
+            },
+            "p-226973822": {
+                "value": "",
+                "percent": null
+            }
+        }
+    },
+    "foodNutrientOCRContent": {},
+    "foodPrdLicense": "SC12443062605700",
+    "foodDesignCode": "",
+    "foodFactoryName": "平江县吴彬食品有限公司",
+    "foodFactorySite": "湖南省岳阳市平江县三阳乡美源村晒谷组",
+    "foodOrganic": {
+        "value": 0
+    },
+    "isGreenFood": {
+        "value": 0
+    },
+    "foodMix": "",
+    "foodFactoryContact": "",
+    "foodPlanStorage": "",
+    "foodPeriod": "",
+    "foodAdditive": "",
     "afterSaleVideoNew": {
         "afterSaleVideo_sub_1": {
             "name": "afterSaleVideo_sub_1",
