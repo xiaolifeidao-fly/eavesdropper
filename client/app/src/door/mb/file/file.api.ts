@@ -53,10 +53,11 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
 }
 
 async function getHeaderData(resourceId : number, skuItemId : string, headerData : { [key: string]: any }, fileQueryMonitor : MbFileQueryMonitor){
+    let headerless = true;
     if(headerData && Object.keys(headerData).length > 0){
-        return headerData;
+        headerless = false;
     }
-    const mbEngine = new MbEngine(resourceId);
+    const mbEngine = new MbEngine(resourceId, headerless);
     try{
         const page = await mbEngine.init();
         if(!page){

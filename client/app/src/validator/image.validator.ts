@@ -1,7 +1,8 @@
 import { MbEngine } from "@src/door/mb/mb.engine";
+import { ImageValidatorMonitor } from "@src/door/monitor/mb/validate/image.validator";
 import { BrowserView, session } from "electron";
 import path from "path";
-
+import log from "electron-log"
 
 
 const {app, BrowserWindow } = require('electron');
@@ -59,23 +60,27 @@ const createBrowserView = async (resourceId : number, header : {[key:string]:any
  }
 
 class ValidateItem {
-    waitResolve: (value: boolean) => void = () => {};
-    waitPromise: Promise<boolean>;
+    waitResolve: (value: {header: {[key:string]:any}, result: boolean}) => void = () => {};
+    waitPromise: Promise<{header: {[key:string]:any}, result: boolean}>;
     resourceId: number;
     header: {[key:string]:any};
     validateUrl: string;
-
+   
     constructor(resourceId: number, header: {[key:string]:any}, validateUrl: string){
         this.resourceId = resourceId;
         this.header = header;
         this.validateUrl = validateUrl;
-        this.waitPromise = new Promise<boolean>((resolve) => {
+        this.waitPromise = new Promise<{header: {[key:string]:any}, result: boolean}>((resolve) => {
             this.waitResolve = resolve;
         });
     }
 
-    public resolve(value: boolean){
-        this.waitResolve(value);
+    public resolve(header: {[key:string]:any}, value: boolean){
+        const result = {
+            header : header,
+            result : value
+        }
+        this.waitResolve(result);
     }
 
     public async wait(){
@@ -119,8 +124,7 @@ async function waitTimes(times : number){
 export async function validate(resourceId : number, header : {[key:string]:any}, validateUrl : string){
     const validateItem = new ValidateItem(resourceId, header, validateUrl);
     validateQueueProcessor.put(validateItem);
-    // return await validateItem.wait();
-    await waitTimes(30000);
+    return await validateItem.wait();
 }
 
 checkValidate();
@@ -132,18 +136,29 @@ function checkValidate(){
     setInterval(async () => {
         const validateItem = validateQueueProcessor.take();
         if(validateItem){
-            console.log('checkValidate', validateItem);
             const engine = new MbEngine(validateItem.resourceId, false);
-            const page = await engine.init();
-            const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource','static',"test.html");
+            try{
+                const page = await engine.init();
+                const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource','static',"test.html");
             if(page){
-                await page.goto("file://" + sessionDirPath + "?iframeUrl=" + encodeBase64(validateItem.validateUrl));
+                const url = "file://" + sessionDirPath + "?iframeUrl=" + encodeBase64(validateItem.validateUrl);
+                const result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor());
+                if(result){
+                    validateItem.resolve(result.getHeaderData(), true);
+                }else{
+                        validateItem.resolve({}, false);
+                    }
+                }
+            } catch(error){
+                log.error("checkValidate error", error);
+                validateItem.resolve({}, false);
+            }finally{
+                engine.closePage();
             }
-            // await createBrowserView(validateItem.resourceId, validateItem.header, validateItem.validateUrl);
-            // validateItem.resolve(true);
         }   
     }, 1000);
 }
+
 
 
 

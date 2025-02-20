@@ -33,12 +33,14 @@ export class StepResult {
     public responseData : StepResponse[];
     public header : { [key: string]: any } | undefined
     public validateUrl : string | undefined
-    constructor(result : boolean, message : string, responseData : StepResponse[] = [], header : { [key: string]: any } | undefined = undefined, validateUrl : string | undefined = undefined){
+    public sourceUrl : string | undefined
+    constructor(result : boolean, message : string, responseData : StepResponse[] = [], header : { [key: string]: any } | undefined = undefined, validateUrl : string | undefined = undefined, sourceUrl : string | undefined = undefined){
         this.result = result
         this.message = message
         this.responseData = responseData
         this.header = header
         this.validateUrl = validateUrl
+        this.sourceUrl = sourceUrl
     }
 }
 
@@ -48,14 +50,10 @@ export abstract class StepUnit {
     private withParams : { [key: string]: any } | undefined;
     private header : { [key: string]: any } | undefined;
     private context : StepContext;
-    private key : string;
-    private groupCode : string;
 
-    constructor(step : SkuTaskStep, context : StepContext, groupCode : string, key : string){
+    constructor(step : SkuTaskStep, context : StepContext){
         this.step = step;
         this.context = context;
-        this.groupCode = groupCode;
-        this.key = key;
     }
 
     public async init(saveFlag : boolean = true){
@@ -119,6 +117,11 @@ export abstract class StepUnit {
     getHeaderKey(key : string) : string {
         return `step_header_${key}`;
     }
+
+
+    getHeaderAllKey() : string {
+        return `step_header_all`;
+    }
     
     getHeaderValue(key : string) : any {
         if(!this.header){
@@ -128,9 +131,6 @@ export abstract class StepUnit {
         return this.header[key]
     }
 
-    getHeaderAllKey() : string {
-        return `step_header_all`;
-    }
 
     getHeader() : { [key: string]: any } {
         if(!this.header){
@@ -147,7 +147,7 @@ export abstract class StepUnit {
                 return new StepResult(true, "");
             }
             await this.pendingStep();
-            console.log("doStep start ", this.step.code);
+            log.info("doStep start ", this.step.code);
             const result = await this.doStep();
             if(result.result){
                 this.step.status = STEP_DONE;
@@ -165,12 +165,15 @@ export abstract class StepUnit {
             if(result.validateUrl){
                 this.step.validateUrl = result.validateUrl;
             }
-            await saveSkuTaskStep(this.step);
-            console.log("doStep end ", this.step.code);
+            log.info("doStep end ", this.step.code);
             return result;
         } catch (error) {
+            this.step.status = STEP_ERROR;
+            this.step.message = "发送未知异常";
             log.error(`step ${this.step.code} failed`, error)
-            return new StepResult(false, "发送未知异常");
+            return new StepResult(false, this.step.message);
+        }finally{
+            await saveSkuTaskStep(this.step);
         }
     }   
 

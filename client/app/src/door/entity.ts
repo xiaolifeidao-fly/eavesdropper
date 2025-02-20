@@ -4,7 +4,7 @@
 export class DoorEntity<T>{
     code: boolean;
     data : T;
-    headerData : { [key: string]: string; };
+    headerData : { [key: string]: any; };
     requestBody : { [key: string]: any; };
     url: string;
     constructor(code: boolean = true, data: T = {} as T, url: string = "", headerData : { [key: string]: string; } = {}, requestBody : { [key: string]: any; } = {}){

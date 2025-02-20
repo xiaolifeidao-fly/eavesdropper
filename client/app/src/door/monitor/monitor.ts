@@ -1,12 +1,7 @@
 import { Page, Route , Request, BrowserContext, Response} from "playwright";
 import { DoorEntity } from "../entity";
 import { EventEmitter } from 'events';
-const axios = require('axios');
-
-function getUrlParameter(url: string) {
-    const urlObj = new URL(url);
-    return new URLSearchParams(urlObj.search);
-}
+import { getUrlParameter } from "@utils/url.util";
 
 export abstract class Monitor<T = any> {
 
