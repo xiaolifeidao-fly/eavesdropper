@@ -139,7 +139,7 @@ function checkValidate(){
             const engine = new MbEngine(validateItem.resourceId, false);
             try{
                 const page = await engine.init();
-                const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource','static',"test.html");
+                const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource',"validate_image.html");
             if(page){
                 const url = "file://" + sessionDirPath + "?iframeUrl=" + encodeBase64(validateItem.validateUrl);
                 const result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor());

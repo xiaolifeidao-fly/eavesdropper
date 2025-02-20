@@ -1,0 +1,26 @@
+<html></html>
+
+<head>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const iframeUrl = decodeBase64(params.get("iframeUrl"));
+        console.log(iframeUrl);
+        const iframe = document.createElement("iframe");
+        iframe.src = iframeUrl;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        document.body.appendChild(iframe);
+
+         // Base64 解码函数
+        function decodeBase64(encodedStr) {
+            return atob(encodedStr);
+        }
+    </script>
+    
+</head>
+
+<body>
+
+</body>
+
+</html>
