@@ -3,13 +3,16 @@ package services
 import (
 	"errors"
 	"server/common"
+	"server/common/base"
 	"server/common/base/page"
 	"server/common/converter"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
+	timeutil "server/common/time_util"
 	"server/internal/resource/models"
 	"server/internal/resource/repositories"
 	"server/internal/resource/services/dto"
+	"time"
 )
 
 func CreateResource(req *dto.AddResourceDTO) (uint64, error) {
@@ -119,6 +122,9 @@ func PageResource(param *dto.ResourcePageParamDTO) (*page.Page[dto.ResourcePageD
 				logger.Errorf("PageResource failed, with error is %v", err)
 				return nil, errors.New("数据库操作失败")
 			}
+			if taobaoDTO == nil || taobaoDTO.ID == 0 {
+				continue
+			}
 			nick = taobaoDTO.Nick
 		}
 		d.Nick = nick
@@ -137,6 +143,10 @@ func BindResource(req *dto.ResourceBindDTO) error {
 	}
 
 	resourceDTO.Account = req.Nick
+	// 资源账号有效期,先固定30天
+	userID := common.GetLoginUserID()
+	expirationDate, _ := GetResourceAuthExpirationDate(userID)
+	resourceDTO.ExpirationDate = &expirationDate
 	resourceDTO.InitUpdate()
 	if _, err = UpdateResource(resourceDTO); err != nil {
 		return err
@@ -165,4 +175,19 @@ func GetResourceByUserIDAndTag(userID uint64, tag string) ([]*dto.ResourceDTO, e
 
 	resourcesDTO := database.ToDTOs[dto.ResourceDTO](resources)
 	return resourcesDTO, nil
+}
+
+func GetResourceStatus(expirationDate *base.Time) (*dto.ResourceStatusEnum, bool) {
+	if expirationDate == nil {
+		return nil, false
+	}
+
+	nowTime := time.Now()
+	isExpiration := !timeutil.IsAfter(expirationDate.ToTime(), nowTime)
+
+	if isExpiration {
+		return &dto.EXPIRATION, isExpiration
+	}
+
+	return &dto.ONLINE, isExpiration
 }

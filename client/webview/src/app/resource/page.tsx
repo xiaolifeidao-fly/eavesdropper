@@ -26,6 +26,10 @@ type DataType = {
   source: LabelValue;
   tag: LabelValue;
   remark: string;
+  expirationDate: string;
+  isExpiration: boolean;
+  updatedAt: string;
+  status: LabelValue;
 }
 
 function resourcePageRespConvertDataType(resp: ResourcePageResp[]): DataType[] {
@@ -64,12 +68,12 @@ export default function ResourceManage() {
       setTagList(res)
     })
     const mbLoginApi = new MbLoginApi();
-    mbLoginApi.onMonitorLoginResult(async (resourceId : number, result : boolean) => {
-      if(!result){
+    mbLoginApi.onMonitorLoginResult(async (resourceId: number, result: boolean) => {
+      if (!result) {
         message.error('绑定失败');
         return;
       }
-      try{
+      try {
         setQrCodeLoading(true);
         setQrCodeTip("绑定用户信息中...")
         // 获取用户信息
@@ -90,13 +94,11 @@ export default function ResourceManage() {
     });
   }, [])
 
-  
-
   const baseColumns: ProColumns<DataType>[] = [
     {
       title: '来源',
       dataIndex: 'source',
-      key : "source",
+      key: "source",
       align: 'center',
       valueType: 'select',
       valueEnum: sourceEnum,
@@ -112,7 +114,7 @@ export default function ResourceManage() {
     {
       title: '标签',
       dataIndex: 'tag',
-      key : "tag",
+      key: "tag",
       search: false,
       align: 'center',
       width: 100,
@@ -130,7 +132,7 @@ export default function ResourceManage() {
     {
       title: '昵称',
       dataIndex: 'nick',
-      key : "nick",
+      key: "nick",
       align: 'center',
       search: false,
     },
@@ -138,7 +140,7 @@ export default function ResourceManage() {
       title: '备注',
       dataIndex: 'remark',
       align: 'center',
-      key : "remark",
+      key: "remark",
       width: 200,
       search: false,
       render: (_, record) => (
@@ -150,6 +152,56 @@ export default function ResourceManage() {
           </Tooltip>
         ) : null
       ),
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
+      search: false,
+      render: (_, record) => (
+        record.expirationDate ?
+          <Space>
+            <Tag color={record.status.color} key={record.status.value}>
+              {record.status.label}
+            </Tag>
+          </Space> : "-"
+      )
+    },
+    {
+      title: '过期时间',
+      dataIndex: 'expirationDate',
+      key: "expirationDate",
+      align: 'center',
+      search: false,
+      width: 200,
+      render: (_, record) => (
+        record.isExpiration ? (
+          <div style={{ color: "red" }}>{record.expirationDate}</div>
+        ) : record.expirationDate ? record.expirationDate : "-"
+      )
+    },
+    {
+      title: '过期时间',
+      dataIndex: 'expirationDate',
+      valueType: 'dateRange',
+      hideInTable: true,
+      width: 200,
+      search: {
+        transform: (value) => {
+          return {
+            startExpirationDate: value[0],
+            endExpirationDate: value[1],
+          };
+        },
+      },
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updatedAt',
+      key: "updatedAt",
+      align: 'center',
+      search: false,
     },
   ]
 
@@ -168,7 +220,7 @@ export default function ResourceManage() {
         return;
       }
       const qrCodeData = loginResult.data;
-      if(!qrCodeData || Object.keys(qrCodeData).length === 0){
+      if (!qrCodeData || Object.keys(qrCodeData).length === 0) {
         message.success('绑定成功');
         return;
       }
@@ -230,7 +282,11 @@ export default function ResourceManage() {
             }} />
           ]}
           request={async (params) => {
-            const req = new ResourcePageReq(params.current ?? 1, params.pageSize ?? 10, params.account, params.source)
+            const req = new ResourcePageReq(params.current ?? 1, params.pageSize ?? 10)
+            req.account = params.account
+            req.source = params.source
+            req.startExpirationDate = params.startExpirationDate
+            req.endExpirationDate = params.endExpirationDate
             const { data: list, pageInfo } = await getResourcePageApi(req)
             const data = resourcePageRespConvertDataType(list);
             return {
@@ -246,8 +302,8 @@ export default function ResourceManage() {
       </Spin>
       <Modal open={open} onCancel={() => setOpen(false)} onOk={() => setOpen(false)}>
         <Spin spinning={qrCodeLoading} tip={qrCodeTip}>
-          <div style={{textAlign: 'center'}}>请在1分钟内扫码完毕,扫码完毕后请待耐心等待20s左右,不要关闭此窗口</div>
-          <div style={{textAlign: 'center'}}>
+          <div style={{ textAlign: 'center' }}>请在1分钟内扫码完毕,扫码完毕后请待耐心等待20s左右,不要关闭此窗口</div>
+          <div style={{ textAlign: 'center' }}>
             <img src={qrCodeFilePath} />
           </div>
         </Spin>

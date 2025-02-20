@@ -48,24 +48,29 @@ type GetResourceReq struct {
 type ResourcePageReq struct {
 	page.Query
 	vo.BaseVO
-	UserID  uint64 `form:"userId"`
-	Source  string `form:"source"`
-	Tag     string `form:"tag"`
-	Account string `form:"account"`
-	Nick    string `form:"nick"`
+	UserID              uint64 `form:"userId"`
+	Source              string `form:"source"`
+	Tag                 string `form:"tag"`
+	Account             string `form:"account"`
+	Nick                string `form:"nick"`
+	StartExpirationDate string `form:"startExpirationDate"`
+	EndExpirationDate   string `form:"endExpirationDate"`
 }
 
 // ResourcePageResp 资源分页响应
 type ResourcePageResp struct {
-	ID        uint64          `json:"id"`        // 资源ID
-	UserID    uint64          `json:"userId"`    // 用户ID
-	Account   string          `json:"account"`   // 资源账号
-	Source    vo.LabelValueVO `json:"source"`    // 资源来源
-	Tag       vo.LabelValueVO `json:"tag"`       // 资源标签
-	UpdatedAt base.Time       `json:"updatedAt"` // 更新时间
-	CreatedBy string          `json:"createdBy"` // 创建人
-	Remark    string          `json:"remark"`    // 备注
-	Nick      string          `json:"nick"`      // 昵称
+	ID             uint64          `json:"id"`              // 资源ID
+	UserID         uint64          `json:"userId"`          // 用户ID
+	Account        string          `json:"account"`         // 资源账号
+	Source         vo.LabelValueVO `json:"source"`          // 资源来源
+	Tag            vo.LabelValueVO `json:"tag"`             // 资源标签
+	UpdatedAt      base.Time       `json:"updatedAt"`       // 更新时间
+	CreatedBy      string          `json:"createdBy"`       // 创建人
+	Remark         string          `json:"remark"`          // 备注
+	Nick           string          `json:"nick"`            // 昵称
+	ExpirationDate *base.Time      `json:"expirationDate" ` // 资源过期时间
+	IsExpiration   bool            `json:"isExpiration"`    // 是否过期
+	Status         vo.LabelValueVO `json:"status"`          // 状态
 }
 
 // ResourceBindReq 绑定资源请求

@@ -54,11 +54,15 @@ export class ResourcePageReq {
     public pageSize: number,
     public account?: string,
     public source?: string,
+    public startExpirationDate?: string,
+    public endExpirationDate?: string,
   ) {
     this.account = account
     this.source = source
     this.current = current
     this.pageSize = pageSize
+    this.startExpirationDate = startExpirationDate
+    this.endExpirationDate = endExpirationDate
   }
 }
 
@@ -73,6 +77,9 @@ export class ResourcePageResp {
     public createdAt: string,
     public updatedAt: string,
     public remark: string,
+    public expirationDate: string,
+    public isExpiration: boolean,
+    public status: LabelValue,
   ) {
     this.id = id
     this.userId = userId
@@ -83,6 +90,9 @@ export class ResourcePageResp {
     this.createdAt = createdAt
     this.updatedAt = updatedAt
     this.remark = remark
+    this.expirationDate = expirationDate
+    this.isExpiration = isExpiration
+    this.status = status
   }
 }
 

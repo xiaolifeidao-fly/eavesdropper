@@ -33,18 +33,8 @@ func LoadResourceRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).GET("/source", GetResourceSourceList)
 		r.Use(middleware.Authorization()).GET("/tag", GetResourceTagList)
 		r.Use(middleware.Authorization()).GET("/main", GetMainResourceList)
-		r.Use().GET("/:id/userId", GetUserIdByResourceId)
+		r.Use(middleware.Authorization()).GET("/:id/userId", GetUserIdByResourceId)
 	}
-}
-
-func GetUserIdByResourceId(ctx *gin.Context) {
-	resourceId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
-	resourceTaobaoDTO, err := services.GetResourceTaobaoByResourceID(resourceId)
-	if err != nil {
-		controller.Error(ctx, err.Error())
-		return
-	}
-	controller.OK(ctx, resourceTaobaoDTO.UserNumId)
 }
 
 // AddResource
@@ -186,6 +176,14 @@ func PageResource(ctx *gin.Context) {
 			resp.Tag.Label = tagLabel.Label
 			resp.Tag.Color = tagLabel.Color
 		}
+
+		statusEum, isExp := services.GetResourceStatus(resp.ExpirationDate)
+		resp.IsExpiration = isExp
+		if statusEum != nil {
+			resp.Status.Label = statusEum.Label
+			resp.Status.Value = statusEum.Value
+			resp.Status.Color = statusEum.Color
+		}
 		pageData = append(pageData, resp)
 	}
 
@@ -246,4 +244,14 @@ func GetMainResourceList(ctx *gin.Context) {
 		return
 	}
 	controller.OK(ctx, resources)
+}
+
+func GetUserIdByResourceId(ctx *gin.Context) {
+	resourceId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	resourceTaobaoDTO, err := services.GetResourceTaobaoByResourceID(resourceId)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, resourceTaobaoDTO.UserNumId)
 }
