@@ -110,10 +110,17 @@ class ValidateQueueProcessor {
 }
 const validateQueueProcessor = new ValidateQueueProcessor();
 
+async function waitTimes(times : number){
+    return await new Promise((resolve) => {
+        setTimeout(resolve, times);
+    });
+}
+
 export async function validate(resourceId : number, header : {[key:string]:any}, validateUrl : string){
     const validateItem = new ValidateItem(resourceId, header, validateUrl);
     validateQueueProcessor.put(validateItem);
-    return await validateItem.wait();
+    // return await validateItem.wait();
+    await waitTimes(30000);
 }
 
 checkValidate();
