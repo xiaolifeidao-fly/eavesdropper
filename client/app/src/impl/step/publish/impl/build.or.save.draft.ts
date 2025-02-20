@@ -630,7 +630,6 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         }
         // 找到适合当前价格的区间配置
         const config = priceRate.find((config) => price >= config.minPrice && price <= config.maxPrice);
-        log.info("getPrice config: ", config);
         if (!config) {
             return String(price);
         }
