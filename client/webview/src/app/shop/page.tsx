@@ -10,7 +10,7 @@ import {
   deleteShop as deleteShopApi,
   syncShop as syncShopApi
 } from '@api/shop/shop.api';
-import { getMainResourceList as getMainResourceListApi } from '@api/resource/resource.api';
+import { getMainResourceList as getMainResourceListApi, getSyncResourceList as getSyncResourceListApi } from '@api/resource/resource.api';
 import { ShopPageReq, ShopPageResp, SyncShopReq } from '@model/shop/shop';
 import { MbShopApi } from '@eleapi/door/shop/mb.shop';
 
@@ -86,7 +86,7 @@ export default function ShopManage() {
   };
 
   const syncAllShop = async () => {
-    const resources = await getMainResourceListApi();
+    const resources = await getSyncResourceListApi();
     if (!resources) {
       return false;
     }

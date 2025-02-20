@@ -63,6 +63,10 @@ export const getMainResourceList = async () => {
   return getDataList(ResourceResp, "/resource/main");
 }
 
+// 获取同步资源列表
+export const getSyncResourceList = async () => {
+  return getDataList(ResourceResp, "/resource/sync/all");
+}
 
 export const getUserIdByResourceId = async (resourceId: number) => {
   const result = await instance.get(`/resource/${resourceId}/userId`)

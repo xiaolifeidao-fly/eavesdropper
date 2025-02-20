@@ -10,6 +10,7 @@ import (
 	"server/common/server/middleware"
 	"server/internal/resource/services"
 	"server/internal/resource/services/dto"
+	shopServices "server/internal/shop/services"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -33,6 +34,7 @@ func LoadResourceRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).GET("/source", GetResourceSourceList)
 		r.Use(middleware.Authorization()).GET("/tag", GetResourceTagList)
 		r.Use(middleware.Authorization()).GET("/main", GetMainResourceList)
+		r.Use(middleware.Authorization()).GET("/sync/all", getSyncResourceList)
 		r.Use(middleware.Authorization()).GET("/:id/userId", GetUserIdByResourceId)
 	}
 }
@@ -244,6 +246,37 @@ func GetMainResourceList(ctx *gin.Context) {
 		return
 	}
 	controller.OK(ctx, resources)
+}
+
+// getSyncResourceList
+// @Description 获取同步资源列表
+// @Router /sync/all [get]
+func getSyncResourceList(ctx *gin.Context) {
+	var err error
+
+	userID := common.GetLoginUserID()
+
+	tag := services.ResourceTagMain
+	var mainResources []*dto.ResourceDTO
+	if mainResources, err = services.GetResourceByUserIDAndTag(userID, tag); err != nil {
+		logger.Errorf("getSyncResourceList failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	syncResources := make([]*dto.ResourceDTO, 0)
+	for _, mainResource := range mainResources {
+		shopDTO, err := shopServices.GetShopByResourceID(mainResource.ID)
+		if err != nil {
+			logger.Errorf("getSyncResourceList failed, with error is %v", err)
+			controller.Error(ctx, err.Error())
+			return
+		}
+		if shopDTO == nil || shopDTO.ID == 0 {
+			syncResources = append(syncResources, mainResource)
+		}
+	}
+	controller.OK(ctx, syncResources)
 }
 
 func GetUserIdByResourceId(ctx *gin.Context) {

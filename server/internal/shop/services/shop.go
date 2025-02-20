@@ -134,3 +134,17 @@ func updateShop(shopDTO *dto.ShopDTO) (*dto.ShopDTO, error) {
 	shopDTO = database.ToDTO[dto.ShopDTO](shop)
 	return shopDTO, nil
 }
+
+func GetShopByResourceID(resourceID uint64) (*dto.ShopDTO, error) {
+	var err error
+	shopRepository := repositories.ShopRepository
+
+	shop := &models.Shop{}
+	if shop, err = shopRepository.FindByResourceID(resourceID); err != nil {
+		logger.Errorf("GetShopByID failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+
+	shopDTO := database.ToDTO[dto.ShopDTO](shop)
+	return shopDTO, nil
+}

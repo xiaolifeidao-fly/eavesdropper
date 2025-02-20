@@ -26,6 +26,8 @@ type SkuPageParamDTO struct {
 	SkuName string      `search:"type:eq;table:sku;column:sku_name"`
 	_       string      `search:"type:order;table:sku;column:id;default:desc"`
 	_       interface{} `search:"type:isNull;table:sku;column:deleted_at"`
+	_       interface{} `search:"type:isNull;table:resource;column:deleted_at"`
+	_       interface{} `search:"type:isNull;table:shop;column:deleted_at"`
 	_       interface{} `search:"type:left;table:sku;join:resource;as:resource;on:id:publish_resource_id"`
 	_       interface{} `search:"type:left;table:resource;join:shop;as:shop;on:resource_id:id"`
 }
