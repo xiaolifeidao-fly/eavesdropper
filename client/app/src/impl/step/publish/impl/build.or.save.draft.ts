@@ -620,4 +620,13 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         });
     }
 
+    async getPrice(price : number){
+        const priceRate : { [key: string]: any }[] = this.getParams("priceRate");
+        if(!priceRate || priceRate.length == 0){
+            return price;
+        }
+        //TODO 根据价格区间计算价格
+        return price;
+    }
+
 }

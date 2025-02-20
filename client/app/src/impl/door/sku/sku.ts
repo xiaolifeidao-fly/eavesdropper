@@ -205,6 +205,11 @@ export class MbSkuApiImpl extends MbSkuApi {
         return uplodaData.skuFiles;
     }
 
+    async getPriceRate(taskId : number) : Promise<{ [key: string]: any }[]>{
+        //TODO 获取价格费率
+        return [];
+    }
+
     @InvokeType(Protocols.INVOKE)
     async publishSku(publishResourceId : number, skuUrl : string, taskId : number) : Promise<SkuPublishResult>{
         const skuPublishResult = new SkuPublishResult(taskId, publishResourceId, SkuStatus.PENDING);
@@ -220,9 +225,11 @@ export class MbSkuApiImpl extends MbSkuApi {
                 skuPublishResult.remark = "商品已存在";
                 return skuPublishResult;
             }
+            const priceRate = await this.getPriceRate(taskId);
             const withParams = {
                 "skuUrl" : skuUrl,
-                "resourceId" : publishResourceId
+                "resourceId" : publishResourceId,
+                "priceRate" : priceRate
             }
             const skuUrlKey = getStringHash(skuUrl);
             const publishHandler = new SkuPublishHandler(skuUrlKey, publishResourceId);
@@ -241,10 +248,10 @@ export class MbSkuApiImpl extends MbSkuApi {
             skuPublishResult.publishTime = formatDate(new Date());
             skuPublishResult.status = SkuStatus.SUCCESS;
             skuPublishResult.remark = "发布商品成功";
-            publishHandler.release();
             const addSkuReq = plainToClass(AddSkuReq, skuPublishResult);
             const skuId = await addSku(addSkuReq) as number;
             skuPublishResult.id = skuId;
+            publishHandler.release();
             // 发布商品ID
             return skuPublishResult;
         } catch (error: any) {
