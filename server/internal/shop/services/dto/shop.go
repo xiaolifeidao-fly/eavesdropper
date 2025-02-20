@@ -6,6 +6,17 @@ import (
 	"server/common/base/page"
 )
 
+var (
+	Effective    = ShopStatusEnum{"有效", "effective", "green"}
+	LoseEfficacy = ShopStatusEnum{"无效", "loseEffective", "red"}
+)
+
+type ShopStatusEnum struct {
+	Label string `json:"label"`
+	Value string `json:"value"`
+	Color string `json:"color"`
+}
+
 type ShopDTO struct {
 	dto.BaseDTO
 	UserID     uint64 `json:"userId"`
@@ -13,6 +24,7 @@ type ShopDTO struct {
 	Name       string `json:"name"`
 	ShopID     uint64 `json:"shopId"`
 	Remark     string `json:"remark"`
+	Status     string `json:"status"`
 }
 
 // ShopPageParamDTO 店铺分页参数DTO
@@ -35,6 +47,7 @@ type ShopPageDTO struct {
 	Remark     string    `json:"remark" select:"table:shop;column:remark"`
 	CreatedBy  string    `json:"createdBy" select:"table:shop;column:created_by"`
 	UpdatedAt  base.Time `json:"updatedAt" select:"table:shop;column:updated_at"`
+	Status     string    `json:"status" select:"table:shop;column:status"`
 }
 
 // ShopSyncDTO 同步店铺DTO
@@ -44,4 +57,5 @@ type ShopSyncDTO struct {
 	Account    string `json:"account"`
 	Name       string `json:"name"`
 	ShopID     uint64 `json:"shopId"`
+	Status     string `json:"status"`
 }

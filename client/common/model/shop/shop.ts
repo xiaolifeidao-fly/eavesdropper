@@ -1,3 +1,10 @@
+import { LabelValue } from '@model/base/base';
+
+export enum ShopStatus {
+  Effective = "effective",
+  LosEffective = "loseEffective",
+}
+
 export class Shop {
   constructor(public id: number, public name: string, public address: string) {
     this.id = id
@@ -27,7 +34,8 @@ export class ShopPageResp {
     public name: string,
     public remark: string,
     public createdAt: string,
-    public updatedAt: string
+    public updatedAt: string,
+    public status: LabelValue,
   ) {
     this.id = id
     this.userId = userId
@@ -37,6 +45,7 @@ export class ShopPageResp {
     this.remark = remark
     this.createdAt = createdAt
     this.updatedAt = updatedAt
+    this.status = status
   }
 }
 
@@ -45,11 +54,13 @@ export class SyncShopReq {
     public resourceId: number,
     public account: string,
     public name: string,
-    public shopId: number
+    public shopId: number,
+    public status: string,
   ) {
     this.resourceId = resourceId
     this.account = account
     this.name = name
     this.shopId = shopId
+    this.status = status
   }
 }

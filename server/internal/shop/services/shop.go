@@ -85,6 +85,11 @@ func SyncShop(syncDTO *dto.ShopSyncDTO) error {
 
 	shopDTO.Name = syncDTO.Name
 	shopDTO.ShopID = syncDTO.ShopID
+	var shopStatusEnum *dto.ShopStatusEnum
+	if shopStatusEnum, err = GetShopStatus(syncDTO.Status); err != nil {
+		return err
+	}
+	shopDTO.Status = shopStatusEnum.Value
 	shopDTO.InitUpdate()
 	if _, err = updateShop(shopDTO); err != nil {
 		return err
@@ -147,4 +152,15 @@ func GetShopByResourceID(resourceID uint64) (*dto.ShopDTO, error) {
 
 	shopDTO := database.ToDTO[dto.ShopDTO](shop)
 	return shopDTO, nil
+}
+
+func GetShopStatus(status string) (*dto.ShopStatusEnum, error) {
+	switch status {
+	case dto.Effective.Value:
+		return &dto.Effective, nil
+	case dto.LoseEfficacy.Value:
+		return &dto.LoseEfficacy, nil
+	default:
+		return nil, errors.New("获取商品状态失败")
+	}
 }

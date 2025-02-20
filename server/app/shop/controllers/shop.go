@@ -71,6 +71,13 @@ func PageShop(ctx *gin.Context) {
 	for _, d := range pageDTO.Data {
 		resp := &vo.ShopPageResp{}
 		converter.Copy(resp, d)
+		var shopStatusEnum *dto.ShopStatusEnum
+		if shopStatusEnum, err = services.GetShopStatus(d.Status); err != nil {
+			logger.Errorf("PageShop failed, with error is %v", err)
+			controller.Error(ctx, err.Error())
+			return
+		}
+		converter.Copy(&resp.Status, shopStatusEnum)
 		pageData = append(pageData, resp)
 	}
 

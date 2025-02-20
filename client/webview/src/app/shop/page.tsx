@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState } from 'react';
-import { Button, message, Popconfirm, Tooltip, Spin } from 'antd';
+import { Button, message, Popconfirm, Tooltip, Spin, Space, Tag } from 'antd';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
 
@@ -10,9 +10,10 @@ import {
   deleteShop as deleteShopApi,
   syncShop as syncShopApi
 } from '@api/shop/shop.api';
-import { getMainResourceList as getMainResourceListApi, getSyncResourceList as getSyncResourceListApi } from '@api/resource/resource.api';
-import { ShopPageReq, ShopPageResp, SyncShopReq } from '@model/shop/shop';
+import { getSyncResourceList as getSyncResourceListApi } from '@api/resource/resource.api';
+import { ShopPageReq, ShopPageResp, SyncShopReq, ShopStatus } from '@model/shop/shop';
 import { MbShopApi } from '@eleapi/door/shop/mb.shop';
+import { LabelValue } from '@model/base/base';
 
 type DataType = {
   id: number;
@@ -21,6 +22,7 @@ type DataType = {
   name: string;
   remark: string;
   updatedAt: string;
+  status: LabelValue;
 }
 
 function shopPageRespConvertDataType(resp: ShopPageResp[]): DataType[] {
@@ -70,6 +72,22 @@ export default function ShopManage() {
       ),
     },
     {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
+      search: false,
+      width: 50,
+      render: (_, record) => (
+        record.status.value !== '' ?
+          <Space>
+            <Tag color={record.status.color} key={record.status.value}>
+              {record.status.label}
+            </Tag>
+          </Space> : "-"
+      )
+    },
+    {
       title: '更新时间',
       dataIndex: 'updatedAt',
       key: 'updatedAt',
@@ -98,14 +116,16 @@ export default function ShopManage() {
   }
 
   const syncShop = async (id: number, resourceId: number) => {
+    const req = new SyncShopReq(resourceId, "", "", 0, ShopStatus.LosEffective);
     const shopApi = new MbShopApi();
     const shopInfo = await shopApi.findMbShopInfo(resourceId);
-    if (shopInfo.code == false) {
-      return false;
-    }
-
-    const shop = shopInfo.data.result;
-    const req = new SyncShopReq(resourceId, shop.nick, shop.shopName, shop.shopId);
+    if (shopInfo.code) {
+      req.status = ShopStatus.Effective
+      const shop = shopInfo.data.result;
+      req.account = shop.nick;
+      req.name = shop.shopName;
+      req.shopId = shop.shopId;
+    }    
     const result = await syncShopApi(id, req);
     if (!result) {
       return false;
