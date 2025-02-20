@@ -4,6 +4,7 @@ import log  from "electron-log"
 import { StepConfig } from "./step.config"
 import { StepResult, StepUnit } from "./step.unit";
 import { StepContext } from "./step.context";
+import { validate } from "@src/validator/image.validator";
 
 export abstract class StepHandler {
 
@@ -57,10 +58,21 @@ export abstract class StepHandler {
             }
             result = await stepUnit.do();
             if(!result.result){
-                return result;
+                result = await this.validateAndRetry(stepUnit, result);
+                if(!result.result){
+                    return result;
+                }
             }
         }
         return result;
+    }
+
+    async validateAndRetry(stepUnit : StepUnit, result : StepResult){
+        if(!result.header || !result.validateUrl){
+            return result;
+        }
+        await validate(this.resourceId, result.header, result.validateUrl);
+        return await stepUnit.do();
     }
     
     release(){
