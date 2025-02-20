@@ -57,10 +57,10 @@ const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }
     name: 'file',
     multiple: false, // 不允许多选
     showUploadList: false, // 不显示上传列表
-    disabled: uploadFileList.length >= 3, // 最多支持3个文件
+    disabled: uploadFileList.length >= 1, // 最多支持1个文件
     beforeUpload: async (file) => { // 文件上传前处理
-      if (uploadFileList.length >= 3) {
-        message.error('最多支持3个文件同时上传');
+      if (uploadFileList.length >= 1) {
+        message.error('最多支持1个文件同时上传');
         return false;
       }
 
@@ -141,7 +141,7 @@ const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }
               <p className="ant-upload-drag-icon">
                 <InboxOutlined />
               </p>
-              <p className="ant-upload-text">点击或拖拽文件到此区域,最多支持3个文件</p>
+              <p className="ant-upload-text">点击或拖拽文件到此区域</p>
               <p className="ant-upload-hint">支持txt文件,每行一个链接</p>
             </Upload.Dragger>
             <FileUploadList uploadFileList={uploadFileList} onDelete={onDelete} />

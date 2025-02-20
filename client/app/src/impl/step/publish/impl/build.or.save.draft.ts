@@ -8,6 +8,7 @@ import log from "electron-log"
 import { SkuFileDetail } from "@model/sku/sku.file";
 import { DoorEntity } from "@src/door/entity";
 import { DoorSkuDTO, SkuItem } from "@model/door/sku";
+import { PriceRangeConfig } from "@model/sku/skuTask";
 import axios from "axios";
 import { getOrSaveTemplateId } from "@src/door/mb/logistics/logistics";
 
@@ -227,7 +228,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
     }
 
     async fillSellInfo(commonData: { data: any }, skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[], saleProp: { [key: string]: { [key: string]: any }[] } }) {
-        draftData.price = skuItem.doorSkuSaleInfo.price;
+        draftData.price = await this.getPrice(Number(skuItem.doorSkuSaleInfo.price));
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
         await this.fillSellProp(commonData, skuItem, draftData);
         await this.fillSellSku(skuItem, draftData);
@@ -267,7 +268,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             })
         }
         if (minPrice > 0) {
-            draftData.price = minPrice.toString();
+            draftData.price = await this.getPrice(minPrice);
         }
         if (quantity > 0) {
             draftData.quantity = quantity.toString();
@@ -621,12 +622,38 @@ export class SkuBuildDraftStep extends AbsPublishStep{
     }
 
     async getPrice(price : number){
-        const priceRate : { [key: string]: any }[] = this.getParams("priceRate");
+        const priceRate : PriceRangeConfig[] | undefined = this.getParams("priceRate");
+        log.info("getPrice price: ", price);
+        log.info("getPrice priceRate: ", priceRate);
         if(!priceRate || priceRate.length == 0){
-            return price;
+            return String(price);
         }
-        //TODO 根据价格区间计算价格
-        return price;
-    }
+        // 找到适合当前价格的区间配置
+        const config = priceRate.find((config) => price >= config.minPrice && price <= config.maxPrice);
+        log.info("getPrice config: ", config);
+        if (!config) {
+            return String(price);
+        }
 
+        // 计算价格
+        let finalPrice = price * config.priceMultiplier + config.fixedAddition;
+        // 根据 roundTo 进行舍入
+        switch (config.roundTo) {
+            case "yuan":
+                finalPrice = Math.round(finalPrice); // 四舍五入到元
+                break;
+            case "jiao":
+                finalPrice = Math.round(finalPrice * 10) / 10; // 四舍五入到角
+                break;
+            case "fen":
+                finalPrice = Math.round(finalPrice * 100) / 100; // 四舍五入到分
+                break;
+            default:
+                // 如果没有指定舍入单位，默认保留两位小数
+                finalPrice = Math.round(finalPrice * 100) / 100;
+                break;
+        }
+        log.info("getPrice finalPrice: ", String(finalPrice));
+        return String(finalPrice);
+    }
 }

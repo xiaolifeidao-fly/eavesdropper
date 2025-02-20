@@ -205,13 +205,8 @@ export class MbSkuApiImpl extends MbSkuApi {
         return uplodaData.skuFiles;
     }
 
-    async getPriceRate(taskId : number) : Promise<{ [key: string]: any }[]>{
-        //TODO 获取价格费率
-        return [];
-    }
-
     @InvokeType(Protocols.INVOKE)
-    async publishSku(publishResourceId : number, skuUrl : string, taskId : number) : Promise<SkuPublishResult>{
+    async publishSku(publishResourceId : number, skuUrl : string, taskId : number, publishConfig?: SkuPublishConfig) : Promise<SkuPublishResult>{
         const skuPublishResult = new SkuPublishResult(taskId, publishResourceId, SkuStatus.PENDING);
         skuPublishResult.url = skuUrl;
         skuPublishResult.publishResourceId = publishResourceId;
@@ -225,11 +220,10 @@ export class MbSkuApiImpl extends MbSkuApi {
                 skuPublishResult.remark = "商品已存在";
                 return skuPublishResult;
             }
-            const priceRate = await this.getPriceRate(taskId);
             const withParams = {
                 "skuUrl" : skuUrl,
                 "resourceId" : publishResourceId,
-                "priceRate" : priceRate
+                "priceRate" : publishConfig?.priceRate
             }
             const skuUrlKey = getStringHash(skuUrl);
             const publishHandler = new SkuPublishHandler(skuUrlKey, publishResourceId);
@@ -330,7 +324,7 @@ export class MbSkuApiImpl extends MbSkuApi {
         const req = new AddSkuTaskReq(count, publishResourceId, "", priceRate);
         const taskId = await addSkuTask(req) as number;
 
-        const skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId);
+        const skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId, publishConfig);
         // 异步操作
         this.asyncBatchPublishSku(skuTask, skuUrls);
         //返回任务
@@ -366,7 +360,7 @@ export class MbSkuApiImpl extends MbSkuApi {
                 const taskItem = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.SUCCESS, taskRemark);
 
                 //发布商品
-                const skuResult = await this.publishSku(task.publishResourceId, skuUrl, task.id);
+                const skuResult = await this.publishSku(task.publishResourceId, skuUrl, task.id, task.skuPublishConfig);
                 skuResult.key = progress;
                 if(skuResult.status == SkuStatus.ERROR){
                     statistic.errorNum = statistic.errorNum + 1;

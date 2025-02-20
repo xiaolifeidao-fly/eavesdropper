@@ -10,12 +10,14 @@ export class SkuTask {
     public id: number,
     public status: string,
     public count: number,
-    public publishResourceId: number
+    public publishResourceId: number,
+    public skuPublishConfig?: SkuPublishConfig,
   ) {
     this.id = id
     this.status = status
     this.count = count
     this.publishResourceId = publishResourceId
+    this.skuPublishConfig = skuPublishConfig
   }
 }
 

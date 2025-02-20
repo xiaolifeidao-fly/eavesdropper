@@ -110,6 +110,15 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
             <ProForm
               formRef={props.priceRangeConfigFormRef}
               submitter={{ render: (pr, doms) => { return [] } }}
+              initialValues={
+                {priceRangeList : [{
+                  minPrice: 0.01,
+                  maxPrice: 1000,
+                  priceMultiplier: 1.25,
+                  fixedAddition: 0,
+                  roundTo: "fen"
+                }]}
+              }
             >
               <ProFormList<PriceRangeConfig>
                 name="priceRangeList"
