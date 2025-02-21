@@ -38,7 +38,7 @@ export class MbSkuApiImpl extends MbSkuApi {
 
     @InvokeType(Protocols.INVOKE)
     async findMbSkuInfo(publishResourceId : number, url: string) {
-        const engine = new MbEngine(publishResourceId, false);
+        const engine = new MbEngine(publishResourceId);
         try{
             const monitorChain = new MbShopDetailMonitorChain();
             const page = await engine.init();
@@ -50,7 +50,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             log.error("findMbSkuInfo error", error);
             return new DoorEntity<any>(false, {});
         }finally{
-            // await engine.closePage();
+            await engine.closePage();
         }  
     }
 
