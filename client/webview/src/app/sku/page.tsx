@@ -18,6 +18,7 @@ type DataType = {
   publishTime: string;
   publishStatus: number;
   url: string;
+  publishUrl: string;
 }
 
 const baseColumns: ProColumns<DataType>[] = [
@@ -40,6 +41,9 @@ const baseColumns: ProColumns<DataType>[] = [
     dataIndex: 'skuName',
     key : "skuName",
     align: 'center',
+    render: (_, record) => {
+      return <a href={record.publishUrl} target="_blank">{record.skuName}</a>
+    }
   },
   {
     title: '发布时间',
@@ -81,6 +85,7 @@ function skuPageRespConvertDataType(resp: SkuPageResp[]): DataType[] {
       publishTime: item.publishTime,
       publishStatus: status,
       url: item.url,
+      publishUrl: item.publishUrl,
     })
   }
   return data
@@ -102,9 +107,9 @@ export default function SkuManage() {
       align: 'center',
       width: 150,
       render: (_, record) => [
-        <Button key="edit" type="link" style={{ paddingRight: 0 }} onClick={() => { window.open(record.url, '_blank'); }}>浏览源商品</Button>,
+        <Button key="edit" type="link" style={{ paddingRight: 0 }} onClick={() => { window.open(record.url, '_blank'); }}>打开上家商品</Button>,
         <Button key="copy" type="link"style={{ paddingLeft: 0 }}  onClick={async () => { await navigator.clipboard.writeText(record.url || '') }}>
-          复制链接
+          复制上家链接
         </Button>
         // <Button key="delete" type="link" danger style={{ paddingLeft: 0 }} onClick={async () => {
         //   message.success('删除成功');

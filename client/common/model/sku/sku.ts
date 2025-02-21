@@ -112,6 +112,7 @@ export class SkuPageResp {
     public publishTime: string,
     public createdAt: string,
     public url: string,
+    public publishUrl: string,
   ) {
     this.id = id
     this.resourceAccount = resourceAccount
@@ -121,5 +122,6 @@ export class SkuPageResp {
     this.publishTime = publishTime
     this.createdAt = createdAt
     this.url = url
+    this.publishUrl = publishUrl
   }
 }

@@ -38,8 +38,10 @@ type SkuPageDTO struct {
 	ShopName        string    `json:"shopName" select:"table:shop;column:name;as:ShopName"`
 	SkuName         string    `json:"skuName" select:"table:sku;column:name;as:SkuName"`
 	Status          string    `json:"status" select:"table:sku;column:status"`
+	PublishSkuId    string    `json:"publishSkuId" select:"table:sku;column:publish_sku_id"`
 	PublishTime     base.Time `json:"publishTime" select:"table:sku;column:publish_time"`
 	CreatedAt       base.Time `json:"createdAt" select:"table:sku;column:created_at"`
 	UpdatedAt       base.Time `json:"updatedAt" select:"table:sku;column:updated_at"`
 	Url             string    `json:"url" select:"table:sku;column:url"`
+	ResourceType    string    `json:"resourceType" select:"table:resource;column:source;as:ResourceType"`
 }

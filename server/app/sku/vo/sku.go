@@ -41,4 +41,5 @@ type SkuPageResp struct {
 	PublishTime     base.Time `json:"publishTime"`     // 发布时间
 	CreatedAt       base.Time `json:"createdAt"`       // 创建时间
 	Url             string    `json:"url"`             // 商品链接
+	PublishUrl      string    `json:"publishUrl"`      // 发布商品链接
 }

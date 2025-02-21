@@ -99,15 +99,24 @@ func PageSku(ctx *gin.Context) {
 		return
 	}
 
-	var pageData []vo.SkuPageResp
-	converter.Copy(&pageData, pageDTO.Data)
-
-	pageDataMock := make([]*vo.SkuPageResp, 0)
-	for _, v := range pageData {
-		pageDataMock = append(pageDataMock, &v)
+	pageData := make([]*vo.SkuPageResp, 0)
+	for _, pageDTO := range pageDTO.Data {
+		pageResp := &vo.SkuPageResp{}
+		converter.Copy(pageResp, pageDTO)
+		if pageDTO.PublishSkuId != "" {
+			pageResp.PublishUrl = "https://item.taobao.com/item.htm?id=" + pageDTO.PublishSkuId // TODO
+		}
+		pageData = append(pageData, pageResp)
 	}
 
-	pageResp := page.BuildPage[vo.SkuPageResp](pageDTO.PageInfo, pageDataMock)
+	// converter.Copy(&pageData, pageDTO.Data)
+
+	// pageDataMock := make([]*vo.SkuPageResp, 0)
+	// for _, v := range pageData {
+	// 	pageDataMock = append(pageDataMock, &v)
+	// }
+
+	pageResp := page.BuildPage[vo.SkuPageResp](pageDTO.PageInfo, pageData)
 	controller.OK(ctx, pageResp)
 
 }
