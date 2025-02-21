@@ -235,7 +235,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             if(skuItem){
                 skuPublishResult.name = skuItem.baseInfo.title;
                 skuPublishResult.sourceSkuId = skuItem.baseInfo.itemId;
-                skuPublishResult.publishSkuId = skuItem.baseInfo.itemId;
+                skuPublishResult.publishSkuId = newSkuId;
             }
             skuPublishResult.publishTime = formatDate(new Date());
             skuPublishResult.status = SkuStatus.SUCCESS;
