@@ -38,7 +38,7 @@ export class MbSkuApiImpl extends MbSkuApi {
 
     @InvokeType(Protocols.INVOKE)
     async findMbSkuInfo(publishResourceId : number, url: string) {
-        const engine = new MbEngine(publishResourceId);
+        const engine = new MbEngine(publishResourceId, false);
         try{
             const monitorChain = new MbShopDetailMonitorChain();
             const page = await engine.init();
@@ -50,7 +50,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             log.error("findMbSkuInfo error", error);
             return new DoorEntity<any>(false, {});
         }finally{
-            await engine.closePage();
+            // await engine.closePage();
         }  
     }
 
@@ -70,7 +70,7 @@ export class MbSkuApiImpl extends MbSkuApi {
         return skuResult;
     }
 
-    async uploadSkuImages(publishResourceId : number, skuItem : DoorSkuDTO, headerData : { [key: string]: any }){
+    async uploadSkuImages(publishResourceId : number, skuItem : DoorSkuDTO, validateTag : boolean){
         const { newMainImages, newDetailImages } = await this.downloadSkuImages(skuItem);
         const skuFileNames: { [key: string]: FileInfo } = {};
         for (let index = 0; index < newMainImages.length; index++){
@@ -92,7 +92,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             skuFileNames[fileName] = new FileInfo(fileName, index, "detail", detailImage);
         }   
         const skuItemId = skuItem.baseInfo.itemId;
-        return await uploadByFileApi(publishResourceId, skuItemId, skuFileNames, headerData);
+        return await uploadByFileApi(publishResourceId, skuItemId, skuFileNames, validateTag);
     }
 
     async getImage(mainImages : string[], detailImages : string[], itemId : string) {
@@ -184,8 +184,8 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
 
-    async uploadImages(publishResourceId : number, skuItem : DoorSkuDTO, headerData : { [key: string]: any } = {}){
-        const uplodaData = await this.uploadSkuImages(publishResourceId, skuItem, headerData); // skuId TODO
+    async uploadImages(publishResourceId : number, skuItem : DoorSkuDTO, validateTag : boolean = false){
+        const uplodaData = await this.uploadSkuImages(publishResourceId, skuItem, validateTag); // skuId TODO
         if (!uplodaData){
             return [];
         }

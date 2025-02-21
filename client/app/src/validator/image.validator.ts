@@ -65,11 +65,13 @@ class ValidateItem {
     resourceId: number;
     header: {[key:string]:any};
     validateUrl: string;
+    validateParams: { [key: string]: any } | undefined;
    
-    constructor(resourceId: number, header: {[key:string]:any}, validateUrl: string){
+    constructor(resourceId: number, header: {[key:string]:any}, validateUrl: string, validateParams: { [key: string]: any } | undefined){
         this.resourceId = resourceId;
         this.header = header;
         this.validateUrl = validateUrl;
+        this.validateParams = validateParams;
         this.waitPromise = new Promise<{header: {[key:string]:any}, result: boolean}>((resolve) => {
             this.waitResolve = resolve;
         });
@@ -121,8 +123,8 @@ async function waitTimes(times : number){
     });
 }
 
-export async function validate(resourceId : number, header : {[key:string]:any}, validateUrl : string){
-    const validateItem = new ValidateItem(resourceId, header, validateUrl);
+export async function validate(resourceId : number, header : {[key:string]:any}, validateUrl : string, validateParams : { [key: string]: any } | undefined){
+    const validateItem = new ValidateItem(resourceId, header, validateUrl, validateParams);
     validateQueueProcessor.put(validateItem);
     return await validateItem.wait();
 }
@@ -141,14 +143,18 @@ function checkValidate(){
                 const page = await engine.init();
                 const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource',"validate_image.html");
             if(page){
-                const url = "file://" + sessionDirPath + "?iframeUrl=" + encodeBase64(validateItem.validateUrl);
+                let url = "file://" + sessionDirPath + "?iframeUrl=" + encodeBase64(validateItem.validateUrl);
+                const validateParams = validateItem.validateParams;
+                if(validateParams){
+                    url += "&validateParams=" + encodeBase64(JSON.stringify(validateParams));
+                }
                 const result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor());
                 if(result){
                     validateItem.resolve(result.getHeaderData(), true);
                 }else{
-                        validateItem.resolve({}, false);
-                    }
+                    validateItem.resolve({}, false);
                 }
+            }
             } catch(error){
                 log.error("checkValidate error", error);
                 validateItem.resolve({}, false);

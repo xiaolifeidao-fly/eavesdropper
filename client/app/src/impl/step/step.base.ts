@@ -94,12 +94,12 @@ export abstract class StepHandler {
         if(!result.header || !result.validateUrl){
             return result;
         }
-        const validateResult = await validate(this.resourceId, result.header, result.validateUrl);
+        const validateResult = await validate(this.resourceId, result.header, result.validateUrl, result.validateParams);
         if(!validateResult){
             return result;
         }
         if(validateResult.result && validateResult.header){
-            this.setHeader(validateResult.header);
+            stepUnit.setValidateTag(true);
             return await stepUnit.do();
         }
         return result;

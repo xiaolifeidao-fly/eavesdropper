@@ -51,8 +51,17 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
                     const retCode = ret[0];
                     if(retCode == 'FAIL_SYS_USER_VALIDATE'){
                         log.error("MbFileUploadMonitor getResponseData error ", result);
-                        const doorEntity = new DoorEntity<T>(false, result.data as T);
+                        const data = result.data as { [key: string]: any };
+                        const doorEntity = new DoorEntity<T>(false, data as T);
                         doorEntity.validateUrl = result.data?.url;
+                        const validateParams : { [key: string]: any } =  {};
+                        if('dialogSize' in data){
+                            validateParams.dialogSize = data.dialogSize;
+                        }
+                        if('attributes' in data){
+                            validateParams.attributes = data.attributes;
+                        }
+                        doorEntity.setValidateParams(validateParams);
                         return doorEntity;
                     }
                     if(retCode == undefined ||!retCode.includes("SUCCESS")){

@@ -8,6 +8,7 @@ export class DoorEntity<T>{
     requestBody : { [key: string]: any; };
     url: string;
     validateUrl : string | undefined;
+    validateParams : { [key: string]: any; } | undefined;
     constructor(code: boolean = true, data: T = {} as T, url: string = "", headerData : { [key: string]: string; } = {}, requestBody : { [key: string]: any; } = {}, validateUrl : string | undefined = undefined){
         this.code = code;
         this.data = data;
@@ -15,6 +16,14 @@ export class DoorEntity<T>{
         this.requestBody = requestBody;
         this.url = url;
         this.validateUrl = validateUrl;
+    }
+
+    setValidateParams(params: { [key: string]: any; }){
+        this.validateParams = params;
+    }
+
+    getValidateParams(){
+        return this.validateParams;
     }
 
     public getValidateUrl(){

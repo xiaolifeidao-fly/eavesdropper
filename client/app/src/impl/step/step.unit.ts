@@ -33,13 +33,15 @@ export class StepResult {
     public responseData : StepResponse[];
     public header : { [key: string]: any } | undefined
     public validateUrl : string | undefined
+    public validateParams : { [key: string]: any } | undefined
     public sourceUrl : string | undefined
-    constructor(result : boolean, message : string, responseData : StepResponse[] = [], header : { [key: string]: any } | undefined = undefined, validateUrl : string | undefined = undefined, sourceUrl : string | undefined = undefined){
+    constructor(result : boolean, message : string, responseData : StepResponse[] = [], header : { [key: string]: any } | undefined = undefined, validateUrl : string | undefined = undefined, validateParams : { [key: string]: any } | undefined = undefined, sourceUrl : string | undefined = undefined){
         this.result = result
         this.message = message
         this.responseData = responseData
         this.header = header
         this.validateUrl = validateUrl
+        this.validateParams = validateParams
         this.sourceUrl = sourceUrl
     }
 }
@@ -50,6 +52,7 @@ export abstract class StepUnit {
     private withParams : { [key: string]: any } | undefined;
     private header : { [key: string]: any } | undefined;
     private context : StepContext;
+    private validateTag : boolean = false;
 
     constructor(step : SkuTaskStep, context : StepContext){
         this.step = step;
@@ -123,6 +126,14 @@ export abstract class StepUnit {
 
     getHeaderAllKey() : string {
         return `step_header_all`;
+    }
+
+    setValidateTag(tag : boolean){
+        this.validateTag = tag;
+    }
+
+    getValidateTag() : boolean{
+        return this.validateTag;
     }
     
     getHeaderValue(key : string) : any {

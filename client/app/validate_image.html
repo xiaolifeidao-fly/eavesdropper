@@ -4,12 +4,27 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const iframeUrl = decodeBase64(params.get("iframeUrl"));
+        const validateParams = params.get("validateParams");
         const iframe = document.createElement("iframe");
+        if(validateParams){
+            const validateParamsObj = JSON.parse(decodeBase64(validateParams));
+            let style = "";
+            if(validateParamsObj.dialogSize?.width){
+                style = style + "width: " + validateParamsObj.dialogSize.width + "px;";
+            }
+            if(validateParamsObj.dialogSize?.height){
+                style = style + "height: " + validateParamsObj.dialogSize.height + "px;";
+            }
+            if(validateParamsObj.attributes?.style){
+                style = style + validateParamsObj.attributes.style + ";";
+            }
+            iframe.style.cssText = style;
+        }else{
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+        }
         iframe.src = iframeUrl;
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
         document.body.appendChild(iframe);
-
          // Base64 解码函数
         function decodeBase64(encodedStr) {
             return atob(encodedStr);

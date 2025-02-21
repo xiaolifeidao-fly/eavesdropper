@@ -6,7 +6,7 @@ import { DoorEntity } from "@src/door/entity";
 export class ImageValidatorMonitor extends MbMonitorResponse<any>{
 
     getApiName(): string | string[] {
-        return "api/upload.api/_____tmd_____/puzzleCaptchaValidate";
+        return ["api/upload.api/_____tmd_____/puzzleCaptchaValidate","_____tmd_____/slide","_____tmd_____/gridConnectVerify"];
     }
     getKey(): string {
         return "image.validator";
@@ -18,6 +18,7 @@ export class ImageValidatorMonitor extends MbMonitorResponse<any>{
             log.info("image validator success", data.result);
             return new DoorEntity<{}>(true, data.result as {});
         }
+        log.error("image validator error", JSON.stringify(data));
         return new DoorEntity<{}>(false, {} as {});
     }
 

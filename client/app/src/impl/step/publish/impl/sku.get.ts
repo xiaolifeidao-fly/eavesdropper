@@ -17,7 +17,7 @@ export class SkuGetStep extends StepUnit{
             if(skuResult.validateUrl){
                 return new StepResult(false, "获取商品信息失败出现验证码", [
                     new StepResponse("validateUrl", skuResult.validateUrl)
-                ], skuResult.getHeaderData(), skuResult.validateUrl);
+                ], skuResult.getHeaderData(), skuResult.validateUrl, skuResult.getValidateParams());
             }
             return new StepResult(false, "获取商品信息失败");
         }

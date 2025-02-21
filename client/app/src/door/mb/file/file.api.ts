@@ -23,7 +23,7 @@ function getFilePaths(skuFileNames: { [key: string]: FileInfo } = {}){
     return filePaths;
 }
 
-export async function uploadByFileApi(resourceId : number, skuItemId : string, skuFileNames: { [key: string]: FileInfo } = {}, headerData : { [key: string]: any } = {}) {
+export async function uploadByFileApi(resourceId : number, skuItemId : string, skuFileNames: { [key: string]: FileInfo } = {}, validateTag : boolean = false) {
     const fileQueryMonitor = new MbFileQueryMonitor();
     const paths = getFilePaths(skuFileNames);
     const unUploadFiles = await getUnUploadFile(fileQueryMonitor.getType(), resourceId, paths);
@@ -35,7 +35,7 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
             header : undefined
         };
     }
-    const header = await getHeaderData(resourceId, skuItemId, headerData, fileQueryMonitor);
+    const header = await getHeaderData(resourceId, validateTag, fileQueryMonitor);
     if(!header){
         return {
             skuFiles : [],
@@ -52,9 +52,9 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
     };
 }
 
-async function getHeaderData(resourceId : number, skuItemId : string, headerData : { [key: string]: any }, fileQueryMonitor : MbFileQueryMonitor){
+async function getHeaderData(resourceId : number, validateTag : boolean, fileQueryMonitor : MbFileQueryMonitor){
     let headerless = true;
-    if(headerData && Object.keys(headerData).length > 0){
+    if(validateTag){
         headerless = false;
     }
     const mbEngine = new MbEngine(resourceId, headerless);
