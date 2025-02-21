@@ -104,6 +104,15 @@ export class PublishSkuStep extends AbsPublishStep {
                     log.info("deleteDraft failed ", deleteResult);
                     return new StepResult(false, "删除草稿失败");
                 }
+                const successUrl = responseData.models?.globalMessage?.successUrl;
+                if(successUrl){
+                    const primaryIdMatch = successUrl.match(/primaryId=(\d+)/);
+                    let primaryId = null;
+                    if (primaryIdMatch && primaryIdMatch[1]) {
+                        primaryId = primaryIdMatch[1];
+                        this.setParams("newSkuId", primaryId);
+                    }
+                }
                 const itemId = this.getParams("itemId");
                 await expireSkuDraft(resourceId, itemId);
                 return new StepResult(true, "发布商品成功");

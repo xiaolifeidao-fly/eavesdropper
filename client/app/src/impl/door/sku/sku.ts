@@ -230,6 +230,8 @@ export class MbSkuApiImpl extends MbSkuApi {
                 return skuPublishResult;
             }
             const skuItem = publishHandler.getParams("skuItem");
+            //TODO 获取新商品ID
+            const newSkuId = publishHandler.getParams("newSkuId");
             if(skuItem){
                 skuPublishResult.name = skuItem.baseInfo.title;
                 skuPublishResult.sourceSkuId = skuItem.baseInfo.itemId;
