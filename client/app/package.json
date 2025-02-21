@@ -28,7 +28,7 @@
       },
       {
         "from": "validate_image.html",
-        "to": "validate_image.html",
+        "to": "resource/validate_image.html",
         "filter": [
           "**/*"
         ]
