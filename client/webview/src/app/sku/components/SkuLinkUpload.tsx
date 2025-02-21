@@ -86,7 +86,7 @@ const ImportSku: React.FC<ImportSkuProps> = ({ uploadUrlList, setUploadUrlList }
       try {
         const { urls } = await parseTxtFileClient(file);
         // 将解析后的数据添加到上传列表
-        const newUploadUrlList = urls.map(item => ({
+        const newUploadUrlList = urls.filter(item => item).map(item => ({
           uid: uid,
           url: item
         }));

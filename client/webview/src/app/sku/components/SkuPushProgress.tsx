@@ -119,7 +119,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
       detail: sku.remark,
     }
 
-    setData((prevData) => [...prevData, skuInfo]);
+    setData((prevData) => [skuInfo, ...prevData]);
     setPushCount(prevCount => prevCount + 1);
 
     if (statistic.status === SkuTaskStatus.DONE) {
