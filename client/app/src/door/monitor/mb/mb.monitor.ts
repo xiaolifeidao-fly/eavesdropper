@@ -26,29 +26,45 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
 
     abstract getApiName(): string | string[];
 
-    public async getResponseData(response: Response): Promise<any> {
+
+    async getJsonFromResponse(response: Response): Promise<{[key: string]: any}|undefined>{
+        try{
+            return await response.json();
+        }catch(e){
+            const data = await response.text();
+            return toJson(data);
+        }
+    }
+
+    public async getResponseData(response: Response): Promise<DoorEntity<T>> {
         try{
             if(response.url().includes("error.item.taobao.com/error/noitem")){
-                return undefined;
+                return new DoorEntity<T>(false, {} as T);
             }
-            const data = await response.text();
-            const jsonData = toJson(data);
-            if(!jsonData){
-                return undefined;
+            const result = await this.getJsonFromResponse(response);
+            if(!result){
+                return new DoorEntity<T>(true, result as T);
             }
-            const jsonDataObj = jsonData as {data: any, ret: any[]};
-            const ret = jsonDataObj.ret;
-            if(ret == undefined || ret.length == 0){
-                return undefined;
+            if('ret' in result){
+                const ret = result.ret;
+                if(Array.isArray(ret)){
+                    const retCode = ret[0];
+                    if(retCode == 'FAIL_SYS_USER_VALIDATE'){
+                        log.error("MbFileUploadMonitor getResponseData error ", result);
+                        const doorEntity = new DoorEntity<T>(false, result.data as T);
+                        doorEntity.validateUrl = result.data?.url;
+                        return doorEntity;
+                    }
+                    if(retCode == undefined ||!retCode.includes("SUCCESS")){
+                        return new DoorEntity<T>(false, {} as T);
+                    }
+                    return new DoorEntity<T>(true, result.data as T);
+                }
             }
-            const retObj = ret[0];
-            if(retObj == undefined ||!retObj.includes("SUCCESS")){
-                return undefined;
-            }
-            return jsonDataObj.data;
+            return new DoorEntity<T>(false, {} as T);
         }catch(e){
             log.error("MbSkuInfoMonitor getResponseData error", e);
-            return undefined;
+            return new DoorEntity<T>(false, {} as T);
         }
     }
 

@@ -1,5 +1,6 @@
 import { Response } from "playwright-core";
 import { MbMonitorResponse } from "../mb.monitor";
+import { DoorEntity } from "@src/door/entity";
 
 
 export class MbAddressQueryMonitor extends MbMonitorResponse<{}> {
@@ -16,8 +17,8 @@ export class MbAddressQueryMonitor extends MbMonitorResponse<{}> {
         return true;
     }
 
-    public async getResponseData(response: Response): Promise<any> {
-        return {};
+    public async getResponseData(response: Response): Promise<DoorEntity<{}>> {
+        return new DoorEntity<{}>(true, {} as {});
     }
 
 }

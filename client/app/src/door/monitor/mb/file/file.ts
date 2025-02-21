@@ -88,17 +88,17 @@ export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
         return "upload";
     }
 
-    public async getResponseData(response: Response): Promise<any> {
+    public async getResponseData(response: Response): Promise<DoorEntity<FileData>> {
         try{
             const data = await response.json();
             if(!data || data.success == false){
                 console.log("MbFileUploadMonitor getResponseData error ", data);
-                return undefined;
+                return new DoorEntity<FileData>(false, {} as FileData);
             }
-            return data.object;
+            return new DoorEntity<FileData>(true, data.object as FileData);
         }catch(e){
             log.error("MbSkuInfoMonitor getResponseData error", e);
-            return undefined;
+            return new DoorEntity<FileData>(false, {} as FileData);
         }
     }
 
@@ -120,7 +120,6 @@ export class MbFileUploadMonitor extends MbMonitorResponse<FileData> {
         }
         const url = data.url;
         const pix = data.pix;
-        console.log("pix ", pix);
         const fileKey = getFileKey(fileName);
         const doorFileRecord = new DoorFileRecord(undefined, this.getType(), fileId, this.resourceId, "IMAGE", fileName, url, Number(data.size), data.folderId, fileKey,pix);
         const result = await saveDoorFileRecord(doorFileRecord);

@@ -579,6 +579,12 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         if (skuItemId) {
             return skuItemId;
         }
+        if(!result.data){
+            return undefined;
+        }
+        if(!result.data.dbDraftId){
+            return undefined;
+        }
         return String(result.data.dbDraftId);
     }
 

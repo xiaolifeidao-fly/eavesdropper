@@ -180,8 +180,10 @@ export abstract class DoorEngine<T = any> {
                 }
             }
             const data = await responseMonitor.getResponseData(response);
-            const doorEntity = new DoorEntity<T>(data ? true : false, data, url, headerData, requestBody);
-            responseMonitor._doCallback(doorEntity, response.request(), response);
+            data.url = url;
+            data.headerData = headerData;
+            data.requestBody = requestBody;
+            responseMonitor._doCallback(data, response.request(), response);
             responseMonitor.setFinishTag(true);
         }
     }

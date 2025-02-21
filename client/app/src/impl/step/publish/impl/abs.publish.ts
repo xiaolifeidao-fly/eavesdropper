@@ -84,14 +84,13 @@ export abstract class AbsPublishStep extends StepUnit{
             headers: header
         })
         if (!res.data || (typeof (res.data) == 'string' && res.data == '')) {
-            log.info("res is empty", res.data);
+            log.info("updateDraftData res is empty", res.data);
             return false;
         }
         if (!res.data.success) {
-            log.info("res is not success ", res.data);
+            log.info("updateDraftData res is not success ");
             return false;
         }
-        // log.info("draftData is ", JSON.stringify(draftData));
         return true;
     }
 

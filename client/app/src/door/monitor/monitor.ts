@@ -156,16 +156,16 @@ export abstract class MonitorResponse<T> extends Monitor<T> {
     
     abstract getType(): string;
 
-    public async getResponseData(response: Response): Promise<any>{
+    public async getResponseData(response: Response): Promise<DoorEntity<T>>{
         const contentType = response.headers()['content-type'];
         if(contentType.includes('application/json')){
             const result =  await response.json();
-            return result;
+            return new DoorEntity<T>(true, result.data as T);
         }
         if (contentType && contentType.includes('text/html')) {
-            return await response.text();
+            return new DoorEntity<T>(true, await response.text() as T);
         }
-        return await response.body();
+        return new DoorEntity<T>(true, await response.body() as T);
     }
 
 }
@@ -208,6 +208,9 @@ export abstract class MonitorChain<T> {
         for(let monitor of this.monitors){
             const doorEntity = await monitor.waitForAction();
             if(!doorEntity.code){
+                if(doorEntity.validateUrl){
+                    return doorEntity;
+                }
                 result = false;
             }
             doorData[monitor.getKey()] = doorEntity.data;

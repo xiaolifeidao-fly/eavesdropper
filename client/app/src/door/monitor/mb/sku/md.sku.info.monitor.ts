@@ -2,6 +2,7 @@ import { MbMonitorChain, MbMonitorResponse } from "@src/door/monitor/mb/mb.monit
 import { Monitor, MonitorChain } from "../../monitor";
 import {Response} from 'playwright'
 import log from "electron-log";
+import { DoorEntity } from "@src/door/entity";
 
 
 export class MbSkuInfoMonitor extends MbMonitorResponse<{}>{
@@ -68,18 +69,18 @@ export class MbSkuPublishDraffMonitor extends MbMonitorResponse<{}>{
         return true;
     }
 
-    public async getResponseData(response: Response): Promise<any>{
+    public async getResponseData(response: Response): Promise<DoorEntity<{}>>{
         const contentType = response.headers()['content-type'];
         if(contentType.includes('application/json')){
             const result =  await response.json();
-            return result;
+            return new DoorEntity<{}>(true, result as {});
         }
         if (contentType && contentType.includes('text/html')) {
             const text = await response.text();
-            return text;
+            return new DoorEntity<{}>(false, text as {});
         }
         const body = await response.body();
-        return body;
+        return new DoorEntity<{}>(false, body as {});
     }
 
 }
