@@ -90,15 +90,6 @@ async function getHeaderData(resourceId : number, skuItemId : string, headerData
 }
 
 
-async function retryUploadFileByFileApi(form : FormData, headers : { [key: string]: string; }, retryCount : number = 3){
-    while(retryCount > 0){
-        const response = await axios.post("https://stream-upload.taobao.com/api/upload.api?_input_charset=utf-8&appkey=tu&folderId=0&picCompress=true&watermark=false", form, {
-            maxRedirects: 0,
-        headers: headers,
-        timeout: 5000,
-   });}
-
-
 const MAX_RETRIES = 3; // 最大重试次数
 
 async function uploadFileByFileApi(source : string, resourceId : number, skuItemId : string, unUploadFiles: string[], skuFileNames: { [key: string]: FileInfo } = {}, headerData : { [key: string]: string; }){
