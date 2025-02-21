@@ -30,7 +30,7 @@ export abstract class DoorEngine<T = any> {
 
     page : Page | undefined;
 
-    constructor(resourceId : number, headless: boolean = true, chromePath: string = ""){
+    constructor(resourceId : number, headless: boolean = true, chromePath: string = "", forceSaveSesssion = false){
         this.resourceId = resourceId;
         if(chromePath){
             this.chromePath = chromePath;
@@ -385,7 +385,21 @@ export abstract class DoorEngine<T = any> {
         const sessionDir = this.getSessionDir();
         set(this.getKey(), sessionDir);
         await this.context.storageState({ path: sessionDir});
-      }
+    }
+
+    public getHeaderKey(){
+        return `${this.resourceId}_door_header_${this.getKey()}`;
+    }
+
+    public setHeader(header : {[key : string] : any}){
+        const key = this.getHeaderKey();
+        set(key, header);
+    }
+
+    public getHeader(){
+        const key = this.getHeaderKey();
+        return get(key);
+    }
 
     async createContext(){
         if(!this.browser){
@@ -402,11 +416,9 @@ export abstract class DoorEngine<T = any> {
             bypassCSP : true,
             locale: 'zh-CN'
         }
-        log.info("storeBrowserPath is ", storeBrowserPath);
         if(storeBrowserPath){
             contextConfig.executablePath = storeBrowserPath;
         }
-        log.info("platform is ", JSON.stringify(platform));
         if(platform){
             contextConfig.userAgent = platform.userAgent;
             contextConfig.extraHTTPHeaders = {

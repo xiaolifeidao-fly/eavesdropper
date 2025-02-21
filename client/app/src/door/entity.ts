@@ -7,12 +7,18 @@ export class DoorEntity<T>{
     headerData : { [key: string]: any; };
     requestBody : { [key: string]: any; };
     url: string;
-    constructor(code: boolean = true, data: T = {} as T, url: string = "", headerData : { [key: string]: string; } = {}, requestBody : { [key: string]: any; } = {}){
+    validateUrl : string | undefined;
+    constructor(code: boolean = true, data: T = {} as T, url: string = "", headerData : { [key: string]: string; } = {}, requestBody : { [key: string]: any; } = {}, validateUrl : string | undefined = undefined){
         this.code = code;
         this.data = data;
         this.headerData = headerData;
         this.requestBody = requestBody;
         this.url = url;
+        this.validateUrl = validateUrl;
+    }
+
+    public getValidateUrl(){
+        return this.validateUrl;
     }
 
     public getRequestBody(){

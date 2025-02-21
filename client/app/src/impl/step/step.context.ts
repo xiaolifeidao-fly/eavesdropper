@@ -5,7 +5,7 @@ export class StepContext {
 
     private cache : { [key : string] : any} = {};
 
-    private storeKey : string = "step_context"; 
+    private storeKey : string = "step_context";
 
     constructor(key : string, resourceId : number, groupCode : string){
         this.storeKey = `step_context_${key}_${resourceId}_${groupCode}`;

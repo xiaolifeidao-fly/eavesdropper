@@ -5,7 +5,20 @@ import { AbsPublishStep } from "./abs.publish";
 import { MbEngine } from "@src/door/mb/mb.engine";
 import { SkuItem } from "@model/door/sku";
 
+
+
+
+
+
+
 export class UpdateDraftStep extends AbsPublishStep {
+
+    fileterKey = ["descType", "category"]
+
+    fixRequiredDataHandler: { [key : string] : (fieldPros : { [key : string] : any }, draftData : { [key : string] : any }, step : StepUnit) => void } = {
+        "multiDiscountPromotion": this.fixMultiDiscountPromotion
+    }
+
 
     async getPage(engine: MbEngine<any>, draftId: string){
         const newPage = await engine.init();
@@ -15,6 +28,25 @@ export class UpdateDraftStep extends AbsPublishStep {
         }
         await newPage.goto("https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=" + draftId);
         return newPage;
+    }
+
+     fixMultiDiscountPromotion(fieldPros : { [key : string] : any }, draftData : { [key : string] : any }, step : StepUnit){
+        console.log("fixMultiDiscountPromotion", fieldPros);
+        const dataSources = fieldPros.dataSource;
+        if(!dataSources){
+            return;
+        }
+        const dataSource = dataSources[0];
+        if(!dataSource){
+            return;
+        }
+        console.log("dataSource is", dataSource);
+        draftData.multiDiscountPromotion = {
+            value: String(dataSource.max),
+            type: 1,
+            enable: true
+        }
+        step.setParams("multiDiscountPromotionValue", String(dataSource.max));
     }
 
     async doStep(): Promise<StepResult> {
@@ -39,7 +71,11 @@ export class UpdateDraftStep extends AbsPublishStep {
                 return new StepResult(false, "获取请求头失败");
             }
             await this.fillCategoryList(skuItem, draftData, commonData, requestHeader, catId, startTraceId);
-            
+            this.fixRequiredData(draftData, skuItem, commonData);
+            const validateResult = this.validateDraftData(draftData, skuItem, commonData);
+            if(!validateResult.validateResult){
+                return new StepResult(false, validateResult.message);
+            }
             const updateResult = await this.updateDraftData(catId, draftId, requestHeader, startTraceId, draftData);
             if(!updateResult){
                 return new StepResult(false, "更新草稿失败");
@@ -58,7 +94,7 @@ export class UpdateDraftStep extends AbsPublishStep {
         }
     }
 
-    validateDraftData(draftData: { [key: string]: any }, skuItem: SkuItem, commonData: { [key: string]: any }){
+    fixRequiredData(draftData: { [key: string]: any }, skuItem: SkuItem, commonData: { [key: string]: any }){
         const components = commonData.data.components;
         for(const key in components){
             const component = components[key];
@@ -66,8 +102,71 @@ export class UpdateDraftStep extends AbsPublishStep {
                 continue;
             }
             const props = component.props;
+            if(!("required" in props)){
+                continue;
+            }
+            const required = props.required;
+            if(!required){
+                continue;
+            }
+            if(props.name in this.fixRequiredDataHandler){
+                this.fixRequiredDataHandler[props.name](props, draftData, this);
+            }
         }
-        return true;
+    }
+
+    validateDraftData(draftData: { [key: string]: any }, skuItem: SkuItem, commonData: { [key: string]: any }){
+        const components = commonData.data.components;
+        let validateResult = true;
+        let message = "";
+        for(const key in components){
+            if(this.fileterKey.includes(key)){
+                continue;
+            }
+            const component = components[key];
+            if(!('props' in component)){
+                continue;
+            }
+            const props = component.props;
+            if(!("required" in props)){
+                continue;
+            }
+            const required = props.required;
+            if(!required){
+                continue;
+            }
+            const value = draftData[key];
+            if(!value){
+                message += key + ",";
+                validateResult = false;
+                continue;
+            }
+            if(typeof value === "string"){
+                if(value.trim() === ""){
+                    validateResult = false;
+                    message += key + ",";
+                    continue;
+                }
+            }
+            if(typeof value === "number"){
+                if(value === 0){
+                    validateResult = false;
+                    message += key + ",";
+                    continue;
+                }
+            }
+            if(typeof value === "object"){
+                if(Object.keys(value).length === 0){
+                    validateResult = false;
+                    message += key + ",";
+                    continue;
+                }
+            }
+        }
+        return {
+            validateResult,
+            message : message + "不能为空"
+        };
     }
 
 }

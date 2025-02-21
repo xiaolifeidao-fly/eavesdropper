@@ -6,8 +6,8 @@ import log from "electron-log";
 
 export class MbSkuInfoMonitor extends MbMonitorResponse<{}>{
 
-    getApiName(): string{
-        return "mtop.taobao.pcdetail.data.get";
+    getApiName(): string[]{
+        return ["mtop.taobao.pcdetail.data.get","error.item.taobao.com/error/noitem"];
     }
 
     getKey(): string{
@@ -19,8 +19,8 @@ export class MbSkuInfoMonitor extends MbMonitorResponse<{}>{
 
 export class MbSkuDetailMonitor extends MbMonitorResponse<{}>{
 
-    getApiName(): string{
-        return "mtop.taobao.detail.getdesc";
+    getApiName(): string[]{
+        return ["mtop.taobao.detail.getdesc","error.item.taobao.com/error/noitem"];
     }
 
     getKey(): string{

@@ -78,11 +78,13 @@ export abstract class StepUnit {
     public setParamsByResponse(responseData : StepResponse[]){
         for(const response of responseData){
             const storeParamKey = this.getStoreParamKey(response.getKey());
-            if(!storeParamKey){
-                continue;
-            }
             this.context.putItem(storeParamKey, response.getValue(), response.isStore())
         }
+    }
+
+    public setParams(key : string, value : any){
+        const storeParamKey = this.getStoreParamKey(key);
+        this.context.putItem(storeParamKey, value)
     }
 
     public setHeader(header : { [key: string]: any }){
@@ -169,7 +171,7 @@ export abstract class StepUnit {
             return result;
         } catch (error) {
             this.step.status = STEP_ERROR;
-            this.step.message = "发送未知异常";
+            this.step.message = "发生未知异常";
             log.error(`step ${this.step.code} failed`, error)
             return new StepResult(false, this.step.message);
         }finally{

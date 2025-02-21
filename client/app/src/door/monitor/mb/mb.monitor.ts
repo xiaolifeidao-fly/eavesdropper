@@ -28,6 +28,9 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
 
     public async getResponseData(response: Response): Promise<any> {
         try{
+            if(response.url().includes("error.item.taobao.com/error/noitem")){
+                return undefined;
+            }
             const data = await response.text();
             const jsonData = toJson(data);
             if(!jsonData){

@@ -58,6 +58,13 @@ async function getHeaderData(resourceId : number, skuItemId : string, headerData
         headerless = false;
     }
     const mbEngine = new MbEngine(resourceId, headerless);
+    if(headerless){
+        const headerData = mbEngine.getHeader();
+        //TODO cookie失效 要做处理
+        if(headerData){
+            return headerData;
+        }
+    }
     try{
         const page = await mbEngine.init();
         if(!page){
@@ -72,14 +79,30 @@ async function getHeaderData(resourceId : number, skuItemId : string, headerData
                 header : undefined
             };
         }
+        if(!headerless){
+            mbEngine.setHeader(result.getHeaderData());
+        }
         return result.getHeaderData();
     }finally{
+        await mbEngine.saveContextState();
         await mbEngine.closePage();
     }
 }
 
+
+async function retryUploadFileByFileApi(form : FormData, headers : { [key: string]: string; }, retryCount : number = 3){
+    while(retryCount > 0){
+        const response = await axios.post("https://stream-upload.taobao.com/api/upload.api?_input_charset=utf-8&appkey=tu&folderId=0&picCompress=true&watermark=false", form, {
+            maxRedirects: 0,
+        headers: headers,
+        timeout: 5000,
+   });}
+
+
+const MAX_RETRIES = 3; // 最大重试次数
+
 async function uploadFileByFileApi(source : string, resourceId : number, skuItemId : string, unUploadFiles: string[], skuFileNames: { [key: string]: FileInfo } = {}, headerData : { [key: string]: string; }){
-  
+
     //Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/131.0.6778.33 Safari/537.36
     for(let filePath of unUploadFiles){
         const form = new FormData();
@@ -97,10 +120,30 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
         }
         form.append('file', fs.createReadStream(filePath), path.basename(filePath));
         // 发送 POST 请求
-        const response = await axios.post("https://stream-upload.taobao.com/api/upload.api?_input_charset=utf-8&appkey=tu&folderId=0&picCompress=true&watermark=false", form, {
-             maxRedirects: 0,
-             headers: headers,
-        });
+        let attempt = 0; // 当前尝试次数
+        let response; // 响应对象
+        const url = "https://stream-upload.taobao.com/api/upload.api?_input_charset=utf-8&appkey=tu&folderId=0&picCompress=true&watermark=false";   
+        while (attempt < MAX_RETRIES) {
+            try {
+                // 发送 POST 请求
+                response = await axios.post(url, form, {
+                    maxRedirects: 0,
+                    headers: headers,
+                    timeout: 5000,
+                });
+                break; // 如果请求成功，跳出重试循环
+            } catch (error) {
+                attempt++;
+                if (attempt >= MAX_RETRIES) {
+                    log.error("Upload failed after retries: ", error);
+                    throw error; // 超过最大重试次数，抛出错误
+                }
+                log.warn(`Retrying upload... Attempt ${attempt}`);
+            }
+        }
+        if(!response){
+            return undefined;
+        }
         const data = await response.data;
         if(typeof(data) == 'string'){
             log.warn("MbFileUploadMonitor getResponseData error ", data);
@@ -120,7 +163,6 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
             log.warn("MbFileUploadMonitor getResponseData error ", data);
             continue;
         }
-        log.info("MbFileUploadMonitor getResponseData success ", data);
         const fileData : FileData = data.object;
         const doorFileRecord = await saveDoorFileRecordByResult(source, "IMAGE", resourceId, fileData);
         const fileName = doorFileRecord.fileName;

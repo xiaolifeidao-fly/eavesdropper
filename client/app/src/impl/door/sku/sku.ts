@@ -151,14 +151,17 @@ export class MbSkuApiImpl extends MbSkuApi {
             if(height && height > 1600){
                 height = 1600;
             }
-            if(width && height){
+            if((width && width >2000) || (height && height > 1600)){
                 log.info("resize image", width, height);
                 await imageSharp
                 .resize(width, height) // 设置宽高
                 .toFile(imagePath); // 保存图片到指定路径
                 return imagePath;
+            }else{
+                await imageSharp
+                .toFile(imagePath); // 保存图片到指定路径
+                return imagePath;
             }
-            return undefined;
         } catch (error) {
             log.error('Error downloading images:', url);
             return undefined;

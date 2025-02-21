@@ -1,58 +1,22 @@
 {
-    "groups": [
-        {
-            "type": "group",
-            "hide": false,
-            "bizCode": 0,
-            "propertyPanelVisible": true,
-            "level": 1,
-            "boxStyle": {
-                "background-color": "#ffffff",
-                "width": 620,
-                "height": 889
-            },
-            "position": "middle",
-            "groupName": "模块",
-            "scenario": "wde",
-            "components": [
-                {
-                    "type": "component",
-                    "level": 2,
-                    "sellerEditable": true,
-                    "boxStyle": {
-                        "rotate": 0,
-                        "z-index": 0,
-                        "top": 0,
-                        "left": 0,
-                        "width": 620,
-                        "height": 889,
-                        "background-image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01iP9Eyq25vomCONV8u_!!695637589.jpg"
-                    },
-                    "componentName": "图片组件",
-                    "clipType": "rect",
-                    "imgStyle": {
-                        "top": 0,
-                        "left": 0,
-                        "width": 620,
-                        "height": 889
-                    },
-                    "picMeta": {
-                        "width": 790,
-                        "height": 1133,
-                        "size": 53634,
-                        "id": 1758908368981783000
-                    },
-                    "isEdit": false,
-                    "componentType": "pic",
-                    "componentId": "component1739498865470",
-                    "groupId": "group1739498866120",
-                    "selected": false
+    "models": {
+        "globalMessage": {
+            "type": "error"
+        },
+        "formError": {
+            "tbExtractWay": {
+                "itemMessage": {
+                    "template": {
+                        "message": [
+                            {
+                                "type": "error",
+                                "code": "CHK_DELIVERY_POSTAGE_ID_NOT_EXIST",
+                                "msg": "运费模板不存在，请重新选择！"
+                            }
+                        ]
+                    }
                 }
-            ],
-            "groupId": "group1739498866120",
-            "id": "group1739498866120",
-            "bizName": "图文模块"
+            }
         }
-    ],
-    "sellergroups": []
+    }
 }

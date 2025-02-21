@@ -9,7 +9,36 @@ import { expireSkuDraft } from "@api/sku/sku.draft";
 
 async function clickPublishButtonByPage(page: Page, ...doActionParams: any[]){
     await confirmProtocol(page);
+    await fillMultiDiscountPromotion(page, doActionParams[0]);
     await publishSkuByPage(page);
+}
+
+async function fillMultiDiscountPromotion(page: Page, multiDiscountPromotionValue : string) {
+    if(!multiDiscountPromotionValue || multiDiscountPromotionValue == ""){
+        return;
+    }
+    await page.waitForTimeout(1000);
+    const multiDiscountPromotionElement = await page.evaluate(() => {
+        //@ts-ignore
+        const doc = document.querySelectorAll(".sell-component-multi-discount-promotion .next-checkbox-input");
+        if(!doc || doc.length == 0){
+            return false;
+        }
+        return true;
+    });
+    if(!multiDiscountPromotionElement){
+        log.info("multiDiscountPromotionElement not found");
+        return;
+    }
+    const multiDiscountPromotion = page.locator(".sell-component-multi-discount-promotion .next-checkbox-input");
+    await multiDiscountPromotion.waitFor({timeout:2000});
+    if(multiDiscountPromotion){
+        await multiDiscountPromotion.first().click();
+        const input = page.locator(".sell-component-multi-discount-promotion .next-input-group-auto-width input").first();
+        await input.fill(multiDiscountPromotionValue);
+        console.log("fillMultiDiscountPromotion", multiDiscountPromotionValue);
+        await page.waitForTimeout(100);
+    }
 }
 
 async function publishSkuByPage(page: Page, ...doActionParams: any[]){
@@ -42,7 +71,8 @@ export class PublishSkuStep extends AbsPublishStep {
         }
         try{
             const url = "https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=" + draftId;
-            const newResult = await engine.openWaitMonitor(newPage, url, new MbSkuPublishMonitor(), {}, clickPublishButtonByPage);
+            const multiDiscountPromotionValue = this.getParams("multiDiscountPromotionValue");
+            const newResult = await engine.openWaitMonitor(newPage, url, new MbSkuPublishMonitor(), {}, clickPublishButtonByPage, multiDiscountPromotionValue);
             if(!newResult){
                 log.info("newResult is null");
                 return new StepResult(false, "发布商品获取数据失败");
@@ -56,7 +86,17 @@ export class PublishSkuStep extends AbsPublishStep {
             }
             if(type == "error"){
                 log.info("publish is error by ", JSON.stringify(responseData));
+                const message = responseData.models?.formError?.tbExtractWay?.itemMessage?.template?.message;
+                if(message && message.length > 0){
+                    const msg = message[0].msg;
+                    return new StepResult(false, msg);
+                }
                 return new StepResult(false, "发布商品失败");
+            }
+            if(type == "warning"){
+                const message = responseData.models?.warning?.diagnoseViolationWarning?.tipsContent
+                log.info("publish is warning by ", JSON.stringify(responseData));
+                return new StepResult(false, message);
             }
             if(type == "success"){
                 const deleteResult = await this.deleteDraft(draftId);

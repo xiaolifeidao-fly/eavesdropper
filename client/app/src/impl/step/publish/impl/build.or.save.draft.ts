@@ -151,9 +151,10 @@ export class SkuBuildDraftStep extends AbsPublishStep{
     }
 
     async fillImageDetail(draftData: { [key: string]: any }, imageFileList: SkuFileDetail[]) {
+        const detailImages = this.getAndSortImage(imageFileList, "detail");
         const groupImage: { [key: string]: any }[] = [];
         let groupId = new Date().getTime();
-        for(const imageFile of imageFileList){
+        for(const imageFile of detailImages){
             groupId = groupId + 1;
             const componentId = groupId+1;
             const pix = imageFile.pix;
