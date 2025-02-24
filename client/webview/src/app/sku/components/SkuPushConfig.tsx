@@ -114,7 +114,7 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
                 {priceRangeList : [{
                   minPrice: 0.01,
                   maxPrice: 1000,
-                  priceMultiplier: 1.1,
+                  priceMultiplier: 2.0,
                   fixedAddition: 0,
                   roundTo: "fen"
                 }]}
