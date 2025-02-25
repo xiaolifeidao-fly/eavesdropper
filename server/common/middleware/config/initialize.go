@@ -5,6 +5,7 @@ import (
 	"server/common/middleware/logger"
 	"server/common/middleware/server"
 	"server/common/middleware/storage/cache"
+	"server/common/middleware/storage/oss"
 
 	"github.com/spf13/viper"
 )
@@ -27,6 +28,7 @@ type Config struct {
 	Logger   *logger.LoggerEntity     `json:"logger"`
 	Database *database.DatabaseEntity `json:"database"`
 	Cache    *cache.CacheEntity       `json:"cache"`
+	Oss      *oss.OssEntity           `json:"oss"`
 }
 
 // Setup 初始化配置
@@ -39,6 +41,7 @@ func Setup(configPath string) error {
 			Logger:   logger.Entity,
 			Database: database.Config,
 			Cache:    cache.Entity,
+			Oss:      oss.Entity,
 		},
 	}
 

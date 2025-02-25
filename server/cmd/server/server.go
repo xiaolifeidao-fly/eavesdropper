@@ -9,6 +9,7 @@ import (
 	"server/common/middleware/logger"
 	"server/common/middleware/server"
 	"server/common/middleware/storage/cache"
+	"server/common/middleware/storage/oss"
 	"server/common/server/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -51,6 +52,9 @@ func setup() {
 
 	// 缓存初始化
 	cache.Setup(cache.Entity)
+
+	// oss初始化
+	oss.Setup(oss.Entity)
 }
 
 func tip() {

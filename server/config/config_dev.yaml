@@ -27,3 +27,9 @@ config:
     redis:
       addr: r-bp1jjf4dd9lxzgm807pd.redis.rds.aliyuncs.com:6379
       password: A4622511z3!
+  oss:
+    dirPrefix: dev
+    endpoint: 
+    bucketName:
+    accessKeyId: 
+    accessKeySecret:
