@@ -22,8 +22,8 @@ export const getDoorRecord = async (doorKey: string, itemKey: string, itemType: 
     return await getData(DoorRecord, "/doors/get", params);
 }
 
-export const parseSku = async (params: {}) : Promise<DoorSkuDTO|null> => {
-    const jsonResult = await instance.post("/doors/sku/parse", params);
+export const parseSku = async (source: string, params: {}) : Promise<DoorSkuDTO|null> => {
+    const jsonResult = await instance.post(`/doors/sku/parse/${source}`, params);
     const result = plainToClass(DoorSkuDTO, jsonResult);
     return result;
 }

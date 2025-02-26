@@ -22,7 +22,7 @@ export class SkuGetStep extends StepUnit{
             return new StepResult(false, "获取商品信息失败");
         }
         const skuData = skuResult.data;
-        const skuItem : DoorSkuDTO | null = await parseSku(skuData);
+        const skuItem : DoorSkuDTO | null = await parseSku("taobao", skuData);
         if(!skuItem){
             return new StepResult(false, "商品信息解析失败");
         }

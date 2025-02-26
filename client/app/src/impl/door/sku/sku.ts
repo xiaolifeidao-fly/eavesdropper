@@ -276,7 +276,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             }
 
             const skuData = skuResult.data;
-            const skuItem : DoorSkuDTO | null = await parseSku(skuData);
+            const skuItem : DoorSkuDTO | null = await parseSku("taobao", skuData);
             if(!skuItem){
                 skuPublishResult.status = SkuStatus.ERROR;
                 skuPublishResult.remark = "商品信息解析失败";

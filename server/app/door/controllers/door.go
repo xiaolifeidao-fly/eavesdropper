@@ -18,7 +18,7 @@ func LoadDoorRouter(router *gin.RouterGroup) {
 		r.POST("/file/save", SaveDoorFileRecord)
 		r.GET("/file/get", GetDoorFileRecord)
 		r.GET("/file/getByKey", GetDoorFileRecordByKey)
-		r.POST("/sku/parse", ParseDoorSkuInfo)
+		r.POST("/sku/parse/:source", ParseDoorSkuInfo)
 	}
 }
 
@@ -29,7 +29,14 @@ func ParseDoorSkuInfo(ctx *gin.Context) {
 		controller.Error(ctx, err.Error())
 		return
 	}
-	doorInfoMap := handler.MBParseDoorInfo(doorSkuDTO)
+
+	var source string
+	if source = ctx.Param("source"); source == "" {
+		controller.Error(ctx, "source is empty")
+		return
+	}
+
+	doorInfoMap := handler.ParseDoorInfo(source, doorSkuDTO)
 	controller.OK(ctx, doorInfoMap)
 }
 

@@ -16,10 +16,22 @@ func TestDoorInfoParse(t *testing.T) {
 	json.Unmarshal(doorInfoJson, &doorInfoMap)
 
 	doorSkuDTO := &dto.DoorSkuDTO{}
-	doorSkuDTO = MBParseDoorInfo(&doorInfoMap)
+	doorSkuDTO = ParseDoorInfo("taobao", &doorInfoMap)
 
 	// doorInfoMapJson, _ := json.Marshal(doorInfoMap)
 	// json.Unmarshal(doorInfoMapJson, doorSkuDTO)
 
+	fmt.Println(doorSkuDTO)
+}
+
+func TestPddDoorInfoParse(t *testing.T) {
+	// 读取文件
+	doorInfoJson, _ := os.ReadFile("pdd_door_info.json")
+
+	var doorInfoMap map[string]interface{}
+	json.Unmarshal(doorInfoJson, &doorInfoMap)
+
+	parseDoor := &PDDParse{}
+	doorSkuDTO := parseDoor.ParseDoorInfo(&doorInfoMap)
 	fmt.Println(doorSkuDTO)
 }
