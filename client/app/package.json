@@ -67,7 +67,8 @@
     "@model": "dist/common/model",
     "@api": "dist/common/api",
     "@utils": "dist/common/utils",
-    "@eleapi": "dist/common/eleapi"
+    "@eleapi": "dist/common/eleapi",
+    "@enums": "dist/common/enums"
   },
   "keywords": [],
   "author": "",

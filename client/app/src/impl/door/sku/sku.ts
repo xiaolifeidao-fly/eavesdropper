@@ -33,6 +33,7 @@ import { app } from "electron";
 import sharp from "sharp";
 import { SkuPublishHandler } from "@src/impl/step/publish/sku.publish.handler";
 import { getUrlParameter } from "@utils/url.util";
+import { TB } from "@enums/source";
 export class MbSkuApiImpl extends MbSkuApi {
 
 
@@ -277,7 +278,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             }
 
             const skuData = skuResult.data;
-            const skuItem : DoorSkuDTO | null = await parseSku("taobao", skuData);
+            const skuItem : DoorSkuDTO | null = await parseSku(TB, skuData);
             if(!skuItem){
                 skuPublishResult.status = SkuStatus.ERROR;
                 skuPublishResult.remark = "商品信息解析失败";

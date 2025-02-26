@@ -11,7 +11,8 @@
         "@api/*": ["./api/*"],
         "@utils/*": ["./utils/*"],
         "@eleapi/*": ["./eleapi/*"],
-        "@model/*": ["./model/*"]
+        "@model/*": ["./model/*"],
+        "@enums/*": ["./enums/*"]
       }
     },
     "include": ["**/*"]

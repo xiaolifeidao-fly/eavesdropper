@@ -39,8 +39,9 @@ export class SkuBuildDraftStep extends AbsPublishStep{
                 return new StepResult(false, "打开发布页面失败") ;
             }
             const itemId = skuItem.baseInfo.itemId;
+            const tbItemId = skuItem.itemId;
             let skuDraftId = await this.getSkuDraftIdFromDB(resourceId, itemId);
-            let url = this.getPublishUrl(skuDraftId, itemId);
+            let url = this.getPublishUrl(skuDraftId, tbItemId);
             const result = await mbEngine.openWaitMonitor(page, url, new MbSkuPublishDraffMonitor(), {}, doAction, imageFileList, skuDraftId);
             if (!result) {
                 return new StepResult(false, "添加草稿失败") ;

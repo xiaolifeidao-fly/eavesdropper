@@ -11,7 +11,6 @@ type DoorRecord struct {
 	Type       string    `json:"type"`
 	DoorKey    string    `json:"door_key"`
 	Url        string    `json:"url"`
-	Data       string    `json:"data"`
 	OssUrl     string    `json:"oss_url"`
 	Version    string    `json:"version"`
 	ExpireTime base.Time `json:"expire_time"`

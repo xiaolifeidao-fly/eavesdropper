@@ -4,6 +4,7 @@ import  log from "electron-log";
 import { MbSkuApiImpl } from "@src/impl/door/sku/sku";
 import { DoorSkuDTO } from "@model/door/sku";
 import { parseSku } from "@api/door/door.api";
+import { TB } from "@enums/source";
 
 export class SkuGetStep extends StepUnit{
 
@@ -22,7 +23,7 @@ export class SkuGetStep extends StepUnit{
             return new StepResult(false, "获取商品信息失败");
         }
         const skuData = skuResult.data;
-        const skuItem : DoorSkuDTO | null = await parseSku("taobao", skuData);
+        const skuItem : DoorSkuDTO | null = await parseSku(TB, skuData);
         if(!skuItem){
             return new StepResult(false, "商品信息解析失败");
         }

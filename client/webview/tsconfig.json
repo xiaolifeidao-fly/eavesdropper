@@ -39,6 +39,9 @@
       ],
       "@eleapi/*": [
         "../common/eleapi/*"
+      ],
+      "@enums/*": [
+        "../common/enums/*"
       ]
     }
   },

@@ -159,6 +159,7 @@ export class DoorSkuImageInfoDTO {
 }
 
 export class DoorSkuDTO {
+    itemId : string;
     @Type(() => DoorSkuBaseInfoDTO)
     baseInfo: DoorSkuBaseInfoDTO;
     @Type(() => DoorSkuSaleInfoDTO)
@@ -168,10 +169,19 @@ export class DoorSkuDTO {
     @Type(() => DoorSkuImageInfoDTO)
     doorSkuImageInfo: DoorSkuImageInfoDTO;
 
-    constructor(baseInfo: DoorSkuBaseInfoDTO, doorSkuSaleInfo: DoorSkuSaleInfoDTO, doorSkuLogisticsInfo: DoorSkuLogisticsInfoDTO, doorSkuImageInfo: DoorSkuImageInfoDTO) {
+    constructor(itemId: string, baseInfo: DoorSkuBaseInfoDTO, doorSkuSaleInfo: DoorSkuSaleInfoDTO, doorSkuLogisticsInfo: DoorSkuLogisticsInfoDTO, doorSkuImageInfo: DoorSkuImageInfoDTO) {
+        this.itemId = this.getItemId();
         this.baseInfo = baseInfo;
         this.doorSkuSaleInfo = doorSkuSaleInfo;
         this.doorSkuLogisticsInfo = doorSkuLogisticsInfo;
         this.doorSkuImageInfo = doorSkuImageInfo;
+    }
+
+    getItemId(){
+        return this.baseInfo?.itemId;
+    }
+
+    setItemId(itemId: string){
+        this.itemId = itemId;
     }
 }

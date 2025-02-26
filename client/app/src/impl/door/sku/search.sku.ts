@@ -36,7 +36,7 @@ export class SearchSkuApiImpl extends SearchSkuApi{
                 if(skuId){
                     const searchRecord = new SearchSkuRecord(undefined, this.getSearchType(), title, String(skuId));
                     await saveSearchSkuRecord(searchRecord);
-                    return skuId;
+                    return String(skuId);
                 }
             }
             return undefined;
