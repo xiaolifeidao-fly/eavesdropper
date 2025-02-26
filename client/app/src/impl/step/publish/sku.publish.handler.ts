@@ -7,6 +7,8 @@ import { SkuPublishFileUploadStep } from "./impl/file.upload";
 import { UpdateDraftStep } from "./impl/update.draft";
 import { PublishSkuStep } from "./impl/publish.sku";
 import { SkuBuildDraftStep } from "./impl/build.or.save.draft";
+import { PddSkuGetStep } from "./impl/pdd.sku.get";
+import { TbSearchStep } from "./impl/tb.search";
 
 export class SkuPublishHandler extends StepHandler {
 
@@ -28,4 +30,26 @@ export class SkuPublishHandler extends StepHandler {
         return "sku.publish.handler";
     }
 
+}
+
+export class PddSkuPublishHandler extends StepHandler {
+
+    constructor(key: string, resourceId: number) {
+        super(key, resourceId);
+    }
+
+    getGroupCode(): string {
+        return "pdd.sku.publish.handler";
+    }
+
+    buildStepConfig(): StepConfig {
+        const stepConfig = new StepConfig();
+        stepConfig.register("PddSkuGetStep", PddSkuGetStep)
+        stepConfig.register("SearchSkuStep", TbSearchStep)
+        stepConfig.register("SkuPublishFileUploadStep", SkuPublishFileUploadStep)
+        stepConfig.register("SkuBuildDraftStep", SkuBuildDraftStep)
+        stepConfig.register("UpdateDraftStep", UpdateDraftStep)
+        stepConfig.register("PublishSkuStep", PublishSkuStep)
+        return stepConfig;
+    }
 }

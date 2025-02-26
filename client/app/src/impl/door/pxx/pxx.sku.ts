@@ -79,12 +79,17 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
     saveByJson(rawData : string, url : string, doorKey : string, itemKey : string, type : string){
         try{
             const jsonData = JSON.parse(rawData);
-            const status = jsonData?.store?.initDataObj?.goods?.status;
+            const initDataObj = jsonData?.data?.initDataObj;
+            if(!initDataObj){
+                log.warn(itemKey, " initDataObj not found");
+                return;
+            }
+            const status = initDataObj?.goods?.status;
             log.info(itemKey, " status is ", status);
             if(!status || status != 1){
                 return;
             }
-            const doorRecord = new DoorRecord(undefined, doorKey, url, itemKey, type, rawData);
+            const doorRecord = new DoorRecord(undefined, doorKey, url, itemKey, type, JSON.stringify(initDataObj));
             saveDoorRecord(doorRecord);
             log.info("save door record success ", itemKey);
         } catch(error){

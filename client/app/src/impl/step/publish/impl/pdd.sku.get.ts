@@ -10,7 +10,8 @@ export class PddSkuGetStep extends AbsPublishStep{
 
     getSkuId(skuUrl: string){
         const params = getUrlParameter(skuUrl);
-        return params.get("goods_id");
+        //TODO 获取商品ID
+        return params.get("id");
     }
 
     async doStep(): Promise<StepResult> {

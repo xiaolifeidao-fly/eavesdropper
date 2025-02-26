@@ -31,7 +31,7 @@ import { uploadByFileApi } from "@src/door/mb/file/file.api";
 import { DoorEntity } from "@src/door/entity";
 import { app } from "electron";
 import sharp from "sharp";
-import { SkuPublishHandler } from "@src/impl/step/publish/sku.publish.handler";
+import { PddSkuPublishHandler, SkuPublishHandler } from "@src/impl/step/publish/sku.publish.handler";
 import { getUrlParameter } from "@utils/url.util";
 import { TB } from "@enums/source";
 export class MbSkuApiImpl extends MbSkuApi {
@@ -109,7 +109,11 @@ export class MbSkuApiImpl extends MbSkuApi {
             const headers = {
                 "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
             }
-            for(let index = 0; index < mainImages.length; index++){
+            let maxMainImageSize = mainImages.length;
+            if(maxMainImageSize > 5){
+                maxMainImageSize = 5;
+            }
+            for(let index = 0; index < maxMainImageSize; index++){
                 const mainImage = mainImages[index];
                 const bgPath = await this.downloadImages(imagePath, mainImage, headers, "main", itemId, index, true);
                 if(bgPath){
@@ -224,7 +228,8 @@ export class MbSkuApiImpl extends MbSkuApi {
                 "resourceId" : publishResourceId,
                 "priceRate" : publishConfig?.priceRate
             }
-            const publishHandler = new SkuPublishHandler(skuItemId, publishResourceId);
+            // const publishHandler = new SkuPublishHandler(skuItemId, publishResourceId);
+            const publishHandler = new PddSkuPublishHandler(skuItemId, publishResourceId);
             const result = await publishHandler.doStep(withParams);
             if(!result || !result.result){
                 skuPublishResult.status = SkuStatus.ERROR;

@@ -30,6 +30,7 @@ export class SearchSkuApiImpl extends SearchSkuApi{
             const monitor = new SearchSkuMonitor();
             const date = this.formatDateToYYYYMMDD(new Date());
             const url = `https://s.taobao.com/search?initiative_id=staobaoz_${date}&page=1&q=${encodeURIComponent(title)}&tab=pc_taobao`;
+            log.info("url  is  ", url);
             const result = await engine.openWaitMonitor(page, url, monitor);
             if(result){
                 const skuId = result.data?.itemArrays[0]?.itemId;
