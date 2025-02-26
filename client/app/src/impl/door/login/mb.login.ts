@@ -1,7 +1,7 @@
 
 import { InvokeType, Protocols } from "@eleapi/base";
 import { MbLoginApi } from "@eleapi/door/login/mb.login";
-import { getPlatform, setPlatform } from "@src/door/engine";
+import { DoorEngine, getPlatform, setPlatform } from "@src/door/engine";
 import { DoorEntity } from "@src/door/entity";
 import { MbEngine } from "@src/door/mb/mb.engine";
 import { MdLoginMonitor } from "@src/door/monitor/mb/login/md.login.monitor";
@@ -12,6 +12,22 @@ import path from "path";
 import { Page } from "playwright-core";
 import { v4 as uuidv4 } from 'uuid';
 import fs from "fs";
+
+const loginEngineMap : { [key: string]: DoorEngine; } = {};
+
+function getLoginEngine(resourceId : number){
+    return loginEngineMap[resourceId];
+}
+
+function setLoginEngine(resourceId : number, engine : DoorEngine){
+    loginEngineMap[resourceId] = engine;
+}   
+
+function removeLoginEngine(resourceId : number){
+    delete loginEngineMap[resourceId];
+}
+
+
 async function openLoginPageAction(page : Page){
     try{
         const element = await page.$("#qrcode-img"); // 选择要截图的元素
@@ -44,6 +60,25 @@ async function checkIsLogin(page : Page){
 export class MbLoginApiImpl extends MbLoginApi {
 
     @InvokeType(Protocols.INVOKE)
+    async inputLoginInfo(resourceId: number, username: string, password: string) {
+        const engine = getLoginEngine(resourceId);
+        if(!engine){
+            return;
+        }
+        const page = await engine.getPage();
+        if(!page){
+            return;
+        }
+        await page.locator("#fm-login-id").fill(username);
+        await page.locator("#fm-login-password").fill(password);
+        
+    }
+
+    @InvokeType(Protocols.INVOKE)
+    async loginByValidateCode(resourceId: number, validateCode: string) {
+    }
+
+    @InvokeType(Protocols.INVOKE)
     async login(resourceId: number) {
         const url = "https://login.taobao.com/member/login.jhtml";
         const engine = new MbEngine<{}>(resourceId, true);
@@ -72,12 +107,14 @@ export class MbLoginApiImpl extends MbLoginApi {
         }
     }
 
+
+
     async handlerLoginResult(engine: MbEngine<{}>,resourceId : number, monitor: MdLoginMonitor, result: DoorEntity<{}>, qrCodeData : { [key: string]: string; } | undefined){
         try{
             const monitorResult = await monitor.waitForAction();
             // fs 删除二维码图片
             if(!result.getCode() || !qrCodeData){
-                this.send("onMonitorLoginResult", resourceId, false); // 发送登录接过
+                this.send("onMonitorLoginResult", resourceId, false); // 发送登录结果
                 return;
             }
             if(Object.keys(qrCodeData).length == 0){

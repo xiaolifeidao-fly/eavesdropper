@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs'
 import { Browser, chromium, devices,firefox, BrowserContext, Page, Route ,Request, Response} from 'playwright';
 import { get, set } from '@utils/store/electron';
-import { app } from 'electron';
+import { app, screen } from 'electron';
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from './monitor/monitor';
 import { DoorEntity } from './entity';
 import log from 'electron-log';
@@ -30,6 +30,11 @@ export abstract class DoorEngine<T = any> {
 
     page : Page | undefined;
 
+    width : number;
+    height : number;
+    isMobile : boolean = false;
+    deviceName : string = "ipad pro";
+
     constructor(resourceId : number, headless: boolean = true, chromePath: string = "", forceSaveSesssion = false){
         this.resourceId = resourceId;
         if(chromePath){
@@ -38,6 +43,17 @@ export abstract class DoorEngine<T = any> {
             this.chromePath = this.getChromePath();
         }
         this.headless = headless;
+        const primaryDisplay = screen.getPrimaryDisplay();
+        this.width = primaryDisplay.workAreaSize.width;
+        this.height = primaryDisplay.workAreaSize.height;
+    }
+
+    setMobile(isMobile : boolean){
+        this.isMobile = isMobile;
+    }
+
+    setDeviceName(deviceName : string){
+        this.deviceName = deviceName;
     }
 
     getChromePath() : string | undefined{
@@ -46,6 +62,10 @@ export abstract class DoorEngine<T = any> {
 
     addMonitor(monitor: Monitor){
         this.monitors.push(monitor);
+    }
+
+    getPage(){
+        return this.page;
     }
 
     addMonitorChain(monitorChain: MonitorChain<T>){
@@ -68,8 +88,13 @@ export abstract class DoorEngine<T = any> {
         }
         this.onRequest(page);
         this.onResponse(page);
+        await page.setViewportSize({ width: this.width, height: this.height });
         this.page = page;
         return page;
+    }
+
+    public getContext(){
+        return this.context;
     }
 
     public async closePage(){
@@ -358,7 +383,7 @@ export abstract class DoorEngine<T = any> {
         return undefined;
     }
 
-    getSessionDir(){
+    public getSessionDir(){
         const sessionFileName = Date.now().toString() + ".json";
         const name = this.constructor.name;
         const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource','session',this.getNamespace(), this.resourceId.toString());
@@ -421,6 +446,14 @@ export abstract class DoorEngine<T = any> {
         if(storeBrowserPath){
             contextConfig.executablePath = storeBrowserPath;
         }
+        contextConfig.screen = {
+            width: this.width,
+            height: this.height
+        }
+        const sessionPath = await this.getSessionPath();
+        if(sessionPath){
+            contextConfig.storageState = sessionPath;
+        }
         if(platform){
             contextConfig.userAgent = platform.userAgent;
             contextConfig.extraHTTPHeaders = {
@@ -428,10 +461,6 @@ export abstract class DoorEngine<T = any> {
                 'sec-ch-ua-mobile': '?0', // 设置为移动设备
                 'sec-ch-ua-platform': `"${platform.userAgentData.platform}"`,
             };
-        }
-        const sessionPath = await this.getSessionPath();
-        if(sessionPath){
-            contextConfig.storageState = sessionPath;
         }
         const context = await this.browser?.newContext(contextConfig);
         contextMap.set(key, context);
@@ -457,7 +486,7 @@ export abstract class DoorEngine<T = any> {
                 // return path.join(process.resourcesPath, 'app', 'Chrome-bin');
             }
         }
-        return undefined;
+        return this.chromePath;
     }
 
     getBrowserKey(){
@@ -509,6 +538,7 @@ export abstract class DoorEngine<T = any> {
                 '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
                 '--disable-setuid-sandbox',
                 '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
+                '--window-size=' + this.width + ',' + this.height
               ]
         });
         browserMap.set(key, browser);

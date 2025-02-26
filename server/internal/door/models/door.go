@@ -12,6 +12,7 @@ type DoorRecord struct {
 	DoorKey    string    `json:"door_key"`
 	Url        string    `json:"url"`
 	Data       string    `json:"data"`
+	OssUrl     string    `json:"oss_url"`
 	Version    string    `json:"version"`
 	ExpireTime base.Time `json:"expire_time"`
 }
@@ -34,6 +35,17 @@ type DoorFileRecord struct {
 	Pix        string `json:"pix"`
 }
 
+type SearchSkuRecord struct {
+	database.BaseEntity
+	SkuId string `json:"sku_id"`
+	Type  string `json:"type"`
+	Title string `json:"title"`
+}
+
 func (f *DoorFileRecord) TableName() string {
 	return "door_file_record"
+}
+
+func (s *SearchSkuRecord) TableName() string {
+	return "search_sku_record"
 }

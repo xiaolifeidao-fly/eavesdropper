@@ -57,3 +57,17 @@ export class DoorRecord {
         this.data = data;
     }
 }
+
+export class SearchSkuRecord {
+    id: number | undefined;
+    type: string;
+    title: string;
+    skuId: string | undefined;
+
+    constructor(id: number | undefined, type: string, title: string, skuId?: string) {
+        this.id = id;
+        this.type = type;
+        this.title = title;
+        this.skuId = skuId;
+    }
+}

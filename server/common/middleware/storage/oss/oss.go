@@ -2,7 +2,7 @@ package oss
 
 import "errors"
 
-var Oss AdapterOss
+var Oss *AliyunOss
 
 type AdapterOss interface {
 	Put(path string, data []byte) error

@@ -14,6 +14,7 @@ type DoorRecordDTO struct {
 	Data       string    `json:"data"`
 	Version    string    `json:"version"`
 	ExpireTime base.Time `json:"expire_time"`
+	OssUrl     string    `json:"ossUrl"`
 }
 
 type DoorFileRecordDTO struct {
@@ -28,6 +29,13 @@ type DoorFileRecordDTO struct {
 	FileName   string `json:"fileName"`
 	FileKey    string `json:"fileKey"`
 	Pix        string `json:"pix"`
+}
+
+type SearchSkuRecordDTO struct {
+	dto.BaseDTO
+	SkuId string `json:"skuId"`
+	Type  string `json:"type"`
+	Title string `json:"title"`
 }
 
 // DoorSkuDTO 商品信息

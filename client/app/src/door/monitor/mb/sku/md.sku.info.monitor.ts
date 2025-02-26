@@ -31,6 +31,18 @@ export class MbSkuDetailMonitor extends MbMonitorResponse<{}>{
 }
 
 
+export class SearchSkuMonitor extends MbMonitorResponse<{}>{
+
+    getApiName(): string[]{
+        return ["mtop.relationrecommend.wirelessrecommend.recommend"];
+    }
+
+    getKey(): string{
+        return "searchSku";
+    }
+
+}
+
 export class MbShopDetailMonitorChain extends MbMonitorChain<{}>{
     
     initMonitors(): Monitor<{}>[] {

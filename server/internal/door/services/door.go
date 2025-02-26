@@ -1,8 +1,11 @@
 package services
 
 import (
+	"fmt"
 	"server/common/base"
+	"server/common/encryption"
 	"server/common/middleware/database"
+	"server/common/middleware/storage/oss"
 	"server/internal/door/models"
 	"server/internal/door/repositories"
 	"server/internal/door/services/dto"
@@ -11,6 +14,7 @@ import (
 
 var doorRecordRepository = database.NewRepository[repositories.DoorRecordRepository]()
 var doorFileRecordRepository = database.NewRepository[repositories.DoorFileRecordRepository]()
+var searchSkuRecordRepository = database.NewRepository[repositories.SearchSkuRecordRepository]()
 
 func FindByDoorKeyAndItemKeyAndType(doorKey string, itemKey string, itemType string) (*dto.DoorRecordDTO, error) {
 	doorRecord, err := doorRecordRepository.FindByDoorKeyAndItemKeyAndType(doorKey, itemKey, itemType)
@@ -21,7 +25,32 @@ func FindByDoorKeyAndItemKeyAndType(doorKey string, itemKey string, itemType str
 	if doorRecord == nil || doorRecord.ExpireTime.ToTime().Before(now.ToTime()) {
 		return nil, nil
 	}
-	return database.ToDTO[dto.DoorRecordDTO](doorRecord), nil
+	doorRecordDTO := database.ToDTO[dto.DoorRecordDTO](doorRecord)
+	if doorRecordDTO.OssUrl != "" {
+		jsonData, err := convertToJsonData(doorRecordDTO.OssUrl)
+		if err != nil {
+			return nil, err
+		}
+		doorRecordDTO.Data = jsonData
+	}
+	return doorRecordDTO, nil
+}
+
+func getPath(doorKey string, itemKey string, itemType string) string {
+	return fmt.Sprintf("%s/%s/%s.json", itemType, doorKey, itemKey)
+}
+
+func convertToJsonData(path string) (string, error) {
+	bytes, err := oss.Get(path)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
+}
+
+func storeJsonData(doorRecordDTO *dto.DoorRecordDTO) (string, error) {
+	path := getPath(doorRecordDTO.DoorKey, doorRecordDTO.ItemKey, doorRecordDTO.Type)
+	return path, oss.Put(path, []byte(doorRecordDTO.Data))
 }
 
 func CreateDoorRecord(doorRecordDTO *dto.DoorRecordDTO) (*dto.DoorRecordDTO, error) {
@@ -36,6 +65,14 @@ func CreateDoorRecord(doorRecordDTO *dto.DoorRecordDTO) (*dto.DoorRecordDTO, err
 	doorRecord.ExpireTime = base.Time(now.ToTime().Add(time.Hour * 24 * 30))
 	doorRecord.UpdatedAt = now
 	doorRecord.Data = doorRecordDTO.Data
+	if doorRecord.Data != "" {
+		path, err := storeJsonData(doorRecordDTO)
+		if err != nil {
+			return nil, err
+		}
+		doorRecord.OssUrl = path
+		doorRecord.Data = ""
+	}
 	doorRecordPO, err := doorRecordRepository.SaveOrUpdate(doorRecord)
 	if err != nil {
 		return nil, err
@@ -76,4 +113,32 @@ func FindDoorFileRecordBySourceAndResourceIdAndFileKey(source string, resourceId
 		return nil, nil
 	}
 	return database.ToDTO[dto.DoorFileRecordDTO](doorFileRecord), nil
+}
+
+func FindSearchSkuRecordBySearchTypeAndTitle(searchType string, title string) (*dto.SearchSkuRecordDTO, error) {
+	hashedTitle := encryption.HashString(title)
+	searchSkuRecord, err := searchSkuRecordRepository.FindBySearchTypeAndTitle(searchType, hashedTitle)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTO[dto.SearchSkuRecordDTO](searchSkuRecord), nil
+}
+
+func CreateSearchSkuRecord(searchSkuRecordDTO *dto.SearchSkuRecordDTO) (*dto.SearchSkuRecordDTO, error) {
+	hashedTitle := encryption.HashString(searchSkuRecordDTO.Title)
+	searchSkuRecordDTO.Title = hashedTitle
+	searchSkuRecord, err := searchSkuRecordRepository.FindBySearchTypeAndTitle(searchSkuRecordDTO.Type, hashedTitle)
+	if err != nil {
+		return nil, err
+	}
+	if searchSkuRecord != nil {
+		searchSkuRecord.SkuId = searchSkuRecordDTO.SkuId
+	} else {
+		searchSkuRecord = database.ToPO[models.SearchSkuRecord](searchSkuRecordDTO)
+	}
+	saveSearchSkuRecord, err := searchSkuRecordRepository.SaveOrUpdate(searchSkuRecord)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTO[dto.SearchSkuRecordDTO](saveSearchSkuRecord), nil
 }

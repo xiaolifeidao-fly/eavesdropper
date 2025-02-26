@@ -8,7 +8,7 @@ func Setup(entity *OssEntity) {
 
 	var err error
 
-	var oss AdapterOss
+	var oss *AliyunOss
 	if oss, err = NewAliyun(entity); err != nil {
 		panic(err.Error())
 	}

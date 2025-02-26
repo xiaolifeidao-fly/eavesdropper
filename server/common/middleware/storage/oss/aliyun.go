@@ -8,7 +8,7 @@ import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 )
 
-type aliyunOss struct {
+type AliyunOss struct {
 	DirPrefix       string
 	Endpoint        string
 	BucketName      string
@@ -18,11 +18,11 @@ type aliyunOss struct {
 	ossClient *oss.Client
 }
 
-func NewAliyun(entity *OssEntity) (*aliyunOss, error) {
+func NewAliyun(entity *OssEntity) (*AliyunOss, error) {
 	var err error
 	var ossClient *oss.Client
 
-	aliyunOss := &aliyunOss{
+	aliyunOss := &AliyunOss{
 		DirPrefix:       entity.DirPrefix,
 		Endpoint:        entity.Endpoint,
 		BucketName:      entity.BucketName,
@@ -38,7 +38,7 @@ func NewAliyun(entity *OssEntity) (*aliyunOss, error) {
 	return aliyunOss, nil
 }
 
-func (a *aliyunOss) BuildKey(path string) string {
+func (a *AliyunOss) BuildKey(path string) string {
 	if a.DirPrefix == "" {
 		return path
 	}
@@ -50,7 +50,7 @@ func (a *aliyunOss) BuildKey(path string) string {
 	return path
 }
 
-func (a *aliyunOss) Put(path string, data []byte) error {
+func (a *AliyunOss) Put(path string, data []byte) error {
 	if len(path) == 0 || len(data) == 0 {
 		return errors.New("file path or data is nil")
 	}
@@ -68,7 +68,7 @@ func (a *aliyunOss) Put(path string, data []byte) error {
 	return nil
 }
 
-func (a *aliyunOss) Get(path string) ([]byte, error) {
+func (a *AliyunOss) Get(path string) ([]byte, error) {
 	if len(path) == 0 {
 		return nil, errors.New("file path is nil")
 	}
@@ -81,11 +81,11 @@ func (a *aliyunOss) Get(path string) ([]byte, error) {
 
 	key := a.BuildKey(path)
 	var body io.ReadCloser
-	defer body.Close()
 
 	if body, err = bucket.GetObject(key); err != nil {
 		return nil, err
 	}
+	defer body.Close()
 
 	buf := new(bytes.Buffer)
 	io.Copy(buf, body)
