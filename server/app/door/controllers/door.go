@@ -19,7 +19,31 @@ func LoadDoorRouter(router *gin.RouterGroup) {
 		r.GET("/file/get", GetDoorFileRecord)
 		r.GET("/file/getByKey", GetDoorFileRecordByKey)
 		r.POST("/sku/parse", ParseDoorSkuInfo)
+		r.POST("/sku/search", SearchSkuRecord)
+		r.POST("/sku/search/save", SaveSearchSkuRecord)
 	}
+}
+
+func SearchSkuRecord(ctx *gin.Context) {
+	searchType := ctx.Query("searchType")
+	title := ctx.Query("title")
+	result, err := services.FindSearchSkuRecordBySearchTypeAndTitle(searchType, title)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, result)
+}
+
+func SaveSearchSkuRecord(ctx *gin.Context) {
+	var searchSkuRecordDTO dto.SearchSkuRecordDTO
+	controller.Bind(ctx, &searchSkuRecordDTO)
+	result, err := services.CreateSearchSkuRecord(&searchSkuRecordDTO)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, result)
 }
 
 func ParseDoorSkuInfo(ctx *gin.Context) {

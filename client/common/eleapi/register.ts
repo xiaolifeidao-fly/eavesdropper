@@ -5,8 +5,7 @@ import { MbShopApi } from "@eleapi/door/shop/mb.shop";
 import { MbSkuApi } from "@eleapi/door/sku/mb.sku";
 import { MbUserApi } from "@eleapi/door/user/user";
 import { StoreApi } from "@eleapi/store/store";
-import { v4 as uuidv4 } from 'uuid';
-
+import { MonitorPxxSkuApi } from "@eleapi/door/sku/pxx.sku";
 const register : { new(...args: any[]): ElectronApi }[] = []
 
 export function registerApi(){
@@ -16,5 +15,6 @@ export function registerApi(){
     register.push(StoreApi);
     register.push(MbUserApi);
     register.push(MbFileApi);
+    register.push(MonitorPxxSkuApi);
     return register;
 }

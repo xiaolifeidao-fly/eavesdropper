@@ -5,6 +5,7 @@ import { toJson } from "@utils/json";
 import log from "electron-log";
 
 
+
 export abstract class MbMonitorRequest<T> extends MonitorRequest<T> {
 
 
@@ -41,6 +42,7 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
             if(response.url().includes("error.item.taobao.com/error/noitem")){
                 return new DoorEntity<T>(false, {} as T);
             }
+            console.log("response", response.url());
             const result = await this.getJsonFromResponse(response);
             if(!result){
                 return new DoorEntity<T>(true, result as T);
@@ -50,7 +52,7 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
                 if(Array.isArray(ret)){
                     const retCode = ret[0];
                     if(retCode == 'FAIL_SYS_USER_VALIDATE'){
-                        log.error("MbFileUploadMonitor getResponseData error ", result);
+                        log.error("getResponseData error ", result);
                         const data = result.data as { [key: string]: any };
                         const doorEntity = new DoorEntity<T>(false, data as T);
                         doorEntity.validateUrl = result.data?.url;

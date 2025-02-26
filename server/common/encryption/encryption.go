@@ -151,3 +151,18 @@ func HexStringToBytes(str string) []byte {
 	bytes, _ := hex.DecodeString(str)
 	return bytes
 }
+
+// HashString 将输入字符串转换为 SHA-256 哈希值的十六进制表示
+func HashString(input string) string {
+	// 创建一个新的 SHA-256 哈希对象
+	hasher := sha256.New()
+
+	// 写入数据
+	hasher.Write([]byte(input))
+
+	// 计算哈希值并转换为十六进制字符串
+	hashBytes := hasher.Sum(nil)
+	hashString := hex.EncodeToString(hashBytes)
+
+	return hashString
+}

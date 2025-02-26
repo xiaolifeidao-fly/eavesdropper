@@ -1,5 +1,5 @@
 import { DoorSkuDTO } from "@model/door/sku";
-import { ActionCommand, DoorRecord } from "@model/door/door"
+import { ActionCommand, DoorRecord, SearchSkuRecord } from "@model/door/door"
 import { getData, getDataList,instance } from "@utils/axios"
 import { plainToClass } from "class-transformer";
 
@@ -33,5 +33,15 @@ export const parseSku = async (params: {}) : Promise<DoorSkuDTO|null> => {
 export const saveDoorRecord = async (doorRecord: DoorRecord) : Promise<DoorRecord> => {
     return await instance.post("/doors/save", doorRecord);
 }
+
+
+export const saveSearchSkuRecord = async (searchSkuRecord: SearchSkuRecord) : Promise<SearchSkuRecord> => {
+    return await instance.post("/doors/sku/search/save", searchSkuRecord);
+}
+
+export const searchSkuRecord = async (searchType: string, title: string) : Promise<SearchSkuRecord> => {
+    return await instance.get("/doors/sku/search", { params: { searchType, title } });
+}
+
 
   

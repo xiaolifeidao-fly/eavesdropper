@@ -45,7 +45,8 @@ export class MbSkuApiImpl extends MbSkuApi {
             if(!page){ 
                 return;
             }
-            return await engine.openWaitMonitorChain(page, url, monitorChain);
+            const result = await engine.openWaitMonitorChain(page, url, monitorChain);
+            return result;
         }catch(error){
             log.error("findMbSkuInfo error", error);
             return new DoorEntity<any>(false, {});

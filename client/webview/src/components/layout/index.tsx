@@ -1,12 +1,13 @@
 'use client';
 import React, { useState } from 'react';
-import { Layout, message, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps } from 'antd';
+import { Layout, message, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps, Spin, Button } from 'antd';
 import getNavList from '@/components/layout/menu';
 import { useRouter } from 'next/navigation';
 import { getThemeBg } from '@utils/index';
 import './index_module.css';
 
 import { useAuth } from '@/context/AuthContext';
+import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -71,6 +72,20 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     setCollapsed(!collapsed);
   };
 
+  const openPxx = async () => {
+    try{
+      setPxxLoading(true);
+      const monitor = new MonitorPxxSkuApi();
+      await monitor.monitorSku();
+    } catch(error){
+      message.error("打开PXX失败");
+    } finally {
+      setPxxLoading(false);
+    }
+  }
+
+  const [pxxLoading, setPxxLoading] = useState(false);
+
   return (
     <ConfigProvider
       theme={{
@@ -100,6 +115,11 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
             <div className="rightControl">
               <span className="avatar" >
               </span>
+            <div className="logo-text" style={{marginRight : 100}}>
+            <Spin spinning={pxxLoading} size="small">
+              <Button onClick={openPxx}>打开PXX</Button>
+            </Spin>
+          </div>
               <span className="msg" >
                 <Dropdown menu={{ items }} placement="bottomLeft" arrow>
                   <Avatar style={{ color: '#fff', backgroundColor: colorTextBase }}>
