@@ -12,6 +12,7 @@ const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
 
+
 export abstract class DoorEngine<T = any> {
 
     private chromePath: string | undefined;
@@ -32,8 +33,6 @@ export abstract class DoorEngine<T = any> {
 
     width : number;
     height : number;
-    isMobile : boolean = false;
-    deviceName : string = "ipad pro";
 
     constructor(resourceId : number, headless: boolean = true, chromePath: string = "", forceSaveSesssion = false){
         this.resourceId = resourceId;
@@ -43,18 +42,17 @@ export abstract class DoorEngine<T = any> {
             this.chromePath = this.getChromePath();
         }
         this.headless = headless;
-        const primaryDisplay = screen.getPrimaryDisplay();
-        this.width = primaryDisplay.workAreaSize.width;
-        this.height = primaryDisplay.workAreaSize.height;
+        try{
+            const primaryDisplay = screen.getPrimaryDisplay();
+            this.width = primaryDisplay.workAreaSize.width;
+            this.height = primaryDisplay.workAreaSize.height;
+        }catch(error){
+            this.width = 1920;
+            this.height = 1080;
+            log.error("init width and height error", error);
+        }
     }
 
-    setMobile(isMobile : boolean){
-        this.isMobile = isMobile;
-    }
-
-    setDeviceName(deviceName : string){
-        this.deviceName = deviceName;
-    }
 
     getChromePath() : string | undefined{
         return process.env.CHROME_PATH;
@@ -188,8 +186,10 @@ export abstract class DoorEngine<T = any> {
             }
             let headerData = {};
             const request = response.request();
+            
+            const allHeaders = await request.allHeaders();
             if(responseMonitor.needHeaderData()){
-                headerData = await request.allHeaders();
+                headerData = allHeaders;
             }
             let url = "";
             if(responseMonitor.needUrl()){
@@ -205,6 +205,12 @@ export abstract class DoorEngine<T = any> {
                 }
             }
             const data = await responseMonitor.getResponseData(response);
+            if(data && data.code){
+                if(responseMonitor.needStoreContext(this.getKey(), allHeaders)){
+                    log.info("session reset save context state");
+                    await this.saveContextState();
+                }
+            }
             data.url = url;
             data.headerData = headerData;
             data.requestBody = requestBody;

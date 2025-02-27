@@ -72,14 +72,16 @@ export class SalesAttr {
     isSaleAddValues: boolean = false;
     @Type(() => SalesAttrValue)
     values: SalesAttrValue[];
+    oldPid: string|null = null  ;
 
-    constructor(label: string, values: SalesAttrValue[], hasImage: string, comboProperty: string, packPro: string, pid: string) {
+    constructor(label: string, values: SalesAttrValue[], hasImage: string, comboProperty: string, packPro: string, pid: string, oldPid: string|null = null) {
         this.label = label;
         this.values = values;
         this.hasImage = hasImage;
         this.comboProperty = comboProperty;
         this.packPro = packPro;
         this.pid = pid;
+        this.oldPid = oldPid;
     }
 }
 
@@ -159,6 +161,7 @@ export class DoorSkuImageInfoDTO {
 }
 
 export class DoorSkuDTO {
+    itemId : string;
     @Type(() => DoorSkuBaseInfoDTO)
     baseInfo: DoorSkuBaseInfoDTO;
     @Type(() => DoorSkuSaleInfoDTO)
@@ -168,10 +171,19 @@ export class DoorSkuDTO {
     @Type(() => DoorSkuImageInfoDTO)
     doorSkuImageInfo: DoorSkuImageInfoDTO;
 
-    constructor(baseInfo: DoorSkuBaseInfoDTO, doorSkuSaleInfo: DoorSkuSaleInfoDTO, doorSkuLogisticsInfo: DoorSkuLogisticsInfoDTO, doorSkuImageInfo: DoorSkuImageInfoDTO) {
+    constructor(itemId: string, baseInfo: DoorSkuBaseInfoDTO, doorSkuSaleInfo: DoorSkuSaleInfoDTO, doorSkuLogisticsInfo: DoorSkuLogisticsInfoDTO, doorSkuImageInfo: DoorSkuImageInfoDTO) {
+        this.itemId = this.getItemId();
         this.baseInfo = baseInfo;
         this.doorSkuSaleInfo = doorSkuSaleInfo;
         this.doorSkuLogisticsInfo = doorSkuLogisticsInfo;
         this.doorSkuImageInfo = doorSkuImageInfo;
+    }
+
+    getItemId(){
+        return this.baseInfo?.itemId;
+    }
+
+    setItemId(itemId: string){
+        this.itemId = itemId;
     }
 }

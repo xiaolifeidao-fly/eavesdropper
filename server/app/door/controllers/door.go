@@ -19,7 +19,7 @@ func LoadDoorRouter(router *gin.RouterGroup) {
 		r.GET("/file/get", GetDoorFileRecord)
 		r.GET("/file/getByKey", GetDoorFileRecordByKey)
 		r.POST("/sku/parse/:source", ParseDoorSkuInfo)
-		r.POST("/sku/search", SearchSkuRecord)
+		r.GET("/sku/search", SearchSkuRecord)
 		r.POST("/sku/search/save", SaveSearchSkuRecord)
 	}
 }

@@ -19,11 +19,10 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
     @InvokeType(Protocols.INVOKE)
     async monitorSku(){
         const resourceId = 111111;
-        const engine = new PxxEngine(resourceId, false);
-        engine.setMobile(true);
-        engine.setDeviceName("iPad Pro 11");
-        const url = "https://mobile.yangkeduo.com/personal.html";
+        log.info("open pxx resourceId is ", resourceId);
         try{
+            const engine = new PxxEngine(resourceId, false);
+            const url = "https://mobile.yangkeduo.com/personal.html";
             const page = await engine.init(url);
             if(!page){ 
                 return;
@@ -57,8 +56,6 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         context.on("response", async response => {
             const request = response.request();
             const requestUrl = request.url();
-            log.info("request url is ", requestUrl);
-            log.info("request headers is ", await request?.allHeaders());
             if(requestUrl.includes("goods.html?goods_id")){
                 const requestParams = getUrlParameter(requestUrl);
                 const goodsId = requestParams.get("goods_id");
@@ -82,12 +79,17 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
     saveByJson(rawData : string, url : string, doorKey : string, itemKey : string, type : string){
         try{
             const jsonData = JSON.parse(rawData);
-            const status = jsonData?.store?.initDataObj?.goods?.status;
+            const initDataObj = jsonData?.data?.initDataObj;
+            if(!initDataObj){
+                log.warn(itemKey, " initDataObj not found");
+                return;
+            }
+            const status = initDataObj?.goods?.status;
             log.info(itemKey, " status is ", status);
             if(!status || status != 1){
                 return;
             }
-            const doorRecord = new DoorRecord(undefined, doorKey, url, itemKey, type, rawData);
+            const doorRecord = new DoorRecord(undefined, doorKey, url, itemKey, type, JSON.stringify(initDataObj));
             saveDoorRecord(doorRecord);
             log.info("save door record success ", itemKey);
         } catch(error){

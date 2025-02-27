@@ -18,7 +18,8 @@ module.exports = {
       "@model": path.resolve(__dirname, '../common/model'),
       "@api": path.resolve(__dirname, '../common/api'),
       "@utils": path.resolve(__dirname, '../common/utils'),
-      "@eleapi": path.resolve(__dirname, '../common/eleapi')
+      "@eleapi": path.resolve(__dirname, '../common/eleapi'),
+      "@enums": path.resolve(__dirname, '../common/enums')
     }
   },
   externals: [nodeExternals({

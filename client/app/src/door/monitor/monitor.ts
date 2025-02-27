@@ -151,10 +151,35 @@ export abstract class MonitorRequest<T> extends Monitor<T> {
     }
 }
 
-  
+const resourceStore : {[key : string] : any} = {};
+
+
+function hadStore(key : string){
+    if(resourceStore[key]){
+        return true;
+    }
+    return false;
+}
+
+function setStore(key : string){
+    resourceStore[key] = true;
+}
+
 export abstract class MonitorResponse<T> extends Monitor<T> {
     
     abstract getType(): string;
+
+    containerCookie(headers : {[key : string] : any}){
+        return false;
+    }
+
+    needStoreContext(key : string, headers : {[key : string] : any}){
+        if(hadStore(key)){
+            return false;
+        }
+        setStore(key);
+        return true;
+    }
 
     public async getResponseData(response: Response): Promise<DoorEntity<T>>{
         const contentType = response.headers()['content-type'];

@@ -64,14 +64,12 @@ func CreateDoorRecord(doorRecordDTO *dto.DoorRecordDTO) (*dto.DoorRecordDTO, err
 	now := base.Now()
 	doorRecord.ExpireTime = base.Time(now.ToTime().Add(time.Hour * 24 * 30))
 	doorRecord.UpdatedAt = now
-	doorRecord.Data = doorRecordDTO.Data
-	if doorRecord.Data != "" {
+	if doorRecordDTO.Data != "" {
 		path, err := storeJsonData(doorRecordDTO)
 		if err != nil {
 			return nil, err
 		}
 		doorRecord.OssUrl = path
-		doorRecord.Data = ""
 	}
 	doorRecordPO, err := doorRecordRepository.SaveOrUpdate(doorRecord)
 	if err != nil {

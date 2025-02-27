@@ -34,11 +34,31 @@ export class MbSkuDetailMonitor extends MbMonitorResponse<{}>{
 export class SearchSkuMonitor extends MbMonitorResponse<{}>{
 
     getApiName(): string[]{
-        return ["mtop.relationrecommend.wirelessrecommend.recommend"];
+        return ["mtop.relationrecommend.wirelessrecommend.recommend/2.0"];
     }
 
     getKey(): string{
         return "searchSku";
+    }
+
+    public async getResponseData(response: Response): Promise<DoorEntity<{}>> {
+        try{
+            if(response.url().includes("error.item.taobao.com/error/noitem")){
+                return new DoorEntity<{}>(false, {});
+            }
+            const result = await this.getJsonFromResponse(response);
+            if(!result){
+                return new DoorEntity<{}>(false, {});
+            }
+            if('data' in result){
+                const data = result.data;
+                return new DoorEntity<{}>(true, data);
+            }
+            return new DoorEntity<{}>(false, {});
+        }catch(e){
+            log.error("MbSkuInfoMonitor getResponseData error", e);
+            return new DoorEntity<{}>(false, {});
+        }
     }
 
 }

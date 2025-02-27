@@ -77,8 +77,8 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
       setPxxLoading(true);
       const monitor = new MonitorPxxSkuApi();
       await monitor.monitorSku();
-    } catch(error){
-      message.error("打开PXX失败");
+    } catch(error : any){
+      message.error("打开PXX失败", error);
     } finally {
       setPxxLoading(false);
     }

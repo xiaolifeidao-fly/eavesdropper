@@ -213,7 +213,7 @@ export abstract class AbsPublishStep extends StepUnit{
                 }
             }
             if (!hasFound) {
-                const categoryInfo = await this.getCategoryInfo(proKey, requestHeader, catId, startTraceId, skuItem.baseInfo.itemId, catValue);
+                const categoryInfo = await this.getCategoryInfo(proKey, requestHeader, catId, startTraceId, skuItem.itemId, catValue);
                 if (categoryInfo) {
                     newValues = {
                         value: categoryInfo.value,

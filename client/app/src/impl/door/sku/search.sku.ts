@@ -21,7 +21,7 @@ export class SearchSkuApiImpl extends SearchSkuApi{
         if(skuId){
             return skuId;
         }
-        const engine = new MbEngine(publishResourceId);
+        const engine = new MbEngine(publishResourceId, false);
         try{
             const page = await engine.init();
             if(!page){
@@ -30,13 +30,19 @@ export class SearchSkuApiImpl extends SearchSkuApi{
             const monitor = new SearchSkuMonitor();
             const date = this.formatDateToYYYYMMDD(new Date());
             const url = `https://s.taobao.com/search?initiative_id=staobaoz_${date}&page=1&q=${encodeURIComponent(title)}&tab=pc_taobao`;
+            log.info("url  is  ", url);
             const result = await engine.openWaitMonitor(page, url, monitor);
-            if(result){
-                const skuId = result.data?.itemArrays[0]?.itemId;
+            if(result && result.code){
+                const itemsArray = result.data?.itemsArray;
+                if(!itemsArray || itemsArray.length === 0){
+                    return undefined;
+                }
+                const item = itemsArray[0];
+                const skuId = item?.item_id;
                 if(skuId){
                     const searchRecord = new SearchSkuRecord(undefined, this.getSearchType(), title, String(skuId));
                     await saveSearchSkuRecord(searchRecord);
-                    return skuId;
+                    return String(skuId);
                 }
             }
             return undefined;

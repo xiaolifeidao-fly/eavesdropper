@@ -31,7 +31,7 @@ export class UpdateDraftStep extends AbsPublishStep {
     }
 
      fixMultiDiscountPromotion(fieldPros : { [key : string] : any }, draftData : { [key : string] : any }, step : StepUnit){
-        console.log("fixMultiDiscountPromotion", fieldPros);
+        log.info("fixMultiDiscountPromotion", fieldPros);
         const dataSources = fieldPros.dataSource;
         if(!dataSources){
             return;
@@ -40,7 +40,7 @@ export class UpdateDraftStep extends AbsPublishStep {
         if(!dataSource){
             return;
         }
-        console.log("dataSource is", dataSource);
+        log.info("dataSource is", dataSource);
         draftData.multiDiscountPromotion = {
             value: String(dataSource.max),
             type: 1,
