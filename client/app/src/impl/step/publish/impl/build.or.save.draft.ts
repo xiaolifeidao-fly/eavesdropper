@@ -50,6 +50,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             if(!draftData.draftData){
                 return new StepResult(false, draftData.message) ;
             }
+            this.setParams("skuItem", skuItem);
             return new StepResult(true, "添加草稿成功", [
                 new StepResponse("draftData", draftData.draftData.draftData),
                 new StepResponse("catId", draftData.draftData.catId),
@@ -531,6 +532,9 @@ export class SkuBuildDraftStep extends AbsPublishStep{
     }
     
     getFixValue(salePropSubItem: { [key: string]: any }, value: string) {
+        if(!salePropSubItem){
+            return String(-Number(value));
+        }
         const subItems = salePropSubItem.subItems;
         if (!subItems || subItems.length == 0) {
             if ('dataSource' in salePropSubItem) {

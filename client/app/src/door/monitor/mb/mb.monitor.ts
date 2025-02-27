@@ -5,7 +5,6 @@ import { toJson } from "@utils/json";
 import log from "electron-log";
 
 
-
 export abstract class MbMonitorRequest<T> extends MonitorRequest<T> {
 
 
@@ -16,6 +15,7 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
     getType(): string{
         return "MB";
     }
+
 
     public async isMatch(url : string, method: string, headers: { [key: string]: string; }): Promise<boolean> {
         const apiNames = this.getApiName();
@@ -28,9 +28,11 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
     abstract getApiName(): string | string[];
 
 
-    async getJsonFromResponse(response: Response): Promise<{[key: string]: any}|undefined>{
+    public async getJsonFromResponse(response: Response): Promise<{[key: string]: any}|undefined>{
         try{
-            return await response.json();
+            const json = await response.json();
+            console.log("json is ", json);
+            return json;
         }catch(e){
             const data = await response.text();
             return toJson(data);
@@ -42,7 +44,6 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
             if(response.url().includes("error.item.taobao.com/error/noitem")){
                 return new DoorEntity<T>(false, {} as T);
             }
-            console.log("response", response.url());
             const result = await this.getJsonFromResponse(response);
             if(!result){
                 return new DoorEntity<T>(true, result as T);

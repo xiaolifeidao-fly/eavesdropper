@@ -9,6 +9,7 @@ import { PublishSkuStep } from "./impl/publish.sku";
 import { SkuBuildDraftStep } from "./impl/build.or.save.draft";
 import { PddSkuGetStep } from "./impl/pdd.sku.get";
 import { TbSearchStep } from "./impl/tb.search";
+import { PddSkuBuildDraftStep } from "./impl/pdd.build.or.save.draft";
 
 export class SkuPublishHandler extends StepHandler {
 
@@ -47,7 +48,7 @@ export class PddSkuPublishHandler extends StepHandler {
         stepConfig.register("PddSkuGetStep", PddSkuGetStep)
         stepConfig.register("SearchSkuStep", TbSearchStep)
         stepConfig.register("SkuPublishFileUploadStep", SkuPublishFileUploadStep)
-        stepConfig.register("SkuBuildDraftStep", SkuBuildDraftStep)
+        stepConfig.register("SkuBuildDraftStep", PddSkuBuildDraftStep)
         stepConfig.register("UpdateDraftStep", UpdateDraftStep)
         stepConfig.register("PublishSkuStep", PublishSkuStep)
         return stepConfig;

@@ -12,6 +12,7 @@ const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
 
+
 export abstract class DoorEngine<T = any> {
 
     private chromePath: string | undefined;
@@ -185,8 +186,10 @@ export abstract class DoorEngine<T = any> {
             }
             let headerData = {};
             const request = response.request();
+            
+            const allHeaders = await request.allHeaders();
             if(responseMonitor.needHeaderData()){
-                headerData = await request.allHeaders();
+                headerData = allHeaders;
             }
             let url = "";
             if(responseMonitor.needUrl()){
@@ -202,6 +205,12 @@ export abstract class DoorEngine<T = any> {
                 }
             }
             const data = await responseMonitor.getResponseData(response);
+            if(data && data.code){
+                if(responseMonitor.needStoreContext(this.getKey(), allHeaders)){
+                    log.info("session reset save context state");
+                    await this.saveContextState();
+                }
+            }
             data.url = url;
             data.headerData = headerData;
             data.requestBody = requestBody;

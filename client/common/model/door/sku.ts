@@ -72,14 +72,16 @@ export class SalesAttr {
     isSaleAddValues: boolean = false;
     @Type(() => SalesAttrValue)
     values: SalesAttrValue[];
+    oldPid: string|null = null  ;
 
-    constructor(label: string, values: SalesAttrValue[], hasImage: string, comboProperty: string, packPro: string, pid: string) {
+    constructor(label: string, values: SalesAttrValue[], hasImage: string, comboProperty: string, packPro: string, pid: string, oldPid: string|null = null) {
         this.label = label;
         this.values = values;
         this.hasImage = hasImage;
         this.comboProperty = comboProperty;
         this.packPro = packPro;
         this.pid = pid;
+        this.oldPid = oldPid;
     }
 }
 
