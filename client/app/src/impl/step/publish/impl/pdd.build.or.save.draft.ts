@@ -35,6 +35,31 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
         await this.fillSellSku(skuItem, draftData);
     }
 
+    fixSkuSaleImages(imageFileList: SkuFileDetail[], skuItem: DoorSkuDTO): void {
+        const salesAttrs = skuItem.doorSkuSaleInfo.salesAttr;
+        for (let salesAttr in salesAttrs){
+            const salesAttrValue = salesAttrs[salesAttr];
+            if(!salesAttrValue){
+                continue;
+            }
+            const hasImage = salesAttrValue.hasImage;
+            if(!hasImage){
+                continue;
+            }
+            const values = salesAttrValue.values;
+            for(let value of values){
+                const imageFileName = value.image;
+                if(imageFileName){
+                    for(let imageFile of imageFileList){
+                        if(imageFile.fileName == imageFileName){
+                            value.image = imageFile.fileUrl || "";
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     async fillSellSku(skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[] }) {
         const salesSkus = skuItem.doorSkuSaleInfo.salesSkus;
         const skuList: { [key: string]: any }[] = [];

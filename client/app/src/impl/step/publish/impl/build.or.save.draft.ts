@@ -50,7 +50,6 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             if(!draftData.draftData){
                 return new StepResult(false, draftData.message) ;
             }
-            this.setParams("skuItem", skuItem);
             return new StepResult(true, "添加草稿成功", [
                 new StepResponse("draftData", draftData.draftData.draftData),
                 new StepResponse("catId", draftData.draftData.catId),
@@ -65,6 +64,9 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         }
     }
 
+    fixSkuSaleImages(imageFileList: SkuFileDetail[], skuItem: DoorSkuDTO){
+
+    }
     
     async buildDraftData(imageFileList: SkuFileDetail[], resourceId: number, skuDraftId: string | undefined, skuItem: DoorSkuDTO, result: DoorEntity<any>, page: Page) {
         const newSkuDraftId = this.getSkuDraftIdFromData(skuDraftId, result);
@@ -105,6 +107,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             };
         }
         const draftData = JSON.parse(result.requestBody.jsonBody);
+        this.fixSkuSaleImages(imageFileList, skuItem);
         await this.fixSaleProp(commonData, skuItem);
         await this.fillTiltle(skuItem, draftData);
         await this.fillCategoryList(skuItem, draftData, commonData, result.getHeaderData(), catId, startTraceId);

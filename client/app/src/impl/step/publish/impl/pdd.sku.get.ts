@@ -8,16 +8,10 @@ import {PDD} from "@enums/source";
 
 export class PddSkuGetStep extends AbsPublishStep{
 
-    getSkuId(skuUrl: string){
-        const params = getUrlParameter(skuUrl);
-        //TODO 获取商品ID
-        return params.get("id");
-    }
 
     async doStep(): Promise<StepResult> {
        //获取商品信息
-       const skuUrl = this.getParams("skuUrl");
-       const itemKey = this.getSkuId(skuUrl);
+       const itemKey = this.getParams("skuItemId")
        if(!itemKey){
            return new StepResult(false, "pxx skuId is required");
        }

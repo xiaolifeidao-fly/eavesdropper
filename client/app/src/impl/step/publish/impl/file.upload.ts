@@ -10,7 +10,8 @@ export class SkuPublishFileUploadStep extends StepUnit{
         const resourceId = this.getParams("resourceId");
         const skuItem = this.getParams("skuItem");
         const validateTag = this.getValidateTag();
-        const uploadResult = await skuApi.uploadSkuImages(resourceId, skuItem, validateTag); // skuId TODO
+        const skuSource = this.getParams("skuSource");
+        const uploadResult = await skuApi.uploadSkuImages(skuSource, resourceId, skuItem, validateTag); // skuId TODO
         const imageFileList = uploadResult.skuFiles;
         const validateUrl = uploadResult.validateUrl;
         const header = uploadResult.header;

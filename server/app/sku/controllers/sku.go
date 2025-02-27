@@ -64,7 +64,7 @@ func CheckSkuExistence(ctx *gin.Context) {
 
 	var skuDTO *dto.SkuDTO
 	if skuDTO, err = services.GetSkuByPublishResourceIdAndSourceSkuIdAndSource(req.PublishResourceID, req.SourceSkuID, req.Source); err != nil {
-		if skuDTO.Status == services.SKU_SUCCESS {
+		if skuDTO != nil && skuDTO.Status == services.SKU_SUCCESS {
 			logger.Errorf("CheckSkuExistence failed, with error is %v", err)
 			controller.Error(ctx, err.Error())
 			return

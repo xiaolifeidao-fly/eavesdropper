@@ -84,9 +84,11 @@ export class CheckSkuExistenceReq {
   constructor(
     public sourceSkuId: string,
     public publishResourceId: number,
+    public source : string,
   ) {
     this.sourceSkuId = sourceSkuId
     this.publishResourceId = publishResourceId
+    this.source = source
   }
 }
 
