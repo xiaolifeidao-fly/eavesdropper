@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"regexp"
 	"server/common/extractor"
 	"server/internal/door/services/dto"
 	"strconv"
@@ -20,8 +21,10 @@ func (pdd *PDDParse) GetExtractorRule() map[string]interface{} {
 			"skuItemInfo": "goods.goodsProperty",
 		},
 		"doorSkuSaleInfo": map[string]interface{}{
-			"skus":  "goods.skus",
-			"price": "goods.ui.new_price_section.price",
+			"skus":      "goods.skus",
+			"price":     "goods.ui.new_price_section.price",
+			"reviewNum": "oakData.review.reviewNum",
+			"saleNum":   "goods.sideSalesTip",
 		},
 		"doorSkuLogisticsInfo": map[string]interface{}{
 			"deliveryFromAddr": "goods.goodsProperty",
@@ -141,6 +144,8 @@ func pddParseDoorSkuSaleInfo(doorSkuSaleInfo map[string]interface{}) map[string]
 	doorSkuSaleInfo["salesAttr"] = pddParseDoorSkuSaleInfoSalesAttr(skus)
 	doorSkuSaleInfo["salesSkus"] = pddParseDoorSkuSaleInfoSalesSkus(skus)
 	doorSkuSaleInfo["quantity"] = pddParseDoorSkuSaleInfoQuantity(skus)
+	doorSkuSaleInfo["reviewNum"] = pddParseDoorSkuSaleInfoReviewNum(doorSkuSaleInfo["reviewNum"])
+	doorSkuSaleInfo["saleNum"] = pddParseDoorSkuSaleInfoSaleNum(doorSkuSaleInfo["saleNum"])
 
 	return doorSkuSaleInfo
 }
@@ -277,6 +282,66 @@ func pddParseDoorSkuSaleInfoQuantity(skus []map[string]interface{}) string {
 	}
 
 	return strconv.FormatFloat(quantitySum, 'f', -1, 64)
+}
+
+func pddParseDoorSkuSaleInfoReviewNum(reviewNumInterface interface{}) string {
+	var ok bool
+
+	var reviewNum float64
+	if reviewNum, ok = reviewNumInterface.(float64); !ok {
+		return ""
+	}
+	return strconv.FormatFloat(reviewNum, 'f', -1, 64)
+}
+
+func pddParseDoorSkuSaleInfoSaleNum(saleNumInterface interface{}) string {
+	var ok bool
+
+	var saleNumStr string
+	if saleNumStr, ok = saleNumInterface.(string); !ok {
+		return "0"
+	}
+
+	numRe := regexp.MustCompile(`\d+\.?\d*`) // 匹配整数或小数
+	numStr := numRe.FindString(saleNumStr)
+	if numStr == "" {
+		return "0"
+	}
+
+	// 提取单位部分
+	// 定义单位换算表
+	unitMap := map[string]float64{
+		"十":  10,
+		"百":  100,
+		"千":  1000,
+		"万":  10000,
+		"十万": 100000,
+		"百万": 1000000,
+		"千万": 10000000,
+		"亿":  100000000,
+	}
+	unitReStr := ""
+	for k, _ := range unitMap {
+		unitReStr += k + "|"
+	}
+	unitReStr = strings.TrimRight(unitReStr, "|")
+
+	unitRe := regexp.MustCompile(unitReStr)
+	unit := unitRe.FindString(saleNumStr)
+
+	// 将字符串转换为浮点数
+	num, err := strconv.ParseFloat(numStr, 64)
+	if err != nil {
+		return "0"
+	}
+
+	multiplier, exists := unitMap[unit]
+	if !exists {
+		multiplier = 1 // 如果没有匹配的单位，默认按原值计算
+	}
+	result := num * multiplier
+
+	return strconv.FormatFloat(result, 'f', -1, 64)
 }
 
 func pddParseDoorSkuLogisticsInfo(doorSkuLogisticsInfo map[string]interface{}) map[string]interface{} {
