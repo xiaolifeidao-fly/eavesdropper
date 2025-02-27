@@ -32,6 +32,7 @@ type SkuTaskDTO struct {
 	Remark            string `json:"remark"`
 	Count             int    `json:"count"`
 	PriceRate         string `json:"priceRate"`
+	Source            string `json:"source"`
 }
 
 type PriceRangeConfigDTO struct {

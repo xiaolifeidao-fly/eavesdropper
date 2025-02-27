@@ -12,6 +12,7 @@ type Sku struct {
 	TaskId            uint64    `json:"taskId"`
 	Name              string    `json:"name"`
 	SourceSkuId       string    `json:"sourceSkuId"`
+	Source            string    `json:"source"`
 	PublishSkuID      string    `json:"publishSkuId"`
 	Url               string    `json:"url"`
 	PublishTime       base.Time `json:"publishTime"`

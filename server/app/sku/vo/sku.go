@@ -16,9 +16,11 @@ type SkuAddReq struct {
 	Status            string    `json:"status" binding:"required"`
 	Url               string    `json:"url" binding:"required"`
 	PublishTime       base.Time `json:"publishTime" binding:"required"`
+	Source            string    `json:"source" binding:"required"`
 }
 
 type CheckSkuExistenceReq struct {
+	Source            string `form:"source" binding:"required"`
 	PublishResourceID uint64 `form:"publishResourceId" binding:"required"`
 	SourceSkuID       string `form:"sourceSkuId" binding:"required"`
 }
@@ -42,4 +44,5 @@ type SkuPageResp struct {
 	CreatedAt       base.Time `json:"createdAt"`       // 创建时间
 	Url             string    `json:"url"`             // 商品链接
 	PublishUrl      string    `json:"publishUrl"`      // 发布商品链接
+	Source          string    `json:"source"`          // 商品来源
 }

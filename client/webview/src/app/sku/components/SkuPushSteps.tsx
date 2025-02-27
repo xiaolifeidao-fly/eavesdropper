@@ -1,13 +1,14 @@
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { ProFormInstance } from '@ant-design/pro-components';
-import { StepsForm } from '@ant-design/pro-components';
+import { StepsForm, ProFormSelect } from '@ant-design/pro-components';
 import { Modal, message, Button } from 'antd';
 
 import ImportSku from './SkuLinkUpload';
 import type { LinkInfo } from './SkuLinkUpload';
 import SkuPushProgress from './SkuPushProgress';
 import type { SkuUrl } from './SkuPushProgress';
+import { getResourceSourceList as getResourceSourceListApi } from '@api/resource/resource.api';
 import SukPushConfig from './SkuPushConfig';
 import { StoreApi } from '@eleapi/store/store';
 import { SkuPublishConfig, PriceRangeConfig } from "@model/sku/skuTask";
@@ -20,6 +21,8 @@ interface PushSkuStepsFormProps {
 
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
 
+  const [skuSource, setSkuSource] = useState<string>("taobao");
+  const [sourceList, setSourceList] = useState<{}[]>([]); // 链接来源列表
   const [sourceAccount, setSourceAccount] = useState<number>(0);
   const [pushConfig, setPushConfig] = useState<SkuPublishConfig>(new SkuPublishConfig());
   const priceRangeConfigFormRef = useRef<ProFormInstance>();
@@ -31,6 +34,22 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   const [taskId, setTaskId] = useState<number>(0);
 
   const store = new StoreApi();
+
+  useEffect(() => {
+    initSource();
+  }, [])
+
+  const initSource = async () => {
+    const resourceSourceList = await getResourceSourceListApi();
+    const sourceList: {}[] = [];
+    for (const resourceSource of resourceSourceList) {
+      sourceList.push({
+        value: resourceSource.value,
+        label: resourceSource.label,
+      })
+    }
+    setSourceList(sourceList);
+  }
 
   const onCancel = () => {
     if (taskId > 0) {
@@ -94,6 +113,11 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           title="导入链接"
           style={{ height: '400px' }}
           onFinish={async () => {
+            if (skuSource === "") {
+              message.error('请选择商品来源');
+              return false;
+            }
+
             if (uploadUrlList.length === 0) {
               message.error('请先导入链接');
               return false;
@@ -103,6 +127,17 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
             return true;
           }}
         >
+          <ProFormSelect
+            name="source"
+            label="链接来源"
+            placeholder="请选择来源"
+            initialValue={skuSource}
+            options={sourceList}
+            onChange={(value: string) => {
+              setSkuSource(value);
+            }}
+            required
+          />
           <ImportSku uploadUrlList={uploadUrlList} setUploadUrlList={setUploadUrlList} />
         </StepsForm.StepForm>
 
@@ -174,6 +209,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
             publishStatus={pushSkuFlag}
             publishResourceId={sourceAccount}
             publishConfig={pushConfig}
+            skuSource={skuSource}
             urls={urls}
             onPublishFinish={setOnPublishFinish}
             setTaskId={setTaskId}

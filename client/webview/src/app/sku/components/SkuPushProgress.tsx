@@ -31,6 +31,7 @@ interface SkuPushProgressProps {
   publishStatus: boolean;
   publishResourceId: number;
   publishConfig: SkuPublishConfig;
+  skuSource: string;
   urls: SkuUrl[];
   onPublishFinish: (finish: boolean) => void;
   setTaskId: (taskId: number) => void;
@@ -145,7 +146,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
       const urls = props.urls.map(item => item.url);
 
       // 监听任务完成之后批量发布商品
-      mbSkuApi.batchPublishSkus(props.publishResourceId, props.publishConfig, urls).then((task?: SkuTask) => {
+      mbSkuApi.batchPublishSkus(props.publishResourceId, props.publishConfig, props.skuSource, urls).then((task?: SkuTask) => {
         console.log("batchPublishSkus task: ", task);
         if (task) {
           props.setTaskId(task.id as number);

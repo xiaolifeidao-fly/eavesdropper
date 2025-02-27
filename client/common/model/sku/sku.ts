@@ -66,6 +66,7 @@ export class AddSkuReq {
     public url?: string, // 商品链接
     public publishTime?: string, // 发布时间
     public publishSkuId?: string, // 发布商品id
+    public source?: string, // 来源
   ) {
     this.name = name
     this.sourceSkuId = sourceSkuId
@@ -75,6 +76,7 @@ export class AddSkuReq {
     this.url = url
     this.publishTime = publishTime
     this.publishSkuId = publishSkuId
+    this.source = source
   }
 }
 
@@ -113,6 +115,7 @@ export class SkuPageResp {
     public createdAt: string,
     public url: string,
     public publishUrl: string,
+    public source: string,
   ) {
     this.id = id
     this.resourceAccount = resourceAccount
@@ -123,5 +126,6 @@ export class SkuPageResp {
     this.createdAt = createdAt
     this.url = url
     this.publishUrl = publishUrl
+    this.source = source
   }
 }

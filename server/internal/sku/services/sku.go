@@ -2,12 +2,15 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"server/common/base/page"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
 	"server/internal/sku/models"
 	"server/internal/sku/repositories"
 	"server/internal/sku/services/dto"
+
+	resourceService "server/internal/resource/services"
 )
 
 const (
@@ -20,7 +23,7 @@ func CreateSku(skuDTO *dto.SkuDTO) (uint64, error) {
 	var err error
 
 	var skuDTO2 *dto.SkuDTO
-	if skuDTO2, err = GetSkuByPublishResourceIdAndSourceSkuId(skuDTO.PublishResourceID, skuDTO.SourceSkuID); err != nil {
+	if skuDTO2, err = GetSkuByPublishResourceIdAndSourceSkuIdAndSource(skuDTO.PublishResourceID, skuDTO.SourceSkuID, skuDTO.Source); err != nil {
 		return 0, err
 	}
 	if skuDTO2 != nil && skuDTO2.ID > 0 {
@@ -35,16 +38,16 @@ func CreateSku(skuDTO *dto.SkuDTO) (uint64, error) {
 	return skuDTO.ID, nil
 }
 
-func GetSkuByPublishResourceIdAndSourceSkuId(publishResourceId uint64, sourceSkuId string) (*dto.SkuDTO, error) {
+func GetSkuByPublishResourceIdAndSourceSkuIdAndSource(publishResourceId uint64, sourceSkuId, source string) (*dto.SkuDTO, error) {
 	var err error
 	skuRepository := repositories.SkuRepository
 
-	sku, err := skuRepository.GetSkuByPublishResourceIdAndSourceSkuId(publishResourceId, sourceSkuId)
+	sku, err := skuRepository.GetSkuByPublishResourceIdAndSourceSkuIdAndSource(publishResourceId, sourceSkuId, source)
 	if err != nil {
 		return nil, err
 	}
 
-	if sku == nil {
+	if sku == nil || sku.DeletedAt.Valid {
 		return nil, nil
 	}
 	return database.ToDTO[dto.SkuDTO](sku), nil
@@ -81,4 +84,9 @@ func saveSku(skuDTO *dto.SkuDTO) (*dto.SkuDTO, error) {
 
 	skuDTO = database.ToDTO[dto.SkuDTO](sku)
 	return skuDTO, nil
+}
+
+func GetSkuSourceUrl(source string, publishSkuId string) string {
+	publishUrl := resourceService.GetResourceSkuUrl(source)
+	return fmt.Sprintf(publishUrl, publishSkuId)
 }

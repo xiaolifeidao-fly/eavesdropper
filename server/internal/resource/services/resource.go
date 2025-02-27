@@ -116,7 +116,7 @@ func PageResource(param *dto.ResourcePageParamDTO) (*page.Page[dto.ResourcePageD
 
 	for _, d := range pageData {
 		var nick string
-		if d.Source == ResourceSourceTaobao {
+		if d.Source == dto.TaoBao.Value {
 			var taobaoDTO *dto.ResourceTaobaoDTO
 			if taobaoDTO, err = GetResourceTaobaoByResourceID(d.ID); err != nil {
 				logger.Errorf("PageResource failed, with error is %v", err)
@@ -152,7 +152,7 @@ func BindResource(req *dto.ResourceBindDTO) error {
 		return err
 	}
 
-	if resourceDTO.Source == ResourceSourceTaobao {
+	if resourceDTO.Source == dto.TaoBao.Value {
 		taobaoDTO := &dto.ResourceTaobaoDTO{}
 		converter.Copy(taobaoDTO, req)
 		taobaoDTO.ResourceID = resourceDTO.ID

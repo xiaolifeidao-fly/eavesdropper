@@ -11,6 +11,6 @@ type skuRepository struct {
 	database.Repository[*models.Sku]
 }
 
-func (r *skuRepository) GetSkuByPublishResourceIdAndSourceSkuId(publishResourceId uint64, sourceSkuId string) (*models.Sku, error) {
-	return r.GetOne("select * from sku where publish_resource_id = ? and source_sku_id = ?", publishResourceId, sourceSkuId)
+func (r *skuRepository) GetSkuByPublishResourceIdAndSourceSkuIdAndSource(publishResourceId uint64, sourceSkuId, source string) (*models.Sku, error) {
+	return r.GetOne("select * from sku where publish_resource_id = ? and source_sku_id = ? and source = ? and delete_at is null", publishResourceId, sourceSkuId, source)
 }

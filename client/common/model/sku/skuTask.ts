@@ -11,6 +11,7 @@ export class SkuTask {
     public status: string,
     public count: number,
     public publishResourceId: number,
+    public source: string,
     public skuPublishConfig?: SkuPublishConfig,
   ) {
     this.id = id
@@ -65,11 +66,13 @@ export class AddSkuTaskReq {
   constructor(
     public count: number,
     public publishResourceId: number,
+    public source: string,
     public remark?: string,
     public priceRange?: PriceRangeConfig[],
   ) {
     this.count = count
     this.publishResourceId = publishResourceId
+    this.source = source
     this.remark = remark
     this.priceRange = priceRange
   }
@@ -98,11 +101,13 @@ export class AddSkuTaskItemReq {
     public taskId: number,
     public url: string,
     public status: string,
+    public source: string,
     public remark?: string
   ) {
     this.taskId = taskId
     this.url = url
     this.status = status
+    this.source = source;
     this.remark = remark
   }
 }

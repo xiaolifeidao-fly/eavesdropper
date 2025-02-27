@@ -16,6 +16,7 @@ type AddSkuTaskReq struct {
 	PublishResourceID int                    `json:"publishResourceId" binding:"required"`
 	Count             int                    `json:"count" binding:"required"`
 	Remark            string                 `json:"remark"`
+	Source            string                 `json:"source"`
 	PriceRange        []*PriceRangeConfigReq `json:"priceRange"`
 }
 

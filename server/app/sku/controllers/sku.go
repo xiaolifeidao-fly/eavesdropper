@@ -63,7 +63,7 @@ func CheckSkuExistence(ctx *gin.Context) {
 	}
 
 	var skuDTO *dto.SkuDTO
-	if skuDTO, err = services.GetSkuByPublishResourceIdAndSourceSkuId(req.PublishResourceID, req.SourceSkuID); err != nil {
+	if skuDTO, err = services.GetSkuByPublishResourceIdAndSourceSkuIdAndSource(req.PublishResourceID, req.SourceSkuID, req.Source); err != nil {
 		if skuDTO.Status == services.SKU_SUCCESS {
 			logger.Errorf("CheckSkuExistence failed, with error is %v", err)
 			controller.Error(ctx, err.Error())
@@ -103,18 +103,9 @@ func PageSku(ctx *gin.Context) {
 	for _, pageDTO := range pageDTO.Data {
 		pageResp := &vo.SkuPageResp{}
 		converter.Copy(pageResp, pageDTO)
-		if pageDTO.PublishSkuId != "" {
-			pageResp.PublishUrl = "https://item.taobao.com/item.htm?id=" + pageDTO.PublishSkuId // TODO
-		}
+		pageResp.PublishUrl = services.GetSkuSourceUrl(pageDTO.Source, pageDTO.PublishSkuId)
 		pageData = append(pageData, pageResp)
 	}
-
-	// converter.Copy(&pageData, pageDTO.Data)
-
-	// pageDataMock := make([]*vo.SkuPageResp, 0)
-	// for _, v := range pageData {
-	// 	pageDataMock = append(pageDataMock, &v)
-	// }
 
 	pageResp := page.BuildPage[vo.SkuPageResp](pageDTO.PageInfo, pageData)
 	controller.OK(ctx, pageResp)

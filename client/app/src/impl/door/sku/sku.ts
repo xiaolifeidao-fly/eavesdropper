@@ -202,7 +202,7 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async publishSku(publishResourceId : number, skuUrl : string, taskId : number, publishConfig?: SkuPublishConfig) : Promise<SkuPublishResult>{
+    async publishSku(publishResourceId : number, skuSource: string, skuUrl : string, taskId : number, publishConfig?: SkuPublishConfig) : Promise<SkuPublishResult>{
         const skuPublishResult = new SkuPublishResult(taskId, publishResourceId, SkuStatus.PENDING);
         skuPublishResult.url = skuUrl;
         skuPublishResult.publishResourceId = publishResourceId;
@@ -224,6 +224,7 @@ export class MbSkuApiImpl extends MbSkuApi {
                 return skuPublishResult;
             }
             const withParams = {
+                "skuSource": skuSource,
                 "skuUrl" : skuUrl,
                 "resourceId" : publishResourceId,
                 "priceRate" : publishConfig?.priceRate
@@ -247,6 +248,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             skuPublishResult.status = SkuStatus.SUCCESS;
             skuPublishResult.remark = "发布商品成功";
             const addSkuReq = plainToClass(AddSkuReq, skuPublishResult);
+            addSkuReq.source = skuSource;
             const skuId = await addSku(addSkuReq) as number;
             skuPublishResult.id = skuId;
             publishHandler.release();
@@ -321,14 +323,14 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-    async batchPublishSkus(publishResourceId : number, publishConfig: SkuPublishConfig, skuUrls : string[]) : Promise<SkuTask|undefined>{
+    async batchPublishSkus(publishResourceId : number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls : string[]) : Promise<SkuTask|undefined>{
         // 1. 创建task记录
         const count = skuUrls.length;
         const priceRate = publishConfig.priceRate;
-        const req = new AddSkuTaskReq(count, publishResourceId, "", priceRate);
+        const req = new AddSkuTaskReq(count, publishResourceId, skuSource,  "", priceRate);
         const taskId = await addSkuTask(req) as number;
 
-        const skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId, publishConfig);
+        const skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId, skuSource, publishConfig);
         // 异步操作
         this.asyncBatchPublishSku(skuTask, skuUrls);
         //返回任务
@@ -361,10 +363,10 @@ export class MbSkuApiImpl extends MbSkuApi {
                     break;
                 }
 
-                const taskItem = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.SUCCESS, taskRemark);
+                const taskItem = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.SUCCESS, task.source, taskRemark);
 
                 //发布商品
-                const skuResult = await this.publishSku(task.publishResourceId, skuUrl, task.id, task.skuPublishConfig);
+                const skuResult = await this.publishSku(task.publishResourceId, task.source, skuUrl, task.id, task.skuPublishConfig);
                 skuResult.key = progress;
                 if(skuResult.status == SkuStatus.ERROR){
                     statistic.errorNum = statistic.errorNum + 1;

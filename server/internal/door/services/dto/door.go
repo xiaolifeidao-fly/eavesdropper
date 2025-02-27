@@ -100,6 +100,9 @@ type DoorSkuSaleInfoDTO struct {
 	Barcode      string       `json:"barcode"`      // 商品条形码
 	SubStock     string       `json:"subStock"`     // 拍下减库存, 必填, 0: 不减库存, 1: 拍下减库存
 	ShelfTime    ShelfTimeDTO `json:"shelfTime"`    // 上架时间, 必填, 0: 立刻上架, 1: 定时上架, 2: 放入仓库
+
+	ReviewNum string `json:"reviewNum"` // 商品评论
+	SaleNum   string `json:"saleNum"`   // 商品销售量
 }
 
 // SetRequiredDefault 设置必填字段默认值

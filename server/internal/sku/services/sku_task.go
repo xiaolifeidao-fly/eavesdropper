@@ -42,6 +42,10 @@ func UpdateSkuTask(skuTaskUpdateDTO *dto.UpdateSkuTaskDTO) error {
 		return err
 	}
 
+	for _, item := range skuTaskUpdateDTO.Items {
+		item.Source = skuTaskDTO.Source
+	}
+
 	// 更新任务项
 	if err = BatchAddSkuTaskItem(skuTaskUpdateDTO.Items); err != nil {
 		return err
