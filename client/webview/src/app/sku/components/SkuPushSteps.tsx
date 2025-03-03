@@ -21,7 +21,7 @@ interface PushSkuStepsFormProps {
 
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
 
-  const [skuSource, setSkuSource] = useState<string>("taobao");
+  const [skuSource, setSkuSource] = useState<string>("pdd");
   const [sourceList, setSourceList] = useState<{}[]>([]); // 链接来源列表
   const [sourceAccount, setSourceAccount] = useState<number>(0);
   const [pushConfig, setPushConfig] = useState<SkuPublishConfig>(new SkuPublishConfig());

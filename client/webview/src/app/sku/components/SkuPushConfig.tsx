@@ -18,24 +18,7 @@ export interface SukPushConfigProp {
 const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
 
   const [account, setAccount] = useState<number>();
-  const [sourceList, setSourceList] = useState<{}[]>([]);
   const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    initSourceAccount();
-  }, []);
-
-  const initSourceAccount = async () => {
-    const shopList = await getShopList();
-    const sourceList: {}[] = [];
-    for (const shop of shopList) {
-      sourceList.push({
-        value: shop.resourceId,
-        label: shop.name
-      })
-    }
-    setSourceList(sourceList);
-  }
 
   const stepTitles = [
     "请选择资源账号",
@@ -95,10 +78,25 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
               name="sourceAccoun"
               label="资源账号"
               placeholder="请选择资源账号"
-              options={sourceList}
+              fieldProps={{value: account}}
               onChange={(value: number) => {
                 setAccount(value);
                 props.setSourceAccount(value)
+              }}
+              request={async () => {
+                const shopList = await getShopList();
+                const sourceList: {value: number, label: string}[] = [];
+                for (const shop of shopList) {
+                  sourceList.push({
+                    value: shop.resourceId,
+                    label: shop.name
+                  })
+                }
+                if (sourceList.length !== 0) {
+                  console.log(sourceList[0]);
+                  setAccount(sourceList[0].value)
+                }
+                return sourceList
               }}
               required
             />
