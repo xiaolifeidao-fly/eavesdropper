@@ -2,8 +2,10 @@ package services
 
 import (
 	"fmt"
+	"server/common/ai"
 	"server/common/base"
 	"server/common/encryption"
+	"server/common/http"
 	"server/common/middleware/database"
 	"server/common/middleware/storage/oss"
 	"server/internal/door/models"
@@ -169,7 +171,11 @@ func CreateDoorSkuCatProp(doorSkuCatPropDTO []*dto.DoorSkuCatPropDTO) error {
 	return nil
 }
 
-func GetDoorSkuCatPropsByAi(params *map[string]interface{}) ([]*dto.DoorSkuCatPropDTO, error) {
+func GetDoorSkuCatPropsByAi(params map[string]string) ([]*dto.DoorSkuCatPropDTO, error) {
 	// // http 请求 ai 服务
-
+	body, err := http.Post(ai.Entity.Url, nil, params, nil)
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
 }

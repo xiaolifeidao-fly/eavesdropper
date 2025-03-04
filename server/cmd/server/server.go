@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"server/app"
+	"server/common/ai"
 	"server/common/middleware/config"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
@@ -55,6 +56,9 @@ func setup() {
 
 	// oss初始化
 	oss.Setup(oss.Entity)
+
+	// ai初始化
+	ai.Setup(ai.Entity)
 }
 
 func tip() {
