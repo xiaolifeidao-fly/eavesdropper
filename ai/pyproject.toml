@@ -1,3 +1,8 @@
+[[tool.poetry.source]]
+name = "tuna"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
+
 [tool.poetry]
 name = "ai"
 version = "0.1.0"
