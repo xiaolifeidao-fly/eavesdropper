@@ -43,9 +43,13 @@ func GetDoorCatPropsByAi(ctx *gin.Context) {
 }
 
 func SaveDoorCatProp(ctx *gin.Context) {
-	var doorCatPropDTO []*dto.DoorCatPropDTO
-	controller.Bind(ctx, &doorCatPropDTO)
-	err := services.CreateDoorCatProp(doorCatPropDTO)
+	var doorCatPropDTOs []*dto.DoorCatPropDTO
+	err := ctx.BindJSON(&doorCatPropDTOs)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	err = services.CreateDoorCatProp(doorCatPropDTOs)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return
