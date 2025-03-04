@@ -95,6 +95,12 @@ export class UpdateDraftStep extends AbsPublishStep {
     }
 
     fixRequiredData(draftData: { [key: string]: any }, skuItem: SkuItem, commonData: { [key: string]: any }){
+        const catPropDataSource = commonData.data.models.catProp.dataSource;
+        for(const catProp of catPropDataSource){
+            if(catProp.required) {
+                log.info(catProp.lable," catProp is required name is ", catProp.name);
+            }
+        }
         const components = commonData.data.components;
         for(const key in components){
             const component = components[key];

@@ -20,6 +20,18 @@ func (u *DoorRecord) TableName() string {
 	return "door_record"
 }
 
+type DoorSkuCatProp struct {
+	database.BaseEntity
+	ItemKey   string `json:"item_key"`
+	Source    string `json:"source"`
+	PropKey   string `json:"prop_key"`
+	PropValue string `json:"prop_value"`
+}
+
+func (u *DoorSkuCatProp) TableName() string {
+	return "door_sku_cat_prop"
+}
+
 type DoorFileRecord struct {
 	database.BaseEntity
 	ResourceId uint64 `json:"resource_id"`

@@ -7,9 +7,26 @@ import axios from "axios";
 import { AddressTemplate } from "@model/address/address";
 import log from "electron-log";
 
+function getKeywords(keywords : string){
+    if(keywords.includes(";")){
+        return keywords.split(";")[0];
+    }
+    if(keywords.includes("；")){
+        return keywords.split("；")[0];
+    }
+    if(keywords.includes("，")){
+        return keywords.split("，")[0];
+    }
+    if(keywords.includes(",")){
+        return keywords.split(",")[0];
+    }
+    return keywords;
+}
+
 export async function getOrSaveTemplateId(resourceId: number, skuItem: DoorSkuDTO) {
     const logisticsMode = skuItem.doorSkuLogisticsInfo;
-    const address = await getAddressByKeywordsAndResourceId(logisticsMode.deliveryFromAddr, resourceId);
+    const keywords = getKeywords(logisticsMode.deliveryFromAddr);
+    const address = await getAddressByKeywordsAndResourceId(keywords, resourceId);
     if (address) {
         return address.templateId;
     }
@@ -44,7 +61,7 @@ async function postAddress(resourceId : number, tbToken: string, skuItem: DoorSk
         "cookie": headerData['cookie'],
         "user-agent": headerData['user-agent']
     }
-    const keywords = skuItem.doorSkuLogisticsInfo.deliveryFromAddr;
+    const keywords = getKeywords(skuItem.doorSkuLogisticsInfo.deliveryFromAddr);
     const address = await getAddressByKeywords(keywords);
     const defaultTemplateId = "64723339970";
     if(!address){

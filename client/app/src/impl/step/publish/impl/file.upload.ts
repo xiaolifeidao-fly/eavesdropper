@@ -23,6 +23,7 @@ export class SkuPublishFileUploadStep extends StepUnit{
         if(!imageFileList || imageFileList.length === 0){
             return new StepResult(false, "上传图片失败");
         }
+        this.setParams("skuItem", skuItem);
         return new StepResult(true, "上传成功", [
             new StepResponse("imageFileList", imageFileList)
         ]);

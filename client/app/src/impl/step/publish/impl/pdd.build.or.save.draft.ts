@@ -1,42 +1,40 @@
-import { MbEngine } from "@src/door/mb/mb.engine";
-import { StepResponse, StepResult, StepUnit } from "../../step.unit";
-import { AbsPublishStep, confirmProtocol } from "./abs.publish";
-import { activeSkuDraft, getSkuDraft } from "@api/sku/sku.draft";
-import { MbSkuPublishDraffMonitor } from "@src/door/monitor/mb/sku/md.sku.info.monitor";
-import { Page } from "playwright-core";
 import log from "electron-log"
 import { SkuFileDetail } from "@model/sku/sku.file";
-import { DoorEntity } from "@src/door/entity";
 import { DoorSkuDTO, SalesAttr, SkuItem } from "@model/door/sku";
-import { PriceRangeConfig } from "@model/sku/skuTask";
-import axios from "axios";
-import { getOrSaveTemplateId } from "@src/door/mb/logistics/logistics";
 import { SkuBuildDraftStep } from "./build.or.save.draft";
+import { RebuildSalePro } from "../sku.sale.config";
 
-async function doAction(page: Page, ...doActionParams: any[]) {
-    await page.waitForTimeout(1000);
-    await confirmProtocol(page);
-    await clickSaveDraf(page);
-}
-
-async function clickSaveDraf(page: Page) {
-    // 保存草稿
-    await page.locator(".sell-draft-save-btn button").click();
-}
 
 
 export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
 
 
-    async fillSellInfo(commonData: { data: any }, skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[], saleProp: { [key: string]: { [key: string]: any }[] } }) {
+    override async fillSellInfo(commonData: { data: any }, skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[], saleProp: { [key: string]: { [key: string]: any }[] } }) {
         draftData.price = await this.getPrice(Number(skuItem.doorSkuSaleInfo.price));
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
-        await this.fillSellProp(commonData, skuItem, draftData);
+        const salePropSubItems = commonData.data.components.saleProp.props.subItems;
+        log.info("fillSellInfo start ", salePropSubItems);
+        const rebuildSalePro = new RebuildSalePro();
+        const saleMappers = rebuildSalePro.fixAndAssign(skuItem.doorSkuSaleInfo, salePropSubItems);
+        for(let saleMapper of saleMappers){
+            log.info("saleMapper is ", JSON.stringify(saleMapper.saleAttr));
+        }
+        const saleProps = rebuildSalePro.buildSaleProp(saleMappers, skuItem.doorSkuSaleInfo);
+        draftData.saleProp = saleProps;
+        log.info("saleProps is ", JSON.stringify(saleProps));
+
+        log.info("saleProps sku is ", JSON.stringify(skuItem.doorSkuSaleInfo.salesSkus));
+
         await this.fillSellSku(skuItem, draftData);
+    }
+
+    async fixSaleProp(commonData: { data: any }, skuItem: DoorSkuDTO) {
+
     }
 
     fixSkuSaleImages(imageFileList: SkuFileDetail[], skuItem: DoorSkuDTO): void {
         const salesAttrs = skuItem.doorSkuSaleInfo.salesAttr;
+
         for (let salesAttr in salesAttrs){
             const salesAttrValue = salesAttrs[salesAttr];
             if(!salesAttrValue){
@@ -181,70 +179,6 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
             }
         }
         draftData.saleProp = salePropInfo;
-    }
-    
-
-    async fixSaleProp(commonData: { data: any }, skuItem: DoorSkuDTO) {
-        let salesAttrs = skuItem.doorSkuSaleInfo.salesAttr;
-        const salePropSubItems = commonData.data.components.saleProp.props.subItems;
-        log.info("salePropSubItems fix start ");
-        const newSalesAttrs: { [key: string]: any } = {};
-        for(let subItemKey in salePropSubItems){
-            const subItem = salePropSubItems[subItemKey];
-            const tbLabel = subItem.label;
-            log.info("tbLabel is ", tbLabel);
-            for (let key in salesAttrs) {
-                const salesAttr = salesAttrs[key];
-                if (!salesAttr) {
-                    continue;
-                }
-                const pddLabel = salesAttr.label;
-                if(pddLabel == tbLabel || pddLabel.includes(tbLabel) || tbLabel.includes(pddLabel)){
-                    log.info("pddLabel is ", pddLabel);
-                    salesAttr.oldPid = salesAttr.pid;
-                    const subItemName = subItem.name;
-                    const newPid = subItem.name.split("-")[1];
-                    salesAttr.pid = newPid;
-                    newSalesAttrs[subItemName] = salesAttr;
-                }
-            }
-        }
-        skuItem.doorSkuSaleInfo.salesAttr = newSalesAttrs;
-        salesAttrs = newSalesAttrs;
-         for (let key in salesAttrs) {
-            const salesAttr = salesAttrs[key];
-            if (!salesAttr) {
-                continue;
-            }
-            log.info("fixSaleProp key is ", key);
-            const salesAttrValues = salesAttr.values;
-            if (!(key in salePropSubItems)) {
-                continue;
-            }
-            const salePropSubItem = salePropSubItems[key];
-            if ('subItems' in salePropSubItem) {
-                salesAttr.isSaleAddValues = true;
-            }
-            for (let salesAttrValue of salesAttrValues) {
-                salesAttrValue.value = this.getFixValue(salePropSubItem, salesAttrValue.value);
-            }
-        }
-        const salesSkus = skuItem.doorSkuSaleInfo.salesSkus;
-        for(let saleSku of salesSkus) {
-            const salePropPath = saleSku.salePropPath;
-            const saleProps = salePropPath.split(";");
-            const salePropKey = [];
-            for (const saleProp of saleProps) {
-                const salePropIds = saleProp.split(":");
-                const pddPid = salePropIds[0];
-                const tbPid = this.getTbPid(pddPid, salesAttrs);
-                const key = "p-" + tbPid;
-                const salePropSubItem = salePropSubItems[key];
-                const newValue = this.getFixValue(salePropSubItem, salePropIds[1]);
-                salePropKey.push(tbPid + ":" + newValue);
-            }
-            saleSku.salePropPath = salePropKey.join(";");
-        }
     }
 
     getTbPid(pddPid: string, salesAttrs: { [key: string]: any }) {
