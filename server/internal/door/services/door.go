@@ -2,10 +2,10 @@ package services
 
 import (
 	"fmt"
-	"server/common/ai"
 	"server/common/base"
 	"server/common/encryption"
 	"server/common/http"
+	"server/common/middleware/ai"
 	"server/common/middleware/database"
 	"server/common/middleware/storage/oss"
 	"server/internal/door/models"
@@ -17,7 +17,7 @@ import (
 var doorRecordRepository = database.NewRepository[repositories.DoorRecordRepository]()
 var doorFileRecordRepository = database.NewRepository[repositories.DoorFileRecordRepository]()
 var searchSkuRecordRepository = database.NewRepository[repositories.SearchSkuRecordRepository]()
-var doorSkuCatPropRepository = database.NewRepository[repositories.DoorSkuCatPropRepository]()
+var doorCatPropRepository = database.NewRepository[repositories.DoorCatPropRepository]()
 
 func FindByDoorKeyAndItemKeyAndType(doorKey string, itemKey string, itemType string) (*dto.DoorRecordDTO, error) {
 	doorRecord, err := doorRecordRepository.FindByDoorKeyAndItemKeyAndType(doorKey, itemKey, itemType)
@@ -144,26 +144,26 @@ func CreateSearchSkuRecord(searchSkuRecordDTO *dto.SearchSkuRecordDTO) (*dto.Sea
 	return database.ToDTO[dto.SearchSkuRecordDTO](saveSearchSkuRecord), nil
 }
 
-func GetDoorSkuCatProps(source string, itemKey string) ([]*dto.DoorSkuCatPropDTO, error) {
-	doorSkuCatProps, err := doorSkuCatPropRepository.FindBySourceAndItemKey(source, itemKey)
+func GetDoorCatProps(source string, itemKey string) ([]*dto.DoorCatPropDTO, error) {
+	doorCatProps, err := doorCatPropRepository.FindBySourceAndItemKey(source, itemKey)
 	if err != nil {
 		return nil, err
 	}
-	return database.ToDTOs[dto.DoorSkuCatPropDTO](doorSkuCatProps), nil
+	return database.ToDTOs[dto.DoorCatPropDTO](doorCatProps), nil
 }
 
-func CreateDoorSkuCatProp(doorSkuCatPropDTO []*dto.DoorSkuCatPropDTO) error {
-	for _, doorSkuCatPropDTO := range doorSkuCatPropDTO {
-		doorSkuCatProp, err := doorSkuCatPropRepository.FindBySourceAndItemKeyAndPropKey(doorSkuCatPropDTO.Source, doorSkuCatPropDTO.ItemKey, doorSkuCatPropDTO.PropKey)
+func CreateDoorCatProp(doorCatPropDTO []*dto.DoorCatPropDTO) error {
+	for _, doorCatPropDTO := range doorCatPropDTO {
+		doorCatProp, err := doorCatPropRepository.FindBySourceAndItemKeyAndPropKey(doorCatPropDTO.Source, doorCatPropDTO.ItemKey, doorCatPropDTO.PropKey)
 		if err != nil {
 			return err
 		}
-		if doorSkuCatProp != nil {
-			doorSkuCatProp.PropValue = doorSkuCatPropDTO.PropValue
+		if doorCatProp != nil {
+			doorCatProp.PropValue = doorCatPropDTO.PropValue
 		} else {
-			doorSkuCatProp = database.ToPO[models.DoorSkuCatProp](doorSkuCatPropDTO)
+			doorCatProp = database.ToPO[models.DoorCatProp](doorCatPropDTO)
 		}
-		_, err = doorSkuCatPropRepository.SaveOrUpdate(doorSkuCatProp)
+		_, err = doorCatPropRepository.SaveOrUpdate(doorCatProp)
 		if err != nil {
 			return err
 		}
@@ -171,11 +171,19 @@ func CreateDoorSkuCatProp(doorSkuCatPropDTO []*dto.DoorSkuCatPropDTO) error {
 	return nil
 }
 
-func GetDoorSkuCatPropsByAi(params map[string]string) ([]*dto.DoorSkuCatPropDTO, error) {
+func GetDoorCatPropsByAi(params map[string]interface{}) (any, error) {
 	// // http 请求 ai 服务
-	body, err := http.Post(ai.Entity.Url, nil, params, nil)
+	header := map[string]string{
+		"Content-Type": "application/json",
+	}
+	body, err := http.Post(ai.Entity.Url, params, "", header)
 	if err != nil {
 		return nil, err
+	}
+	if body != nil {
+		if body["code"] == float64(0) {
+			return body["data"], nil
+		}
 	}
 	return nil, nil
 }

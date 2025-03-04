@@ -11,7 +11,6 @@ from abc import abstractmethod
 from lib.settings.configuration import config
 model = config.get("TBK", "model")
 
-llm = OpenAi(model=model, temperature=1.0, timeout=60)
 
 
 
@@ -35,6 +34,7 @@ class AiProcessor:
     
     def do_ai(self) -> List[dict] | dict | None:
         log.info("do ai params is %s", self.params)
+        llm = OpenAi(model=model, temperature=1.0, timeout=60)
         rag_prompt_template = PromptTemplate(
                                     template=self.build_prompt(),
                                     **self.rebuild_params(self.params))

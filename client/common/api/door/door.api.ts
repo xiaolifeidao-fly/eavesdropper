@@ -47,16 +47,20 @@ export const searchSkuRecord = async (searchType: string, title: string) : Promi
     return await getData(SearchSkuRecord, "/doors/sku/search", params);
 }
 
-export const saveDoorSkuCatProp = async (doorSkuCatProp: DoorSkuCatProp[]) : Promise<any> => {
-    return await instance.post("/doors/sku/cat/prop/save", doorSkuCatProp);
+export const saveDoorCatProp = async (doorSkuCatProp: DoorSkuCatProp[]) : Promise<any> => {
+    return await instance.post("/doors/cat/prop/save", doorSkuCatProp);
 }
 
-export const getDoorSkuCatProps = async (source: string, itemKey: string) : Promise<DoorSkuCatProp[]> => {
+export const getDoorCatProps = async (source: string, itemKey: string) : Promise<DoorSkuCatProp[]> => {
     const params = {
         source : source,
         itemKey : itemKey
     }
-    return await getDataList(DoorSkuCatProp, "/doors/sku/cat/prop/get", params);
+    return await getDataList(DoorSkuCatProp, "/doors/cat/prop/get", params);
+}
+
+export const getDoorCatPropsByAi = async (params: {[key : string] : any}) : Promise<{code : string, value : string}[]> => {
+    return await instance.post("/doors/cat/prop/ai", params);
 }
 
 

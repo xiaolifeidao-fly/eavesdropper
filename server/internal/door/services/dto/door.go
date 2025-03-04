@@ -17,7 +17,7 @@ type DoorRecordDTO struct {
 	OssUrl     string    `json:"ossUrl"`
 }
 
-type DoorSkuCatPropDTO struct {
+type DoorCatPropDTO struct {
 	dto.BaseDTO
 	ItemKey   string `json:"itemKey"`
 	Source    string `json:"source"`

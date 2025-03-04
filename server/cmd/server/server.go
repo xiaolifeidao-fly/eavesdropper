@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"server/app"
-	"server/common/ai"
+	"server/common/middleware/ai"
 	"server/common/middleware/config"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"

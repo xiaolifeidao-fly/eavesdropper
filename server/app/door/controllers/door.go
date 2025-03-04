@@ -21,27 +21,31 @@ func LoadDoorRouter(router *gin.RouterGroup) {
 		r.POST("/sku/parse/:source", ParseDoorSkuInfo)
 		r.GET("/sku/search", SearchSkuRecord)
 		r.POST("/sku/search/save", SaveSearchSkuRecord)
-		r.POST("/sku/cat/prop/save", SaveDoorSkuCatProp)
-		r.GET("/sku/cat/prop/get", GetDoorSkuCatProps)
-		r.GET("/sku/cat/prop/ai", GetDoorSkuCatPropsByAi)
+		r.POST("/cat/prop/save", SaveDoorCatProp)
+		r.GET("/cat/prop/get", GetDoorCatProps)
+		r.POST("/cat/prop/ai", GetDoorCatPropsByAi)
 	}
 }
 
-func GetDoorSkuCatPropsByAi(ctx *gin.Context) {
+func GetDoorCatPropsByAi(ctx *gin.Context) {
 	params := map[string]interface{}{}
-	controller.Bind(ctx, &params)
-	doorSkuCatProps, err := services.GetDoorSkuCatPropsByAi(&params)
+	err := ctx.BindJSON(&params)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return
 	}
-	controller.OK(ctx, doorSkuCatProps)
+	result, err := services.GetDoorCatPropsByAi(params)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, result)
 }
 
-func SaveDoorSkuCatProp(ctx *gin.Context) {
-	var doorSkuCatPropDTO []*dto.DoorSkuCatPropDTO
-	controller.Bind(ctx, &doorSkuCatPropDTO)
-	err := services.CreateDoorSkuCatProp(doorSkuCatPropDTO)
+func SaveDoorCatProp(ctx *gin.Context) {
+	var doorCatPropDTO []*dto.DoorCatPropDTO
+	controller.Bind(ctx, &doorCatPropDTO)
+	err := services.CreateDoorCatProp(doorCatPropDTO)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return
@@ -49,15 +53,15 @@ func SaveDoorSkuCatProp(ctx *gin.Context) {
 	controller.OK(ctx, "success")
 }
 
-func GetDoorSkuCatProps(ctx *gin.Context) {
+func GetDoorCatProps(ctx *gin.Context) {
 	source := ctx.Query("source")
 	itemKey := ctx.Query("itemKey")
-	doorSkuCatProps, err := services.GetDoorSkuCatProps(source, itemKey)
+	doorCatProps, err := services.GetDoorCatProps(source, itemKey)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return
 	}
-	controller.OK(ctx, doorSkuCatProps)
+	controller.OK(ctx, doorCatProps)
 }
 
 func SearchSkuRecord(ctx *gin.Context) {
