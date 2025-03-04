@@ -2,6 +2,7 @@
 name = "aliyun"
 url = "https://mirrors.aliyun.com/pypi/simple/"
 default = true
+
 [tool.poetry]
 name = "ai"
 version = "0.1.0"
