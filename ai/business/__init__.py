@@ -34,6 +34,7 @@ class AiProcessor:
         pass
     
     def do_ai(self) -> List[dict] | dict | None:
+        log.info("do ai params is %s", self.params)
         rag_prompt_template = PromptTemplate(
                                     template=self.build_prompt(),
                                     **self.rebuild_params(self.params))
