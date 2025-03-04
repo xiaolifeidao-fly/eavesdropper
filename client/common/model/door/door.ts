@@ -71,3 +71,19 @@ export class SearchSkuRecord {
         this.skuId = skuId;
     }
 }
+
+export class DoorSkuCatProp {
+    id: number | undefined;
+    source: string;
+    itemKey: string;
+    propKey: string;
+    propValue: string;
+
+    constructor(id: number | undefined, source: string, itemKey: string, propKey: string, propValue: string) {
+        this.id = id;
+        this.source = source;
+        this.itemKey = itemKey;
+        this.propKey = propKey;
+        this.propValue = propValue;
+    }
+}

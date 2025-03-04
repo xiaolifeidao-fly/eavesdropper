@@ -21,7 +21,43 @@ func LoadDoorRouter(router *gin.RouterGroup) {
 		r.POST("/sku/parse/:source", ParseDoorSkuInfo)
 		r.GET("/sku/search", SearchSkuRecord)
 		r.POST("/sku/search/save", SaveSearchSkuRecord)
+		r.POST("/sku/cat/prop/save", SaveDoorSkuCatProp)
+		r.GET("/sku/cat/prop/get", GetDoorSkuCatProps)
+		r.GET("/sku/cat/prop/ai", GetDoorSkuCatPropsByAi)
 	}
+}
+
+func GetDoorSkuCatPropsByAi(ctx *gin.Context) {
+	params := map[string]interface{}{}
+	controller.Bind(ctx, &params)
+	doorSkuCatProps, err := services.GetDoorSkuCatPropsByAi(&params)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, doorSkuCatProps)
+}
+
+func SaveDoorSkuCatProp(ctx *gin.Context) {
+	var doorSkuCatPropDTO []*dto.DoorSkuCatPropDTO
+	controller.Bind(ctx, &doorSkuCatPropDTO)
+	err := services.CreateDoorSkuCatProp(doorSkuCatPropDTO)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, "success")
+}
+
+func GetDoorSkuCatProps(ctx *gin.Context) {
+	source := ctx.Query("source")
+	itemKey := ctx.Query("itemKey")
+	doorSkuCatProps, err := services.GetDoorSkuCatProps(source, itemKey)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, doorSkuCatProps)
 }
 
 func SearchSkuRecord(ctx *gin.Context) {

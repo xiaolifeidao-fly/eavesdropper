@@ -21,6 +21,14 @@ type DoorFileRecordRepository struct {
 	database.Repository[*models.DoorFileRecord]
 }
 
+type DoorSkuCatPropRepository struct {
+	database.Repository[*models.DoorSkuCatProp]
+}
+
+func (r *DoorSkuCatPropRepository) FindBySourceAndItemKey(source string, itemKey string) ([]*models.DoorSkuCatProp, error) {
+	return r.GetList("select * from door_sku_cat_prop where source = ? and item_key = ?", source, itemKey)
+}
+
 func (r *DoorFileRecordRepository) FindBySourceAndFileId(source string, fileId string, resourceId uint64) (*models.DoorFileRecord, error) {
 	return r.GetOne("select * from door_file_record where source = ? and file_id = ? and resource_id = ?", source, fileId, resourceId)
 }
@@ -31,4 +39,8 @@ func (r *DoorFileRecordRepository) FindBySourceAndResourceIdAndFileKey(source st
 
 func (r *SearchSkuRecordRepository) FindBySearchTypeAndTitle(searchType string, title string) (*models.SearchSkuRecord, error) {
 	return r.GetOne("select * from search_sku_record where type = ? and title = ? order by id desc limit 1", searchType, title)
+}
+
+func (r *DoorSkuCatPropRepository) FindBySourceAndItemKeyAndPropKey(source string, itemKey string, propKey string) (*models.DoorSkuCatProp, error) {
+	return r.GetOne("select * from door_sku_cat_prop where source = ? and item_key = ? and prop_key = ?", source, itemKey, propKey)
 }

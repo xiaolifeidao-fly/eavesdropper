@@ -15,6 +15,7 @@ import (
 var doorRecordRepository = database.NewRepository[repositories.DoorRecordRepository]()
 var doorFileRecordRepository = database.NewRepository[repositories.DoorFileRecordRepository]()
 var searchSkuRecordRepository = database.NewRepository[repositories.SearchSkuRecordRepository]()
+var doorSkuCatPropRepository = database.NewRepository[repositories.DoorSkuCatPropRepository]()
 
 func FindByDoorKeyAndItemKeyAndType(doorKey string, itemKey string, itemType string) (*dto.DoorRecordDTO, error) {
 	doorRecord, err := doorRecordRepository.FindByDoorKeyAndItemKeyAndType(doorKey, itemKey, itemType)
@@ -139,4 +140,36 @@ func CreateSearchSkuRecord(searchSkuRecordDTO *dto.SearchSkuRecordDTO) (*dto.Sea
 		return nil, err
 	}
 	return database.ToDTO[dto.SearchSkuRecordDTO](saveSearchSkuRecord), nil
+}
+
+func GetDoorSkuCatProps(source string, itemKey string) ([]*dto.DoorSkuCatPropDTO, error) {
+	doorSkuCatProps, err := doorSkuCatPropRepository.FindBySourceAndItemKey(source, itemKey)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTOs[dto.DoorSkuCatPropDTO](doorSkuCatProps), nil
+}
+
+func CreateDoorSkuCatProp(doorSkuCatPropDTO []*dto.DoorSkuCatPropDTO) error {
+	for _, doorSkuCatPropDTO := range doorSkuCatPropDTO {
+		doorSkuCatProp, err := doorSkuCatPropRepository.FindBySourceAndItemKeyAndPropKey(doorSkuCatPropDTO.Source, doorSkuCatPropDTO.ItemKey, doorSkuCatPropDTO.PropKey)
+		if err != nil {
+			return err
+		}
+		if doorSkuCatProp != nil {
+			doorSkuCatProp.PropValue = doorSkuCatPropDTO.PropValue
+		} else {
+			doorSkuCatProp = database.ToPO[models.DoorSkuCatProp](doorSkuCatPropDTO)
+		}
+		_, err = doorSkuCatPropRepository.SaveOrUpdate(doorSkuCatProp)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func GetDoorSkuCatPropsByAi(params *map[string]interface{}) ([]*dto.DoorSkuCatPropDTO, error) {
+	// // http 请求 ai 服务
+
 }
