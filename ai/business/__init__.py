@@ -1,5 +1,5 @@
 
-from typing import Optional
+from typing import Any, Optional
 from llm.openai import OpenAi
 from lib.utils import log
 from typing import List,Optional
@@ -21,12 +21,16 @@ class AiProcessor:
 
     def process(self) -> Optional[dict] | List[dict]:
         try:
-            return self.do_ai()
+            response = self.do_ai()
+            return self.process_response(response)
         except Exception as e:
             log.error("AiProcessor process error %s", e)
 
     def rebuild_params(self, params : dict) -> dict:
         return params
+    
+    def process_response(self, response : Any) -> Any:
+        return response
 
     @abstractmethod
     def build_prompt(self) -> str:
