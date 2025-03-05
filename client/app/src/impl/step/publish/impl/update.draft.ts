@@ -9,7 +9,7 @@ import { DoorSkuCatProp } from "@model/door/door";
 
 
 
-const excludeCatProp = ["'p-20000"];
+const excludeCatProp = ["p-20000"];
 
 
 
@@ -275,7 +275,7 @@ export class UpdateDraftStep extends AbsPublishStep {
                 "data" : requestAiParams
             }
         }
-        log.info("fixDataSourceByAI requestAiParams is", params);
+        log.info("fixDataSourceByAI requestAiParams is", JSON.stringify(params));
         const aiResult : any[] = await getDoorCatPropsByAI(params);
         if(aiResult && aiResult.length > 0){
             const doorCatProps : DoorSkuCatProp[] = [];

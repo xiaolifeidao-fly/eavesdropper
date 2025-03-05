@@ -39,3 +39,4 @@ client/app/static/**/*
 
 **/config.ini
 **/*.out
+**/*.tar.gz
