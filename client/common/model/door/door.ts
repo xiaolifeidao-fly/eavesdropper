@@ -77,9 +77,9 @@ export class DoorSkuCatProp {
     source: string;
     itemKey: string;
     propKey: string;
-    propValue: string;
+    propValue: any;
 
-    constructor(id: number | undefined, source: string, itemKey: string, propKey: string, propValue: string) {
+    constructor(id: number | undefined, source: string, itemKey: string, propKey: string, propValue: any) {
         this.id = id;
         this.source = source;
         this.itemKey = itemKey;
