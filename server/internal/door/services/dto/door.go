@@ -17,6 +17,14 @@ type DoorRecordDTO struct {
 	OssUrl     string    `json:"ossUrl"`
 }
 
+type DoorCatPropDTO struct {
+	dto.BaseDTO
+	ItemKey   string `json:"itemKey"`
+	Source    string `json:"source"`
+	PropKey   string `json:"propKey"`
+	PropValue string `json:"propValue"`
+}
+
 type DoorFileRecordDTO struct {
 	dto.BaseDTO
 	ResourceId uint64 `json:"resourceId"`

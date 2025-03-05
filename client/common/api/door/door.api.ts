@@ -1,5 +1,5 @@
 import { DoorSkuDTO } from "@model/door/sku";
-import { ActionCommand, DoorRecord, SearchSkuRecord } from "@model/door/door"
+import { ActionCommand, DoorRecord, DoorSkuCatProp, SearchSkuRecord } from "@model/door/door"
 import { getData, getDataList,instance } from "@utils/axios"
 import { plainToClass } from "class-transformer";
 
@@ -45,6 +45,22 @@ export const searchSkuRecord = async (searchType: string, title: string) : Promi
         title : title
     }
     return await getData(SearchSkuRecord, "/doors/sku/search", params);
+}
+
+export const saveDoorCatProp = async (doorSkuCatProp: DoorSkuCatProp[]) : Promise<any> => {
+    return await instance.post("/doors/cat/prop/save", doorSkuCatProp);
+}
+
+export const getDoorCatProps = async (source: string, itemKey: string) : Promise<DoorSkuCatProp[]> => {
+    const params = {
+        source : source,
+        itemKey : itemKey
+    }
+    return await getDataList(DoorSkuCatProp, "/doors/cat/prop/get", params);
+}
+
+export const getDoorCatPropsByAi = async (params: {[key : string] : any}) : Promise<{code : string, value : string}[]> => {
+    return await instance.post("/doors/cat/prop/ai", params);
 }
 
 

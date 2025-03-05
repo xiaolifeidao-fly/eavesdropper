@@ -21,7 +21,7 @@ export class SearchSkuApiImpl extends SearchSkuApi{
         if(skuId){
             return skuId;
         }
-        const engine = new MbEngine(publishResourceId, false);
+        const engine = new MbEngine(publishResourceId);
         try{
             const page = await engine.init();
             if(!page){

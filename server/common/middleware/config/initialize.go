@@ -1,6 +1,7 @@
 package config
 
 import (
+	"server/common/middleware/ai"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
 	"server/common/middleware/server"
@@ -29,6 +30,7 @@ type Config struct {
 	Database *database.DatabaseEntity `json:"database"`
 	Cache    *cache.CacheEntity       `json:"cache"`
 	Oss      *oss.OssEntity           `json:"oss"`
+	Ai       *ai.AiEntity             `json:"ai"`
 }
 
 // Setup 初始化配置
@@ -42,6 +44,7 @@ func Setup(configPath string) error {
 			Database: database.Config,
 			Cache:    cache.Entity,
 			Oss:      oss.Entity,
+			Ai:       ai.Entity,
 		},
 	}
 

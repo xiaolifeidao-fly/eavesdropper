@@ -33,6 +33,7 @@ config:
     bucketName:
     accessKeyId: 
     accessKeySecret: 
-
+  ai:
+    url: http://127.0.0.1:8888/chat
 
     

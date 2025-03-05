@@ -48,7 +48,7 @@ export class PddSkuPublishHandler extends StepHandler {
         stepConfig.register("PddSkuGetStep", PddSkuGetStep)
         stepConfig.register("SearchSkuStep", TbSearchStep)
         stepConfig.register("SkuPublishFileUploadStep", SkuPublishFileUploadStep)
-        stepConfig.register("SkuBuildDraftStep", PddSkuBuildDraftStep)
+        stepConfig.register("PddSkuBuildDraftStep", PddSkuBuildDraftStep)
         stepConfig.register("UpdateDraftStep", UpdateDraftStep)
         stepConfig.register("PublishSkuStep", PublishSkuStep)
         return stepConfig;

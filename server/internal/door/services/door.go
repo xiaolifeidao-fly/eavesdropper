@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"server/common/base"
 	"server/common/encryption"
+	"server/common/http"
+	"server/common/middleware/ai"
 	"server/common/middleware/database"
 	"server/common/middleware/storage/oss"
 	"server/internal/door/models"
@@ -15,6 +17,7 @@ import (
 var doorRecordRepository = database.NewRepository[repositories.DoorRecordRepository]()
 var doorFileRecordRepository = database.NewRepository[repositories.DoorFileRecordRepository]()
 var searchSkuRecordRepository = database.NewRepository[repositories.SearchSkuRecordRepository]()
+var doorCatPropRepository = database.NewRepository[repositories.DoorCatPropRepository]()
 
 func FindByDoorKeyAndItemKeyAndType(doorKey string, itemKey string, itemType string) (*dto.DoorRecordDTO, error) {
 	doorRecord, err := doorRecordRepository.FindByDoorKeyAndItemKeyAndType(doorKey, itemKey, itemType)
@@ -139,4 +142,48 @@ func CreateSearchSkuRecord(searchSkuRecordDTO *dto.SearchSkuRecordDTO) (*dto.Sea
 		return nil, err
 	}
 	return database.ToDTO[dto.SearchSkuRecordDTO](saveSearchSkuRecord), nil
+}
+
+func GetDoorCatProps(source string, itemKey string) ([]*dto.DoorCatPropDTO, error) {
+	doorCatProps, err := doorCatPropRepository.FindBySourceAndItemKey(source, itemKey)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTOs[dto.DoorCatPropDTO](doorCatProps), nil
+}
+
+func CreateDoorCatProp(doorCatPropDTO []*dto.DoorCatPropDTO) error {
+	for _, doorCatPropDTO := range doorCatPropDTO {
+		doorCatProp, err := doorCatPropRepository.FindBySourceAndItemKeyAndPropKey(doorCatPropDTO.Source, doorCatPropDTO.ItemKey, doorCatPropDTO.PropKey)
+		if err != nil {
+			return err
+		}
+		if doorCatProp != nil {
+			doorCatProp.PropValue = doorCatPropDTO.PropValue
+		} else {
+			doorCatProp = database.ToPO[models.DoorCatProp](doorCatPropDTO)
+		}
+		_, err = doorCatPropRepository.SaveOrUpdate(doorCatProp)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func GetDoorCatPropsByAi(params map[string]interface{}) (any, error) {
+	// // http 请求 ai 服务
+	header := map[string]string{
+		"Content-Type": "application/json",
+	}
+	body, err := http.Post(ai.Entity.Url, params, "", header)
+	if err != nil {
+		return nil, err
+	}
+	if body != nil {
+		if body["code"] == float64(0) {
+			return body["data"], nil
+		}
+	}
+	return nil, nil
 }

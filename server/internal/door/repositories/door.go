@@ -21,6 +21,17 @@ type DoorFileRecordRepository struct {
 	database.Repository[*models.DoorFileRecord]
 }
 
+type DoorCatPropRepository struct {
+	database.Repository[*models.DoorCatProp]
+}
+
+func (r *DoorCatPropRepository) FindBySourceAndItemKey(source string, itemKey string) ([]*models.DoorCatProp, error) {
+	return r.GetList("select * from door_cat_prop where source = ? and item_key = ?", source, itemKey)
+}
+func (r *DoorCatPropRepository) FindBySourceAndItemKeyAndPropKey(source string, itemKey string, propKey string) (*models.DoorCatProp, error) {
+	return r.GetOne("select * from door_cat_prop where source = ? and item_key = ? and prop_key = ?", source, itemKey, propKey)
+}
+
 func (r *DoorFileRecordRepository) FindBySourceAndFileId(source string, fileId string, resourceId uint64) (*models.DoorFileRecord, error) {
 	return r.GetOne("select * from door_file_record where source = ? and file_id = ? and resource_id = ?", source, fileId, resourceId)
 }
