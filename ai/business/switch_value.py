@@ -11,8 +11,8 @@ class SwitchValueProcessor(AiProcessor):
 <data>
 {data}
 <rule>
-1.ori_data是正确的数据, 请修正target_data, 使其符合ori_data的规则
-2.修正后的target_data数组长度和原有的target_data数组长度一致
+1.ori_data是正确的数据, 我们要补充target_data的code,修正value,以对应的correct_value为准
+2.不改变target_data原有的数组长度
 <result_style>
 不要过程,只要最终的json数据
 {result_style}
@@ -24,7 +24,7 @@ class SwitchValueProcessor(AiProcessor):
             "data" : json.dumps(params['data'], ensure_ascii=False),    
             "result_style" : json.dumps([{
                 "pid" : "",
-                "target_data" : [{"code" : "", "correct_value" : ""}]
+                "target_data" : {"code" : "", "value" : ""}
             }], ensure_ascii=False)
         }
         return data
