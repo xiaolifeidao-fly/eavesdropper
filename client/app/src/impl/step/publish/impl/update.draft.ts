@@ -9,6 +9,8 @@ import { DoorSkuCatProp } from "@model/door/door";
 
 
 
+const excludeCatProp = ["'p-20000"];
+
 
 
 
@@ -210,11 +212,10 @@ export class UpdateDraftStep extends AbsPublishStep {
             await this.fixInputByAI(draftData, skuItem, fixInputParams);
         }
         if(Object.keys(fixCatProp).length > 0){
-            const newFixCatProp : {[key : string] : any}[] = [];
             for(const doorSkuCatProp of doorSkuCatProps){
                 const propKey = doorSkuCatProp.propKey;
                 draftData.catProp[propKey] = doorSkuCatProp.propValue;
-                if(propKey in fixCatProp){
+                if(propKey in fixCatProp || excludeCatProp.includes(propKey)){
                     delete fixCatProp[propKey];
                 }
             }
@@ -259,18 +260,20 @@ export class UpdateDraftStep extends AbsPublishStep {
         const requestAiParams : {[key : string] : any}[] = [];
 
         for(const propKey in fixCatProp){
-            const prop = fixCatProp[propKey];
+            const catProp = fixCatProp[propKey];
             const draftValue = draftCatProp[propKey];
             requestAiParams.push({
-                "label" : prop.label,
+                "label" : catProp.label,
                 "pid" : propKey,
-                "ori_data" : prop,
+                "ori_data" : catProp.data,
                 "target_data" : this.buildTargetData(draftValue)
             })
         }
         const params ={
             "sence_name" : "switch_value",
-            "params" : requestAiParams
+            "params" : {
+                "data" : requestAiParams
+            }
         }
         log.info("fixDataSourceByAI requestAiParams is", params);
         const aiResult : any[] = await getDoorCatPropsByAI(params);
