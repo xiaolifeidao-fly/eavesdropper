@@ -23,9 +23,10 @@ class SwitchValueProcessor(AiProcessor):
          
         data = {
             "data" : json.dumps(params['data'], ensure_ascii=False),    
-            "result_style" : json.dumps([{
-                "pid" : "",
-                "target_data" : {"code" : "", "value" : ""}
-            }], ensure_ascii=False)
+            "result_style" : json.dumps({
+                "pid1" : {"target_data" : {"code" : "", "value" : ""}},
+                "pid2" : {"target_data" : {"code" : "", "value" : ""}},
+                "pid3" : {"target_data" : {"code" : "", "value" : ""}} 
+            }, ensure_ascii=False)
         }
         return data
