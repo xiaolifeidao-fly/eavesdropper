@@ -13,7 +13,7 @@ model = config.get("TBK", "model")
 
 
 
-
+llm = OpenAi(model=model, temperature=1.0, timeout=60)
 class AiProcessor:
 
     def __init__(self, params : dict):
@@ -34,13 +34,13 @@ class AiProcessor:
     
     def do_ai(self) -> List[dict] | dict | None:
         log.info("do ai params is %s", self.params)
-        llm = OpenAi(model=model, temperature=1.0, timeout=60)
         rag_prompt_template = PromptTemplate(
                                     template=self.build_prompt(),
                                     **self.rebuild_params(self.params))
         rag_messages : List[ChatMessage] = rag_prompt_template.format_messages()
         log.info("rag prompt is %s", rag_messages[0].content)
         chat_response = llm.chat(rag_messages) # type: ignore
+        log.info("rag response is %s", chat_response.message.content)
         response = llm.extract_json(chat_response)
         if response is None:
             return None

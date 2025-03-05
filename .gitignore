@@ -36,3 +36,6 @@ client/images/**/*
 nohup.outout
 
 client/app/static/**/*
+
+**/config.ini
+**/*.out
