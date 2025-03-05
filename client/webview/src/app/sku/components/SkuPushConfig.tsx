@@ -81,7 +81,7 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
               fieldProps={{value: account}}
               onChange={(value: number) => {
                 setAccount(value);
-                props.setSourceAccount(value)
+                props.setSourceAccount(value);
               }}
               request={async () => {
                 const shopList = await getShopList();
@@ -94,7 +94,8 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
                 }
                 if (sourceList.length !== 0) {
                   console.log(sourceList[0]);
-                  setAccount(sourceList[0].value)
+                  setAccount(sourceList[0].value);
+                  props.setSourceAccount(sourceList[0].value);
                 }
                 return sourceList
               }}
