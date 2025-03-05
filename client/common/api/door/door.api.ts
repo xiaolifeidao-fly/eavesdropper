@@ -58,18 +58,17 @@ export const getDoorCatProps = async (source: string, itemKey: string) : Promise
     }
     const result = await getDataList(DoorSkuCatProp, "/doors/cat/prop/get", params);
     for(const item of result){
-        try{
-            item.propValue = JSON.parse(item.propValue);
-        }catch(e){
-            //ignore
+        if(item.propValue.indexOf("{") > -1){
+            try{
+                item.propValue = JSON.parse(item.propValue);
+            }catch(e){
+                //ignore
+            }
         }
     }
     return result;
 }
 
-export const getDoorCatPropsByAi = async (params: {[key : string] : any}) : Promise<{code : string, value : string}[]> => {
+export const getDoorCatPropsByAI = async (params: {[key : string] : any}) : Promise<any[]> => {
     return await instance.post("/doors/cat/prop/ai", params);
 }
-
-
-  

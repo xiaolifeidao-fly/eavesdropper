@@ -4,7 +4,7 @@ import log from "electron-log"
 import { AbsPublishStep } from "./abs.publish";
 import { MbEngine } from "@src/door/mb/mb.engine";
 import { DoorSkuDTO, SkuItem } from "@model/door/sku";
-import { getDoorCatProps, getDoorCatPropsByAi, saveDoorCatProp } from "@api/door/door.api";
+import { getDoorCatProps, getDoorCatPropsByAI, saveDoorCatProp } from "@api/door/door.api";
 import { DoorSkuCatProp } from "@model/door/door";
 
 
@@ -96,65 +96,209 @@ export class UpdateDraftStep extends AbsPublishStep {
         }
     }
 
-    async saveDoorCatProp(draftData : { [key : string] : any }, skuItem : DoorSkuDTO, params : { [key : string] : any }){
+    async fixInputByAI(draftData : { [key : string] : any }, skuItem : DoorSkuDTO, params : { [key : string] : any }){
+        if(Object.keys(params).length == 0){
+            return;
+        }
         const properties : {[key : string] : any}[] = [];
         for(const key in params){
             properties.push({
-                "lable" : params[key],
+                "label" : params[key],
                 "code" : key
             })
         }
-        if(properties.length > 0){
-            const requestAiParams =
-                {
-                "sence_name" : "fill_category",
-                "params" : {
-                    "title" : skuItem.baseInfo.title,
-                    "properties" : properties
+        const requestAiParams =
+            {
+            "sence_name" : "fill_category",
+            "params" : {
+                "title" : skuItem.baseInfo.title,
+                "properties" : properties
+            }
+        }
+        log.info("fixInputByAI requestAiParams is", requestAiParams);
+        const aiResult : any[] = await getDoorCatPropsByAI(requestAiParams);
+        if(aiResult && aiResult.length > 0){
+            const doorCatProps : DoorSkuCatProp[] = [];
+            for(const aiProp of aiResult){
+                draftData.catProp[aiProp.code] = aiProp.value;
+                doorCatProps.push({
+                    "id" : undefined,
+                    "source" : this.getParams("skuSource"),
+                    "itemKey" : skuItem.baseInfo.itemId,
+                    "propKey" : aiProp.code,
+                    "propValue" : aiProp.value
+                })
+            }
+            await saveDoorCatProp(doorCatProps);
+        }
+    }
+
+    checkCatProp(draftCatPropValue : { [key : string] : any }, dataSource : { [key : string] : any }[]){
+        for(const item of dataSource){
+            if(item.value == draftCatPropValue.value){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    buildNewDataSource(label : string, dataSource : { [key : string] : any }[]){
+        const newDataSource : { [key : string] : any }[] = [];
+        for(const item of dataSource){
+            newDataSource.push({
+                "code" : item.value,
+                "correct_value" : item.text
+            });
+        }
+        return {
+            "label" : label,
+            "data" : newDataSource
+        };
+    }
+
+    buildFixCatPropAndInputParams(draftData : { [key : string] : any }, commonData : { [key : string] : any }){
+        const catPropDataSource = commonData.data.models.catProp.dataSource;
+        const fixInputParams : {[key : string] : any} = {};
+        const fixCatProp : {[key : string] : any} = {};
+        const draftCatProp = draftData.catProp;
+        for(const catProp of catPropDataSource){
+            const propKey = catProp.name;
+            const draftCatPropValue = draftCatProp[propKey];
+            if(draftCatPropValue){
+                const dataSource = catProp.dataSource;
+                if(!dataSource){
+                    continue;
+                }
+                let checkResult = this.checkCatProp(draftCatPropValue, dataSource);
+                if(checkResult){
+                    continue;
+                }
+                fixCatProp[propKey] = this.buildNewDataSource(catProp.label, dataSource);
+            }
+            if(catProp.required) {
+                const uiType = catProp.uiType;
+                if(uiType == 'input'){
+                    fixInputParams[catProp.name] = catProp.label;
                 }
             }
-            log.info("requestAiParams is", requestAiParams);
-            const aiResult : {code : string, value : string}[] = await getDoorCatPropsByAi(requestAiParams);
-            if(aiResult && aiResult.length > 0){
-                const doorCatProps : DoorSkuCatProp[] = [];
-                for(const aiProp of aiResult){
-                    draftData.catProp[aiProp.code] = aiProp.value;
-                    doorCatProps.push({
-                        "id" : undefined,
-                        "source" : this.getParams("skuSource"),
-                        "itemKey" : skuItem.baseInfo.itemId,
-                        "propKey" : aiProp.code,
-                        "propValue" : aiProp.value
-                    })
+        }
+        return {
+            fixInputParams,
+            fixCatProp
+        }
+
+    }
+
+    async getDoorSkuCatProps(fixInputParams : {[key : string] : any}, fixCatProp : {[key : string] : any}, itemId : string){
+        if(Object.keys(fixInputParams).length == 0 && Object.keys(fixCatProp).length == 0){
+            return [];
+        }
+        return await getDoorCatProps(this.getParams("skuSource"), itemId);
+    }
+
+    async checkCatPropAndFix(draftData : { [key : string] : any }, skuItem : DoorSkuDTO, commonData : { [key : string] : any }){
+        const {fixInputParams, fixCatProp} = this.buildFixCatPropAndInputParams(draftData, commonData);
+        const doorSkuCatProps = await this.getDoorSkuCatProps(fixInputParams, fixCatProp, skuItem.baseInfo.itemId);
+        if(Object.keys(fixInputParams).length > 0){
+            for(const doorSkuCatProp of doorSkuCatProps){
+                const propKey = doorSkuCatProp.propKey;
+                draftData.catProp[propKey] = doorSkuCatProp.propValue;
+                if(propKey in fixInputParams){
+                    delete fixInputParams[propKey];
                 }
-                await saveDoorCatProp(doorCatProps);
             }
+            await this.fixInputByAI(draftData, skuItem, fixInputParams);
+        }
+        if(Object.keys(fixCatProp).length > 0){
+            const newFixCatProp : {[key : string] : any}[] = [];
+            for(const doorSkuCatProp of doorSkuCatProps){
+                const propKey = doorSkuCatProp.propKey;
+                draftData.catProp[propKey] = doorSkuCatProp.propValue;
+                if(propKey in fixCatProp){
+                    delete fixCatProp[propKey];
+                }
+            }
+            await this.fixDataSourceByAI(draftData, skuItem.baseInfo.itemId, fixCatProp);
+        }
+    }
+
+    isValidJson(json : string){
+        try {
+            JSON.parse(JSON.stringify(json));
+            return true; // 是有效的 JSON
+        } catch (e) {
+            return false; // 不是有效的 JSON
+        }
+    }
+
+    buildTargetData(draftValue : any){
+        if(Array.isArray(draftValue)){
+            for(const item of draftValue){
+                if(this.isValidJson(item)){
+                    return {
+                        "value" : item.text,
+                    };
+                }
+            }
+        }
+        if(this.isValidJson(draftValue)){
+            return {
+                "value" : draftValue.text,
+            };
+        }
+        return {
+            "value" : draftValue,
+        };
+    }
+
+    async fixDataSourceByAI(draftData : { [key : string] : any }, itemId : string, fixCatProp : {[key : string] : any}){
+        if(Object.keys(fixCatProp).length == 0){
+            return;
+        }
+        const draftCatProp = draftData.catProp;
+        const requestAiParams : {[key : string] : any}[] = [];
+
+        for(const propKey in fixCatProp){
+            const prop = fixCatProp[propKey];
+            const draftValue = draftCatProp[propKey];
+            requestAiParams.push({
+                "label" : prop.label,
+                "pid" : propKey,
+                "ori_data" : prop,
+                "target_data" : this.buildTargetData(draftValue)
+            })
+        }
+        const params ={
+            "sence_name" : "switch_value",
+            "params" : requestAiParams
+        }
+        log.info("fixDataSourceByAI requestAiParams is", params);
+        const aiResult : any[] = await getDoorCatPropsByAI(params);
+        if(aiResult && aiResult.length > 0){
+            const doorCatProps : DoorSkuCatProp[] = [];
+
+            for(const aiProp of aiResult){
+                const propKey = aiProp.pid;
+                const aiPropValue = aiProp.target_data;
+                const aiDraftValue = {
+                    "value" : aiPropValue.code,
+                    "text" : aiPropValue.value
+                }
+                draftData.catProp[propKey] = aiDraftValue;
+                doorCatProps.push({
+                    "id" : undefined,
+                    "source" : this.getParams("skuSource"),
+                    "itemKey" : itemId,
+                    "propKey" : propKey,
+                    "propValue" : JSON.stringify(aiDraftValue)
+                })
+            }
+            await saveDoorCatProp(doorCatProps);
         }
     }
 
     async fixRequiredData(draftData: { [key: string]: any }, skuItem: DoorSkuDTO, commonData: { [key: string]: any }){
-        const catPropDataSource = commonData.data.models.catProp.dataSource;
-        const params : {[key : string] : any} = {};
-        for(const catProp of catPropDataSource){
-            if(catProp.required) {
-                log.info(catProp.label," catProp is required name is ", catProp.name);
-                if(catProp.uiType == 'input'){
-                    params[catProp.name] = catProp.label;
-                }
-            }
-        }
-        log.info("catProp params  is", params);
-        if(Object.keys(params).length > 0){
-            const doorSkuCatProps = await getDoorCatProps(this.getParams("skuSource"), skuItem.baseInfo.itemId);
-            for(const doorSkuCatProp of doorSkuCatProps){
-                const propKey = doorSkuCatProp.propKey;
-                draftData.catProp[propKey] = doorSkuCatProp.propValue;
-                if(propKey in params){
-                    delete params[propKey];
-                }
-            }
-            await this.saveDoorCatProp(draftData, skuItem, params);
-        }
+        await this.checkCatPropAndFix(draftData, skuItem, commonData);
         const components = commonData.data.components;
         for(const key in components){
             const component = components[key];
