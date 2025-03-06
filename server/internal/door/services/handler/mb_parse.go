@@ -332,7 +332,12 @@ func setMbBaseInfoRequiredDefault(doorInfoDTO *dto.DoorSkuDTO, doorInfoValueMap 
 			if len(items) > 0 {
 				item := items[0].(map[string]interface{})
 				skuItem := &dto.SkuItem{}
-				skuItem.Text = []string{item["actionLink"].(string)}
+				actionLink := item["actionLink"].(string)
+				if strings.HasPrefix(actionLink, "http") {
+					skuItem.Text = []string{actionLink}
+				} else {
+					skuItem.Text = []string{"https:" + actionLink}
+				}
 				skuItem.Title = skuItemInfoMap["title"].(string)
 				skuItems = append(skuItems, skuItem)
 			}
