@@ -79,7 +79,6 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
     saveByJson(rawData : string, url : string, doorKey : string, itemKey : string, type : string){
         try{
             const jsonData = JSON.parse(rawData);
-            log.info("jsonData is ", jsonData);
             const initDataObj = jsonData?.store?.initDataObj;
             if(!initDataObj){
                 log.warn(itemKey, " initDataObj not found");

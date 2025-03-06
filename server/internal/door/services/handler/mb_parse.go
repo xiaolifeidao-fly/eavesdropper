@@ -327,6 +327,16 @@ func setMbBaseInfoRequiredDefault(doorInfoDTO *dto.DoorSkuDTO, doorInfoValueMap 
 				skuItems = append(skuItems, skuItem)
 			}
 		}
+		if itemType == "CERTIFICATION" {
+			items := skuItemInfoMap["items"].([]interface{})
+			if len(items) > 0 {
+				item := items[0].(map[string]interface{})
+				skuItem := &dto.SkuItem{}
+				skuItem.Text = []string{item["actionLink"].(string)}
+				skuItem.Title = skuItemInfoMap["title"].(string)
+				skuItems = append(skuItems, skuItem)
+			}
+		}
 	}
 	doorInfoDTO.BaseInfo.SkuItems = skuItems
 }

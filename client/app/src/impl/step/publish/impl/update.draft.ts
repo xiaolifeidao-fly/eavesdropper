@@ -12,9 +12,6 @@ import { DoorSkuCatProp } from "@model/door/door";
 const excludeCatProp = ["p-20000"];
 
 
-
-
-
 export class UpdateDraftStep extends AbsPublishStep {
 
     fileterKey = ["descType", "category"]
@@ -176,14 +173,20 @@ export class UpdateDraftStep extends AbsPublishStep {
                     continue;
                 }
                 fixCatProp[propKey] = this.buildNewDataSource(catProp.label, dataSource);
+                continue;
             }
             if(catProp.required) {
+                const dataSource = catProp.dataSource;
+                if(dataSource){
+                    fixCatProp[propKey] = this.buildNewDataSource(catProp.label, dataSource);
+                }
                 const uiType = catProp.uiType;
                 if(uiType == 'input'){
                     fixInputParams[catProp.name] = catProp.label;
                 }
             }
         }
+        log.info("fixCatProp is", fixCatProp);
         return {
             fixInputParams,
             fixCatProp
@@ -215,7 +218,12 @@ export class UpdateDraftStep extends AbsPublishStep {
             for(const doorSkuCatProp of doorSkuCatProps){
                 const propKey = doorSkuCatProp.propKey;
                 draftData.catProp[propKey] = doorSkuCatProp.propValue;
-                if(propKey in fixCatProp || excludeCatProp.includes(propKey)){
+                if(propKey in fixCatProp ){
+                    delete fixCatProp[propKey];
+                }
+            }
+            for(const propKey of excludeCatProp){
+                if(propKey in fixCatProp){
                     delete fixCatProp[propKey];
                 }
             }
@@ -233,6 +241,11 @@ export class UpdateDraftStep extends AbsPublishStep {
     }
 
     buildTargetData(draftValue : any){
+        if(draftValue == undefined){
+            return {
+                "value" : "",
+            };
+        }
         if(Array.isArray(draftValue)){
             for(const item of draftValue){
                 if(this.isValidJson(item)){

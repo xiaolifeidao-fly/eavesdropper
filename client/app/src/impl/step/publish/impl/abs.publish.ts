@@ -189,13 +189,23 @@ export abstract class AbsPublishStep extends StepUnit{
         });
         const data = response.data;
         if (!data.success || !data.data.success) {
-            return undefined;
+            return this.getDefaultCatPropValueByPinPai(categoryCode);
         }
         const dataSource = data.data.dataSource;
         if (!dataSource || dataSource.length == 0) {
-            return undefined;
+            return this.getDefaultCatPropValueByPinPai(categoryCode);
         }
         return dataSource[0];
+    }
+
+    getDefaultCatPropValueByPinPai(pid: string){
+        if(pid == "p-20000"){
+            return {
+                "text": "无品牌",
+                "value": 3246379
+            }
+        }
+        return undefined;
     }
 
     async switchCatPropValue(proKey: string, dataSource: { [key: string]: any }[], value: string[], requestHeader : { [key: string]: any }, catId: string, startTraceId: string, skuItem: DoorSkuDTO) {

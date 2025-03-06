@@ -11,6 +11,7 @@ import { DoorSkuDTO, SkuItem } from "@model/door/sku";
 import { PriceRangeConfig } from "@model/sku/skuTask";
 import axios from "axios";
 import { getOrSaveTemplateId } from "@src/door/mb/logistics/logistics";
+import { getUrlParameter } from "@utils/url.util";
 
 async function doAction(page: Page, ...doActionParams: any[]) {
     await page.waitForTimeout(1000);
@@ -25,7 +26,6 @@ async function clickSaveDraf(page: Page) {
 
 
 export class SkuBuildDraftStep extends AbsPublishStep{
-
 
 
     async doStep(): Promise<StepResult> {
@@ -50,7 +50,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             if(!draftData.draftData){
                 return new StepResult(false, draftData.message) ;
             }
-            return new StepResult(true, "添加草稿成功", [
+            return new StepResult(false, "添加草稿成功", [
                 new StepResponse("draftData", draftData.draftData.draftData),
                 new StepResponse("catId", draftData.draftData.catId),
                 new StepResponse("draftId", draftData.draftData.draftId),
@@ -107,6 +107,13 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             };
         }
         const draftData = JSON.parse(result.requestBody.jsonBody);
+        const mergeResult = await this.mergeTbSku(skuItem, draftData, commonData);
+        if(!mergeResult){
+            return {
+                draftData : undefined,
+                message : "合并TB属性失败"
+            };
+        }
         this.fixSkuSaleImages(imageFileList, skuItem);
         await this.fixSaleProp(commonData, skuItem);
         await this.fillTiltle(skuItem, draftData);
@@ -140,6 +147,10 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             },
             message : "buildDraftData success"
         }
+    }
+
+    async mergeTbSku(skuItem : DoorSkuDTO, draftData : { [key: string]: any }, commonData : { [key: string]: any }){
+        return true;
     }
 
     async fillLogisticsMode(resourceId : number, skuItemDTO : DoorSkuDTO, draftData: { [key: string]: any }) {
@@ -279,6 +290,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         if (quantity > 0) {
             draftData.quantity = quantity.toString();
         }
+        log.info("skuList is ", skuList);
         draftData.sku = skuList;
     
     }
@@ -434,6 +446,17 @@ export class SkuBuildDraftStep extends AbsPublishStep{
                             const endDate = this.convertDateFormat(range[1]);
                             return startDate + "," + endDate;
                         }
+                    }
+                    if(fieldType == "qualification"){
+                        const urlParams = getUrlParameter(text[0]);
+                        const value = urlParams.get("q");
+                         return [
+                            {
+                                "key": "org_auth_indu_cer_code",
+                                "type": "text",
+                                "value": value
+                            }
+                        ]
                     }
                     return text[0];
                 }

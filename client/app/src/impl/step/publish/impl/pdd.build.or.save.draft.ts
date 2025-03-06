@@ -3,6 +3,10 @@ import { SkuFileDetail } from "@model/sku/sku.file";
 import { DoorSkuDTO, SalesAttr, SkuItem } from "@model/door/sku";
 import { SkuBuildDraftStep } from "./build.or.save.draft";
 import { RebuildSalePro } from "../sku.sale.config";
+import { checkPropValue } from "../sku.prop.config";
+import { MbSkuApiImpl } from "@src/impl/door/sku/sku";
+import { parseSku } from "@api/door/door.api";
+import { TB } from "@enums/source";
 
 
 
@@ -30,6 +34,52 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
 
     async fixSaleProp(commonData: { data: any }, skuItem: DoorSkuDTO) {
 
+    }
+
+    async fillPropExt(commonData: { [key: string]: any; }, skuItem: DoorSkuDTO, draftData: { [key: string]: any; }): Promise<void> {
+        await super.fillPropExt(commonData, skuItem, draftData)
+    }
+
+    async mergeTbSku(skuItem : DoorSkuDTO, draftData : { [key: string]: any }, commonData : { [key: string]: any }){
+        const checkResult = checkPropValue(draftData, commonData);
+        log.info("mergeTbSku checkResult is ", checkResult);
+        if(checkResult){
+            return true;
+        }
+        const resourceId = 22;
+        const skuApi = new MbSkuApiImpl();
+        const url = "https://item.taobao.com/item.htm?id=" + skuItem.itemId;
+        const tbSkuItemDTO = await skuApi.getSkuInfo(resourceId, url);
+        if(!tbSkuItemDTO || !tbSkuItemDTO.code){
+            return false;
+        }
+        const tbData = tbSkuItemDTO.data;
+        const tbSkuItem = await parseSku(TB, tbData);
+        if(!tbSkuItem){
+            return false;
+        }
+        const tbSkuItems = tbSkuItem.baseInfo.skuItems;
+        const pddSkuItems = skuItem.baseInfo.skuItems;
+        const needPushTbSkuItems = [];
+        for(let tbSkuItem of tbSkuItems){
+            if(this.needPushTbSku(pddSkuItems, tbSkuItem)){
+                needPushTbSkuItems.push(tbSkuItem);
+            }
+        }
+        for(let tbSkuItem of needPushTbSkuItems){
+            pddSkuItems.push(tbSkuItem);
+        }
+        log.info("mergeSkuProp pddSkuItems is ", JSON.stringify(pddSkuItems));
+        return true;
+    }
+
+    needPushTbSku(pddSkuItems : SkuItem[], tbSkuItem : SkuItem){
+        for(let pddSkuItem of pddSkuItems){
+            if(tbSkuItem.value == pddSkuItem.value){
+                return false;
+            }
+        }
+        return true;
     }
 
     fixSkuSaleImages(imageFileList: SkuFileDetail[], skuItem: DoorSkuDTO): void {
@@ -97,6 +147,7 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
         if (quantity > 0) {
             draftData.quantity = quantity.toString();
         }
+        log.info("skuList is ", JSON.stringify(skuList));
         draftData.sku = skuList;
     
     }
@@ -136,7 +187,7 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
                 saleItem["name"] = "p-" + saleParentId;
                 saleItem["value"] = salePropId;
                 saleItem["text"] = saleProp.text;
-                if (salesAttrs.hasImage == 'true') {
+                if (saleProp.image && saleProp.image != "") {
                     saleItem["pix"] = "800x871";
                     saleItem["img"] = saleProp.image;
                 }
