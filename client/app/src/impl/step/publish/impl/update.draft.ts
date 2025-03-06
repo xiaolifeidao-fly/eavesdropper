@@ -186,7 +186,6 @@ export class UpdateDraftStep extends AbsPublishStep {
                 }
             }
         }
-        log.info("fixCatProp is", fixCatProp);
         return {
             fixInputParams,
             fixCatProp

@@ -50,7 +50,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             if(!draftData.draftData){
                 return new StepResult(false, draftData.message) ;
             }
-            return new StepResult(false, "添加草稿成功", [
+            return new StepResult(true, "添加草稿成功", [
                 new StepResponse("draftData", draftData.draftData.draftData),
                 new StepResponse("catId", draftData.draftData.catId),
                 new StepResponse("draftId", draftData.draftData.draftId),
@@ -418,9 +418,37 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         }
     }
 
-    getPropValue(props: { [key: string]: any }, skuItem: DoorSkuDTO) {
+    getCerNo(value : string){
+        if(value.startsWith("http")){
+            const urlParams = getUrlParameter(value);
+            return urlParams.get("q");
+        }
+        return value;
+    }
+
+    getPropLabelAndPropKey(props: { [key: string]: any }){
+        const items = props.dataSource?.requiredModule?.items;
+        if(items && items.length > 0){
+            const item = items[0];
+            const label = item.label;
+            const propKey = item.name;
+            if(label){
+                return {
+                    fieldLabel: label,
+                    propKey: propKey
+                };
+            }
+        }
         const fieldLabel = props.label;
+        return {
+            fieldLabel: fieldLabel,
+            propKey: props.name
+        };
+    }
+
+    getPropValue(props: { [key: string]: any }, skuItem: DoorSkuDTO) {
         const fieldType = props.uiType;
+        let {fieldLabel, propKey} = this.getPropLabelAndPropKey(props);
         const skuItems = skuItem.baseInfo.skuItems;
         for(const skuItem of skuItems){
             const skuItemValue = skuItem.value;
@@ -448,13 +476,17 @@ export class SkuBuildDraftStep extends AbsPublishStep{
                         }
                     }
                     if(fieldType == "qualification"){
-                        const urlParams = getUrlParameter(text[0]);
-                        const value = urlParams.get("q");
+                        let value = text[0];
+                        if(value.startsWith("http")){
+                            propKey = "org_auth_indu_cer_code";
+                        }
+                        const cerNo = this.getCerNo(value);
+                        log.info("qualification key is ", propKey, " value is ", cerNo);
                          return [
                             {
-                                "key": "org_auth_indu_cer_code",
+                                "key": propKey,
                                 "type": "text",
-                                "value": value
+                                "value": cerNo
                             }
                         ]
                     }

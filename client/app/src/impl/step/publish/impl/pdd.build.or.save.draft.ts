@@ -17,17 +17,17 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
         draftData.price = await this.getPrice(Number(skuItem.doorSkuSaleInfo.price));
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
         const salePropSubItems = commonData.data.components.saleProp.props.subItems;
-        log.info("fillSellInfo start ", salePropSubItems);
+        // log.info("fillSellInfo start ", salePropSubItems);
         const rebuildSalePro = new RebuildSalePro();
         const saleMappers = rebuildSalePro.fixAndAssign(skuItem.doorSkuSaleInfo, salePropSubItems);
         for(let saleMapper of saleMappers){
-            log.info("saleMapper is ", JSON.stringify(saleMapper.saleAttr));
+            // log.info("saleMapper is ", JSON.stringify(saleMapper.saleAttr));
         }
         const saleProps = rebuildSalePro.buildSaleProp(saleMappers, skuItem.doorSkuSaleInfo);
         draftData.saleProp = saleProps;
-        log.info("saleProps is ", JSON.stringify(saleProps));
+        // log.info("saleProps is ", JSON.stringify(saleProps));
 
-        log.info("saleProps sku is ", JSON.stringify(skuItem.doorSkuSaleInfo.salesSkus));
+        // log.info("saleProps sku is ", JSON.stringify(skuItem.doorSkuSaleInfo.salesSkus));
 
         await this.fillSellSku(skuItem, draftData);
     }

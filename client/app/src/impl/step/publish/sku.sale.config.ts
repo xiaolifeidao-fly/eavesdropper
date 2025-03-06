@@ -40,7 +40,7 @@ const saleConfigMap : { [key: string]: SkuSaleConfig } = {
     }, (subItem : { [key: string]: any }) => {
         return buildDefaultByDataSourceList(subItem);
     }),
-    "checkboxSaleProps": new SkuSaleConfig("checkboxSaleProps",true, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
+    "checkboxSaleProps": new SkuSaleConfig("checkboxSaleProps",false, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
         return handlerCheckbox(salesAttrValues, subItem)
     }, (subItem : { [key: string]: any }) => {
         return buildDefaultByDataSourceList(subItem);
@@ -56,11 +56,11 @@ const saleConfigMap : { [key: string]: SkuSaleConfig } = {
         
         return buildDefaultByDataSourceList(subItem);
     }),
-    "newMeasurement": new SkuSaleConfig("newMeasurement",true, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
-        return handlerNewMeasurement(salesAttrValues, subItem)
-    }, (subItem : { [key: string]: any }) => {
-        return new SalesAttr(subItem.label, [], "", "", "", subItem.name);
-    }),
+    // "newMeasurement": new SkuSaleConfig("newMeasurement",true, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
+    //     return handlerNewMeasurement(salesAttrValues, subItem)
+    // }, (subItem : { [key: string]: any }) => {
+    //     return new SalesAttr(subItem.label, [], "", "", "", subItem.name);
+    // }),
     "checkbox" : new SkuSaleConfig("checkbox",true, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
         return handlerCheckbox(salesAttrValues, subItem)
     }, (subItem : { [key: string]: any }) => {
@@ -191,13 +191,12 @@ export class RebuildSalePro{
             }
             const uiType = subItem.uiType;
             const saleConfig = saleConfigMap[uiType];
-            if(!saleConfig.allowInput){
-                if(subItem.required){
-                    const saleAttr = saleConfig.buildDefaultSaleAttr(subItem);
-                    return new SaleMapper(saleAttr, subItem, null, true);
-                }
-                return undefined;
-            }
+            // if(saleConfig.allowInput){
+            //     if(subItem.required){
+            //         const saleAttr = saleConfig.buildDefaultSaleAttr(subItem);
+            //         return new SaleMapper(saleAttr, subItem, null, true);
+            //     }
+            // }
             const label = subItem.label;
             const pddLable = saleAttr.label;
             if(pddLable == label || label.includes(pddLable) || pddLable.includes(label)){
@@ -219,8 +218,9 @@ export class RebuildSalePro{
         return false;
     }
 
-    getAllowAssignSaleMappers(saleMappers : SaleMapper[]) {
-        const allowSaleMappers : SaleMapper[] = [];
+    getAllowAssignSaleMappers(saleMappers : SaleMapper[], unAssignSaleAttrs : SalesAttr[]) {
+        log.info("saleMappers is ", saleMappers);
+        let allowSaleMappers : SaleMapper[] = [];
         for(const saleMapper of saleMappers){
             if(saleMapper.hadAssign){
                 continue;
@@ -235,6 +235,10 @@ export class RebuildSalePro{
                 allowSaleMappers.push(saleMapper);
             }
         }
+        if(allowSaleMappers.length >= unAssignSaleAttrs.length){
+            //如果大于等于未分配的属性数量，则需要重新分配，因为此时没有选择有图片
+            allowSaleMappers = [];
+        }
         for(const saleMapper of saleMappers){
             if(saleMapper.hadAssign){
                 continue;
@@ -248,6 +252,10 @@ export class RebuildSalePro{
             if(saleConfig.allowInput && subItem.showUploadImage){
                 allowSaleMappers.push(saleMapper);
             }
+        }
+        if(allowSaleMappers.length > unAssignSaleAttrs.length){
+            allowSaleMappers = allowSaleMappers.slice(0, unAssignSaleAttrs.length);
+            return allowSaleMappers;
         }
         if(allowSaleMappers.length == 0){
             for(const saleMapper of saleMappers){
@@ -289,13 +297,14 @@ export class RebuildSalePro{
     
     fillSaleSku(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[]) {
         const saleSkus : SalesSku[] = doorSkuSaleInfo.salesSkus;
-        log.info("fillSaleSku skuPropMap ", this.skuPropMap);
         const newSaleSkuMap :SalesSku[] = [];
         for(const saleSku of saleSkus){
            const salePropPath = saleSku.salePropPath;
            const newSalePropPath = this.getNewSalePropPath(salePropPath, saleMappers);
-           saleSku.salePropPath = newSalePropPath;
-           newSaleSkuMap.push(saleSku);
+           if(newSalePropPath && newSalePropPath.length > 0){
+                saleSku.salePropPath = newSalePropPath;
+                newSaleSkuMap.push(saleSku);
+           }
         }
         doorSkuSaleInfo.salesSkus = newSaleSkuMap;
     }
@@ -392,16 +401,16 @@ export class RebuildSalePro{
                 saleMappers.push(new SaleMapper(undefined, subItem, null, false));
             }
         }
+        const unAssignSaleAttrs = this.getUnAssignSaleAttrs(saleMappers, salesAttrs);
+        log.info("unAssignSaleAttrs is ", unAssignSaleAttrs);
 
         //如果saleMappers 中没有包含图片的分类，要重新分配有图片的分类
-        const allowAssignSaleMappers = this.getAllowAssignSaleMappers(saleMappers);
+        const allowAssignSaleMappers = this.getAllowAssignSaleMappers(saleMappers, unAssignSaleAttrs);
         log.info("allowAssignSaleMappers is ", allowAssignSaleMappers);
         if(allowAssignSaleMappers.length == 0){
             log.warn(`未找到能分配的 subItem`);
             return [];
         }
-        const unAssignSaleAttrs = this.getUnAssignSaleAttrs(saleMappers, salesAttrs);
-        log.info("unAssignSaleAttrs is ", unAssignSaleAttrs);
         const needMergeSaleAttrs : SalesAttr[] = [];
         let needMegerSaleMapper = undefined;
         for(let i = 0; i < unAssignSaleAttrs.length; i++){
@@ -426,6 +435,9 @@ export class RebuildSalePro{
         }
         // 将tb 已经分配的 且不是merge的的pid和value进行映射
         for(const saleMapper of saleMappers){
+            if(!saleMapper.hadAssign){
+                continue;
+            }
             const saleAttr = saleMapper.saleAttr;
             const values = saleAttr?.values;
             if(values && values.length > 0){
@@ -466,6 +478,9 @@ export class RebuildSalePro{
         const saleProp : {[key: string]: any} = {};
         const salesSkus = doorSkuSaleInfo.salesSkus;
         for(const saleMapper of saleMappers){
+            if(!saleMapper.hadAssign){
+                continue;
+            }
             const subItem = saleMapper.subItem;
             const uiType = subItem.uiType;
             const saleConfig = saleConfigMap[uiType];
@@ -473,9 +488,7 @@ export class RebuildSalePro{
                 log.warn(`${uiType} 未找到对应的 saleConfig`);
                 continue;
             }
-            log.info("---------------- ");
-
-            log.info("uiType is ", uiType);
+            // log.info("uiType is ", uiType);
             const values = saleMapper.saleAttr?.values || [];
             const newValue : SalesAttrValue[] = [];
             for(const value of values){
@@ -491,7 +504,6 @@ export class RebuildSalePro{
             const saleValue = saleConfig.toSaleValue(subItem.showUploadImage, newValue, subItem);
             log.info("saleValue is ", saleValue);
 
-            log.info("---------------- ");
             saleProp[saleValue.pidKey] = saleValue.saleProp;
         }
         return saleProp;
@@ -553,7 +565,7 @@ export class RebuildSalePro{
                 mergedValues = salesAttrs[0].values;
             } else {
                 // For multiple attributes, create combinations
-                mergedValues = this.createCombinations(salesAttrs, saleMapper.pid);
+                mergedValues = this.createCombinations(salesAttrs, saleMapper.pid, saleMapper.subItem.maxCustomItems);
             }
         }
         const mergeSaleAttr = salesAttrs[0];
@@ -579,7 +591,7 @@ export class RebuildSalePro{
      * Each combination will have text that combines the text from each attribute's values
      * but will preserve the original value and image from the first attribute's values
      */
-    createCombinations(salesAttrs: SalesAttr[], newPid : string) {
+    createCombinations(salesAttrs: SalesAttr[], newPid : string, maxCustomItems : number) {
         if (salesAttrs.length === 0) return [];
         
         // Start with the first attribute's values
@@ -621,6 +633,9 @@ export class RebuildSalePro{
             }
             combinations = newCombinations;
         }
+        if(combinations.length > maxCustomItems ){
+            combinations = combinations.slice(0, maxCustomItems);
+        }
         for(const combo of combinations){
             const salePropPath = combo.value;
             const tempValue = tempSaleSkuMapper[salePropPath]
@@ -629,8 +644,6 @@ export class RebuildSalePro{
             }
             this.putSkuMap(salePropPath, `${newPid}:${combo.value}`)
         }
-        log.info("createCombinations is ", combinations);
-        log.info("createCombinations skuPropMap is ", this.skuPropMap);
         return combinations;
     }
 
