@@ -277,7 +277,7 @@ export class MbSkuApiImpl extends MbSkuApi {
                 "skuUrl" : skuUrl,
                 "resourceId" : publishResourceId,
                 "priceRate" : publishConfig?.priceRate,
-                "skuItemId": skuItemId
+                "skuItemId": skuItemId,
             }
             // const publishHandler = new SkuPublishHandler(skuItemId, publishResourceId);
             let publishHandler : StepHandler;

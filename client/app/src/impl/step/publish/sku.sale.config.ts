@@ -1,4 +1,6 @@
+import { createSkuMapper } from "@api/sku/sku.api";
 import { DoorSkuDTO, DoorSkuSaleInfoDTO, SalesAttr, SalesAttrValue, SalesSku } from "@model/door/sku"
+import { SkuMapper } from "@model/sku/sku";
 import log from "electron-log";
 import { pid, resourceUsage } from "process";
 export class SkuSaleConfig {
@@ -173,10 +175,12 @@ export class SaleMapper {
 export class RebuildSalePro{
     skuPropMap : {[key : string]:any} = {}
     skuProps : {[key : string]:any}
+    skuId : string
 
-    constructor(){
+    constructor(skuId : string){
         this.skuPropMap = {}
         this.skuProps = {}
+        this.skuId = skuId
     }
 
     putSkuMap(oriMap : string, nowMap : any){
@@ -278,9 +282,9 @@ export class RebuildSalePro{
     }
     
     
-    fillSale(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[]) {
+    async fillSale(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[]) {
         this.fillSaleAttrs(doorSkuSaleInfo, saleMappers);
-        this.fillSaleSku(doorSkuSaleInfo, saleMappers);
+        await this.fillSaleSku(doorSkuSaleInfo, saleMappers);
     }
     
     fillSaleAttrs(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[]) {
@@ -295,13 +299,14 @@ export class RebuildSalePro{
         doorSkuSaleInfo.salesAttr = saleAttrs;
     }
     
-    fillSaleSku(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[]) {
+    async fillSaleSku(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[]) {
         const saleSkus : SalesSku[] = doorSkuSaleInfo.salesSkus;
         const newSaleSkuMap :SalesSku[] = [];
         for(const saleSku of saleSkus){
            const salePropPath = saleSku.salePropPath;
            const newSalePropPath = this.getNewSalePropPath(salePropPath, saleMappers);
            if(newSalePropPath && newSalePropPath.length > 0){
+                await createSkuMapper(new SkuMapper(undefined, this.skuId, salePropPath, newSalePropPath));
                 saleSku.salePropPath = newSalePropPath;
                 newSaleSkuMap.push(saleSku);
            }
@@ -376,7 +381,7 @@ export class RebuildSalePro{
     }
 
 
-    fixAndAssign(doorSkuSaleInfo : DoorSkuSaleInfoDTO, subItems : { [key: string]: any }) {
+    async fixAndAssign(doorSkuSaleInfo : DoorSkuSaleInfoDTO, subItems : { [key: string]: any }) {
         const salesAttrs = doorSkuSaleInfo.salesAttr;
         const saleMappers : SaleMapper[] = [];
         let hadImageSaleMapper = false;
@@ -451,7 +456,7 @@ export class RebuildSalePro{
                 }
             }
         }
-        this.fillSale(doorSkuSaleInfo, saleMappers);
+        await this.fillSale(doorSkuSaleInfo, saleMappers);
         return saleMappers;
     }
     

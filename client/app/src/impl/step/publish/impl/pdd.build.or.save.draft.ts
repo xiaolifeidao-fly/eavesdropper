@@ -18,8 +18,8 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
         const salePropSubItems = commonData.data.components.saleProp.props.subItems;
         // log.info("fillSellInfo start ", salePropSubItems);
-        const rebuildSalePro = new RebuildSalePro();
-        const saleMappers = rebuildSalePro.fixAndAssign(skuItem.doorSkuSaleInfo, salePropSubItems);
+        const rebuildSalePro = new RebuildSalePro(this.getParams("publishSkuId"));
+        const saleMappers = await rebuildSalePro.fixAndAssign(skuItem.doorSkuSaleInfo, salePropSubItems);
         for(let saleMapper of saleMappers){
             // log.info("saleMapper is ", JSON.stringify(saleMapper.saleAttr));
         }

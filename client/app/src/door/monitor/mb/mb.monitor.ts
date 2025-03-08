@@ -31,6 +31,7 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
     public async getJsonFromResponse(response: Response): Promise<{[key: string]: any}|undefined>{
         try{
             const json = await response.json();
+            console.log("json is ", json);
             return json;
         }catch(e){
             const data = await response.text();

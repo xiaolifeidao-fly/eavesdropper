@@ -131,3 +131,19 @@ export class SkuPageResp {
     this.source = source
   }
 }
+
+export class SkuMapper {
+  constructor(
+    public id?: number,
+    public skuId?: string,
+    public pxxSkuSaleInfo?: string,
+    public tbSkuSaleInfo?: string,
+  ) {
+    this.id = id
+    this.skuId = skuId
+    this.pxxSkuSaleInfo = pxxSkuSaleInfo
+    this.tbSkuSaleInfo = tbSkuSaleInfo
+  }
+}
+
+

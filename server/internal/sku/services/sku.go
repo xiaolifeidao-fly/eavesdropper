@@ -19,6 +19,8 @@ const (
 	SKU_ERROR   = "error"   // 发布失败
 )
 
+var skuMapperRepository = database.NewRepository[repositories.SkuMapperRepository]()
+
 func CreateSku(skuDTO *dto.SkuDTO) (uint64, error) {
 	var err error
 
@@ -89,4 +91,24 @@ func saveSku(skuDTO *dto.SkuDTO) (*dto.SkuDTO, error) {
 func GetSkuSourceUrl(source string, publishSkuId string) string {
 	publishUrl := resourceService.GetResourceSkuUrl(source)
 	return fmt.Sprintf(publishUrl, publishSkuId)
+}
+
+func CreateSkuMapper(skuMapperDTO *dto.SkuMapperDto) (*dto.SkuMapperDto, error) {
+	skuMapper, err := skuMapperRepository.FindBySkuIdAndTbSkuSaleInfo(skuMapperDTO.SkuId, skuMapperDTO.TbSkuSaleInfo)
+	if err != nil {
+		return nil, err
+	}
+
+	if skuMapper != nil {
+		skuMapper.PxxSkuSaleInfo = skuMapperDTO.PxxSkuSaleInfo
+	} else {
+		skuMapper = database.ToPO[models.SkuMapper](skuMapperDTO)
+	}
+
+	skuMapper, err = skuMapperRepository.SaveOrUpdate(skuMapper)
+	if err != nil {
+		return nil, err
+	}
+
+	return database.ToDTO[dto.SkuMapperDto](skuMapper), nil
 }

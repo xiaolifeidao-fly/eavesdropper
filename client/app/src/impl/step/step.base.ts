@@ -4,7 +4,7 @@ import { StepConfig } from "./step.config"
 import { StepResult, StepUnit } from "./step.unit";
 import { StepContext } from "./step.context";
 import { validate } from "@src/validator/image.validator";
-
+import log from "electron-log";
 export abstract class StepHandler {
 
     private stepConfig: StepConfig;
@@ -12,6 +12,7 @@ export abstract class StepHandler {
     private context : StepContext;
 
     constructor(private readonly key: string, private readonly resourceId: number) {
+        log.info("StepHandler constructor key is ", key);
         this.key = key;
         this.resourceId = resourceId;
         this.stepConfig = this.buildStepConfig();

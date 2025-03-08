@@ -21,7 +21,29 @@ func LoadSkuRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).POST("", AddSku)
 		r.Use(middleware.Authorization()).GET("/check-existence", CheckSkuExistence)
 		r.Use(middleware.Authorization()).GET("/page", PageSku)
+		r.Use(middleware.Authorization()).POST("/mapper", CreateSkuMapper)
 	}
+}
+
+// CreateSkuMapper
+// @Description 保存商品映射
+func CreateSkuMapper(ctx *gin.Context) {
+	var err error
+
+	var req dto.SkuMapperDto
+	if err = controller.Bind(ctx, &req, binding.JSON); err != nil {
+		logger.Errorf("SaveSkuMapper failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	var skuMapperDTO *dto.SkuMapperDto
+	if skuMapperDTO, err = services.CreateSkuMapper(&req); err != nil {
+		logger.Errorf("SaveSkuMapper failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, skuMapperDTO)
 }
 
 // AddSku
