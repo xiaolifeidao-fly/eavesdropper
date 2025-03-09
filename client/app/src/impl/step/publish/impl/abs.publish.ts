@@ -124,7 +124,13 @@ export abstract class AbsPublishStep extends StepUnit{
                 delete newCatProp[key];
                 continue;
             }
+            const uiType = catProp.uiType;
             const value = skuItem.text;
+            if(uiType == "taoSirProp"){
+                newCatProp[key] = parseInt(value[0]);
+                log.info("taoSirProp is ", newCatProp[key]);
+                continue;
+            }
             if (key in newCatProp) {
                 const newCatValue = newCatProp[key];
                 if (!("dataSource" in catProp)) {

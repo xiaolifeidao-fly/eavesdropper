@@ -18,7 +18,7 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
         const salePropSubItems = commonData.data.components.saleProp.props.subItems;
         // log.info("fillSellInfo start ", salePropSubItems);
-        const rebuildSalePro = new RebuildSalePro(this.getParams("publishSkuId"));
+        const rebuildSalePro = new RebuildSalePro(skuItem.baseInfo.itemId);
         const saleMappers = await rebuildSalePro.fixAndAssign(skuItem.doorSkuSaleInfo, salePropSubItems);
         for(let saleMapper of saleMappers){
             // log.info("saleMapper is ", JSON.stringify(saleMapper.saleAttr));
@@ -46,7 +46,7 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
         if(checkResult){
             return true;
         }
-        const resourceId = 22;
+        const resourceId = this.getParams("resourceId");
         const skuApi = new MbSkuApiImpl();
         const url = "https://item.taobao.com/item.htm?id=" + skuItem.itemId;
         const tbSkuItemDTO = await skuApi.getSkuInfo(resourceId, url);

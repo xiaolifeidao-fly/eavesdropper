@@ -10,12 +10,13 @@ export class TbSearchStep extends AbsPublishStep{
     async doStep(): Promise<StepResult> {
         const skuItem : DoorSkuDTO = this.getParams("skuItem");
         const title = skuItem.baseInfo.title;
-        const resourceId = 22;
+        const resourceId = this.getParams("resourceId");
         if(!title){
             return new StepResult(false, "title is required");
         }
         log.info("标题为：", title);
         const skuId = await this.getSkuId(resourceId, title);
+        log.info("seach skuId is ", skuId);
         if(!skuId){
             return new StepResult(false, "skuId is not found");
         }

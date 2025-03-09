@@ -42,6 +42,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             const tbItemId = skuItem.itemId;
             let skuDraftId = await this.getSkuDraftIdFromDB(resourceId, itemId);
             let url = this.getPublishUrl(skuDraftId, tbItemId);
+            log.info("publish url is ", url);
             const result = await mbEngine.openWaitMonitor(page, url, new MbSkuPublishDraffMonitor(), {}, doAction, imageFileList, skuDraftId);
             if (!result) {
                 return new StepResult(false, "添加草稿失败") ;
@@ -430,8 +431,11 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         const items = props.dataSource?.requiredModule?.items;
         if(items && items.length > 0){
             const item = items[0];
-            const label = item.label;
+            let label = item.label;
             const propKey = item.name;
+            if(propKey == "org_auth_indu_cer_code"){
+                label = "商品资质";
+            }
             if(label){
                 return {
                     fieldLabel: label,
@@ -477,7 +481,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
                     }
                     if(fieldType == "qualification"){
                         let value = text[0];
-                        if(value.startsWith("http")){
+                        if(value.startsWith("https")){
                             propKey = "org_auth_indu_cer_code";
                         }
                         const cerNo = this.getCerNo(value);
