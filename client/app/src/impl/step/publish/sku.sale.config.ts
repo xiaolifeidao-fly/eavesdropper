@@ -195,11 +195,8 @@ export class RebuildSalePro{
             }
             const uiType = subItem.uiType;
             const saleConfig = saleConfigMap[uiType];
-            // if(saleConfig.allowInput){
-            //     if(subItem.required){
-            //         const saleAttr = saleConfig.buildDefaultSaleAttr(subItem);
-            //         return new SaleMapper(saleAttr, subItem, null, true);
-            //     }
+            // if(subItem.required){
+            //     return new SaleMapper(undefined, subItem, null, true);
             // }
             const label = subItem.label;
             const pddLable = saleAttr.label;
@@ -223,7 +220,6 @@ export class RebuildSalePro{
     }
 
     getAllowAssignSaleMappers(saleMappers : SaleMapper[], unAssignSaleAttrs : SalesAttr[]) {
-        log.info("saleMappers is ", saleMappers);
         let allowSaleMappers : SaleMapper[] = [];
         for(const saleMapper of saleMappers){
             if(saleMapper.hadAssign){
@@ -509,8 +505,6 @@ export class RebuildSalePro{
                 }
             }
             const saleValue = saleConfig.toSaleValue(subItem.showUploadImage, newValue, subItem);
-            log.info("saleValue is ", saleValue);
-
             saleProp[saleValue.pidKey] = saleValue.saleProp;
         }
         return saleProp;
@@ -560,9 +554,7 @@ export class RebuildSalePro{
             log.warn("未找到需要合并的 saleMapper");
             return undefined;
         }
-        log.info("nedd merge saleMapper is ", saleMapper);
         salesAttrs = this.sortMergeSaleAttr(salesAttrs, saleMapper);
-        log.info("salesAttrs is need merge ", salesAttrs);
         // Create a new merged values array
         let mergedValues: SalesAttrValue[] = [];
         

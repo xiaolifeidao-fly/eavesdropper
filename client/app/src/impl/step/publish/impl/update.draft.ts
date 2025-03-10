@@ -11,6 +11,8 @@ import { DoorSkuCatProp } from "@model/door/door";
 
 const excludeCatProp = ["p-20000"];
 
+const aiFillCategoryCode = ["p-20000-226407184"]
+
 
 export class UpdateDraftStep extends AbsPublishStep {
 
@@ -181,7 +183,7 @@ export class UpdateDraftStep extends AbsPublishStep {
                     fixCatProp[propKey] = this.buildNewDataSource(catProp.label, dataSource);
                 }
                 const uiType = catProp.uiType;
-                if(uiType == 'input'){
+                if(uiType == 'input' || aiFillCategoryCode.includes(catProp.name)){
                     fixInputParams[catProp.name] = catProp.label;
                 }
             }

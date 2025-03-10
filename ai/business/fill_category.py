@@ -3,7 +3,7 @@
 
 
 import json
-from typing import List
+from typing import Any, List
 from business import AiProcessor
 
 
@@ -32,5 +32,12 @@ class FillCategoryProcessor(AiProcessor):
         params['result_style'] = json.dumps(result_style, ensure_ascii=False)
         return params
 
+    def process_response(self, response : Any) -> Any:
+        if response is None:
+            return None
+        for r in response:
+            if r['code'] == 'p-20000-226407184':
+                r['value'] = {"value" : "-1", "text" : r['value']}
+        return response
 
 
