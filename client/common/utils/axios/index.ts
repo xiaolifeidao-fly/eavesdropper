@@ -84,7 +84,7 @@ instance.interceptors.response.use(
       if (data && data.error) {
         return rejectHttpError(data.error, data.code);
       }
-      return rejectHttpError('请求异常：' + error.response.statusText);
+      return rejectHttpError('请求异常：' + error.request?.url + ' ' + error.response.statusText);
     }
 
     if (error.request) {

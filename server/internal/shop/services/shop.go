@@ -82,7 +82,6 @@ func SyncShop(syncDTO *dto.ShopSyncDTO) error {
 		shopDTO.ResourceID = syncDTO.ResourceID
 		shopDTO.InitCreate()
 	}
-
 	shopDTO.Name = syncDTO.Name
 	shopDTO.ShopID = syncDTO.ShopID
 	var shopStatusEnum *dto.ShopStatusEnum

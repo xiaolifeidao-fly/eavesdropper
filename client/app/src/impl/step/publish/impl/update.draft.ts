@@ -34,7 +34,6 @@ export class UpdateDraftStep extends AbsPublishStep {
     }
 
      fixMultiDiscountPromotion(fieldPros : { [key : string] : any }, draftData : { [key : string] : any }, step : StepUnit){
-        log.info("fixMultiDiscountPromotion", fieldPros);
         const dataSources = fieldPros.dataSource;
         if(!dataSources){
             return;
@@ -43,7 +42,6 @@ export class UpdateDraftStep extends AbsPublishStep {
         if(!dataSource){
             return;
         }
-        log.info("dataSource is", dataSource);
         draftData.multiDiscountPromotion = {
             value: String(dataSource.max),
             type: 1,
@@ -121,13 +119,18 @@ export class UpdateDraftStep extends AbsPublishStep {
         if(aiResult && aiResult.length > 0){
             const doorCatProps : DoorSkuCatProp[] = [];
             for(const aiProp of aiResult){
+                let aiValue = aiProp.value;
+                if(typeof aiValue != "string"){
+                    aiValue = JSON.stringify(aiValue);
+                }
                 draftData.catProp[aiProp.code] = aiProp.value;
+
                 doorCatProps.push({
                     "id" : undefined,
                     "source" : this.getParams("skuSource"),
                     "itemKey" : skuItem.baseInfo.itemId,
                     "propKey" : aiProp.code,
-                    "propValue" : aiProp.value
+                    "propValue" : aiValue
                 })
             }
             await saveDoorCatProp(doorCatProps);
@@ -164,6 +167,9 @@ export class UpdateDraftStep extends AbsPublishStep {
         const draftCatProp = draftData.catProp;
         for(const catProp of catPropDataSource){
             const propKey = catProp.name;
+            if(excludeCatProp.includes(propKey)){
+                continue;
+            }
             const draftCatPropValue = draftCatProp[propKey];
             if(draftCatPropValue){
                 const dataSource = catProp.dataSource;
@@ -188,6 +194,8 @@ export class UpdateDraftStep extends AbsPublishStep {
                 }
             }
         }
+        log.info("fixInputParams is", fixInputParams);
+        log.info("fixCatProp is", fixCatProp);
         return {
             fixInputParams,
             fixCatProp

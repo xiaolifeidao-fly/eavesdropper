@@ -30,7 +30,7 @@ export class SkuSaleConfig {
         return {saleAttr : saleAttr, pidKey : pidKey};
     }
 
-    public buildSalesAttr(subItem : { [key: string]: any }) {
+    public buildSalesAttr(subItem : { [key: string]: any }) : SalesAttr {
         return this.buildDefaultSaleAttr(subItem);
     }
 
@@ -39,7 +39,7 @@ export class SkuSaleConfig {
 const saleConfigMap : { [key: string]: SkuSaleConfig } = {
     "newColorSelect": new SkuSaleConfig("newColorSelect",true, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
         return handlerImage(salesAttrValues, subItem)
-    }, (subItem : { [key: string]: any }) => {
+    }, (subItem : { [key: string]: any }) : SalesAttr => {
         return buildDefaultByDataSourceList(subItem);
     }),
     "checkboxSaleProps": new SkuSaleConfig("checkboxSaleProps",false, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
@@ -55,8 +55,7 @@ const saleConfigMap : { [key: string]: SkuSaleConfig } = {
     "comboboxSaleProps": new SkuSaleConfig("comboboxSaleProps",true, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
         return handlerImage(salesAttrValues, subItem, showUploadImage)
     }, (subItem : { [key: string]: any }) => {
-        
-        return buildDefaultByDataSourceList(subItem);
+        return buildDefaultByComboboxSaleProps(subItem);
     }),
     // "newMeasurement": new SkuSaleConfig("newMeasurement",true, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
     //     return handlerNewMeasurement(salesAttrValues, subItem)
@@ -73,6 +72,21 @@ const saleConfigMap : { [key: string]: SkuSaleConfig } = {
     }, (subItem : { [key: string]: any }) => {
         return new SalesAttr(subItem.label, [], "", "", "", subItem.name);
     })
+}
+
+function buildDefaultByComboboxSaleProps(subItem : { [key: string]: any }) {
+    let saleProp : SalesAttrValue[] = [];
+    const label = subItem.label;
+    if(label == "尺码"){
+        saleProp.push(new SalesAttrValue("其他", "10122","",""))
+        return new SalesAttr(subItem.label, saleProp, "false", "", "", subItem.name.split("-")[1]);
+    }
+    const dataSource = subItem.dataSource;
+    if(dataSource && dataSource.length > 0){
+        const dataSourceFirst = dataSource[0];
+        saleProp.push(new SalesAttrValue(dataSourceFirst.text, dataSourceFirst.value,"",""))
+    }
+    return new SalesAttr(subItem.label, saleProp, "false", "", "", subItem.name.split("-")[1]);
 }
 
 function buildDefaultByDataSourceList(subItem : { [key: string]: any }) {
@@ -195,9 +209,6 @@ export class RebuildSalePro{
             }
             const uiType = subItem.uiType;
             const saleConfig = saleConfigMap[uiType];
-            // if(subItem.required){
-            //     return new SaleMapper(undefined, subItem, null, true);
-            // }
             const label = subItem.label;
             const pddLable = saleAttr.label;
             if(pddLable == label || label.includes(pddLable) || pddLable.includes(label)){
@@ -274,6 +285,7 @@ export class RebuildSalePro{
                 }
             }
         }
+
         return allowSaleMappers;
     }
     
@@ -346,7 +358,7 @@ export class RebuildSalePro{
                 const saleAttr = saleMapper.saleAttr;
                 const values = saleAttr?.values;
                 if(values && values.length > 0){
-                    newSalePropPath = newSalePropPath + ";" + saleMapper.pid + ":" + -values[0].value;
+                    newSalePropPath = newSalePropPath + ";" + saleMapper.pid + ":" +values[0].value;
                 }
             }
         }
@@ -400,8 +412,6 @@ export class RebuildSalePro{
             const saleMapper = this.matchSaleMapper(salesAttrs, subItem, subItem.showUploadImage);
             if(saleMapper){
                 saleMappers.push(saleMapper);
-            }else{
-                saleMappers.push(new SaleMapper(undefined, subItem, null, false));
             }
         }
         const unAssignSaleAttrs = this.getUnAssignSaleAttrs(saleMappers, salesAttrs);
@@ -454,8 +464,36 @@ export class RebuildSalePro{
                 }
             }
         }
+
+        for(const key in subItems){
+            const subItem = subItems[key];
+            if(!subItem){
+                continue;
+            }
+            const uiType = subItem.uiType;
+            const saleConfig = saleConfigMap[uiType];
+            if(!saleConfig){
+                continue;
+            }
+            if(subItem.required){
+                if(!this.isAssignRequired(saleMappers, subItem)){
+                    const saleValue = saleConfig.buildSalesAttr(subItem);
+                    log.info("saleValue is ", saleValue)
+                    saleMappers.push(new SaleMapper(saleValue, subItem, null, true, false))
+                }
+            }
+        }
         await this.fillSale(doorSkuSaleInfo, saleMappers);
         return saleMappers;
+    }
+
+    isAssignRequired(saleMappers : SaleMapper[], subItem : { [key: string]: any }) {
+        for(const saleMapper of saleMappers){
+            if(saleMapper.pid == subItem.name.split("-")[1]){
+                return true;
+            }
+        }
+        return false;
     }
     
     allowMerge(allowAssignSaleMappers : SaleMapper[], unAssignSize : number, unAssignIndex : number) {
@@ -481,6 +519,7 @@ export class RebuildSalePro{
         const saleProp : {[key: string]: any} = {};
         const salesSkus = doorSkuSaleInfo.salesSkus;
         for(const saleMapper of saleMappers){
+            log.info("saleMapper is ", JSON.stringify(saleMapper));
             if(!saleMapper.hadAssign){
                 continue;
             }
