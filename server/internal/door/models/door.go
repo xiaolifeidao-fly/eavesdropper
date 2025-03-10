@@ -48,9 +48,10 @@ type DoorFileRecord struct {
 
 type SearchSkuRecord struct {
 	database.BaseEntity
-	SkuId string `json:"sku_id"`
-	Type  string `json:"type"`
-	Title string `json:"title"`
+	SkuId    string `json:"sku_id"`
+	Type     string `json:"type"`
+	Title    string `json:"title"`
+	PddSkuId string `json:"pdd_sku_id"`
 }
 
 func (f *DoorFileRecord) TableName() string {

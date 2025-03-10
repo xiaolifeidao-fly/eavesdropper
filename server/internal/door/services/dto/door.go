@@ -41,9 +41,10 @@ type DoorFileRecordDTO struct {
 
 type SearchSkuRecordDTO struct {
 	dto.BaseDTO
-	SkuId string `json:"skuId"`
-	Type  string `json:"type"`
-	Title string `json:"title"`
+	SkuId    string `json:"skuId"`
+	Type     string `json:"type"`
+	Title    string `json:"title"`
+	PddSkuId string `json:"pddSkuId"`
 }
 
 // DoorSkuDTO 商品信息

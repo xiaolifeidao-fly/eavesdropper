@@ -39,10 +39,10 @@ export const saveSearchSkuRecord = async (searchSkuRecord: SearchSkuRecord) : Pr
     return await instance.post("/doors/sku/search/save", searchSkuRecord);
 }
 
-export const searchSkuRecord = async (searchType: string, title: string) : Promise<SearchSkuRecord|null> => {
+export const searchSkuRecord = async (searchType: string, pddSkuId: string) : Promise<SearchSkuRecord|null> => {
     const params = {
         searchType : searchType,
-        title : title
+        pddSkuId : pddSkuId
     }
     return await getData(SearchSkuRecord, "/doors/sku/search", params);
 }

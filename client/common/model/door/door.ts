@@ -63,12 +63,14 @@ export class SearchSkuRecord {
     type: string;
     title: string;
     skuId: string | undefined;
+    pddSkuId: string | undefined;
 
-    constructor(id: number | undefined, type: string, title: string, skuId?: string) {
+    constructor(id: number | undefined, type: string, title: string, skuId?: string, pddSkuId?: string) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.skuId = skuId;
+        this.pddSkuId = pddSkuId;
     }
 }
 

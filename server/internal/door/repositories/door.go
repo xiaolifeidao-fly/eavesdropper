@@ -40,6 +40,6 @@ func (r *DoorFileRecordRepository) FindBySourceAndResourceIdAndFileKey(source st
 	return r.GetOne("select * from door_file_record where source = ? and resource_id = ? and file_key = ?", source, resourceId, fileKey)
 }
 
-func (r *SearchSkuRecordRepository) FindBySearchTypeAndTitle(searchType string, title string) (*models.SearchSkuRecord, error) {
-	return r.GetOne("select * from search_sku_record where type = ? and title = ? order by id desc limit 1", searchType, title)
+func (r *SearchSkuRecordRepository) FindBySearchTypeAndPddSkuId(searchType string, pddSkuId string) (*models.SearchSkuRecord, error) {
+	return r.GetOne("select * from search_sku_record where type = ? and pdd_sku_id = ? order by id desc limit 1", searchType, pddSkuId)
 }

@@ -7,7 +7,7 @@ export class SearchSkuApi extends ElectronApi{
     }
 
     @InvokeType(Protocols.INVOKE)
-    async searchSku(publishResourceId : number, title : string){
-        return await this.invokeApi("searchSku", publishResourceId, title);
+    async searchSku(publishResourceId : number, title : string, pddSkuId : string){
+        return await this.invokeApi("searchSku", publishResourceId, title, pddSkuId);
     }
 }

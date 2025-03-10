@@ -70,8 +70,8 @@ func GetDoorCatProps(ctx *gin.Context) {
 
 func SearchSkuRecord(ctx *gin.Context) {
 	searchType := ctx.Query("searchType")
-	title := ctx.Query("title")
-	result, err := services.FindSearchSkuRecordBySearchTypeAndTitle(searchType, title)
+	pddSkuId := ctx.Query("pddSkuId")
+	result, err := services.FindSearchSkuRecordBySearchTypeAndPddSkuId(searchType, pddSkuId)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return

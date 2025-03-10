@@ -3,7 +3,6 @@ package services
 import (
 	"fmt"
 	"server/common/base"
-	"server/common/encryption"
 	"server/common/http"
 	"server/common/middleware/ai"
 	"server/common/middleware/database"
@@ -116,9 +115,8 @@ func FindDoorFileRecordBySourceAndResourceIdAndFileKey(source string, resourceId
 	return database.ToDTO[dto.DoorFileRecordDTO](doorFileRecord), nil
 }
 
-func FindSearchSkuRecordBySearchTypeAndTitle(searchType string, title string) (*dto.SearchSkuRecordDTO, error) {
-	hashedTitle := encryption.HashString(title)
-	searchSkuRecord, err := searchSkuRecordRepository.FindBySearchTypeAndTitle(searchType, hashedTitle)
+func FindSearchSkuRecordBySearchTypeAndPddSkuId(searchType string, pddSkuId string) (*dto.SearchSkuRecordDTO, error) {
+	searchSkuRecord, err := searchSkuRecordRepository.FindBySearchTypeAndPddSkuId(searchType, pddSkuId)
 	if err != nil {
 		return nil, err
 	}
@@ -126,9 +124,7 @@ func FindSearchSkuRecordBySearchTypeAndTitle(searchType string, title string) (*
 }
 
 func CreateSearchSkuRecord(searchSkuRecordDTO *dto.SearchSkuRecordDTO) (*dto.SearchSkuRecordDTO, error) {
-	hashedTitle := encryption.HashString(searchSkuRecordDTO.Title)
-	searchSkuRecordDTO.Title = hashedTitle
-	searchSkuRecord, err := searchSkuRecordRepository.FindBySearchTypeAndTitle(searchSkuRecordDTO.Type, hashedTitle)
+	searchSkuRecord, err := searchSkuRecordRepository.FindBySearchTypeAndPddSkuId(searchSkuRecordDTO.Type, searchSkuRecordDTO.PddSkuId)
 	if err != nil {
 		return nil, err
 	}

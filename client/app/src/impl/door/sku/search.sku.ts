@@ -16,8 +16,8 @@ export class SearchSkuApiImpl extends SearchSkuApi{
     }
 
     @InvokeType(Protocols.INVOKE)
-    async searchSku(publishResourceId : number, title : string){
-        const skuId = await this.getSkuId(title);
+    async searchSku(publishResourceId : number, title : string, pddSkuId : string){
+        const skuId = await this.getSkuId(pddSkuId);
         if(skuId){
             return skuId;
         }
@@ -40,7 +40,7 @@ export class SearchSkuApiImpl extends SearchSkuApi{
                 const item = itemsArray[0];
                 const skuId = item?.item_id;
                 if(skuId){
-                    const searchRecord = new SearchSkuRecord(undefined, this.getSearchType(), title, String(skuId));
+                    const searchRecord = new SearchSkuRecord(undefined, this.getSearchType(), title, String(skuId), pddSkuId);
                     await saveSearchSkuRecord(searchRecord);
                     return String(skuId);
                 }
@@ -55,8 +55,8 @@ export class SearchSkuApiImpl extends SearchSkuApi{
         return "tb";
     }
 
-    async getSkuId(title: string): Promise<string | undefined> {
-        const result = await searchSkuRecord(this.getSearchType(), title);
+    async getSkuId(pddSkuId: string): Promise<string | undefined> {
+        const result = await searchSkuRecord(this.getSearchType(), pddSkuId);
         if(result){
             return result.skuId;
         }

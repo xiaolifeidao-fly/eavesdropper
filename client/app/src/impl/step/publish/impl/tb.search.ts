@@ -15,7 +15,7 @@ export class TbSearchStep extends AbsPublishStep{
             return new StepResult(false, "title is required");
         }
         log.info("标题为：", title);
-        const skuId = await this.getSkuId(resourceId, title);
+        const skuId = await this.getSkuId(resourceId, title, skuItem.baseInfo.itemId);
         log.info("seach skuId is ", skuId);
         if(!skuId){
             return new StepResult(false, "skuId is not found");
@@ -25,13 +25,13 @@ export class TbSearchStep extends AbsPublishStep{
         return new StepResult(true, skuId);
     }
 
-    async getSkuId(resourceId : number, title : string){
+    async getSkuId(resourceId : number, title : string, pddSkuId : string){
         let requestSuccess = false;
         let requestCount = 0;
         const searchSkuApi = new SearchSkuApiImpl();
         let skuId : string | undefined = undefined;
         while(!requestSuccess && requestCount <=1 ){
-            skuId = await searchSkuApi.searchSku(resourceId, title);
+            skuId = await searchSkuApi.searchSku(resourceId, title, pddSkuId);
             if(!skuId){
                 log.error("searchSku error", skuId);
                 requestCount++;
