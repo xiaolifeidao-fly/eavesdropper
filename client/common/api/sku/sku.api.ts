@@ -22,7 +22,6 @@ export const getSkuPage = async (req: SkuPageReq) => {
   return plainToClass(BasePageResp<SkuPageResp>, result)
 }
 
-export const createSkuMapper = async (req: SkuMapper) => {
-  const result = await instance.post(`/sku/mapper`, req)
-  return plainToClass(SkuMapper, result)
+export const createSkuMappers = async (req: SkuMapper[]) => {
+  await instance.post(`/sku/mappers`, req)
 }

@@ -80,12 +80,6 @@ export abstract class AbsPublishStep extends StepUnit{
                 "jsonBody": JSON.stringify(draftData),
                 "globalExtendInfo": JSON.stringify({ "startTraceId": startTraceId })
             };
-            log.info("updateDraftData data is ", {
-                "id": draftId,
-                "dbDraftId": draftId,
-                "globalExtendInfo": JSON.stringify({ "startTraceId": startTraceId })
-            });
-            log.info("updateDraftData url ", url);
             const res = await axios.post(url, data, {
                 headers: header
             })

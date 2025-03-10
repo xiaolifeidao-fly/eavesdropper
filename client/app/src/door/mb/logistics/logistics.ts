@@ -25,6 +25,10 @@ function getKeywords(keywords : string){
 
 export async function getOrSaveTemplateId(resourceId: number, skuItem: DoorSkuDTO) {
     const logisticsMode = skuItem.doorSkuLogisticsInfo;
+    const deliveryFromAddr = logisticsMode.deliveryFromAddr;
+    if (!deliveryFromAddr || deliveryFromAddr == "") {
+        logisticsMode.deliveryFromAddr = "北京市";
+    }
     const keywords = getKeywords(logisticsMode.deliveryFromAddr);
     const address = await getAddressByKeywordsAndResourceId(keywords, resourceId);
     if (address) {

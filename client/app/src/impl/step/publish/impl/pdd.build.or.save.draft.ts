@@ -148,7 +148,6 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
         if (quantity > 0) {
             draftData.quantity = quantity.toString();
         }
-        log.info("skuList is ", JSON.stringify(skuList));
         draftData.sku = skuList;
     
     }

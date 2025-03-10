@@ -291,7 +291,6 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         if (quantity > 0) {
             draftData.quantity = quantity.toString();
         }
-        log.info("skuList is ", skuList);
         draftData.sku = skuList;
     
     }

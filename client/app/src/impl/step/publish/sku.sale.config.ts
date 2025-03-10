@@ -1,4 +1,4 @@
-import { createSkuMapper } from "@api/sku/sku.api";
+import { createSkuMappers } from "@api/sku/sku.api";
 import { DoorSkuDTO, DoorSkuSaleInfoDTO, SalesAttr, SalesAttrValue, SalesSku } from "@model/door/sku"
 import { SkuMapper } from "@model/sku/sku";
 import log from "electron-log";
@@ -302,15 +302,17 @@ export class RebuildSalePro{
     async fillSaleSku(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[]) {
         const saleSkus : SalesSku[] = doorSkuSaleInfo.salesSkus;
         const newSaleSkuMap :SalesSku[] = [];
+        const skuMappers : SkuMapper[] = [];
         for(const saleSku of saleSkus){
            const salePropPath = saleSku.salePropPath;
            const newSalePropPath = this.getNewSalePropPath(salePropPath, saleMappers);
            if(newSalePropPath && newSalePropPath.length > 0){
-                await createSkuMapper(new SkuMapper(undefined, this.skuId, salePropPath, newSalePropPath));
+                skuMappers.push(new SkuMapper(undefined, this.skuId, salePropPath, newSalePropPath));
                 saleSku.salePropPath = newSalePropPath;
                 newSaleSkuMap.push(saleSku);
            }
         }
+        await createSkuMappers(skuMappers);
         doorSkuSaleInfo.salesSkus = newSaleSkuMap;
     }
     

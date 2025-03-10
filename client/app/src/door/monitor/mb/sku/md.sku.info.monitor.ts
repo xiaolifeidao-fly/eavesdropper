@@ -50,6 +50,12 @@ export class SearchSkuMonitor extends MbMonitorResponse<{}>{
             if(!result){
                 return new DoorEntity<{}>(false, {});
             }
+            if('ret' in result){
+                const doorEntity = this.buildDoorEntity(result);
+                if(doorEntity){
+                    return doorEntity;
+                }
+            }
             if('data' in result){
                 const data = result.data;
                 return new DoorEntity<{}>(true, data);
@@ -105,6 +111,25 @@ export class MbSkuPublishDraffMonitor extends MbMonitorResponse<{}>{
         const contentType = response.headers()['content-type'];
         if(contentType.includes('application/json')){
             const result =  await response.json();
+            const ret = result.ret;
+            if(Array.isArray(ret)){
+                const retCode = ret[0];
+                if(retCode == 'FAIL_SYS_USER_VALIDATE'){
+                    log.error("getResponseData error ", result);
+                    const data = result.data as { [key: string]: any };
+                    const doorEntity = new DoorEntity<{}>(false, data as {});
+                    doorEntity.validateUrl = result.data?.url;
+                    const validateParams : { [key: string]: any } =  {};
+                    if('dialogSize' in data){
+                        validateParams.dialogSize = data.dialogSize;
+                    }
+                    if('attributes' in data){
+                        validateParams.attributes = data.attributes;
+                    }
+                    doorEntity.setValidateParams(validateParams);
+                    return doorEntity;
+                }
+            }
             return new DoorEntity<{}>(true, result as {});
         }
         if (contentType && contentType.includes('text/html')) {
