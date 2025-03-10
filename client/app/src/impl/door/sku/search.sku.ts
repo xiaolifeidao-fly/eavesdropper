@@ -17,7 +17,7 @@ export class SearchSkuApiImpl extends SearchSkuApi{
 
     @InvokeType(Protocols.INVOKE)
     async searchSku(publishResourceId : number, title : string, pddSkuId : string){
-        const skuId = await this.getSkuId(pddSkuId);
+        let skuId = await this.getSkuId(pddSkuId);
         if(skuId){
             return skuId;
         }
@@ -30,7 +30,6 @@ export class SearchSkuApiImpl extends SearchSkuApi{
             const monitor = new SearchSkuMonitor();
             const date = this.formatDateToYYYYMMDD(new Date());
             const url = `https://s.taobao.com/search?initiative_id=staobaoz_${date}&page=1&q=${encodeURIComponent(title)}&tab=pc_taobao`;
-            log.info("url  is  ", url);
             const result = await engine.openWaitMonitor(page, url, monitor);
             if(result && result.code){
                 const itemsArray = result.data?.itemsArray;
@@ -38,7 +37,7 @@ export class SearchSkuApiImpl extends SearchSkuApi{
                     return undefined;
                 }
                 const item = itemsArray[0];
-                const skuId = item?.item_id;
+                skuId = item?.item_id;
                 if(skuId){
                     const searchRecord = new SearchSkuRecord(undefined, this.getSearchType(), title, String(skuId), pddSkuId);
                     await saveSearchSkuRecord(searchRecord);
