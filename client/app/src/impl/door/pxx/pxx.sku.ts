@@ -22,7 +22,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         log.info("open pxx resourceId is ", resourceId);
         try{
             const engine = new PxxEngine(resourceId, false);
-            const url = "https://mobile.yangkeduo.com/personal.html";
+            const url = "https://mobile.yangkeduo.com/";
             const page = await engine.init(url);
             if(!page){ 
                 return;
