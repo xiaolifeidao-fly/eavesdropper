@@ -253,6 +253,10 @@ export default function ResourceManage() {
           await bindResource(record);
           refreshPage(actionRef, false);
         }}>重绑定</Button>,
+        <Button key="openUserInfo" type="link" style={{ paddingRight: 0 }} onClick={async () => {
+          const userApi = new MbUserApi();
+          await userApi.openUserInfo(record.id);
+        }}>打开用户信息</Button>,
         <UpdateResourceModal key="updateResourceModal"
           id={record.id}
           form={{ source: record.source.value, tag: record.tag.value, remark: record.remark }}

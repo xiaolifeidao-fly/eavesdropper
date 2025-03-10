@@ -40,7 +40,7 @@ export class MbSkuApiImpl extends MbSkuApi {
 
     @InvokeType(Protocols.INVOKE)
     async findMbSkuInfo(publishResourceId : number, url: string) {
-        const engine = new MbEngine(publishResourceId);
+        const engine = new MbEngine(publishResourceId, false);
         try{
             const monitorChain = new MbShopDetailMonitorChain();
             const page = await engine.init();

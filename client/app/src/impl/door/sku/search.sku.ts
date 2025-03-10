@@ -5,6 +5,7 @@ import log from "electron-log";
 import { SearchSkuMonitor } from "@src/door/monitor/mb/sku/md.sku.info.monitor";
 import { searchSkuRecord, saveSearchSkuRecord } from "@api/door/door.api";
 import { SearchSkuRecord } from "@model/door/door";
+const cheerio = require('cheerio');
 
 export class SearchSkuApiImpl extends SearchSkuApi{
 
@@ -36,8 +37,7 @@ export class SearchSkuApiImpl extends SearchSkuApi{
                 if(!itemsArray || itemsArray.length === 0){
                     return undefined;
                 }
-                const item = itemsArray[0];
-                skuId = item?.item_id;
+                skuId = this.matchSkuId(title, itemsArray);
                 if(skuId){
                     const searchRecord = new SearchSkuRecord(undefined, this.getSearchType(), title, String(skuId), pddSkuId);
                     await saveSearchSkuRecord(searchRecord);
@@ -48,6 +48,19 @@ export class SearchSkuApiImpl extends SearchSkuApi{
         }catch(error){
             log.error("searchSku error", error);
         }
+    }
+
+    matchSkuId(title : string, itemsArray : {[key: string]: any}[]) : string | undefined{
+        for(const item of itemsArray){
+            const itemTitle = item.title;
+            const htmlTitle = `<html><body>${itemTitle}</body></html>`;
+            const $ = cheerio.load(htmlTitle);
+            const textContent = $('body').text().trim().replace(/\s+/g, ' ');
+            if(textContent == title){
+                return item.item_id;
+            }
+        }
+        return itemsArray[0].item_id;
     }
 
     getSearchType(): string {

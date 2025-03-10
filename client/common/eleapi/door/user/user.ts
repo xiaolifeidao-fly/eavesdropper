@@ -12,4 +12,9 @@ export class MbUserApi extends ElectronApi {
         return await this.invokeApi("getUserInfo", resourceId);
     }
 
+    @InvokeType(Protocols.INVOKE)
+    async openUserInfo(resourceId : number) {
+        return await this.invokeApi("openUserInfo", resourceId);
+    }
+
 }

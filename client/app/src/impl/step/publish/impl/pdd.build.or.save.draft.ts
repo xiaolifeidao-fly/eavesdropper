@@ -41,35 +41,36 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
     }
 
     async mergeTbSku(skuItem : DoorSkuDTO, draftData : { [key: string]: any }, commonData : { [key: string]: any }){
-        const checkResult = checkPropValue(draftData, commonData);
-        log.info("mergeTbSku checkResult is ", checkResult);
-        if(checkResult){
-            return true;
-        }
-        const resourceId = this.getParams("resourceId");
-        const skuApi = new MbSkuApiImpl();
-        const url = "https://item.taobao.com/item.htm?id=" + skuItem.itemId;
-        const tbSkuItemDTO = await skuApi.getSkuInfo(resourceId, url);
-        if(!tbSkuItemDTO || !tbSkuItemDTO.code){
-            return false;
-        }
-        const tbData = tbSkuItemDTO.data;
-        const tbSkuItem = await parseSku(TB, tbData);
-        if(!tbSkuItem){
-            return false;
-        }
-        const tbSkuItems = tbSkuItem.baseInfo.skuItems;
-        const pddSkuItems = skuItem.baseInfo.skuItems;
-        const needPushTbSkuItems = [];
-        for(let tbSkuItem of tbSkuItems){
-            if(this.needPushTbSku(pddSkuItems, tbSkuItem)){
-                needPushTbSkuItems.push(tbSkuItem);
-            }
-        }
-        for(let tbSkuItem of needPushTbSkuItems){
-            pddSkuItems.push(tbSkuItem);
-        }
-        log.info("mergeSkuProp pddSkuItems is ", JSON.stringify(pddSkuItems));
+        // const checkResult = checkPropValue(draftData, commonData);
+        // log.info("mergeTbSku checkResult is ", checkResult);
+        // if(checkResult){
+        //     return true;
+        // }
+        // // const resourceId = this.getParams("resourceId");
+        // const resourceId = 22;
+        // const skuApi = new MbSkuApiImpl();
+        // const url = "https://item.taobao.com/item.htm?id=" + skuItem.itemId;
+        // const tbSkuItemDTO = await skuApi.getSkuInfo(resourceId, url);
+        // if(!tbSkuItemDTO || !tbSkuItemDTO.code){
+        //     return false;
+        // }
+        // const tbData = tbSkuItemDTO.data;
+        // const tbSkuItem = await parseSku(TB, tbData);
+        // if(!tbSkuItem){
+        //     return false;
+        // }
+        // const tbSkuItems = tbSkuItem.baseInfo.skuItems;
+        // const pddSkuItems = skuItem.baseInfo.skuItems;
+        // const needPushTbSkuItems = [];
+        // for(let tbSkuItem of tbSkuItems){
+        //     if(this.needPushTbSku(pddSkuItems, tbSkuItem)){
+        //         needPushTbSkuItems.push(tbSkuItem);
+        //     }
+        // }
+        // for(let tbSkuItem of needPushTbSkuItems){
+        //     pddSkuItems.push(tbSkuItem);
+        // }
+        // log.info("mergeSkuProp pddSkuItems is ", JSON.stringify(pddSkuItems));
         return true;
     }
 

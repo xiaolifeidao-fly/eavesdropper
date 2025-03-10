@@ -28,6 +28,16 @@ export class MbUserApiImpl extends MbUserApi {
         }  
     }
 
+    @InvokeType(Protocols.INVOKE)
+    async openUserInfo(resourceId : number) {
+        const engine = new MbEngine(resourceId, false);
+        const monitor = new MbUserInfoMonitor();
+        const page = await engine.init();
+        if(!page){ 
+            return;
+        }
+        await page.goto("https://www.taobao.com/");
+    }
 
 }
 

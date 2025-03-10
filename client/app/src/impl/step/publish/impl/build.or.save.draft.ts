@@ -123,7 +123,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         await this.fillMainImage(imageFileList, draftData);
         await this.fillSellInfo(commonData, skuItem, draftData);
         await this.fillLogisticsMode(resourceId, skuItem, draftData);
-        const imageDetailResult = await this.fillImageDetail(draftData, imageFileList);
+        const imageDetailResult = this.fillImageDetail(draftData, imageFileList);
         if(!imageDetailResult){
             return {
                 draftData : undefined,
@@ -167,7 +167,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         };
     }
 
-    async fillImageDetail(draftData: { [key: string]: any }, imageFileList: SkuFileDetail[]) {
+    fillImageDetail(draftData: { [key: string]: any }, imageFileList: SkuFileDetail[]) {
         const detailImages = this.getAndSortImage(imageFileList, "detail");
         const groupImage: { [key: string]: any }[] = [];
         let groupId = new Date().getTime();

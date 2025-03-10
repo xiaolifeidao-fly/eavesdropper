@@ -72,26 +72,37 @@ export async function confirmProtocol(page: Page) {
 export abstract class AbsPublishStep extends StepUnit{
 
     public async updateDraftData(catId: string, draftId: string, header: { [key: string]: any }, startTraceId: string, draftData: {}) {
-        const url = "https://item.upload.taobao.com/sell/draftOp/update.json?catId=" + catId;
-        const data = {
-            "id": draftId,
-            "dbDraftId": draftId,
-            "jsonBody": JSON.stringify(draftData),
-            "globalExtendInfo": JSON.stringify({ "startTraceId": startTraceId })
-        };
-    
-        const res = await axios.post(url, data, {
-            headers: header
-        })
-        if (!res.data || (typeof (res.data) == 'string' && res.data == '')) {
-            log.info("updateDraftData res is empty", res.data);
+        try{
+            const url = "https://item.upload.taobao.com/sell/draftOp/update.json?catId=" + catId;
+            const data = {
+                "id": draftId,
+                "dbDraftId": draftId,
+                "jsonBody": JSON.stringify(draftData),
+                "globalExtendInfo": JSON.stringify({ "startTraceId": startTraceId })
+            };
+            log.info("updateDraftData data is ", {
+                "id": draftId,
+                "dbDraftId": draftId,
+                "globalExtendInfo": JSON.stringify({ "startTraceId": startTraceId })
+            });
+            log.info("updateDraftData url ", url);
+            const res = await axios.post(url, data, {
+                headers: header
+            })
+            if (!res.data || (typeof (res.data) == 'string' && res.data == '')) {
+                log.info("updateDraftData res is empty", res.data);
+                return false;
+            }
+            if (!res.data.success) {
+                log.info("updateDraftData res is not success ");
+                return false;
+            }
+            log.info("updateDraftData res is success ");
+            return true;
+        }catch(e){
+            log.error("updateDraftData error ", e);
             return false;
         }
-        if (!res.data.success) {
-            log.info("updateDraftData res is not success ");
-            return false;
-        }
-        return true;
     }
 
     public async getCommonData(page: Page) {

@@ -43,6 +43,9 @@ func GetAddressTemplateByKeywords(ctx *gin.Context) {
 
 func GetAddressByKeywords(ctx *gin.Context) {
 	keywords := ctx.Param("keywords")
+	if keywords == "" {
+		keywords = "北京市"
+	}
 	address, err := services.GetAddressByKeywords(keywords)
 	if err != nil {
 		controller.Error(ctx, err.Error())
