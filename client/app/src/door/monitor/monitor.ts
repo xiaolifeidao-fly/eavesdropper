@@ -48,7 +48,10 @@ export abstract class Monitor<T = any> {
         return undefined;
     }
 
-    getItemKeys(url : string): string | undefined {
+    getItemKeys(url : string | undefined): string | undefined {
+        if(!url){
+            return undefined;
+        }
         return this.getItemKey(getUrlParameter(url));
     }
 

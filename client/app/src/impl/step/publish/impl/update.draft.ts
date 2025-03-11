@@ -88,10 +88,10 @@ export class UpdateDraftStep extends AbsPublishStep {
         }finally{
             await engine.closePage();
             const page = this.getParams("page");
-            if(page){
-                console.log("cache page is not null");
-                await page.close();
-            }
+            // if(page){
+            //     console.log("cache page is not null");
+            //     await page.close();
+            // }
         }
     }
 

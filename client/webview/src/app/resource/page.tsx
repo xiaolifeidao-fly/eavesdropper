@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState, useEffect } from 'react';
-import { Button, message, Tag, Space, Popconfirm, Tooltip, Spin, Modal } from 'antd';
+import { Button, message, Tag, Space, Popconfirm, Tooltip, Spin, Modal, Input, Form } from 'antd';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
 
@@ -208,32 +208,89 @@ export default function ResourceManage() {
   const [open, setOpen] = useState(false);
   const [qrCodeFilePath, setQrCodeFilePath] = useState<string | undefined>(undefined);
 
-  const bindResource = async (record: DataType) => {
-    try {
-      setLoading(true);
-      const resourceId = record.id;
+  const [username, setUsername] = useState<string>();
+  const [password, setPassword] = useState<string>();
+  const [validateCode, setValidateCode] = useState<string>("");
+  const [validateHidden, setValidateHidden] = useState(true);
 
-      const mbLoginApi = new MbLoginApi();
-      const loginResult = await mbLoginApi.login(resourceId);
-      if (loginResult.code === false) {
-        message.error('绑定失败');
-        return;
-      }
-      const qrCodeData = loginResult.data;
-      if (!qrCodeData || Object.keys(qrCodeData).length === 0) {
-        message.success('绑定成功');
-        return;
-      }
-      setOpen(true);
-      setQrCodeLoading(true);
-      const qrCodeFilePath = qrCodeData['fileUrl'];
-      setQrCodeFilePath(qrCodeFilePath);
-    } finally {
-      setLoading(false);
-      setQrCodeLoading(false);
-    }
+  const [operatorResourceId, setOperatorResourceId] = useState<number>(-1);
+
+  // const bindResource = async (record: DataType) => {
+  //   try {
+  //     setLoading(true);
+  //     const resourceId = record.id;
+
+  //     const mbLoginApi = new MbLoginApi();
+  //     const loginResult = await mbLoginApi.login(resourceId);
+  //     if (loginResult.code === false) {
+  //       message.error('绑定失败');
+  //       return;
+  //     }
+  //     const qrCodeData = loginResult.data;
+  //     if (!qrCodeData || Object.keys(qrCodeData).length === 0) {
+  //       message.success('绑定成功');
+  //       return;
+  //     }
+  //     setOpen(true);
+  //     setQrCodeLoading(true);
+  //     const qrCodeFilePath = qrCodeData['fileUrl'];
+  //     setQrCodeFilePath(qrCodeFilePath);
+  //   } finally {
+  //     setLoading(false);
+  //     setQrCodeLoading(false);
+  //   }
+  // }
+
+  const openLoginPage = async (record: DataType) => {
+     setOpen(true);
+     setOperatorResourceId(record.id);
   }
 
+  const login = async () => {
+      try {
+        if(!username || !password){
+          message.error("请输入账号和密码");
+          return;
+        }
+        setValidateHidden(true);
+        setQrCodeLoading(true);
+        const mbLoginApi = new MbLoginApi();
+        const loginResult = await mbLoginApi.inputLoginInfo(operatorResourceId, username, password);
+        if(loginResult.code === undefined){
+          setValidateHidden(false);
+          message.info("请输入验证码");
+          return;
+        }
+        if (!loginResult || loginResult.code === false) {
+          message.error(loginResult?.data || "登录失败");
+          return;
+        }
+        message.success(loginResult?.data || "登录成功");
+        setOpen(false);
+      } finally {
+        setQrCodeLoading(false);
+      }
+  }
+
+  const loginByValidateCode = async () => {
+      try {
+        if(!validateCode || validateCode.length !== 6){
+          message.error("请输入6位验证码");
+          return;
+        }
+        setQrCodeLoading(true);
+        const mbLoginApi = new MbLoginApi();
+        const loginResult = await mbLoginApi.loginByValidateCode(operatorResourceId, validateCode);
+        if (loginResult.code === false) {
+          message.error(loginResult.data);
+          return;
+        }
+        message.success('登录成功');
+        setOpen(false);
+      } finally {
+        setQrCodeLoading(false);
+      }
+  }
   const deleteConfirm = async (id: number) => {
     await deleteResourceApi(id);
     message.success('删除成功');
@@ -250,8 +307,7 @@ export default function ResourceManage() {
       width: 150,
       render: (_, record) => [
         <Button key="bind" type="link" style={{ paddingRight: 0 }} onClick={async () => {
-          await bindResource(record);
-          refreshPage(actionRef, false);
+          await openLoginPage(record);
         }}>重绑定</Button>,
         <Button key="openUserInfo" type="link" style={{ paddingRight: 0 }} onClick={async () => {
           const userApi = new MbUserApi();
@@ -304,11 +360,34 @@ export default function ResourceManage() {
           }}
         />
       </Spin>
-      <Modal open={open} onCancel={() => setOpen(false)} onOk={() => setOpen(false)}>
-        <Spin spinning={qrCodeLoading} tip={qrCodeTip}>
+      <Modal open={open} onCancel={() => setOpen(false)} onOk={() => setOpen(false)} footer={null} style={{ height: '400px' }}>
+        {/* <Spin spinning={qrCodeLoading} tip={qrCodeTip}>
           <div style={{ textAlign: 'center' }}>请在1分钟内扫码完毕,扫码完毕后请待耐心等待20s左右,不要关闭此窗口</div>
           <div style={{ textAlign: 'center' }}>
             <img src={qrCodeFilePath} />
+          </div>
+        </Spin> */}
+        <Spin spinning={qrCodeLoading} tip={qrCodeTip}>
+
+          <div style={{ textAlign: 'center', marginTop: 50 }}>
+            <div>
+              <Form.Item label="账号:">
+                <Input placeholder='请输入账号' required={true} onChange={(e) => setUsername(e.target.value)}></Input>
+              </Form.Item>
+            </div>
+            <div>
+              <Form.Item label="密码:">
+                <Input placeholder='请输入密码' required={true} type='password' onChange={(e) => setPassword(e.target.value)}></Input>
+              </Form.Item>
+            </div>
+            <div style={{ display: validateHidden ? 'none' : 'block' }}>
+              <Form.Item label="验证码:">
+                <Input hidden placeholder='请输入验证码' type='number'  maxLength={6} onChange={(e) => setValidateCode(e.target.value)}></Input>
+              </Form.Item>
+            </div>
+            <Button onClick={async () => await login()}>登录</Button>
+            {validateHidden ? null : <Button onClick={async () => await loginByValidateCode()}>提交</Button>}
+
           </div>
         </Spin>
       </Modal>

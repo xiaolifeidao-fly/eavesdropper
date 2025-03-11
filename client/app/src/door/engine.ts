@@ -12,7 +12,6 @@ const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
 
-
 export abstract class DoorEngine<T = any> {
 
     private chromePath: string | undefined;
@@ -33,9 +32,11 @@ export abstract class DoorEngine<T = any> {
 
     width : number;
     height : number;
+    usePersistentContext : boolean;
 
-    constructor(resourceId : number, headless: boolean = true, chromePath: string = "", forceSaveSesssion = false){
+    constructor(resourceId : number, headless: boolean = true, chromePath: string = "", usePersistentContext : boolean = false){
         this.resourceId = resourceId;
+        this.usePersistentContext = usePersistentContext;
         if(chromePath){
             this.chromePath = chromePath;
         }else{
@@ -71,24 +72,84 @@ export abstract class DoorEngine<T = any> {
         this.monitors.push(...monitorChain.getMonitors());
     }
 
+
+
     public async init(url : string|undefined = undefined) : Promise<Page | undefined> {
+        // if(this.usePersistentContext){
+        //     return this.initByPersistentContext(url);
+        // }
         this.browser = await this.createBrowser();
         if(!this.context){
             this.context = await this.createContext();
         }
         // this.context = await this.createBrowser();
         if(!this.context){
+            log.info("context is null");
             return undefined;
         }
         const page = await this.context.newPage();
+        await page.setViewportSize({ width: this.width, height: this.height });
         if(url){
             await page.goto(url);
         }
         this.onRequest(page);
         this.onResponse(page);
-        await page.setViewportSize({ width: this.width, height: this.height });
         this.page = page;
         return page;
+    }
+
+
+
+    async initByPersistentContext(url : string|undefined = undefined) : Promise<Page | undefined> {
+        this.context = await this.createContextByPersistentContext();
+        if(!this.context){
+            return undefined;
+        }
+        const page = await this.context.newPage();
+        await page.setViewportSize({ width: this.width, height: this.height });
+        if(url){
+            await page.goto(url);
+        }
+        this.onRequest(page);
+        this.onResponse(page);
+        this.page = page;
+        return page;
+    }
+
+    async createContextByPersistentContext(): Promise<BrowserContext> {
+        let storeBrowserPath = await this.getRealChromePath();
+
+        let key = this.getKey();
+        if(storeBrowserPath){
+            key += "_" + storeBrowserPath;
+        }   
+        log.info("browser key is ", key);
+        if(contextMap.has(key)){
+            return contextMap.get(key) as BrowserContext;
+        }
+        const userDataDir = this.getUserDataDir();
+        const platform = await getPlatform();
+        const context = await chromium.launchPersistentContext(userDataDir,{
+            headless: this.headless,
+            executablePath: storeBrowserPath,
+            args: [
+                '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
+                '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
+                '--disable-setuid-sandbox',
+                '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
+                '--window-size=' + this.width + ',' + this.height
+            ],
+            extraHTTPHeaders: {
+                'sec-ch-ua': getSecChUa(platform),
+                'sec-ch-ua-mobile': '?0', // 设置为移动设备
+                'sec-ch-ua-platform': `"${platform.userAgentData.platform}"`,
+            },
+            userAgent: platform.userAgent,
+            bypassCSP : true,
+            locale: 'zh-CN',
+        })
+        contextMap.set(key, context);
+        return context;
     }
 
     public getContext(){
@@ -97,7 +158,8 @@ export abstract class DoorEngine<T = any> {
 
     public async closePage(){
         if(this.page){
-            await this.page.close();
+            // 无需关闭
+            // await this.page.close();
         }
     }
 
@@ -225,7 +287,7 @@ export abstract class DoorEngine<T = any> {
         });
     }
 
-    public async openWaitMonitor(page : Page,  url: string, monitor : Monitor<T | any>, headers: Record<string, string> = {}, doAction: (page: Page, ...doActionParams: any[]) => Promise<void> = async (page: Page, ...doActionParams: any[]) => {}, ...doActionParams: any[]){
+    public async openWaitMonitor(page : Page,  url: string | undefined, monitor : Monitor<T | any>, headers: Record<string, string> = {}, doAction: (page: Page, ...doActionParams: any[]) => Promise<void> = async (page: Page, ...doActionParams: any[]) => {}, ...doActionParams: any[]){
         const itemKey = monitor.getItemKeys(url);
         const cache = await this.fromCacheByMonitor(url, itemKey, monitor);
         if(cache){
@@ -233,11 +295,15 @@ export abstract class DoorEngine<T = any> {
         }
         this.addMonitor(monitor);
         await this.startMonitor();
-        await page.goto(url, headers);
+        if(url){
+            await page.goto(url);
+        }
         await doAction(page, ...doActionParams);
         const doorEntity = await monitor.waitForAction();
         if(monitor instanceof MonitorResponse && itemKey){
-            await this.saveCache(url, monitor.getKey(), monitor.getType(), itemKey, doorEntity);
+            if(url){
+                await this.saveCache(url, monitor.getKey(), monitor.getType(), itemKey, doorEntity);
+            }
         }
         return doorEntity;
     }
@@ -250,7 +316,7 @@ export abstract class DoorEngine<T = any> {
         }
         this.addMonitor(monitor);
         await this.startMonitor();
-        await page.goto(url, headers);
+        await page.goto(url);
         const result = await doAction(page, ...doActionParams);
         return result;
     }
@@ -263,7 +329,10 @@ export abstract class DoorEngine<T = any> {
         await saveDoorRecord(doorRecord);
     }
 
-    public async fromCacheByMonitor(url : string, itemKey : string | undefined, monitor : Monitor<T>) : Promise<DoorEntity<T> | undefined> {
+    public async fromCacheByMonitor(url : string | undefined, itemKey : string | undefined, monitor : Monitor<T>) : Promise<DoorEntity<T> | undefined> {
+        if(!url){
+            return undefined;
+        }   
         if(!(monitor instanceof MonitorResponse)){
             return undefined;
         }
@@ -300,7 +369,7 @@ export abstract class DoorEngine<T = any> {
         }
         this.addMonitorChain(monitorChain);
         await this.startMonitor();
-        await page.goto(url, headers);
+        await page.goto(url);
         await doAction(page, ...doActionParams);
         const doorEntity = await monitorChain.waitForAction();
         if(doorEntity && doorEntity.code && itemKey){
@@ -367,13 +436,13 @@ export abstract class DoorEngine<T = any> {
 
     public async closeContext(){
         if(this.context){
-            await this.context.close();
+            // await this.context.close();
         }
     }
 
     public async closeBrowser(){
         if(this.browser){
-            await this.browser.close();
+            // await this.browser.close();
         }
     }
 
@@ -401,7 +470,6 @@ export abstract class DoorEngine<T = any> {
     }
 
     getUserDataDir(){
-        const name = this.constructor.name;
         const userDataDir = path.join(path.dirname(app.getAppPath()),'resource','userDataDir',this.getNamespace(), this.resourceId.toString());
         if(!fs.existsSync(userDataDir)){
             fs.mkdirSync(userDataDir, { recursive: true });
@@ -510,32 +578,6 @@ export abstract class DoorEngine<T = any> {
         if(browserMap.has(key)){
             return browserMap.get(key);
         }
-        // if(contextMap.has(key)){
-        //     return contextMap.get(key);
-        // }
-        // const userDataDir = this.getUserDataDir();
-        // const platform = await getPlatform();
-        // const context = await chromium.launchPersistentContext(userDataDir,{
-        //     headless: this.headless,
-        //     executablePath: storeBrowserPath,
-        //     args: [
-        //         '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
-        //         '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
-        //         '--disable-setuid-sandbox',
-        //         '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
-        //     ],
-        //     extraHTTPHeaders: {
-        //         'sec-ch-ua': getSecChUa(platform),
-        //         'sec-ch-ua-mobile': '?0', // 设置为移动设备
-        //         'sec-ch-ua-platform': `"${platform.userAgentData.platform}"`,
-        //     },
-        //     userAgent: platform.userAgent,
-        //     bypassCSP : true,
-        //     locale: 'zh-CN',
-        // })
-        // contextMap.set(key, context);
-        // return context;
-
         const browser = await chromium.launch({
             headless: this.headless,
             executablePath: storeBrowserPath,

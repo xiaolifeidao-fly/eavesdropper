@@ -66,7 +66,7 @@ export class PublishSkuStep extends AbsPublishStep {
         const engine = new MbEngine(resourceId);
         const newPage = await engine.init();
         if(!newPage){
-            log.info("newPage is null");
+            log.info("first init newPage is null");
             return new StepResult(false, "发布商品界面加载失败");
         }
         try{

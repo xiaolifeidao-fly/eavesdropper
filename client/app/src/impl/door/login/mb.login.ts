@@ -9,13 +9,19 @@ import { get } from "@utils/store/electron";
 import { app } from "electron";
 import log from "electron-log";
 import path from "path";
-import { Page } from "playwright-core";
+import { Frame, Page } from "playwright-core";
 import { v4 as uuidv4 } from 'uuid';
 import fs from "fs";
 
 const loginEngineMap : { [key: string]: DoorEngine; } = {};
 
-function getLoginEngine(resourceId : number){
+async function getLoginEngine(resourceId : number){
+    if(!loginEngineMap[resourceId]){
+        const engine = new MbEngine<{}>(resourceId);
+        await engine.init("https://myseller.taobao.com/home.htm/QnworkbenchHome/");
+        loginEngineMap[resourceId] = engine;
+        return engine;
+    }
     return loginEngineMap[resourceId];
 }
 
@@ -59,28 +65,175 @@ async function checkIsLogin(page : Page){
 
 export class MbLoginApiImpl extends MbLoginApi {
 
+
+    async getFrame(page: Page, frameName: string) {
+        const frame = await page.mainFrame();
+        for (const child of frame.childFrames()) {
+            if (child.url().includes(frameName)) {
+                return child;
+            }
+        }
+        return undefined;
+    }
+
     @InvokeType(Protocols.INVOKE)
     async inputLoginInfo(resourceId: number, username: string, password: string) {
-        const engine = getLoginEngine(resourceId);
-        if(!engine){
-            return;
+        try{
+            const engine = await getLoginEngine(resourceId);
+            if(!engine){
+                log.error("inputLoginInfo engine is null");
+                return;
+            }
+            const page = engine.getPage();
+            if(!page){
+                log.error("inputLoginInfo page is null");
+                return;
+            }
+            log.info("inputLoginInfo username is ", username);
+            log.info("inputLoginInfo password is ", password);
+            await page.waitForTimeout(2000);
+            const frame = await this.getFrame(page, "mini_login.htm");
+            if(!frame){
+                log.error("inputLoginInfo frame is null");
+                return;
+            }
+            await frame.locator("#fm-login-id").first().fill(username);
+            await frame.locator("#fm-login-password").first().fill(password);
+            log.info("inputLoginInfo fill username and password");
+            const responsePromise = page.waitForResponse(response =>
+                response.request().url().includes("newlogin/login.do"),
+                { timeout: 10000 }
+            );
+            await frame.locator(".fm-button.fm-submit.password-login ").first().click();
+            const result = await responsePromise;
+            const json = await result.json();
+            log.info("inputLoginInfo click login result is ", json);
+            const loginResult = json.content?.data?.loginResult;
+            if(loginResult && loginResult == "success"){
+                log.info("inputLoginInfo login success wait monitor");
+                await this.awaitByLoginResult(engine, page);
+                return new DoorEntity<{}>(true, "登录成功");
+            }
+            const titleMsg = json.content?.data?.titleMsg;
+            const iframeRedirect = json.content?.data?.iframeRedirect;
+            if(!iframeRedirect){
+                return new DoorEntity<{}>(false, titleMsg);
+            }
+            const validateResult = await this.sendValidateCode(page);
+            if(!validateResult.result){
+                return new DoorEntity<{}>(false, validateResult.message);
+            }
+            return new DoorEntity<{}>(undefined,"请输入验证码");
+        }catch(error : any){
+            log.error("inputLoginInfo error", error);
+            return new DoorEntity<{}>(false, "登录失败");
         }
-        const page = await engine.getPage();
-        if(!page){
-            return;
+    }
+
+    async sendValidateCode(page : Page){
+        try{
+            await page.waitForLoadState('load');
+            await page.waitForTimeout(5000);
+            const frame = await this.getFrame(page, "identity_verify.htm");
+            if(!frame){
+                log.error("sendValidateCode frame is null");
+                return {
+                    result : false,
+                    message : "打开验证码界面失败"
+                };
+            }
+            const responsePromise = page.waitForResponse(response =>
+                response.request().url().includes("phone/send_code.do"),
+                { timeout: 10000 }
+            );
+            await frame.locator("#J_GetCode").first().click();
+            log.info("sendValidateCode click validate code ");
+            const response = await responsePromise;
+            const json = await response.json();
+            /**
+             * {"content":{"code":0,"codeMsg":"success","value":"验证码发送成功","success":true},"hasError":false}
+             */
+            const code = json.content?.code;
+            const value = json.content?.value;
+            if(code != 0){
+                return {
+                    result : false,
+                    message : value
+                };
+            }
+            log.info("sendValidateCode success ", json);
+            return {
+                result : true,
+                message : value
+            };
+        }catch(error){
+            log.error("sendValidateCode error", error);
+            return {
+                result : false,
+                message : "验证码发生未知异常"
+            };
         }
-        await page.locator("#fm-login-id").fill(username);
-        await page.locator("#fm-login-password").fill(password);
-        
+    }
+
+    async awaitByLoginResult(engine : MbEngine<{}>, page : Page){
+        const loginResponse = page.waitForResponse(response =>
+            response.request().url().includes("home.htm/QnworkbenchHome"),
+            { timeout: 10000 }
+        );
+        const headers = await (await loginResponse).allHeaders();
+        log.info("awaitByLoginResult login headers is ", headers);
+        engine.saveContextState();
+        return true;
     }
 
     @InvokeType(Protocols.INVOKE)
     async loginByValidateCode(resourceId: number, validateCode: string) {
+        const engine = await getLoginEngine(resourceId);
+        if(!engine){
+            return;
+        }
+        const page = engine.getPage();
+        if(!page){
+            return;
+        }
+        let frame = await this.getFrame(page, "identity_verify.htm");
+        if(!frame){
+            log.error("sendValidateCode frame is null");
+            return;
+        }
+        const responsePromise = page.waitForResponse(response =>
+            response.request().url().includes("identity_verify.htm"),
+            { timeout: 10000 }
+        );
+        await frame.locator("#J_Checkcode").first().fill(validateCode);
+        log.info("loginByValidateCode fill validateCode");
+        await frame.locator("#btn-submit").first().click();
+        log.info("loginByValidateCode click submit start");
+        await responsePromise;
+        frame = await this.getFrame(page, "identity_verify.htm");
+        if(!frame){
+            log.warn("loginByValidateCode frame is null");
+            return await this.awaitByLoginResult(engine, page);
+        }
+        log.info("loginByValidateCode click submit end");
+        const errorText = await frame.evaluate(() => {
+            //@ts-ignore
+            const errorText = document.querySelector(".ui-tiptext.ui-tiptext-error");
+            if(errorText){
+                return errorText.textContent;
+            }
+            return null;
+        });
+        log.info("loginByValidateCode errorText is ", errorText);
+        if(errorText){
+            return new DoorEntity<{}>(false, errorText);
+        }
+        return await this.awaitByLoginResult(engine, page);
     }
 
     @InvokeType(Protocols.INVOKE)
     async login(resourceId: number) {
-        const url = "https://login.taobao.com/member/login.jhtml";
+        const url = "https://myseller.taobao.com/home.htm/QnworkbenchHome/";
         const engine = new MbEngine<{}>(resourceId, true);
         try{
             const page = await engine.init();
