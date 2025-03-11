@@ -160,6 +160,6 @@ func GetShopStatus(status string) (*dto.ShopStatusEnum, error) {
 	case dto.LoseEfficacy.Value:
 		return &dto.LoseEfficacy, nil
 	default:
-		return nil, errors.New("获取商品状态失败")
+		return nil, errors.New("获取店铺状态失败")
 	}
 }

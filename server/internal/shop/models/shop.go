@@ -9,6 +9,7 @@ type Shop struct {
 	Name       string `json:"name"`
 	ShopID     uint64 `json:"shopId"`
 	Remark     string `json:"remark"`
+	Status     string `json:"status"`
 }
 
 func (Shop) TableName() string {
