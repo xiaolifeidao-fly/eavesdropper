@@ -18,18 +18,18 @@ const getNavList = () => {
             icon: <DesktopOutlined />,
             label: '主页'
         },
-        {
-            key: '/auth',
-            icon: <UserOutlined />,
-            label: '用户中心',
-            children: [
-                {
-                    key: '/auth/user',
-                    icon: <UserOutlined />,
-                    label: '用户管理'
-                }
-            ]
-        },
+        // {
+        //     key: '/auth',
+        //     icon: <UserOutlined />,
+        //     label: '用户中心',
+        //     children: [
+        //         {
+        //             key: '/auth/user',
+        //             icon: <UserOutlined />,
+        //             label: '用户管理'
+        //         }
+        //     ]
+        // },
         {
             key: '/resource',
             icon: <LayoutOutlined />,
