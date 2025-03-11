@@ -43,12 +43,27 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         fetchUserInfo();
       } else {
         if (window.location.pathname !== "/auth/login") {
-          message.error("请先登录");
+          // message.error("请先登录");
         }
         router.push("/auth/login");
         return;
       }
     })
+
+    const handlePromiseRejection = (event: PromiseRejectionEvent) => {
+      event.preventDefault();
+      console.error("未捕获的 Promise 错误:", event.reason);
+      message.error(event.reason?.message || "发生未知错误");
+
+      // 统一存储错误信息
+      // useErrorStore.getState().setError(event.reason?.message || "发生未知错误");
+    };
+
+    window.addEventListener("unhandledrejection", handlePromiseRejection);
+
+    return () => {
+      window.removeEventListener("unhandledrejection", handlePromiseRejection);
+    };
   }, [router])
 
   // 获取登录用户信息

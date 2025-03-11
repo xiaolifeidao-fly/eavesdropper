@@ -12,7 +12,7 @@ class HttpError extends Error {
 
   constructor(message: string, code?: any) {
     super(message);
-    this.name = 'HttpError';
+    this.name = '';
     if (code != null) {
       this.code = code;
     }

@@ -168,10 +168,10 @@ func checkCaptcha(captchaID, captcha string) error {
 
 	cacheKey := fmt.Sprintf(AuthCaptchaCacheKey, captchaID)
 
-	if server.Entity.Mode == "dev" {
-		cache.Del(cacheKey)
-		return nil
-	}
+	// if server.Entity.Mode == "dev" {
+	// 	cache.Del(cacheKey)
+	// 	return nil
+	// }
 
 	var cacheData string
 	if cacheData, err = cache.Get(cacheKey); err != nil {
