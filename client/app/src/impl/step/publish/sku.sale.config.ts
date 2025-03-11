@@ -190,11 +190,13 @@ export class RebuildSalePro{
     skuPropMap : {[key : string]:any} = {}
     skuProps : {[key : string]:any}
     skuId : string
+    salePropPathMap : {[key : string]:any} = {}
 
     constructor(skuId : string){
         this.skuPropMap = {}
         this.skuProps = {}
         this.skuId = skuId
+        this.salePropPathMap = {}
     }
 
     putSkuMap(oriMap : string, nowMap : any){
@@ -211,10 +213,15 @@ export class RebuildSalePro{
             const saleConfig = saleConfigMap[uiType];
             const label = subItem.label;
             const pddLable = saleAttr.label;
+            if(subItem.required){
+                const saleValue = saleConfig.buildSalesAttr(subItem);
+                return new SaleMapper(saleValue, subItem, null, true, false);
+            }
             if(pddLable == label || label.includes(pddLable) || pddLable.includes(label)){
                 const saleProp = saleConfig.buildSaleProp(saleAttr, subItem);
                 return new SaleMapper(saleProp.saleAttr, subItem, saleProp.saleAttr.oldPid, true, imageFlag);
             }
+            
         }
         return undefined;
     }
@@ -321,17 +328,96 @@ export class RebuildSalePro{
            }
         }
         await createSkuMappers(skuMappers);
+        this.fillMissingSku(saleMappers, newSaleSkuMap);
         doorSkuSaleInfo.salesSkus = newSaleSkuMap;
+    }
+
+   /**
+ * 填充缺失的SKU组合
+ * @param {Array} saleMappers - 销售属性映射数组
+ * @param {Array} combination - 用于存储组合结果的数组
+ */
+    fillMissingSku(saleMappers : SaleMapper[], newSaleSkuMap : SalesSku[]) {
+        if (!saleMappers || saleMappers.length === 0) {
+                return;
+        }
+        for(const saleSku of newSaleSkuMap){
+            const salePropPath = saleSku.salePropPath;
+            this.salePropPathMap[salePropPath] = salePropPath;
+        }
+        const combination : {[key : string]: any}[] = [];
+        // 提取所有销售属性路径
+        const propPaths : string[][] = [];
+        for(const saleMapper of saleMappers){
+            const values = saleMapper.saleAttr?.values;
+            if(values && values.length > 0){
+                const salePropPaths : string[] = [];
+                for(const value of values){
+                    const salePropPath = saleMapper.pid + ":" + value.value;
+                    if(this.containsSaleProp(newSaleSkuMap, salePropPath)){
+                        salePropPaths.push(salePropPath);
+                    }
+                }
+                propPaths.push(salePropPaths);
+            }
+        }
+        // 生成所有可能的组合
+        const combinations = this.generateCombinations(propPaths);
+        for(let i = 0; i < combinations.length; i++){
+            const combination = combinations[i];
+            let newCombination : string[] = combination.split(";");
+            newCombination = newCombination.sort();
+            const newCombinationKey = newCombination.join(";");
+            combinations[i] = newCombinationKey;
+        }
+        for(const combination of combinations){
+            if(!this.salePropPathMap[combination]){
+                const missSalesSku = new SalesSku(combination, "0", "0");
+                newSaleSkuMap.push(missSalesSku);
+                this.salePropPathMap[combination] = combination;
+            }
+        }
+
+    }
+
+        /**
+     * 生成所有可能的属性路径组合
+     * @param propPaths 二维数组，每个子数组包含一个属性的所有可能值
+     * @returns 所有可能的组合数组
+     */
+    generateCombinations(propPaths: string[][]): string[] {
+        if (propPaths.length === 0) return [];
+        if (propPaths.length === 1) return propPaths[0];
+        
+        // 从第一个数组开始，逐步与后面的数组进行组合
+        let result = [...propPaths[0]];
+        
+        for (let i = 1; i < propPaths.length; i++) {
+            const currentArray = propPaths[i];
+            const tempResult: string[] = [];
+            
+            // 将当前结果与新数组中的每个元素组合
+            for (const existing of result) {
+                for (const current of currentArray) {
+                    tempResult.push(`${existing};${current}`);
+                }
+            }
+            
+            result = tempResult;
+        }
+        
+        return result;
     }
     
     getNewSalePropPath(salePropPaths : string, saleMappers : SaleMapper[]) {
-        const newSalePropPathArr : string[] = [];
+        let newSalePropPathArr : string[] = [];
         const matchResult = this.matchSalePropPath(salePropPaths);
         if(matchResult){
             newSalePropPathArr.push(matchResult);
         }
-        const newSalePropPath = newSalePropPathArr.join(";");
-        return this.appendTbPrivateSaleSkuProp(newSalePropPath, saleMappers);
+        this.appendTbPrivateSaleSkuProp(newSalePropPathArr, saleMappers);
+        newSalePropPathArr = newSalePropPathArr.sort();
+        return newSalePropPathArr.join(";");
     }
 
     matchSalePropPath(salePropPath : string) {
@@ -351,18 +437,16 @@ export class RebuildSalePro{
         return undefined;
     }
     
-    appendTbPrivateSaleSkuProp(salePropPath : string, saleMappers : SaleMapper[]) {
-        let newSalePropPath = salePropPath;
+    appendTbPrivateSaleSkuProp(newSalePropPathArr : string[], saleMappers : SaleMapper[]) {
         for(const saleMapper of saleMappers){
             if(!saleMapper.salePid){
                 const saleAttr = saleMapper.saleAttr;
                 const values = saleAttr?.values;
                 if(values && values.length > 0){
-                    newSalePropPath = newSalePropPath + ";" + saleMapper.pid + ":" +values[0].value;
+                    newSalePropPathArr.push(saleMapper.pid + ":" +values[0].value);
                 }
             }
         }
-        return newSalePropPath;
     }
     
     
@@ -412,8 +496,11 @@ export class RebuildSalePro{
             const saleMapper = this.matchSaleMapper(salesAttrs, subItem, subItem.showUploadImage);
             if(saleMapper){
                 saleMappers.push(saleMapper);
+            }else{
+                saleMappers.push(new SaleMapper(undefined, subItem, null, false))
             }
         }
+        log.info("first assign saleMappers is ", saleMappers);
         const unAssignSaleAttrs = this.getUnAssignSaleAttrs(saleMappers, salesAttrs);
         log.info("unAssignSaleAttrs is ", unAssignSaleAttrs);
 
@@ -451,6 +538,9 @@ export class RebuildSalePro{
             if(!saleMapper.hadAssign){
                 continue;
             }
+            if(!saleMapper.salePid){
+                continue;
+            }
             const saleAttr = saleMapper.saleAttr;
             const values = saleAttr?.values;
             if(values && values.length > 0){
@@ -461,25 +551,6 @@ export class RebuildSalePro{
                     const newValue = "-" + value.value;
                     this.putSkuMap(value.value, saleMapper.pid + ":" + newValue);
                     value.value = newValue;
-                }
-            }
-        }
-
-        for(const key in subItems){
-            const subItem = subItems[key];
-            if(!subItem){
-                continue;
-            }
-            const uiType = subItem.uiType;
-            const saleConfig = saleConfigMap[uiType];
-            if(!saleConfig){
-                continue;
-            }
-            if(subItem.required){
-                if(!this.isAssignRequired(saleMappers, subItem)){
-                    const saleValue = saleConfig.buildSalesAttr(subItem);
-                    log.info("saleValue is ", saleValue)
-                    saleMappers.push(new SaleMapper(saleValue, subItem, null, true, false))
                 }
             }
         }
@@ -519,7 +590,6 @@ export class RebuildSalePro{
         const saleProp : {[key: string]: any} = {};
         const salesSkus = doorSkuSaleInfo.salesSkus;
         for(const saleMapper of saleMappers){
-            log.info("saleMapper is ", JSON.stringify(saleMapper));
             if(!saleMapper.hadAssign){
                 continue;
             }
