@@ -18,7 +18,7 @@ const loginEngineMap : { [key: string]: DoorEngine; } = {};
 async function getLoginEngine(resourceId : number){
     if(!loginEngineMap[resourceId]){
         const engine = new MbEngine<{}>(resourceId);
-        await engine.init("https://myseller.taobao.com/home.htm/QnworkbenchHome/");
+        await engine.init("");
         loginEngineMap[resourceId] = engine;
         return engine;
     }
@@ -89,9 +89,10 @@ export class MbLoginApiImpl extends MbLoginApi {
                 log.error("inputLoginInfo page is null");
                 return;
             }
+            await page.goto("https://myseller.taobao.com/home.htm/QnworkbenchHome/");
+            await page.waitForTimeout(2000);
             log.info("inputLoginInfo username is ", username);
             log.info("inputLoginInfo password is ", password);
-            await page.waitForTimeout(2000);
             const frame = await this.getFrame(page, "mini_login.htm");
             if(!frame){
                 log.error("inputLoginInfo frame is null");
