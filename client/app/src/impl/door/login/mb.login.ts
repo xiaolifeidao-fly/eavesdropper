@@ -194,9 +194,10 @@ export class MbLoginApiImpl extends MbLoginApi {
 
     async awaitByLoginResult(engine : MbEngine<{}>, page : Page){
         await engine.saveContextState();
-        try{
-            const monitor = new MdLoginMonitor();
-            let loginResult = false;
+        setTimeout(async () => {
+            try{
+                const monitor = new MdLoginMonitor();
+                let loginResult = false;
             monitor.setHandler(async (request, response) => {
                 log.info("login monitor request ", await request?.allHeaders());
                 await engine.saveContextState();
@@ -213,7 +214,9 @@ export class MbLoginApiImpl extends MbLoginApi {
         }catch(error){
             log.error("awaitByLoginResult error", error);
             return new DoorEntity<{}>(true, "登录成功");
-        }
+        }}, 1000);
+        return new DoorEntity<{}>(true, "登录成功");
+
     }
 
     @InvokeType(Protocols.INVOKE)
@@ -240,8 +243,8 @@ export class MbLoginApiImpl extends MbLoginApi {
         await frame.locator("#btn-submit").first().click();
         log.info("loginByValidateCode click submit start");
         await responsePromise;
-        await page.waitForTimeout(2000);
         frame = await getFrame(page, "identity_verify.htm");
+        await page.waitForTimeout(100);
         if(!frame){
             log.warn("loginByValidateCode frame is null");
             return await this.awaitByLoginResult(engine, page);
