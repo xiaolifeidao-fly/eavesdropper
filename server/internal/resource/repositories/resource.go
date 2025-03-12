@@ -11,6 +11,16 @@ type resourceRepository struct {
 	database.Repository[*models.Resource]
 }
 
+func (r *resourceRepository) GetResourceByUserID(userID uint64) ([]*models.Resource, error) {
+	var err error
+
+	var resources []*models.Resource
+	if resources, err = r.GetList("select * from resource where user_id = ? and deleted_at is null", userID); err != nil {
+		return nil, err
+	}
+	return resources, nil
+}
+
 func (r *resourceRepository) GetResourceByUserIDAndTag(userID uint64, tag string) ([]*models.Resource, error) {
 	var err error
 

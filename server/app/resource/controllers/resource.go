@@ -256,13 +256,19 @@ func getSyncResourceList(ctx *gin.Context) {
 
 	userID := common.GetLoginUserID()
 
-	tag := services.ResourceTagMain
 	var mainResources []*dto.ResourceDTO
-	if mainResources, err = services.GetResourceByUserIDAndTag(userID, tag); err != nil {
+	if mainResources, err = services.GetResourceByUserID(userID); err != nil {
 		logger.Errorf("getSyncResourceList failed, with error is %v", err)
 		controller.Error(ctx, err.Error())
 		return
 	}
+
+	// tag := services.ResourceTagMain
+	// if mainResources, err = services.GetResourceByUserIDAndTag(userID, tag); err != nil {
+	// 	logger.Errorf("getSyncResourceList failed, with error is %v", err)
+	// 	controller.Error(ctx, err.Error())
+	// 	return
+	// }
 
 	syncResources := make([]*dto.ResourceDTO, 0)
 	for _, mainResource := range mainResources {

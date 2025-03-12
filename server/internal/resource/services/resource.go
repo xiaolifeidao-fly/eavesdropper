@@ -164,6 +164,20 @@ func BindResource(req *dto.ResourceBindDTO) error {
 	return nil
 }
 
+func GetResourceByUserID(userID uint64) ([]*dto.ResourceDTO, error) {
+	var err error
+	resourceRepository := repositories.ResourceRepository
+
+	var resources []*models.Resource
+	if resources, err = resourceRepository.GetResourceByUserID(userID); err != nil {
+		logger.Errorf("GetResourceByUserID failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+
+	resourcesDTO := database.ToDTOs[dto.ResourceDTO](resources)
+	return resourcesDTO, nil
+}
+
 func GetResourceByUserIDAndTag(userID uint64, tag string) ([]*dto.ResourceDTO, error) {
 	var err error
 	resourceRepository := repositories.ResourceRepository
