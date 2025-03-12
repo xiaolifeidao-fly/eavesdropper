@@ -116,6 +116,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             };
         }
         this.fixSkuSaleImages(imageFileList, skuItem);
+        this.fillStartTime(draftData);
         await this.fixSaleProp(commonData, skuItem);
         await this.fillTiltle(skuItem, draftData);
         await this.fillCategoryList(skuItem, draftData, commonData, result.getHeaderData(), catId, startTraceId);
@@ -148,6 +149,13 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             },
             message : "buildDraftData success"
         }
+    }
+
+    fillStartTime(draftData: { [key: string]: any }) {
+        draftData.startTime = {
+            "type": 2,
+            "shelfTime": null
+        };
     }
 
     async mergeTbSku(skuItem : DoorSkuDTO, draftData : { [key: string]: any }, commonData : { [key: string]: any }){

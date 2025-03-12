@@ -14,7 +14,7 @@ export class TbSearchStep extends AbsPublishStep{
 
 
     async getSkuId(pddSkuId: string): Promise<string | undefined> {
-        const result = await searchSkuRecord("tb", pddSkuId);
+        const result = await searchSkuRecord("mb", pddSkuId);
         if(result){
             return result.skuId;
         }

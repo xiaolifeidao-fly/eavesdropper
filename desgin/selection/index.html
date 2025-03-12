@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout Prototype</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .top {
+            height: 200px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top h1 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            width: 23%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .bottom {
+            flex-grow: 1;
+            display: flex;
+        }
+        
+        .left {
+            width: 20%;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+        }
+        
+        .menu-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .menu-tabs {
+            list-style: none;
+        }
+        
+        .menu-item {
+            position: relative;
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-item .product-name {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .menu-item .price-info {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            display: block;
+            margin-top: 2px;
+        }
+
+        .price-info .price-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .price-info .price-value {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .price-info .profit {
+            color: #4cd137;
+        }
+
+        .price-info .loss {
+            color: #ff6b6b;
+            position: relative;
+            padding: 2px 6px;
+            background-color: rgba(255, 107, 107, 0.1);
+            border-radius: 3px;
+        }
+
+        .menu-item.loss-item {
+            border-left: 3px solid #ff6b6b;
+            background-color: rgba(255, 107, 107, 0.05);
+        }
+
+        .menu-item.loss-item:hover {
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+
+        .menu-item.loss-item .price-info {
+            position: relative;
+        }
+
+        .menu-item.loss-item .price-info::before {
+            content: "⚠️";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .menu-actions {
+            display: none;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            padding: 4px;
+        }
+
+        .menu-item:hover .menu-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background-color 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .right {
+            width: 80%;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        .content-title {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .content-area {
+            height: calc(100% - 60px);
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .content-area iframe {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-btn::before {
+            content: "←";
+            font-size: 16px;
+        }
+
+        .back-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .right-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .right-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .right-title::before {
+            content: "";
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(to bottom, #3498db, #2c3e50);
+            border-radius: 2px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <h1>采集批次（20250312-1)</h1>
+        <div class="stats-container">
+            <div class="stat-card">
+                <h2>328</h2>
+                <p>总收藏数</p>
+            </div>
+            <div class="stat-card">
+                <h2>47</h2>
+                <p>较淘宝同类商品有利数据</p>
+            </div>
+            <div class="stat-card">
+                <button class="action-btn">批量分析</button>
+            </div>
+        </div>
+    </div>
+    <div class="bottom">
+        <div class="left">
+            <h2 class="menu-title">收藏列表</h2>
+            <div>分析结果仅供参考</div>
+            <ul class="menu-tabs">
+                <li class="menu-item active">
+                    <div class="product-name">商品1</div>
+                    <div class="price-info">
+                        <span class="price-label">最低:</span>
+                        <span class="price-value">10元</span>
+                        <span class="price-label">同类最低:</span>
+                        <span class="price-value">15元</span>
+                        <span class="price-label">盈利:</span>
+                        <span class="profit">5元</span>
+                    </div>
+                    <div class="menu-actions">
+                        <button class="action-btn">收藏</button>
+                        <button class="action-btn">取消</button>
+                        <button class="action-btn">分析</button>
+                    </div>
+                </li>
+                <li class="menu-item loss-item">
+                    <div class="product-name">商品2</div>
+                    <div class="price-info">
+                        <span class="price-label">最低:</span>
+                        <span class="price-value">25元</span>
+                        <span class="price-label">同类最低:</span>
+                        <span class="price-value">23元</span>
+                        <span class="price-label">亏损:</span>
+                        <span class="loss">-2元</span>
+                    </div>
+                    <div class="menu-actions">
+                        <button class="action-btn">收藏</button>
+                        <button class="action-btn">取消</button>
+                        <button class="action-btn">分析</button>
+                    </div>
+                </li>
+                <li class="menu-item">
+                    <div class="product-name">商品3</div>
+                    <div class="price-info">
+                        <span class="price-label">最低:</span>
+                        <span class="price-value">18元</span>
+                        <span class="price-label">同类最低:</span>
+                        <span class="price-value">28元</span>
+                        <span class="price-label">盈利:</span>
+                        <span class="profit">10元</span>
+                    </div>
+                    <div class="menu-actions">
+                        <button class="action-btn">收藏</button>
+                        <button class="action-btn">取消</button>
+                        <button class="action-btn">分析</button>
+                    </div>
+                </li>
+                <li class="menu-item">
+                    <div class="product-name">商品4</div>
+                    <div class="price-info">
+                        <span class="price-label">最低:</span>
+                        <span class="price-value">30元</span>
+                        <span class="price-label">同类最低:</span>
+                        <span class="price-value">45元</span>
+                        <span class="price-label">盈利:</span>
+                        <span class="profit">15元</span>
+                    </div>
+                    <div class="menu-actions">
+                        <button class="action-btn">收藏</button>
+                        <button class="action-btn">取消</button>
+                        <button class="action-btn">分析</button>
+                    </div>
+                </li>
+                <li class="menu-item">
+                    <div class="product-name">商品5</div>
+                    <div class="price-info">
+                        <span class="price-label">最低:</span>
+                        <span class="price-value">22元</span>
+                        <span class="price-label">同类最低:</span>
+                        <span class="price-value">32元</span>
+                        <span class="price-label">盈利:</span>
+                        <span class="profit">10元</span>
+                    </div>
+                    <div class="menu-actions">
+                        <button class="action-btn">收藏</button>
+                        <button class="action-btn">取消</button>
+                        <button class="action-btn">分析</button>
+                    </div>
+                </li>
+                <li class="menu-item">
+                    <div class="product-name">商品6</div>
+                    <div class="price-info">
+                        <span class="price-label">最低:</span>
+                        <span class="price-value">15元</span>
+                        <span class="price-label">同类最低:</span>
+                        <span class="price-value">25元</span>
+                        <span class="price-label">盈利:</span>
+                        <span class="profit">10元</span>
+                    </div>
+                    <div class="menu-actions">
+                        <button class="action-btn">收藏</button>
+                        <button class="action-btn">取消</button>
+                        <button class="action-btn">分析</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="right">
+            <div class="right-header">
+                <div class="right-title">商品详情</div>
+                <button class="back-btn">返回列表</button>
+            </div>
+            <div class="content-area">
+                <iframe src="https://mobile.yangkeduo.com/" width="100%" height="100%"></iframe>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

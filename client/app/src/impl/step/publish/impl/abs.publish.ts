@@ -165,6 +165,9 @@ export abstract class AbsPublishStep extends StepUnit{
             const switchValues = await this.switchCatPropValue(key, dataSource, value, requestHeader, catId, startTraceId, skuItemDTO);
             newCatProp[key] = switchValues
         }
+        if(!('p-20000' in newCatProp)){
+            newCatProp['p-20000'] = this.getDefaultCatPropValueByPinPai("p-20000");
+        }
         draftData.catProp = newCatProp;
     }
 
@@ -234,6 +237,9 @@ export abstract class AbsPublishStep extends StepUnit{
                 }
             }
             if (!hasFound) {
+                if(proKey == "p-20000"){
+
+                }
                 const categoryInfo = await this.getCategoryInfo(proKey, requestHeader, catId, startTraceId, skuItem.itemId, catValue);
                 if (categoryInfo) {
                     newValues = {

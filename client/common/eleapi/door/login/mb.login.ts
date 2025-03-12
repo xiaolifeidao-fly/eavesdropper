@@ -13,6 +13,11 @@ export class MbLoginApi extends ElectronApi {
     }
 
     @InvokeType(Protocols.INVOKE)
+    async sendValidateCode(resourceId: number) {
+        return await this.invokeApi("sendValidateCode", resourceId);
+    }
+
+    @InvokeType(Protocols.INVOKE)
     async loginByValidateCode(resourceId: number, validateCode: string) {
         return await this.invokeApi("loginByValidateCode", resourceId, validateCode);
     }

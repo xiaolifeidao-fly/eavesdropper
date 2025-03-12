@@ -136,22 +136,37 @@ export class MbLoginApiImpl extends MbLoginApi {
                     return new DoorEntity<{}>(true, resultData.message);
                 }
                 if(resultData.result == "2"){
-                    const validateResult = await this.sendValidateCode(engine, page);
-                    if(!validateResult.result){
-                        return new DoorEntity<{}>(false, validateResult.message);
-                    }
                     return result;
                 }
                 return new DoorEntity<{}>(false, resultData.message);
             }
-            return new DoorEntity<{}>(false,"发送未知异常");
+            return new DoorEntity<{}>(false,"发生未知异常");
         }catch(error : any){
             log.error("inputLoginInfo error", error);
             return new DoorEntity<{}>(false, "登录失败");
         }
     }
 
-    async sendValidateCode(engine : MbEngine<{}>, page : Page){
+    
+    @InvokeType(Protocols.INVOKE)
+    async sendValidateCode(resourceId: number) {
+        const engine = await getLoginEngine(resourceId);
+        if(!engine){
+            return new DoorEntity<{}>(false, "系统错误");
+        }
+        const page = engine.getPage();
+        if(!page){
+            return new DoorEntity<{}>(false, "系统错误");
+        }
+        const validateResult = await this.sendValidateCodeByPage(engine, page);
+        if(!validateResult.result){
+            return new DoorEntity<{}>(false, validateResult.message);
+        }
+        return new DoorEntity<{}>(true, "验证码发送成功");
+    }
+
+
+    async sendValidateCodeByPage(engine : MbEngine<{}>, page : Page){
         try{
             engine.resetMonitor();
             await page.waitForTimeout(5000);
@@ -178,21 +193,27 @@ export class MbLoginApiImpl extends MbLoginApi {
     }
 
     async awaitByLoginResult(engine : MbEngine<{}>, page : Page){
-        const monitor = new MdLoginMonitor();
-        let loginResult = false;
-        monitor.setHandler(async (request, response) => {
-            log.info("login monitor request ", await request?.allHeaders());
-            engine.saveContextState();
-            loginResult = true;
-            return { "loginResult": true };
-        });
-        engine.resetMonitor();
-        engine.resetListener(page);
-        const result = await engine.openWaitMonitor(page, "https://myseller.taobao.com/home.htm/QnworkbenchHome", monitor, {});
-        if(!result.getCode()){
-            return new DoorEntity<{}>(false, "登录失败");
+        await engine.saveContextState();
+        try{
+            const monitor = new MdLoginMonitor();
+            let loginResult = false;
+            monitor.setHandler(async (request, response) => {
+                log.info("login monitor request ", await request?.allHeaders());
+                await engine.saveContextState();
+                loginResult = true;
+                return { "loginResult": true };
+            });
+            engine.resetMonitor();
+            engine.resetListener(page);
+            const result = await engine.openWaitMonitor(page, "https://myseller.taobao.com/home.htm/QnworkbenchHome", monitor, {});
+            if(!result.getCode()){
+                return new DoorEntity<{}>(false, "登录失败");
+            }
+            return new DoorEntity<{}>(true, "登录成功");
+        }catch(error){
+            log.error("awaitByLoginResult error", error);
+            return new DoorEntity<{}>(true, "登录成功");
         }
-        return new DoorEntity<{}>(true, "登录成功");
     }
 
     @InvokeType(Protocols.INVOKE)
@@ -219,6 +240,7 @@ export class MbLoginApiImpl extends MbLoginApi {
         await frame.locator("#btn-submit").first().click();
         log.info("loginByValidateCode click submit start");
         await responsePromise;
+        await page.waitForTimeout(2000);
         frame = await getFrame(page, "identity_verify.htm");
         if(!frame){
             log.warn("loginByValidateCode frame is null");
@@ -237,6 +259,7 @@ export class MbLoginApiImpl extends MbLoginApi {
         if(errorText){
             return new DoorEntity<{}>(false, errorText);
         }
+        await page.waitForTimeout(5000);
         return await this.awaitByLoginResult(engine, page);
     }
 

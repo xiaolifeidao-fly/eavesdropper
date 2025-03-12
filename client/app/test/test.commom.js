@@ -44,5 +44,4 @@ for(const combination of combinations){
     combinationsJson[combination] = combination;
 }
 //json 获取长度
-console.log(Object.keys(combinationsJson).length);
-console.log(combinationsJson);
+console.log("1226:366399".includes(":366399"));
