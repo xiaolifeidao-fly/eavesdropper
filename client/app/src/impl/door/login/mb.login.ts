@@ -243,8 +243,8 @@ export class MbLoginApiImpl extends MbLoginApi {
         await frame.locator("#btn-submit").first().click();
         log.info("loginByValidateCode click submit start");
         await responsePromise;
+        await page.waitForTimeout(3000);
         frame = await getFrame(page, "identity_verify.htm");
-        await page.waitForTimeout(100);
         if(!frame){
             log.warn("loginByValidateCode frame is null");
             return await this.awaitByLoginResult(engine, page);
@@ -262,7 +262,7 @@ export class MbLoginApiImpl extends MbLoginApi {
         if(errorText){
             return new DoorEntity<{}>(false, errorText);
         }
-        await page.waitForTimeout(5000);
+        await page.waitForTimeout(3000);
         return await this.awaitByLoginResult(engine, page);
     }
 
