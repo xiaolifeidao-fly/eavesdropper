@@ -158,8 +158,7 @@ export abstract class DoorEngine<T = any> {
 
     public async closePage(){
         if(this.page){
-            // 无需关闭
-            // await this.page.close();
+            await this.page.close();
         }
     }
 
@@ -287,7 +286,17 @@ export abstract class DoorEngine<T = any> {
         });
     }
 
-    public async openWaitMonitor(page : Page,  url: string | undefined, monitor : Monitor<T | any>, headers: Record<string, string> = {}, doAction: (page: Page, ...doActionParams: any[]) => Promise<void> = async (page: Page, ...doActionParams: any[]) => {}, ...doActionParams: any[]){
+    resetMonitor(){
+        this.monitors = [];
+        this.monitorsChain = [];
+    }
+
+    resetListener(page : Page){
+        this.onRequest(page);
+        this.onResponse(page);
+    }
+
+    public async openWaitMonitor(page : Page,  url: string | undefined, monitor : Monitor<T | any>, headers: Record<string, string> = {}, doAction: (page: Page, ...doActionParams: any[]) => Promise<void | DoorEntity<any> | undefined> = async (page: Page, ...doActionParams: any[]) => {return undefined}, ...doActionParams: any[]){
         const itemKey = monitor.getItemKeys(url);
         const cache = await this.fromCacheByMonitor(url, itemKey, monitor);
         if(cache){
@@ -298,7 +307,13 @@ export abstract class DoorEngine<T = any> {
         if(url){
             await page.goto(url);
         }
-        await doAction(page, ...doActionParams);
+        const result = await doAction(page, ...doActionParams);
+        if(result != undefined){
+            if(result instanceof DoorEntity){
+                return result;
+            }
+            return result;
+        }
         const doorEntity = await monitor.waitForAction();
         if(monitor instanceof MonitorResponse && itemKey){
             if(url){
@@ -436,13 +451,13 @@ export abstract class DoorEngine<T = any> {
 
     public async closeContext(){
         if(this.context){
-            // await this.context.close();
+            await this.context.close();
         }
     }
 
     public async closeBrowser(){
         if(this.browser){
-            // await this.browser.close();
+            await this.browser.close();
         }
     }
 

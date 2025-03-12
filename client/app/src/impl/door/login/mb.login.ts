@@ -4,7 +4,7 @@ import { MbLoginApi } from "@eleapi/door/login/mb.login";
 import { DoorEngine, getPlatform, setPlatform } from "@src/door/engine";
 import { DoorEntity } from "@src/door/entity";
 import { MbEngine } from "@src/door/mb/mb.engine";
-import { MdLoginMonitor } from "@src/door/monitor/mb/login/md.login.monitor";
+import { MdInputLoginInfoMonitor, MdLoginMonitor, MdSendValidateCodeMonitor } from "@src/door/monitor/mb/login/md.login.monitor";
 import { get } from "@utils/store/electron";
 import { app } from "electron";
 import log from "electron-log";
@@ -12,13 +12,14 @@ import path from "path";
 import { Frame, Page } from "playwright-core";
 import { v4 as uuidv4 } from 'uuid';
 import fs from "fs";
+import { validate } from "@src/validator/image.validator";
 
 const loginEngineMap : { [key: string]: DoorEngine; } = {};
 
 async function getLoginEngine(resourceId : number){
     if(!loginEngineMap[resourceId]){
         const engine = new MbEngine<{}>(resourceId);
-        await engine.init("");
+        await engine.init();
         loginEngineMap[resourceId] = engine;
         return engine;
     }
@@ -63,18 +64,45 @@ async function checkIsLogin(page : Page){
     return false;
 }
 
+
+async function inputLoginInfo(page : Page, ...params : any[]){
+    await page.waitForTimeout(2000);
+    const username = params[0];
+    const password = params[1];
+    log.info("inputLoginInfo username is ", username);
+    log.info("inputLoginInfo password is ", password);
+    const frame = await getFrame(page, "mini_login.htm");
+    if(!frame){
+        log.error("inputLoginInfo frame is null");
+        return new DoorEntity<{}>(true, {"result" : "1", "message" : "当前已经是登录状态,无需登录"});
+    }
+    await frame.locator("#fm-login-id").first().fill(username);
+    await frame.locator("#fm-login-password").first().fill(password);
+    log.info("inputLoginInfo fill username and password");
+    await frame.locator(".fm-button.fm-submit.password-login ").first().click();
+}
+
+async function fillValidateCode(page : Page, ...params : any[]){
+    const frame = await getFrame(page, "identity_verify.htm");
+    if(!frame){
+        log.error("sendValidateCode frame is null");
+        return;
+    }
+    await frame.locator("#J_GetCode").first().click();
+    log.info("sendValidateCode click validate code ");
+}   
+
+async function getFrame(page: Page, frameName: string) {
+    const frame = await page.mainFrame();
+    for (const child of frame.childFrames()) {
+        if (child.url().includes(frameName)) {
+            return child;
+        }
+    }
+    return undefined;
+}
 export class MbLoginApiImpl extends MbLoginApi {
 
-
-    async getFrame(page: Page, frameName: string) {
-        const frame = await page.mainFrame();
-        for (const child of frame.childFrames()) {
-            if (child.url().includes(frameName)) {
-                return child;
-            }
-        }
-        return undefined;
-    }
 
     @InvokeType(Protocols.INVOKE)
     async inputLoginInfo(resourceId: number, username: string, password: string) {
@@ -82,90 +110,63 @@ export class MbLoginApiImpl extends MbLoginApi {
             const engine = await getLoginEngine(resourceId);
             if(!engine){
                 log.error("inputLoginInfo engine is null");
-                return;
+                return new DoorEntity<{}>(false, "系统错误");
             }
             const page = engine.getPage();
             if(!page){
                 log.error("inputLoginInfo page is null");
-                return;
+                return new DoorEntity<{}>(false, "系统错误");
             }
-            await page.goto("https://myseller.taobao.com/home.htm/QnworkbenchHome/");
-            await page.waitForTimeout(2000);
-            log.info("inputLoginInfo username is ", username);
-            log.info("inputLoginInfo password is ", password);
-            const frame = await this.getFrame(page, "mini_login.htm");
-            if(!frame){
-                log.error("inputLoginInfo frame is null");
-                return;
+            const monitor = new MdInputLoginInfoMonitor();
+            monitor.setMonitorTimeout(60000);
+            const result = await engine.openWaitMonitor(page, "https://myseller.taobao.com/home.htm/QnworkbenchHome/", monitor, {}, inputLoginInfo, username, password);
+            log.info("inputLoginInfo result is ", result);
+            if(!result.getCode() && result.validateUrl){
+                const validateResult = await validate(resourceId, result.getHeaderData(), result.validateUrl, result.validateParams);
+                if(!validateResult){
+                    return new DoorEntity<{}>(false, "验证码验证失败");
+                }
+                return new DoorEntity<{}>(false, "请先验证图形验证码");
             }
-            await frame.locator("#fm-login-id").first().fill(username);
-            await frame.locator("#fm-login-password").first().fill(password);
-            log.info("inputLoginInfo fill username and password");
-            const responsePromise = page.waitForResponse(response =>
-                response.request().url().includes("newlogin/login.do"),
-                { timeout: 10000 }
-            );
-            await frame.locator(".fm-button.fm-submit.password-login ").first().click();
-            const result = await responsePromise;
-            const json = await result.json();
-            log.info("inputLoginInfo click login result is ", json);
-            const loginResult = json.content?.data?.loginResult;
-            if(loginResult && loginResult == "success"){
-                log.info("inputLoginInfo login success wait monitor");
-                await this.awaitByLoginResult(engine, page);
-                return new DoorEntity<{}>(true, "登录成功");
+            if(result.getCode()){
+                const resultData = result.getData();
+                if(resultData.result == "1"){
+                    log.info("inputLoginInfo login success");
+                    await engine.saveContextState();
+                    return new DoorEntity<{}>(true, resultData.message);
+                }
+                if(resultData.result == "2"){
+                    const validateResult = await this.sendValidateCode(engine, page);
+                    if(!validateResult.result){
+                        return new DoorEntity<{}>(false, validateResult.message);
+                    }
+                    return result;
+                }
+                return new DoorEntity<{}>(false, resultData.message);
             }
-            const titleMsg = json.content?.data?.titleMsg;
-            const iframeRedirect = json.content?.data?.iframeRedirect;
-            if(!iframeRedirect){
-                return new DoorEntity<{}>(false, titleMsg);
-            }
-            const validateResult = await this.sendValidateCode(page);
-            if(!validateResult.result){
-                return new DoorEntity<{}>(false, validateResult.message);
-            }
-            return new DoorEntity<{}>(undefined,"请输入验证码");
+            return new DoorEntity<{}>(false,"发送未知异常");
         }catch(error : any){
             log.error("inputLoginInfo error", error);
             return new DoorEntity<{}>(false, "登录失败");
         }
     }
 
-    async sendValidateCode(page : Page){
+    async sendValidateCode(engine : MbEngine<{}>, page : Page){
         try{
-            await page.waitForLoadState('load');
+            engine.resetMonitor();
             await page.waitForTimeout(5000);
-            const frame = await this.getFrame(page, "identity_verify.htm");
-            if(!frame){
-                log.error("sendValidateCode frame is null");
+            const monitor = new MdSendValidateCodeMonitor();
+            const result = await engine.openWaitMonitor(page, undefined, monitor, {}, fillValidateCode);
+            log.info("sendValidateCode result is ", result);
+            if(!result.getCode()){
                 return {
                     result : false,
-                    message : "打开验证码界面失败"
+                    message : result.getData()
                 };
             }
-            const responsePromise = page.waitForResponse(response =>
-                response.request().url().includes("phone/send_code.do"),
-                { timeout: 10000 }
-            );
-            await frame.locator("#J_GetCode").first().click();
-            log.info("sendValidateCode click validate code ");
-            const response = await responsePromise;
-            const json = await response.json();
-            /**
-             * {"content":{"code":0,"codeMsg":"success","value":"验证码发送成功","success":true},"hasError":false}
-             */
-            const code = json.content?.code;
-            const value = json.content?.value;
-            if(code != 0){
-                return {
-                    result : false,
-                    message : value
-                };
-            }
-            log.info("sendValidateCode success ", json);
             return {
                 result : true,
-                message : value
+                message : result.getData()
             };
         }catch(error){
             log.error("sendValidateCode error", error);
@@ -177,14 +178,21 @@ export class MbLoginApiImpl extends MbLoginApi {
     }
 
     async awaitByLoginResult(engine : MbEngine<{}>, page : Page){
-        const loginResponse = page.waitForResponse(response =>
-            response.request().url().includes("home.htm/QnworkbenchHome"),
-            { timeout: 10000 }
-        );
-        const headers = await (await loginResponse).allHeaders();
-        log.info("awaitByLoginResult login headers is ", headers);
-        engine.saveContextState();
-        return true;
+        const monitor = new MdLoginMonitor();
+        let loginResult = false;
+        monitor.setHandler(async (request, response) => {
+            log.info("login monitor request ", await request?.allHeaders());
+            engine.saveContextState();
+            loginResult = true;
+            return { "loginResult": true };
+        });
+        engine.resetMonitor();
+        engine.resetListener(page);
+        const result = await engine.openWaitMonitor(page, "https://myseller.taobao.com/home.htm/QnworkbenchHome", monitor, {});
+        if(!result.getCode()){
+            return new DoorEntity<{}>(false, "登录失败");
+        }
+        return new DoorEntity<{}>(true, "登录成功");
     }
 
     @InvokeType(Protocols.INVOKE)
@@ -197,7 +205,7 @@ export class MbLoginApiImpl extends MbLoginApi {
         if(!page){
             return;
         }
-        let frame = await this.getFrame(page, "identity_verify.htm");
+        let frame = await getFrame(page, "identity_verify.htm");
         if(!frame){
             log.error("sendValidateCode frame is null");
             return;
@@ -211,7 +219,7 @@ export class MbLoginApiImpl extends MbLoginApi {
         await frame.locator("#btn-submit").first().click();
         log.info("loginByValidateCode click submit start");
         await responsePromise;
-        frame = await this.getFrame(page, "identity_verify.htm");
+        frame = await getFrame(page, "identity_verify.htm");
         if(!frame){
             log.warn("loginByValidateCode frame is null");
             return await this.awaitByLoginResult(engine, page);

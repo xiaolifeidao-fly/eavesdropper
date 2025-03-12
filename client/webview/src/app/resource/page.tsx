@@ -73,27 +73,30 @@ export default function ResourceManage() {
         message.error('绑定失败');
         return;
       }
-      try {
-        setQrCodeLoading(true);
-        setQrCodeTip("绑定用户信息中...")
-        // 获取用户信息
-        const userApi = new MbUserApi();
-        const userInfo = await userApi.getUserInfo(resourceId);
-        if (userInfo.code) {
-          const userInfoData = userInfo.data;
-          const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
-          await bindResourceApi(resourceId, bindResourceReq);
-        }
-        setQrCodeTip("绑定完成...")
-        setOpen(false);
-        message.success('绑定成功');
-        refreshPage(actionRef, true);
-      } finally {
-        setQrCodeLoading(false);
-      }
+      await bindResource(resourceId);
     });
   }, [])
 
+  const bindResource = async (resourceId: number) => {
+    try {
+      setQrCodeLoading(true);
+      setQrCodeTip("绑定用户信息中...")
+      // 获取用户信息
+      const userApi = new MbUserApi();
+      const userInfo = await userApi.getUserInfo(resourceId);
+      if (userInfo.code) {
+        const userInfoData = userInfo.data;
+        const bindResourceReq = new BindResourceReq(userInfoData.displayNick, userInfoData.nick, userInfoData.userNumId);
+        await bindResourceApi(resourceId, bindResourceReq);
+      }
+      setQrCodeTip("绑定完成...")
+      setOpen(false);
+      message.success('绑定成功');
+      refreshPage(actionRef, true);
+    } finally {
+      setQrCodeLoading(false);
+    }
+  }
   const baseColumns: ProColumns<DataType>[] = [
     {
       title: '来源',
@@ -256,16 +259,22 @@ export default function ResourceManage() {
         setQrCodeLoading(true);
         const mbLoginApi = new MbLoginApi();
         const loginResult = await mbLoginApi.inputLoginInfo(operatorResourceId, username, password);
-        if(loginResult.code === undefined){
+        if (!loginResult) {
+          message.error("系统错误");
+          return;
+        }
+        if(!loginResult.code){
+          message.error(loginResult.data);
+          return;
+        }
+        const resultData = loginResult.data;
+        if(resultData.result == "2"){
+          message.info(resultData.message);
           setValidateHidden(false);
-          message.info("请输入验证码");
           return;
         }
-        if (!loginResult || loginResult.code === false) {
-          message.error(loginResult?.data || "登录失败");
-          return;
-        }
-        message.success(loginResult?.data || "登录成功");
+        message.success(resultData.message);
+        await bindResource(operatorResourceId);
         setOpen(false);
       } finally {
         setQrCodeLoading(false);
@@ -286,6 +295,7 @@ export default function ResourceManage() {
           return;
         }
         message.success('登录成功');
+        await bindResource(operatorResourceId);
         setOpen(false);
       } finally {
         setQrCodeLoading(false);
