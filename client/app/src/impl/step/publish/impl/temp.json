@@ -1,82 +1,22 @@
-[
-    {
-        "salePropPath": "",
-        "price": "10.9",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "12.9",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "16.8",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "22.9",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "23.9",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "11.9",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "13.9",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "17.9",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "23.9",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "25",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "9.5",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "10.9",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "7.9",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "9.5",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "5.01",
-        "quantity": "1000"
-    },
-    {
-        "salePropPath": "",
-        "price": "6.88",
-        "quantity": "1000"
+{
+    "models": {
+        "globalMessage": {
+            "type": "error"
+        },
+        "formError": {
+            "tbExtractWay": {
+                "itemMessage": {
+                    "template": {
+                        "message": [
+                            {
+                                "type": "error",
+                                "code": "CHK_DELIVERY_POSTAGE_ID_NOT_EXIST",
+                                "msg": "运费模板不存在，请重新选择！"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
     }
-]
+}

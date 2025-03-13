@@ -10,8 +10,8 @@ import (
 var addressRepository = database.NewRepository[repositories.AddressRepository]()
 var addressTemplateRepository = database.NewRepository[repositories.AddressTemplateRepository]()
 
-func GetAddressByKeywordsAndUserNumId(keywords string, userNumId string) (*dto.AddressTemplateDTO, error) {
-	addressTemplate, err := addressTemplateRepository.GetByKeywordsAndUserNumId(keywords, userNumId)
+func GetAddressByKeywordsAndUserNumId(keywords string, shopId string) (*dto.AddressTemplateDTO, error) {
+	addressTemplate, err := addressTemplateRepository.GetByKeywordsAndUserNumId(keywords, shopId)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func GetAddressByKeywords(keywords string) (*dto.AddressDTO, error) {
 }
 
 func SaveAddressTemplate(addressTemplateDTO *dto.AddressTemplateDTO) (*dto.AddressTemplateDTO, error) {
-	addressTemplate, err := addressTemplateRepository.GetByAddressIdAndUserNumId(addressTemplateDTO.AddressId, addressTemplateDTO.UserNumId)
+	addressTemplate, err := addressTemplateRepository.GetByAddressIdAndUserId(addressTemplateDTO.AddressId, addressTemplateDTO.UserId)
 	if err != nil {
 		return nil, err
 	}
