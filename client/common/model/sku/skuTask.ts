@@ -93,7 +93,8 @@ export class UpdateSkuTaskReq {
 export enum SkuTaskItemStatus {
   SUCCESS = 'success',
   FAILED = 'failed',
-  CANCEL = 'cancel'
+  CANCEL = 'cancel',
+  EXISTENCE = 'existence'
 }
 
 export class AddSkuTaskItemReq {

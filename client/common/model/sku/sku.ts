@@ -2,6 +2,7 @@ export enum SkuStatus {
   SUCCESS = "success",
   PENDING = "pending",
   ERROR = "error",
+  EXISTENCE = "existence", // 已存在
 }
 
 export class Sku {

@@ -21,6 +21,7 @@ interface SkuPushInfo {
 enum SkuPushStatus {
   SUCCESS = 1,
   ERROR = 0,
+  EXISTENCE = 2,
 }
 
 export interface SkuUrl {
@@ -64,11 +65,19 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
       key: 'status',
       align: 'center',
       render: (_, record) => {
-        const color = record.status === SkuPushStatus.SUCCESS ? 'green' : 'red';
-        const text = record.status === SkuPushStatus.SUCCESS ? '成功' : '失败';
-        return <Tag color={color}>
-          {text}
-        </Tag>
+        switch (record.status) {
+          case SkuPushStatus.SUCCESS:
+            return <Tag color="green">成功</Tag>
+          case SkuPushStatus.ERROR:
+            return <Tag color="red">失败</Tag>
+          case SkuPushStatus.EXISTENCE:
+            return <Tag color="blue">已存在</Tag>
+        }
+        // const color = record.status === SkuPushStatus.SUCCESS ? 'green' : 'red';
+        // const text = record.status === SkuPushStatus.SUCCESS ? '成功' : '失败';
+        // return <Tag color={color}>
+        //   {text}
+        // </Tag>
       }
     },
     {
@@ -104,13 +113,20 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     }
 
     let status = SkuPushStatus.ERROR;
-    if (sku.status === SkuStatus.SUCCESS) {
-      status = SkuPushStatus.SUCCESS;
-      setSuccessCount(prevCount => prevCount + 1);
-    } else {
-      setErrorCount(prevCount => prevCount + 1);
+    switch (sku.status) {
+      case SkuStatus.SUCCESS:
+        setSuccessCount(prevCount => prevCount + 1);
+        status = SkuPushStatus.SUCCESS;
+        break;
+      case SkuStatus.EXISTENCE:
+        setErrorCount(prevCount => prevCount + 1);
+        status = SkuPushStatus.EXISTENCE;
+        break;
+      default:
+        setErrorCount(prevCount => prevCount + 1);
+        status = SkuPushStatus.ERROR;
+        break;
     }
-
     const skuInfo = {
       key: sku.key,
       id: sku.id,

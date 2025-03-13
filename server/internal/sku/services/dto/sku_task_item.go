@@ -8,15 +8,17 @@ import (
 type SkuTaskItemStatus string
 
 const (
-	SkuTaskItemStatusSuccess SkuTaskItemStatus = "success" // 成功
-	SkuTaskItemStatusFailed  SkuTaskItemStatus = "failed"  // 失败
-	SkuTaskItemStatusCancel  SkuTaskItemStatus = "cancel"  // 取消
+	SkuTaskItemStatusSuccess   SkuTaskItemStatus = "success"   // 成功
+	SkuTaskItemStatusFailed    SkuTaskItemStatus = "failed"    // 失败
+	SkuTaskItemStatusCancel    SkuTaskItemStatus = "cancel"    // 取消
+	SkuTaskItemStatusExistence SkuTaskItemStatus = "existence" // 已存在
 )
 
 func (s SkuTaskItemStatus) Validate() error {
 	if s == SkuTaskItemStatusSuccess ||
 		s == SkuTaskItemStatusFailed ||
-		s == SkuTaskItemStatusCancel {
+		s == SkuTaskItemStatusCancel ||
+		s == SkuTaskItemStatusExistence {
 		return nil
 	}
 	return errors.New("status enum failed")

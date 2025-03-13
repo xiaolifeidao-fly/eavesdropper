@@ -109,32 +109,33 @@ export default function ShopManage() {
       return false;
     }
     for (const resource of resources) {
-      try {
-        const result = await syncShop(0, resource.id);
-        console.log(result);
-      } catch (error) {
-        console.log(error);
-      }
+      const result = await syncShop(0, resource.id);
+      console.log(result);
     }
     return true;
   }
 
   const syncShop = async (id: number, resourceId: number) => {
-    const req = new SyncShopReq(resourceId, "", "", 0, ShopStatus.LosEffective);
-    const shopApi = new MbShopApi();
-    const shopInfo = await shopApi.findMbShopInfo(resourceId);
-    if (shopInfo.code) {
-      req.status = ShopStatus.Effective
-      const shop = shopInfo.data.result;
-      req.account = shop.nick;
-      req.name = shop.shopName;
-      req.shopId = shop.shopId;
-    }    
-    const result = await syncShopApi(id, req);
-    if (!result) {
+    try {
+      const req = new SyncShopReq(resourceId, "", "", 0, ShopStatus.LosEffective);
+      const shopApi = new MbShopApi();
+      const shopInfo = await shopApi.findMbShopInfo(resourceId);
+      if (shopInfo.code) {
+        req.status = ShopStatus.Effective
+        const shop = shopInfo.data.result;
+        req.account = shop.nick;
+        req.name = shop.shopName;
+        req.shopId = shop.shopId;
+      }    
+      const result = await syncShopApi(id, req);
+      if (!result) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.log(error);
       return false;
     }
-    return true;
   }
 
   const columns: ProColumns<DataType>[] = [

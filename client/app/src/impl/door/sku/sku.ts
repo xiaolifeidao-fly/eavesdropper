@@ -267,7 +267,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             const checkSkuExistenceReq = new CheckSkuExistenceReq(skuItemId, publishResourceId, skuSource);
             const checkResult = await checkSkuExistence(checkSkuExistenceReq);
             if(checkResult){ // 商品已存在
-                skuPublishResult.status = SkuStatus.ERROR;
+                skuPublishResult.status = SkuStatus.EXISTENCE;
                 skuPublishResult.remark = "商品已存在";
                 return skuPublishResult;
             }
@@ -363,9 +363,13 @@ export class MbSkuApiImpl extends MbSkuApi {
                 //发布商品
                 const skuResult = await this.publishSku(task.publishResourceId, task.source, skuUrl, task.id, task.skuPublishConfig);
                 skuResult.key = progress;
-                if(skuResult.status == SkuStatus.ERROR){
+                if(skuResult.status == SkuStatus.ERROR || skuResult.status == SkuStatus.EXISTENCE){
                     statistic.errorNum = statistic.errorNum + 1;
-                    taskItem.status = SkuTaskItemStatus.FAILED;
+                    if(skuResult.status == SkuStatus.EXISTENCE){
+                        taskItem.status = SkuTaskItemStatus.EXISTENCE;
+                    }else{
+                        taskItem.status = SkuTaskItemStatus.FAILED;
+                    }
                     taskItem.remark = skuResult.remark;
                 } else {
                     statistic.successNum = statistic.successNum + 1;
@@ -379,7 +383,7 @@ export class MbSkuApiImpl extends MbSkuApi {
                 this.send("onPublishSkuMessage", skuResult, statistic); // 发送进度
 
                 // 更新任务状态
-                if (progress % 2 == 0){                    
+                if (progress % 200 == 0){                    
                     // 更新任务状态
                     const req = new UpdateSkuTaskReq(taskStatus, taskRemark, taskItems);
                     await updateSkuTask(task.id, req);
