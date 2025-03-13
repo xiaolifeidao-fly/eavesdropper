@@ -285,14 +285,15 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             if (minPrice == 0 || Number(sale.price) < minPrice) {
                 minPrice = Number(sale.price);
             }
+            const cuurentQuantity = Number(sale.quantity);
             skuList.push({
                 cspuId: 0,
                 skuPrice: await this.getPrice(Number(sale.price)),
                 skuBatchInventory: null,
                 action: { selected: true },
                 skuId: null,
-                skuStatus: 1,
-                skuStock: Number(sale.quantity),
+                skuStatus: cuurentQuantity > 0 ? 1 : 0,
+                skuStock: cuurentQuantity,
                 skuQuality: { value: "mainSku", text: "单品", prefilled: true, prefilledText: { bottom: "<span style='color:#ff6600'>请确认分类</span>" } },
                 skuDetail: [],
                 skuCustomize: {
@@ -716,35 +717,4 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         });
     }
 
-    async getPrice(price : number){
-        const priceRate : PriceRangeConfig[] | undefined = this.getParams("priceRate");
-        if(!priceRate || priceRate.length == 0){
-            return String(price);
-        }
-        // 找到适合当前价格的区间配置
-        const config = priceRate.find((config) => price >= config.minPrice && price <= config.maxPrice);
-        if (!config) {
-            return String(price);
-        }
-
-        // 计算价格
-        let finalPrice = price * config.priceMultiplier + config.fixedAddition;
-        // 根据 roundTo 进行舍入
-        switch (config.roundTo) {
-            case "yuan":
-                finalPrice = Math.round(finalPrice); // 四舍五入到元
-                break;
-            case "jiao":
-                finalPrice = Math.round(finalPrice * 10) / 10; // 四舍五入到角
-                break;
-            case "fen":
-                finalPrice = Math.round(finalPrice * 100) / 100; // 四舍五入到分
-                break;
-            default:
-                // 如果没有指定舍入单位，默认保留两位小数
-                finalPrice = Math.round(finalPrice * 100) / 100;
-                break;
-        }
-        return String(finalPrice);
-    }
 }

@@ -220,6 +220,9 @@ export class RebuildSalePro{
                 return new SaleMapper(saleValue, subItem, null, true, false);
             }
             if(pddLable == label || label.includes(pddLable) || pddLable.includes(label)){
+                if(!saleConfig.allowInput){
+                    return undefined;
+                }
                 const saleProp = saleConfig.buildSaleProp(saleAttr, subItem);
                 return new SaleMapper(saleProp.saleAttr, subItem, saleProp.saleAttr.oldPid, true, imageFlag, true);
             }
@@ -299,9 +302,9 @@ export class RebuildSalePro{
     }
     
     
-    async fillSale(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[]) {
+    async fillSale(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[], minPrice : number) {
         this.fillSaleAttrs(doorSkuSaleInfo, saleMappers);
-        await this.fillSaleSku(doorSkuSaleInfo, saleMappers);
+        await this.fillSaleSku(doorSkuSaleInfo, saleMappers, minPrice);
     }
     
     fillSaleAttrs(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[]) {
@@ -316,7 +319,7 @@ export class RebuildSalePro{
         doorSkuSaleInfo.salesAttr = saleAttrs;
     }
     
-    async fillSaleSku(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[]) {
+    async fillSaleSku(doorSkuSaleInfo : DoorSkuSaleInfoDTO, saleMappers : SaleMapper[], minPrice : number) {
         const saleSkus : SalesSku[] = doorSkuSaleInfo.salesSkus;
         const newSaleSkuMap :SalesSku[] = [];
         const skuMappers : SkuMapper[] = [];
@@ -330,7 +333,7 @@ export class RebuildSalePro{
            }
         }
         await createSkuMappers(skuMappers);
-        this.fillMissingSku(saleMappers, newSaleSkuMap);
+        this.fillMissingSku(saleMappers, newSaleSkuMap, minPrice);
         doorSkuSaleInfo.salesSkus = newSaleSkuMap;
     }
 
@@ -339,9 +342,9 @@ export class RebuildSalePro{
  * @param {Array} saleMappers - 销售属性映射数组
  * @param {Array} combination - 用于存储组合结果的数组
  */
-    fillMissingSku(saleMappers : SaleMapper[], newSaleSkuMap : SalesSku[]) {
+    fillMissingSku(saleMappers : SaleMapper[], newSaleSkuMap : SalesSku[], minPrice : number) {
         if (!saleMappers || saleMappers.length === 0) {
-                return;
+            return;
         }
         for(const saleSku of newSaleSkuMap){
             const salePropPath = saleSku.salePropPath;
@@ -364,7 +367,6 @@ export class RebuildSalePro{
         }
         // 生成所有可能的组合
         const combinations = this.generateCombinations(propPaths);
-
         for(let i = 0; i < combinations.length; i++){
             const combination = combinations[i];
             let newCombination : string[] = combination.split(";");
@@ -372,14 +374,14 @@ export class RebuildSalePro{
             const newCombinationKey = newCombination.join(";");
             combinations[i] = newCombinationKey;
         }
+
         for(const combination of combinations){
             if(!this.salePropPathMap[combination]){
-                const missSalesSku = new SalesSku(combination, "0", "0");
+                const missSalesSku = new SalesSku(combination, String(minPrice), "0");
                 newSaleSkuMap.push(missSalesSku);
                 this.salePropPathMap[combination] = combination;
             }
         }
-
     }
 
         /**
@@ -470,7 +472,7 @@ export class RebuildSalePro{
             for(const saleMapper of saleMappers){
                 if(saleMapper.hadAssign){
                     //说明已经分配过了
-                    if(saleAttr.oldPid &&saleAttr.oldPid == saleMapper.salePid){
+                    if(saleAttr.oldPid && saleAttr.oldPid == saleMapper.salePid){
                         isAssign = true;
                         break;
                     }
@@ -516,7 +518,7 @@ export class RebuildSalePro{
     }
 
 
-    async fixAndAssign(doorSkuSaleInfo : DoorSkuSaleInfoDTO, subItems : { [key: string]: any }) {
+    async fixAndAssign(doorSkuSaleInfo : DoorSkuSaleInfoDTO, subItems : { [key: string]: any }, minPrice : number) {
         const salesAttrs = doorSkuSaleInfo.salesAttr;
         const saleMappers : SaleMapper[] = [];
         let hadImageSaleMapper = false;
@@ -538,7 +540,9 @@ export class RebuildSalePro{
             if(saleMapper){
                 saleMappers.push(saleMapper);
             }else{
-                saleMappers.push(new SaleMapper(undefined, subItem, null, false))
+                if(saleConfig.allowInput){
+                    saleMappers.push(new SaleMapper(undefined, subItem, null, false))
+                }
             }
         }
         log.info("first assign saleMappers is ", saleMappers);
@@ -591,7 +595,7 @@ export class RebuildSalePro{
                 }
             }
         }
-        await this.fillSale(doorSkuSaleInfo, saleMappers);
+        await this.fillSale(doorSkuSaleInfo, saleMappers, minPrice);
         return saleMappers;
     }
 
@@ -605,7 +609,10 @@ export class RebuildSalePro{
     }
     
     allowMerge(allowAssignSaleMappers : SaleMapper[], unAssignSize : number, unAssignIndex : number) {
-        if(allowAssignSaleMappers.length == 1){
+        if(allowAssignSaleMappers.length == 1 && unAssignSize == 1){
+            return false;
+        }
+        if(allowAssignSaleMappers.length == 1 && unAssignSize > 1){
             return true;
         }
         if(allowAssignSaleMappers.length < unAssignSize && unAssignIndex + 1 >= allowAssignSaleMappers.length){

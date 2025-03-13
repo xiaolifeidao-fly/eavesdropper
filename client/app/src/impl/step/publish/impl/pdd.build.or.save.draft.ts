@@ -14,12 +14,13 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
 
 
     override async fillSellInfo(commonData: { data: any }, skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[], saleProp: { [key: string]: { [key: string]: any }[] } }) {
-        draftData.price = await this.getPrice(Number(skuItem.doorSkuSaleInfo.price));
+        const minPrice = await this.getPrice(Number(skuItem.doorSkuSaleInfo.price));
+        draftData.price = minPrice;
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
         const salePropSubItems = commonData.data.components.saleProp.props.subItems;
         // log.info("fillSellInfo start ", salePropSubItems);
         const rebuildSalePro = new RebuildSalePro(skuItem.baseInfo.itemId);
-        const saleMappers = await rebuildSalePro.fixAndAssign(skuItem.doorSkuSaleInfo, salePropSubItems);
+        const saleMappers = await rebuildSalePro.fixAndAssign(skuItem.doorSkuSaleInfo, salePropSubItems, Number(minPrice));
         for(let saleMapper of saleMappers){
             // log.info("saleMapper is ", JSON.stringify(saleMapper.saleAttr));
         }

@@ -4,6 +4,7 @@ import log from "electron-log"
 import { Page } from "playwright";
 import { DoorSkuDTO, SkuItem } from "@model/door/sku";
 import { DoorEntity } from "@src/door/entity";
+import { PriceRangeConfig } from "@model/sku/skuTask";
 
 export async function elementIsExist(page: Page, selector: string){
     return page.evaluate((selectorKey) => {
@@ -99,6 +100,38 @@ export abstract class AbsPublishStep extends StepUnit{
         }
     }
 
+    async getPrice(price : number){
+        const priceRate : PriceRangeConfig[] | undefined = this.getParams("priceRate");
+        if(!priceRate || priceRate.length == 0){
+            return String(price);
+        }
+        // 找到适合当前价格的区间配置
+        const config = priceRate.find((config) => price >= config.minPrice && price <= config.maxPrice);
+        if (!config) {
+            return String(price);
+        }
+
+        // 计算价格
+        let finalPrice = price * config.priceMultiplier + config.fixedAddition;
+        // 根据 roundTo 进行舍入
+        switch (config.roundTo) {
+            case "yuan":
+                finalPrice = Math.round(finalPrice); // 四舍五入到元
+                break;
+            case "jiao":
+                finalPrice = Math.round(finalPrice * 10) / 10; // 四舍五入到角
+                break;
+            case "fen":
+                finalPrice = Math.round(finalPrice * 100) / 100; // 四舍五入到分
+                break;
+            default:
+                // 如果没有指定舍入单位，默认保留两位小数
+                finalPrice = Math.round(finalPrice * 100) / 100;
+                break;
+        }
+        return String(finalPrice);
+    }
+
     public async getCommonData(page: Page) {
         // 获取window对象中 json 数据 
         const commonData = await page.evaluate(() => {
@@ -166,7 +199,7 @@ export abstract class AbsPublishStep extends StepUnit{
             newCatProp[key] = switchValues
         }
         if(!('p-20000' in newCatProp)){
-            newCatProp['p-20000'] = this.getDefaultCatPropValueByPinPai("p-20000");
+            newCatProp['p-20000'] = await this.getDefaultCatPropValueByPinPai("p-20000", requestHeader, catId, startTraceId, skuItemDTO.itemId);
         }
         draftData.catProp = newCatProp;
     }
@@ -203,23 +236,27 @@ export abstract class AbsPublishStep extends StepUnit{
         });
         const data = response.data;
         if (!data.success || !data.data.success) {
-            return this.getDefaultCatPropValueByPinPai(categoryCode);
+            return undefined;
         }
         const dataSource = data.data.dataSource;
         if (!dataSource || dataSource.length == 0) {
-            return this.getDefaultCatPropValueByPinPai(categoryCode);
+            return undefined;
         }
         return dataSource[0];
     }
 
-    getDefaultCatPropValueByPinPai(pid: string){
-        if(pid == "p-20000"){
-            return {
-                "text": "无品牌",
-                "value": 3246379
+    async getDefaultCatPropValueByPinPai(pid: string, requestHeader : { [key: string]: any }, catId: string, startTraceId: string, itemId: string){
+        const result = await this.getCategoryInfo(pid, requestHeader, catId, startTraceId, itemId, "无品牌")
+        if(result){
+            return { 
+                value: result.value,
+                text: result.text
             }
         }
-        return undefined;
+        return {
+            "text": "无品牌/无注册商标",
+            "value": 30025069481
+        }
     }
 
     async switchCatPropValue(proKey: string, dataSource: { [key: string]: any }[], value: string[], requestHeader : { [key: string]: any }, catId: string, startTraceId: string, skuItem: DoorSkuDTO) {
@@ -237,9 +274,6 @@ export abstract class AbsPublishStep extends StepUnit{
                 }
             }
             if (!hasFound) {
-                if(proKey == "p-20000"){
-
-                }
                 const categoryInfo = await this.getCategoryInfo(proKey, requestHeader, catId, startTraceId, skuItem.itemId, catValue);
                 if (categoryInfo) {
                     newValues = {
