@@ -470,7 +470,7 @@ export class RebuildSalePro{
             for(const saleMapper of saleMappers){
                 if(saleMapper.hadAssign){
                     //说明已经分配过了
-                    if(saleAttr.oldPid == saleMapper.salePid){
+                    if(saleAttr.oldPid &&saleAttr.oldPid == saleMapper.salePid){
                         isAssign = true;
                         break;
                     }
@@ -481,6 +481,38 @@ export class RebuildSalePro{
             }
         }
         return unAssignSaleAttrs;
+    }
+
+    async assignOtherSaleAttrs(saleMappers : SaleMapper[], unAssignSaleAttrs : SalesAttr[]){
+        const allowAssignSaleMappers = this.getAllowAssignSaleMappers(saleMappers, unAssignSaleAttrs);
+            log.info("allowAssignSaleMappers is ", allowAssignSaleMappers);
+            if(allowAssignSaleMappers.length == 0){
+                log.warn(`未找到能分配的 subItem`);
+                return [];
+            }
+            const needMergeSaleAttrs : SalesAttr[] = [];
+            let needMegerSaleMapper = undefined;
+            for(let i = 0; i < unAssignSaleAttrs.length; i++){
+                const unAssignSaleAttr = unAssignSaleAttrs[i];
+                if(this.allowMerge(allowAssignSaleMappers, unAssignSaleAttrs.length, i)){
+                    needMergeSaleAttrs.push(unAssignSaleAttr);
+                    if(!needMegerSaleMapper){
+                        needMegerSaleMapper = allowAssignSaleMappers[i];
+                    }
+                    continue;
+                }
+                unAssignSaleAttr.oldPid = unAssignSaleAttr.pid;
+                const saleMapper = allowAssignSaleMappers[i];
+                unAssignSaleAttr.pid = saleMapper.subItem.name.split("-")[1];
+                saleMapper.hadAssign = true;
+                saleMapper.matchFlag = true;
+                saleMapper.saleAttr = unAssignSaleAttr;
+                saleMapper.salePid = unAssignSaleAttr.oldPid;
+            }
+            log.info("needMergeSaleAttrs is ", needMergeSaleAttrs);
+            if(needMergeSaleAttrs.length > 0 && needMegerSaleMapper){
+               this.mergeSaleProp(needMergeSaleAttrs, needMegerSaleMapper);
+            }
     }
 
 
@@ -514,34 +546,8 @@ export class RebuildSalePro{
         log.info("unAssignSaleAttrs is ", unAssignSaleAttrs);
 
         //如果saleMappers 中没有包含图片的分类，要重新分配有图片的分类
-        const allowAssignSaleMappers = this.getAllowAssignSaleMappers(saleMappers, unAssignSaleAttrs);
-        log.info("allowAssignSaleMappers is ", allowAssignSaleMappers);
-        if(allowAssignSaleMappers.length == 0){
-            log.warn(`未找到能分配的 subItem`);
-            return [];
-        }
-        const needMergeSaleAttrs : SalesAttr[] = [];
-        let needMegerSaleMapper = undefined;
-        for(let i = 0; i < unAssignSaleAttrs.length; i++){
-            const unAssignSaleAttr = unAssignSaleAttrs[i];
-            if(this.allowMerge(allowAssignSaleMappers, unAssignSaleAttrs.length, i)){
-                needMergeSaleAttrs.push(unAssignSaleAttr);
-                if(!needMegerSaleMapper){
-                    needMegerSaleMapper = allowAssignSaleMappers[i];
-                }
-                continue;
-            }
-            unAssignSaleAttr.oldPid = unAssignSaleAttr.pid;
-            const saleMapper = allowAssignSaleMappers[i];
-            unAssignSaleAttr.pid = saleMapper.subItem.name.split("-")[1];
-            saleMapper.hadAssign = true;
-            saleMapper.matchFlag = true;
-            saleMapper.saleAttr = unAssignSaleAttr;
-            saleMapper.salePid = unAssignSaleAttr.oldPid;
-        }
-        log.info("needMergeSaleAttrs is ", needMergeSaleAttrs);
-        if(needMergeSaleAttrs.length > 0 && needMegerSaleMapper){
-           this.mergeSaleProp(needMergeSaleAttrs, needMegerSaleMapper);
+        if(unAssignSaleAttrs.length > 0){
+            this.assignOtherSaleAttrs(saleMappers, unAssignSaleAttrs);
         }
         // 将tb 已经分配的 且不是merge的的pid和value进行映射
         for(const saleMapper of saleMappers){

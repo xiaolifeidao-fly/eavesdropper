@@ -27,6 +27,7 @@ async function getTemplateIdByKeywords(keywords : string, resourceId : number, l
     for(const logistics of logisticsList){
         if(logistics.text == keywords){
             const address = await getAddressByKeywords(keywords);
+            log.info(`getTemplateIdByKeywords ${resourceId} ${keywords} ${logistics.value} ${address}`);
             if(address){
                 await saveAddress(resourceId, address.id, logistics.value);
             }

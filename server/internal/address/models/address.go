@@ -13,12 +13,13 @@ type Address struct {
 
 type AddressTemplate struct {
 	database.BaseEntity
-	UserId     uint64 `json:"user_id"`
+	UserId     string `json:"user_id"`
 	AddressId  uint64 `json:"address_id"`
 	TemplateId string `json:"template_id"`
 }
 
 func (a *Address) TableName() string {
+
 	return "address"
 }
 
