@@ -109,8 +109,12 @@ export default function ShopManage() {
       return false;
     }
     for (const resource of resources) {
-      const result = await syncShop(0, resource.id);
-      console.log(result);
+      try {
+        const result = await syncShop(0, resource.id);
+        console.log(result);
+      } catch (error) {
+        console.log(error);
+      }
     }
     return true;
   }

@@ -66,3 +66,19 @@ func (t Time) ToTime() time.Time {
 func (t Time) IsZero() bool {
 	return time.Time(t).IsZero()
 }
+
+func (t Time) Before(other Time) bool {
+	return time.Time(t).Before(time.Time(other))
+}
+
+func (t Time) After(other Time) bool {
+	return time.Time(t).After(time.Time(other))
+}
+
+func (t Time) BeforeTime(other time.Time) bool {
+	return time.Time(t).Before(other)
+}
+
+func (t Time) AfterTime(other time.Time) bool {
+	return time.Time(t).After(other)
+}
