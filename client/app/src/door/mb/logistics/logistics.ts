@@ -23,16 +23,33 @@ function getKeywords(keywords : string){
     return keywords;
 }
 
-export async function getOrSaveTemplateId(resourceId: number, skuItem: DoorSkuDTO) {
+async function getTemplateIdByKeywords(keywords : string, resourceId : number, logisticsList : { [key: string]: any }[]){
+    for(const logistics of logisticsList){
+        if(logistics.text == keywords){
+            const address = await getAddressByKeywords(keywords);
+            if(address){
+                await saveAddress(resourceId, address.id, logistics.value);
+            }
+            return logistics.value;
+        }
+    }
+    const address = await getAddressByKeywordsAndResourceId(keywords, resourceId);
+    if(address){
+        return address.templateId;
+    }
+    return null;
+}
+
+export async function getOrSaveTemplateId(resourceId: number, skuItem: DoorSkuDTO, logisticsList : { [key: string]: any }[]) {
     const logisticsMode = skuItem.doorSkuLogisticsInfo;
     const deliveryFromAddr = logisticsMode.deliveryFromAddr;
     if (!deliveryFromAddr || deliveryFromAddr == "") {
         logisticsMode.deliveryFromAddr = "北京市";
     }
     const keywords = getKeywords(logisticsMode.deliveryFromAddr);
-    const address = await getAddressByKeywordsAndResourceId(keywords, resourceId);
-    if (address) {
-        return address.templateId;
+    const templateId = await getTemplateIdByKeywords(keywords, resourceId, logisticsList);
+    if (templateId) {
+        return templateId;
     }
     return saveAddressByPage(resourceId, skuItem);
 }

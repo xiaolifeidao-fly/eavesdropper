@@ -123,7 +123,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         await this.fillPropExt(commonData, skuItem, draftData);
         await this.fillMainImage(imageFileList, draftData);
         await this.fillSellInfo(commonData, skuItem, draftData);
-        await this.fillLogisticsMode(resourceId, skuItem, draftData);
+        await this.fillLogisticsMode(resourceId, skuItem, draftData, commonData);
         const imageDetailResult = this.fillImageDetail(draftData, imageFileList);
         if(!imageDetailResult){
             return {
@@ -162,8 +162,22 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         return true;
     }
 
-    async fillLogisticsMode(resourceId : number, skuItemDTO : DoorSkuDTO, draftData: { [key: string]: any }) {
-        const templateId = await getOrSaveTemplateId(resourceId, skuItemDTO);
+    getLogisticsList(commonData : { [key: string]: any }){
+        const subItems = commonData.data.components?.tbExtractWay?.props?.subItems;
+        if(!subItems || subItems.length == 0){
+            return [];
+        }
+        for(const subItem of subItems){
+            if(subItem.name == "template"){
+                return subItem.dataSource;
+            }
+        }
+        return [];
+    }
+
+    async fillLogisticsMode(resourceId : number, skuItemDTO : DoorSkuDTO, draftData: { [key: string]: any }, commonData : { [key: string]: any }) {
+        const logisticsList = this.getLogisticsList(commonData);
+        const templateId = await getOrSaveTemplateId(resourceId, skuItemDTO, logisticsList);
         draftData.tbExtractWay = {
             "template": templateId,
             "value": [

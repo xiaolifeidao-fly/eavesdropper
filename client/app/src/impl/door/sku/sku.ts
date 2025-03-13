@@ -26,7 +26,6 @@ import fs from 'fs';
 import path from "path";
 import log, { info } from "electron-log";
 import { FileInfo } from "@src/door/monitor/mb/file/file";
-import { publishFromTb } from "@src/door/mb/sku/sku.publish";
 import { uploadByFileApi } from "@src/door/mb/file/file.api";
 import { DoorEntity } from "@src/door/entity";
 import { app } from "electron";
@@ -317,65 +316,6 @@ export class MbSkuApiImpl extends MbSkuApi {
         }   
     }
 
-    async publishSkuByOld(publishResourceId : number, skuUrl : string, taskId : number){
-        const skuPublishResult = new SkuPublishResult(taskId, publishResourceId, SkuStatus.PENDING);
-        skuPublishResult.url = skuUrl;
-
-        try {
-            //获取商品信息
-            const skuResult = await this.getSkuInfo(publishResourceId, skuUrl);
-            if(!skuResult || !skuResult.code){
-                skuPublishResult.status = SkuStatus.ERROR;
-                skuPublishResult.remark = "获取商品信息失败";
-                return skuPublishResult;
-            }
-  
-            // 校验商品是否存在
-            const checkSkuExistenceReq = new CheckSkuExistenceReq(skuUrl, publishResourceId, TB);
-            const result = await checkSkuExistence(checkSkuExistenceReq);
-            if(result){ // 商品已存在
-                skuPublishResult.status = SkuStatus.ERROR;
-                skuPublishResult.remark = "商品已存在";
-                return skuPublishResult;
-            }
-
-            const skuData = skuResult.data;
-            const skuItem : DoorSkuDTO | null = await parseSku(TB, skuData);
-            if(!skuItem){
-                skuPublishResult.status = SkuStatus.ERROR;
-                skuPublishResult.remark = "商品信息解析失败";
-                return skuPublishResult;
-            }
-            skuPublishResult.name = skuItem.baseInfo.title;
-            skuPublishResult.sourceSkuId = skuItem.baseInfo.itemId;
-            skuPublishResult.publishSkuId = skuItem.baseInfo.itemId;
-            skuPublishResult.publishTime = formatDate(new Date());
-            const imageFileList = await this.uploadImages(TB, publishResourceId, skuItem); // skuId TODO
-            if(imageFileList && imageFileList.length > 0){
-                const result = await publishFromTb(imageFileList, skuItem, publishResourceId, skuItem.baseInfo.itemId);
-                if(!result){
-                    skuPublishResult.status = SkuStatus.ERROR;
-                    skuPublishResult.remark = "发布商品失败";
-                    return skuPublishResult;
-                }
-                skuPublishResult.status = SkuStatus.SUCCESS;
-                skuPublishResult.remark = "发布商品成功";
-            }else{
-                skuPublishResult.status = SkuStatus.ERROR;
-                skuPublishResult.remark = "上传图片失败";
-            }
-            const addSkuReq = plainToClass(AddSkuReq, skuPublishResult);
-            const skuId = await addSku(addSkuReq) as number;
-            skuPublishResult.id = skuId;
-            // 发布商品ID
-            return skuPublishResult;
-        } catch (error: any) {
-            log.error("publishSku error", error);
-            skuPublishResult.status = SkuStatus.ERROR;
-            skuPublishResult.remark = error.message;
-            return skuPublishResult;
-        }   
-    }
 
     @InvokeType(Protocols.INVOKE)
     async batchPublishSkus(publishResourceId : number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls : string[]) : Promise<SkuTask|undefined>{
