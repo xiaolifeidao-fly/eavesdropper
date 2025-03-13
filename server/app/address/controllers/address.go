@@ -4,7 +4,7 @@ import (
 	"server/common/server/controller"
 	"server/internal/address/services"
 	"server/internal/address/services/dto"
-	taobaoServices "server/internal/resource/services"
+	shopServices "server/internal/shop/services"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -24,16 +24,16 @@ func GetAddressTemplateByKeywords(ctx *gin.Context) {
 	keywords := ctx.Query("keywords")
 	resourceId, _ := strconv.ParseUint(ctx.Query("resourceId"), 10, 64)
 
-	resourceTaobao, err := taobaoServices.GetResourceTaobaoByResourceID(resourceId)
+	shopDTO, err := shopServices.GetShopByResourceID(resourceId)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return
 	}
-	if resourceTaobao == nil {
+	if shopDTO == nil {
 		controller.OK(ctx, nil)
 		return
 	}
-	address, err := services.GetAddressByKeywordsAndUserNumId(keywords, strconv.FormatUint(resourceTaobao.UserNumId, 10))
+	address, err := services.GetAddressByKeywordsAndUserNumId(keywords, strconv.FormatUint(shopDTO.ShopID, 10))
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return
@@ -60,16 +60,16 @@ func SaveAddressTemplate(ctx *gin.Context) {
 		controller.Error(ctx, err.Error())
 		return
 	}
-	resourceTaobao, err := taobaoServices.GetResourceTaobaoByResourceID(req.ResourceId)
+	shopDTO, err := shopServices.GetShopByResourceID(req.ResourceId)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return
 	}
-	if resourceTaobao == nil {
-		controller.Error(ctx, "资源未绑定淘宝账号")
+	if shopDTO == nil {
+		controller.Error(ctx, "资源未同步商铺信息")
 		return
 	}
-	req.UserNumId = strconv.FormatUint(resourceTaobao.UserNumId, 10)
+	req.UserId = strconv.FormatUint(shopDTO.ShopID, 10)
 	addressTemplate, err := services.SaveAddressTemplate(&req)
 	if err != nil {
 		controller.Error(ctx, err.Error())

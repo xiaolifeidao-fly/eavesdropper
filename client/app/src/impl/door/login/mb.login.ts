@@ -69,8 +69,6 @@ async function inputLoginInfo(page : Page, ...params : any[]){
     await page.waitForTimeout(2000);
     const username = params[0];
     const password = params[1];
-    log.info("inputLoginInfo username is ", username);
-    log.info("inputLoginInfo password is ", password);
     const frame = await getFrame(page, "mini_login.htm");
     if(!frame){
         log.error("inputLoginInfo frame is null");

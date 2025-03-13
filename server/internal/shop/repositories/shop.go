@@ -25,5 +25,5 @@ func (r *shopRepository) FindByUserID(userID uint64) ([]*models.Shop, error) {
 }
 
 func (r *shopRepository) FindByResourceID(resourceID uint64) (*models.Shop, error) {
-	return r.GetOne("select * from shop where resource_id = ? and deleted_at is null", resourceID)
+	return r.GetOne("select * from shop where resource_id = ? and deleted_at is null order by id desc limit 1", resourceID)
 }
