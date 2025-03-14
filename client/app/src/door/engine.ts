@@ -256,6 +256,10 @@ export abstract class DoorEngine<T = any> {
             if(responseMonitor.needUrl()){
                 url = request.url();
             }
+            let responseHeaderData = {};
+            if(responseMonitor.needResponseHeaderData()){
+                responseHeaderData = await response.allHeaders();
+            }
             let requestBody = {};
             if(responseMonitor.needRequestBody()){
                 const body = request.postData();
@@ -275,6 +279,7 @@ export abstract class DoorEngine<T = any> {
             data.url = url;
             data.headerData = headerData;
             data.requestBody = requestBody;
+            data.responseHeaderData = responseHeaderData;
             responseMonitor._doCallback(data, response.request(), response);
             responseMonitor.setFinishTag(true);
         }

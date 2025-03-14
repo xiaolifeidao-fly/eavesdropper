@@ -6,6 +6,9 @@ import { MbSkuPublishMonitor } from "@src/door/monitor/mb/sku/md.sku.info.monito
 import { Page } from "playwright-core";
 import axios from "axios";
 import { expireSkuDraft } from "@api/sku/sku.draft";
+import { DoorSkuDTO } from "@model/door/sku";
+import { saveDoorCategory } from "@api/door/door.api";
+import { DoorCategory } from "@model/door/door";
 
 async function clickPublishButtonByPage(page: Page, ...doActionParams: any[]){
     await confirmProtocol(page);
@@ -115,6 +118,7 @@ export class PublishSkuStep extends AbsPublishStep {
                 }
                 const itemId = this.getParams("itemId");
                 await expireSkuDraft(resourceId, itemId);
+                await this.saveSkuCategory(this.getParams("skuItem"));
                 return new StepResult(true, "发布商品成功");
             }
             return new StepResult(false, "发布商品失败");
@@ -123,6 +127,14 @@ export class PublishSkuStep extends AbsPublishStep {
             return new StepResult(false, "发布商品发生未知异常");
         } finally{
             await engine.closePage();
+        }
+    }
+
+    async saveSkuCategory(skuItem : DoorSkuDTO){
+        const tbCategory = this.getParams("tbCategory");
+        if(tbCategory){
+            const doorCategory = new DoorCategory(undefined, skuItem.baseInfo.catId, tbCategory.categoryId, tbCategory.categoryName);
+            await saveDoorCategory(doorCategory);
         }
     }
 

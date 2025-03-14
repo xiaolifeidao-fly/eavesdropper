@@ -1,5 +1,5 @@
 import { DoorSkuDTO } from "@model/door/sku";
-import { ActionCommand, DoorRecord, DoorSkuCatProp, SearchSkuRecord } from "@model/door/door"
+import { ActionCommand, DoorCategory, DoorRecord, DoorSkuCatProp, SearchSkuRecord } from "@model/door/door"
 import { getData, getDataList,instance } from "@utils/axios"
 import { plainToClass } from "class-transformer";
 
@@ -71,4 +71,16 @@ export const getDoorCatProps = async (source: string, itemKey: string) : Promise
 
 export const getDoorCatPropsByAI = async (params: {[key : string] : any}) : Promise<any[]> => {
     return await instance.post("/doors/cat/prop/ai", params);
+}
+
+
+export const getDoorCategoryByPddCatId = async (pddCatId: string) : Promise<DoorCategory|null> => {
+    const params = {
+        pddCatId : pddCatId
+    }
+    return await getData(DoorCategory, "/doors/category/get", params);
+}
+
+export const saveDoorCategory = async (doorCategory: DoorCategory) : Promise<DoorCategory> => {
+    return await instance.post("/doors/category/save", doorCategory);
 }

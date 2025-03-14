@@ -3,6 +3,7 @@ import { ImageValidatorMonitor } from "@src/door/monitor/mb/validate/image.valid
 import { BrowserView, session } from "electron";
 import path from "path";
 import log from "electron-log"
+import { DoorEntity } from "@src/door/entity";
 
 
 const {app, BrowserWindow } = require('electron');
@@ -148,8 +149,15 @@ function checkValidate(){
                 if(validateParams){
                     url += "&validateParams=" + encodeBase64(JSON.stringify(validateParams));
                 }
-                const result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor());
-                if(result){
+                let result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor());
+                let validateNum = 0;
+                while(!isValidateSuccess(result) && validateNum <=3 ){
+                    validateNum++;
+                    log.info("checkValidate error retry validate ", validateNum);
+                    engine.resetMonitor();
+                    result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor());
+                }
+                if(isValidateSuccess(result)){
                     validateItem.resolve(result.getHeaderData(), true);
                 }else{
                     validateItem.resolve({}, false);
@@ -165,6 +173,13 @@ function checkValidate(){
     }, 1000);
 }
 
+
+function isValidateSuccess(result : DoorEntity<any>){
+    if(!result || !result.getCode()){
+        return false;
+    }
+    return true;
+}
 
 
 

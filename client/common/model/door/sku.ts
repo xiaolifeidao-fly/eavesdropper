@@ -14,6 +14,7 @@ export class SkuItem {
 
 
 export class DoorSkuBaseInfoDTO {
+    catId: string;
     itemId: string;
     skuType: string;
     mainImages: string[];
@@ -25,7 +26,8 @@ export class DoorSkuBaseInfoDTO {
     @Type(() => SkuItem)
     skuItems: SkuItem[];
 
-    constructor(itemId: string, skuType: string, mainImages: string[], title: string, guideTitle: string, categoryAttr: string, procurementLocation: string, skuItems: SkuItem[]) {
+    constructor(catId: string, itemId: string, skuType: string, mainImages: string[], title: string, guideTitle: string, categoryAttr: string, procurementLocation: string, skuItems: SkuItem[]) {
+        this.catId = catId;
         this.itemId = itemId;
         this.skuType = skuType;
         this.mainImages = mainImages;

@@ -37,6 +37,16 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
 
     }
 
+    getPublishUrl(skuDraftId: string | undefined, itemId: string) {
+        if (!skuDraftId) {
+            const category = this.getParams("tbCategory");
+            const url = "https://item.upload.taobao.com/sell/v2/publish.htm?catId=" + category.categoryId;
+            log.info("add bycategory url is ", url);
+            return url;
+        }
+        return "https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=" + skuDraftId;
+    }
+
     async fillPropExt(commonData: { [key: string]: any; }, skuItem: DoorSkuDTO, draftData: { [key: string]: any; }): Promise<void> {
         await super.fillPropExt(commonData, skuItem, draftData)
     }

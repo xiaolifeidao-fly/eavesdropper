@@ -39,6 +39,13 @@ type DoorFileRecordDTO struct {
 	Pix        string `json:"pix"`
 }
 
+type DoorCategoryDTO struct {
+	dto.BaseDTO
+	PddCatId  string `json:"pddCatId"`
+	TbCatId   string `json:"tbCatId"`
+	TbCatName string `json:"tbCatName"`
+}
+
 type SearchSkuRecordDTO struct {
 	dto.BaseDTO
 	SkuId    string `json:"skuId"`
@@ -65,6 +72,7 @@ func (d *DoorSkuDTO) SetRequiredDefault(doorInfoValueMap map[string]interface{})
 
 // DoorSkuBaseInfoDTO 商品基础信息
 type DoorSkuBaseInfoDTO struct {
+	CatId               string     `json:"catId"`               // 商品分类ID
 	ItemId              string     `json:"itemId"`              // 商品ID
 	SkuType             string     `json:"skuType"`             // 宝贝类型, 必填（自动填充）, 全新 5,二手 6
 	MainImages          []string   `json:"mainImages"`          // 宝贝主图, 必填

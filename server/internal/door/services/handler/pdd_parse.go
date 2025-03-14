@@ -14,6 +14,7 @@ type PDDParse struct{}
 func (pdd *PDDParse) GetExtractorRule() map[string]interface{} {
 	return map[string]interface{}{
 		"baseInfo": map[string]interface{}{
+			"catId":       "goods.catID",
 			"itemId":      "goods.goodsID",
 			"title":       "goods.goodsName", // 提取【】之后的内容
 			"guideTitle":  "goods.goodsName", // 提取【】之后的内容
@@ -77,9 +78,11 @@ func pddParseBaseInfo(baseInfo map[string]interface{}) map[string]interface{} {
 	baseInfo["title"] = pddParseBaseInfoTitle(title)
 	baseInfo["guideTitle"] = baseInfo["title"]
 
+	catId := baseInfo["catId"]
+	baseInfo["catId"] = pddParseBaseInfoItemID(catId)
+
 	skuItemInfo := baseInfo["skuItemInfo"]
 	baseInfo["skuItems"] = pddParseBaseInfoSkuItems(skuItemInfo)
-
 	return baseInfo
 }
 

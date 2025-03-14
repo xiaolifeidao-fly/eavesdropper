@@ -116,6 +116,10 @@ export abstract class Monitor<T = any> {
         return false;
     }
 
+    public needResponseHeaderData(): boolean{
+        return false;
+    }
+
     async _doCallback(doorEntity: DoorEntity<T>, request: Request | undefined = undefined, response : Response | undefined = undefined) : Promise<void>{
         try{
             await this.doCallback(doorEntity, request, response);
@@ -183,6 +187,8 @@ export abstract class MonitorResponse<T> extends Monitor<T> {
         setStore(key);
         return true;
     }
+
+
 
     public async getResponseData(response: Response): Promise<DoorEntity<T>>{
         const contentType = response.headers()['content-type'];

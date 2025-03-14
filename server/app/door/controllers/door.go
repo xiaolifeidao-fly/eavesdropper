@@ -24,7 +24,30 @@ func LoadDoorRouter(router *gin.RouterGroup) {
 		r.POST("/cat/prop/save", SaveDoorCatProp)
 		r.GET("/cat/prop/get", GetDoorCatProps)
 		r.POST("/cat/prop/ai", GetDoorCatPropsByAi)
+		r.GET("/category/get", GetDoorCategoryByPddCatId)
+		r.POST("/category/save", SaveDoorCategory)
 	}
+}
+
+func GetDoorCategoryByPddCatId(ctx *gin.Context) {
+	pddCatId := ctx.Query("pddCatId")
+	doorCategory, err := services.GetDoorCategoryByPddCatId(pddCatId)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, doorCategory)
+}
+
+func SaveDoorCategory(ctx *gin.Context) {
+	var doorCategoryDTO dto.DoorCategoryDTO
+	controller.Bind(ctx, &doorCategoryDTO)
+	result, err := services.CreateDoorCategory(&doorCategoryDTO)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, result)
 }
 
 func GetDoorCatPropsByAi(ctx *gin.Context) {
