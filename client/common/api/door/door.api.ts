@@ -76,7 +76,7 @@ export const getDoorCatPropsByAI = async (params: {[key : string] : any}) : Prom
 
 export const getDoorCategoryByPddCatId = async (pddCatId: string) : Promise<DoorCategory|null> => {
     const params = {
-        pddCatId : pddCatId
+        pddCatId : String(pddCatId)
     }
     return await getData(DoorCategory, "/doors/category/get", params);
 }

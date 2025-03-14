@@ -117,8 +117,8 @@ export class PublishSkuStep extends AbsPublishStep {
                     }
                 }
                 const itemId = this.getParams("itemId");
-                await expireSkuDraft(resourceId, itemId);
                 await this.saveSkuCategory(this.getParams("skuItem"));
+                await expireSkuDraft(resourceId, itemId);
                 return new StepResult(true, "发布商品成功");
             }
             return new StepResult(false, "发布商品失败");
@@ -133,7 +133,7 @@ export class PublishSkuStep extends AbsPublishStep {
     async saveSkuCategory(skuItem : DoorSkuDTO){
         const tbCategory = this.getParams("tbCategory");
         if(tbCategory){
-            const doorCategory = new DoorCategory(undefined, skuItem.baseInfo.catId, tbCategory.categoryId, tbCategory.categoryName);
+            const doorCategory = new DoorCategory(undefined, skuItem.baseInfo.catId, String(tbCategory.categoryId), tbCategory.categoryName);
             await saveDoorCategory(doorCategory);
         }
     }

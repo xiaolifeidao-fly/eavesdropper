@@ -37,10 +37,9 @@ export class TbPublishSearchStep extends AbsPublishStep{
         if(!title){
             return new StepResult(false, "title is required");
         }
-        const pddSkuId = skuItem.baseInfo.itemId;
-        let catId = await this.getCatId(pddSkuId);
+
+        let catId = await this.getCatId(skuItem.baseInfo.catId);
         if(catId){
-            skuItem.itemId = catId;
             return new StepResult(true, "搜索商品分类成功");
         }
         log.info("标题为：", title);
