@@ -4,7 +4,10 @@ import { BrowserView, session } from "electron";
 import path from "path";
 import log from "electron-log"
 import { DoorEntity } from "@src/door/entity";
-
+import { Frame, Page } from "playwright-core";
+import { v4 as uuidv4 } from 'uuid';
+import sharp from "sharp";
+import axios from "axios";
 
 const {app, BrowserWindow } = require('electron');
 
@@ -135,6 +138,176 @@ checkValidate();
 function encodeBase64(str : string) {
     return btoa(str);
 }
+
+async function getFrame(page: Page) {
+    const frame = await page.mainFrame();
+    for (const child of frame.childFrames()) {
+        const url = await child.url();
+        if(url.includes("api/upload.api/_____tmd_____/punish")){
+            log.info("get from childFrame ", url);
+            return child;
+        }
+    }
+    log.info("get from mainFrame ");
+    return page.mainFrame();
+}
+
+async function validateAction(page : Page, ...params : any[]){
+    // try{
+    //     const validateUrl = params[0];
+    //     const validateParams = params[1];
+    //     if(validateUrl.includes("mtop.relationrecommend.wirelessrecommend.recommend")){
+    //         return;
+    //     }
+    //     if(validateParams){
+    //         return;
+    //     }
+    //     let frame = await getFrame(page);
+    //     const element = frame.locator("#puzzle-captcha-question-img").first(); // 选择要截图的元素
+    //     if (element) {
+    //         const qrCodeFileName = uuidv4() + ".jpeg";
+    //         const qrCodeFilePath = path.join(path.dirname(app.getAppPath()),'resource','temp', qrCodeFileName);
+    //         const buffer = await element.screenshot({ path: qrCodeFilePath}); // 保存截图
+    //         const imageSharp = sharp(buffer);
+    //         const boundingBox = await element.boundingBox();
+    //         const width = boundingBox?.width;
+    //         const height = boundingBox?.height;
+    //         log.info("validate width ", width,  " height ", height);
+    //         const imageBuffer = await imageSharp
+    //         .resize(Number(width), Number(height)).toBuffer() // 设置宽高
+    //         const imageBase64 = await convertImageToBase64WithHeader(imageBuffer);
+    //         if(imageBase64){
+    //             const slideContent = await getSlideContent(imageBase64);
+    //             log.info("slideContent is ", slideContent);
+    //             if (slideContent && slideContent.code == 200){
+    //                 console.log("slideContent.data.px_distance ====", slideContent.data.px_distance);
+    //                 // await moveCaptchaVerifyImgSlide(page, frame, slideContent.data.px_distance);
+    //             }
+    //         }
+          
+    //     }
+    // }catch(error){
+    //     log.error("openLoginPageAction error", error);
+    // }
+}
+
+async function moveCaptchaVerifyImgSlide(page : Page, frame : Frame, distance : number){
+    const slider = await frame.locator('#puzzle-captcha-btn').first();
+    if (slider) {
+        const sliderBox = await slider.boundingBox();
+        console.log("sliderBox x ====", sliderBox);
+        if(!sliderBox){
+            return;
+        }
+        const startX = sliderBox.x + sliderBox.width / 2; // 起始位置的 X 坐标
+        const startY = sliderBox.y + sliderBox.height / 2; // 起始位置的 Y 坐标
+        let endX = startX + distance; // 目标位置的 X 坐标
+        
+        // 确保随机值在合理范围内
+        const maxRandomOffset = Math.min(10, sliderBox.width * 0.1); // 最大随机偏移量，不超过滑块宽度的10%
+        const randomEndNext = endX + Math.random() * maxRandomOffset; // 随机超出目标位置
+        const randomEndPre = Math.max(startX + 5, endX - Math.random() * maxRandomOffset); // 随机回退位置，确保大于起始位置
+        
+        console.log("startX ====", startX, "startY ====", startY, "endX ====", endX);
+        console.log("randomEndNext ====", randomEndNext, "randomEndPre ====", randomEndPre);
+        
+        // 增加初始等待时间，模拟人类思考
+        await page.waitForTimeout(500);
+        await page.mouse.move(startX, startY); // 移动到起始点
+        await page.waitForTimeout(300); // 短暂停顿后再按下
+        await page.mouse.down(); // 按住鼠标左键
+        await page.waitForTimeout(200); // 按下后短暂停顿
+        
+        // 增加步数使移动更平滑
+        const steps = 100; // 总步数增加为原来的2倍
+        
+        // 第一阶段：加速移动到随机超出点
+        const firstStageSteps = Math.floor(steps * 0.6); // 60%的步数用于第一阶段
+        for (let i = 0; i < firstStageSteps; i++) {
+            // 使用缓动函数模拟加速
+            const progress = i / firstStageSteps;
+            // 使用三次方缓动，使加速更加平缓
+            const easeProgress = progress * progress * (3 - 2 * progress);
+            const x = startX + (randomEndNext - startX) * easeProgress;
+            
+            // 添加Y轴上下浮动，范围在0-1像素之间
+            const yOffset = (Math.random() - 0.5) * 2; // 生成-1到1之间的随机值
+            
+            await page.mouse.move(x, startY + yOffset);
+            // 延迟时间增加5倍
+            await page.waitForTimeout(Math.random() * 25 + 25); // 随机延迟，模拟人类移动速度不均匀
+        }
+        
+        // 第二阶段：回退到随机回退点
+        const secondStageSteps = Math.floor(steps * 0.2); // 20%的步数用于第二阶段
+        for (let i = 0; i < secondStageSteps; i++) {
+            const progress = i / secondStageSteps;
+            // 使用缓动函数使回退更自然
+            const easeProgress = progress * (2 - progress);
+            const x = randomEndNext - (randomEndNext - randomEndPre) * easeProgress;
+            
+            // 添加Y轴上下浮动，范围在0-1像素之间，回退阶段稍微增加波动
+            const yOffset = (Math.random() - 0.5) * 2.2; // 生成-1.1到1.1之间的随机值
+            
+            await page.mouse.move(x, startY + yOffset);
+            // 延迟时间增加5倍
+            await page.waitForTimeout(Math.random() * 50 + 50); // 回退时速度更慢
+        }
+        
+        // 第三阶段：精确移动到目标位置
+        const thirdStageSteps = steps - firstStageSteps - secondStageSteps;
+        for (let i = 0; i < thirdStageSteps; i++) {
+            const progress = i / thirdStageSteps;
+            // 使用缓动函数使精确移动更自然
+            const easeProgress = 0.5 - Math.cos(progress * Math.PI) / 2;
+            const x = randomEndPre + (endX - randomEndPre) * easeProgress;
+            
+            // 添加Y轴上下浮动，精确阶段减小波动
+            const yOffset = (Math.random() - 0.5) * 1.5; // 生成-0.75到0.75之间的随机值
+            
+            await page.mouse.move(x, startY + yOffset);
+            // 延迟时间增加5倍
+            await page.waitForTimeout(Math.random() * 75 + 75); // 精确调整时速度更慢
+        }
+        
+        // 最后确保精确到达目标位置
+        log.info("endX ====", endX);
+        await page.mouse.move(endX, startY); // 最终位置回到原始Y坐标
+        await page.waitForTimeout(300); // 到达目标位置后短暂停顿
+        await page.mouse.up(); // 释放鼠标
+        console.log('Slider moved successfully with irregular pattern (X and Y axis) at 5x slower speed');
+    }
+    // 增加完成后的等待时间
+    await page.waitForTimeout(5000); // 从2000增加到5000
+}
+
+async function convertImageToBase64WithHeader(imageInfo : Buffer<ArrayBufferLike>) {
+    try {
+      const mimeType = "image/jpeg";
+      console.log('Base64 Image with Header:', mimeType);
+      // 转换为 Base64 编码
+      const base64Image = imageInfo.toString('base64');
+      return `data:${mimeType};base64,${base64Image}`;
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  }
+
+async function getSlideContent(imageInfo : string) {
+    try {
+      const response = await axios.post('http://www.detayun.cn/openapi/verify_code_identify/', {
+        key: 'nULF2C3SE5oy8My8dfF8',
+        verify_idf_id: '56',
+        img_base64:imageInfo
+      });
+      return response.data;
+    } catch (err) {
+      console.error('Error:', err);
+    }
+  }
+
+
+
 function checkValidate(){
     setInterval(async () => {
         const validateItem = validateQueueProcessor.take();
@@ -149,13 +322,13 @@ function checkValidate(){
                 if(validateParams){
                     url += "&validateParams=" + encodeBase64(JSON.stringify(validateParams));
                 }
-                let result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor());
+                let result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor(), {}, validateAction, validateItem.validateUrl, validateParams);
                 let validateNum = 0;
                 while(!isValidateSuccess(result) && validateNum <=3 ){
                     validateNum++;
                     log.info("checkValidate error retry validate ", validateNum);
                     engine.resetMonitor();
-                    result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor());
+                    result = await engine.openWaitMonitor(page, undefined, new ImageValidatorMonitor(), {}, validateAction, validateItem.validateUrl, validateParams);
                 }
                 if(isValidateSuccess(result)){
                     validateItem.resolve(result.getHeaderData(), true);

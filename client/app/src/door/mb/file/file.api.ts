@@ -27,6 +27,7 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
     const fileQueryMonitor = new MbFileQueryMonitor();
     const paths = getFilePaths(skuFileNames);
     const unUploadFiles = await getUnUploadFile(fileQueryMonitor.getType(), resourceId, paths);
+    log.info("unUploadFiles size ", unUploadFiles.length);
     if(unUploadFiles.length === 0){
         const skuFiles = await getSkuFiles(skuItemId, resourceId);
         return {
