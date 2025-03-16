@@ -1,4 +1,5 @@
 import { autoUpdater } from 'electron-updater'
+import { UpdateInfo } from 'builder-util-runtime'
 import log from 'electron-log'
 import { BrowserWindow, dialog, ipcMain } from 'electron'
 
@@ -33,12 +34,66 @@ export function setupAutoUpdater(win: BrowserWindow) {
     console.info('正在检查更新...');
   });
 
-  autoUpdater.on('update-available', () => {
-    console.info('发现新版本...');
-    isUpdateAvailable = true; // 标志新版本已找到
+  // autoUpdater.on('update-available', () => {
+  //   console.info('发现新版本...');
+  //   isUpdateAvailable = true; // 标志新版本已找到
 
-    // 弹出确认对话框
-    win.webContents.send('update-confirm', '发现新版本，是否立即下载更新？');
+  //   // 弹出确认对话框
+  //   win.webContents.send('update-confirm', '发现新版本，是否立即下载更新？');
+  // });
+
+  // 修改update-available事件处理
+  autoUpdater.on('update-available', (info: UpdateInfo) => {
+    console.info('发现新版本...', info.version);
+    isUpdateAvailable = true;
+    
+    // 读取版本信息
+    const newVersion = info.version;
+    const releaseNotes = info.releaseNotes || '';
+    const releaseName = info.releaseName || '新版本';
+    
+    // 读取自定义字段(注意：这些字段在TypeScript类型中不存在，需要类型断言)
+    const updateInfo = info as any;
+    const forceUpdate = updateInfo.forceUpdate === true;
+    const updateType = updateInfo.updateType || 'normal';
+    
+    // 向前端发送更新信息
+    win.webContents.send('update-info', {
+      version: newVersion,
+      notes: releaseNotes,
+      name: releaseName,
+      forceUpdate: forceUpdate,
+      updateType: updateType
+    });
+    
+    // 根据更新类型决定行为
+    if (forceUpdate) {
+      // 强制更新：显示无法关闭的对话框，并自动开始下载
+      dialog.showMessageBox(win, {
+        type: 'warning',
+        title: '强制更新',
+        message: `发现新版本(${newVersion})，需要立即更新`,
+        detail: typeof releaseNotes === 'string' ? releaseNotes : '包含重要更新，必须更新才能继续使用',
+        buttons: ['开始更新'],
+        cancelId: -1, // 防止用户关闭对话框
+      }).then(() => {
+        autoUpdater.downloadUpdate();
+      });
+    } else {
+      // 可选更新：显示可关闭的对话框，让用户选择
+      dialog.showMessageBox(win, {
+        type: 'info',
+        title: '发现新版本',
+        message: `${releaseName} (${newVersion}) 可供更新`,
+        detail: typeof releaseNotes === 'string' ? releaseNotes : '是否立即更新？',
+        buttons: ['稍后再说', '立即更新'],
+        cancelId: 0,
+      }).then(({response}) => {
+        if (response === 1) {
+          autoUpdater.downloadUpdate();
+        }
+      });
+    }
   });
 
   autoUpdater.on('update-not-available', () => {

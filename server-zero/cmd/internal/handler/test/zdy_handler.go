@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"server-zero/cmd/internal/svc"
 	"strconv"
+
+	"golang.org/x/exp/rand"
 )
 
 // ProxyIP 代表单个代理IP的信息
@@ -67,14 +69,14 @@ func ZdyHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 				IP:       "223.241.180.245",
 				Port:     41301,
 				Address:  "安徽省安庆市 电信",
-				Timeout:  76,
+				Timeout:  10 + rand.Intn(11), // 生成10到20之间的随机数
 				ComeTime: 284,
 			},
 			{
 				IP:       "36.26.119.214",
 				Port:     39557,
 				Address:  "浙江省 电信",
-				Timeout:  101,
+				Timeout:  10 + rand.Intn(11), // 生成10到20之间的随机数
 				ComeTime: 259,
 			},
 			// 可以添加更多示例数据

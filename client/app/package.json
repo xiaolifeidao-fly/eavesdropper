@@ -55,6 +55,9 @@
         "url": "http://127.0.0.1:13500/updates/"
       }
     ],
+    "releaseInfo": {
+      "releaseNotes": "这是版本1.1.0的更新说明\n- 修复了若干bug\n- 提升了性能\n- 新增了功能X"
+    },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
