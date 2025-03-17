@@ -670,61 +670,9 @@ async function handleSliderVerificationInFrame(page: Page, frame: Frame) {
           slideOptions.initialDelayBeforeSlide * 0.8, 
           slideOptions.initialDelayBeforeSlide * 1.2
         );
-        
-        // 使用简化版轨迹生成算法
-        const moveTrack = generateSimpleTrack(distance);
-        console.log(`生成了 ${moveTrack.length} 个移动点`);
-        
-        // 开始滑动操作
-        console.log('开始执行滑动操作...');
-        
-        // 直接移动到滑块位置
-        await page.mouse.move(startX, startY, { steps: 5 });
-        await randomDelay(300, 500);
-        await page.mouse.down();
-        await randomDelay(100, 200);
-        
-        // 执行移动轨迹
-        let currentX = startX;
-        let currentY = startY;
-        let totalDelay = 0;
-        
-        for (const [index, point] of moveTrack.entries()) {
-          // 移动到新位置
-          currentX += point.xOffset;
-          currentY += point.yOffset;
-          
-          // 确保只有正向移动
-          currentX = Math.max(startX, currentX);
-          
-          // 检查范围，确保不会移出屏幕
-          currentX = Math.min(page.viewportSize()!.width - 1, currentX);
-          currentY = Math.max(0, Math.min(page.viewportSize()!.height - 1, currentY));
-          
-          const options = index === 0 ? { steps: 1 } : {};
-          await page.mouse.move(currentX, currentY, options);
-          
-          // 确保最后几步的延迟更长，以展示减速效果
-          let delay;
-          if (index > moveTrack.length * 0.8) {
-            delay = 30 + Math.random() * 20;
-          } else {
-            delay = point.delay;
-          }
-          
-          await page.waitForTimeout(delay);
-          totalDelay += delay;
-        }
-        
-        console.log(`滑动轨迹执行完成，总耗时: ${totalDelay}ms`);
-        
-        // 确保最终位置接近目标但不过头
-        const finalPosition = Math.min(endX - 2, currentX);
-        await page.mouse.move(finalPosition, currentY, { steps: 3 });
-        await randomDelay(200, 300);
-        
-        // 松开鼠标
-        await page.mouse.up();
+
+        // 执行滑块滑动
+        await slideSlider(page, { x: startX, y: startY }, { x: startX + distance, y: startY });
         
         console.log('滑块自动验证操作完成');
         
@@ -790,6 +738,91 @@ async function handleSliderVerificationInFrame(page: Page, frame: Frame) {
   } catch (error) {
     console.error('iframe中滑块验证处理失败:', error);
     await captureScreenshot(page, 'slider-error');
+  }
+}
+
+/**
+ * 封装的滑块滑动函数 - 从起始位置滑动到目标位置
+ * @param page Playwright页面对象
+ * @param startPosition 起始位置坐标 {x, y}
+ * @param endPosition 目标位置坐标 {x, y}
+ * @returns 滑动操作是否成功完成
+ */
+async function slideSlider(
+  page: Page, 
+  startPosition: { x: number, y: number }, 
+  endPosition: { x: number, y: number }
+): Promise<boolean> {
+  try {
+    console.log(`执行滑块滑动: 从(${startPosition.x}, ${startPosition.y}) 滑动到 (${endPosition.x}, ${endPosition.y})`);
+    
+    // 计算滑动距离
+    const distance = endPosition.x - startPosition.x;
+    
+    if (distance <= 0) {
+      console.error('滑动距离必须为正值');
+      return false;
+    }
+    
+    // 使用简化版轨迹生成算法
+    const moveTrack = generateSimpleTrack(distance);
+    console.log(`生成了 ${moveTrack.length} 个移动点`);
+    
+    // 开始滑动操作
+    console.log('开始执行滑动操作...');
+    
+    // 直接移动到滑块位置
+    await page.mouse.move(startPosition.x, startPosition.y, { steps: 5 });
+    await randomDelay(300, 500);
+    await page.mouse.down();
+    await randomDelay(100, 200);
+    
+    // 执行移动轨迹
+    let currentX = startPosition.x;
+    let currentY = startPosition.y;
+    let totalDelay = 0;
+    
+    for (const [index, point] of moveTrack.entries()) {
+      // 移动到新位置
+      currentX += point.xOffset;
+      currentY += point.yOffset;
+      
+      // 确保只有正向移动
+      currentX = Math.max(startPosition.x, currentX);
+      
+      // 检查范围，确保不会移出屏幕
+      currentX = Math.min(page.viewportSize()!.width - 1, currentX);
+      currentY = Math.max(0, Math.min(page.viewportSize()!.height - 1, currentY));
+      
+      const options = index === 0 ? { steps: 1 } : {};
+      await page.mouse.move(currentX, currentY, options);
+      
+      // 确保最后几步的延迟更长，以展示减速效果
+      let delay;
+      if (index > moveTrack.length * 0.8) {
+        delay = 30 + Math.random() * 20;
+      } else {
+        delay = point.delay;
+      }
+      
+      await page.waitForTimeout(delay);
+      totalDelay += delay;
+    }
+    
+    console.log(`滑动轨迹执行完成，总耗时: ${totalDelay}ms`);
+    
+    // 确保最终位置接近目标但不过头
+    const finalPosition = Math.min(endPosition.x - 2, currentX);
+    await page.mouse.move(finalPosition, currentY, { steps: 3 });
+    await randomDelay(200, 300);
+    
+    // 松开鼠标
+    await page.mouse.up();
+    
+    return true;
+  } catch (error) {
+    console.error('滑动操作失败:', error);
+    return false;
   }
 }
 
