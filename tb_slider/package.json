@@ -1,0 +1,29 @@
+{
+  "name": "tb_slider",
+  "version": "1.0.0",
+  "description": "淘宝滑块验证自动化测试",
+  "main": "src/taobao-login.ts",
+  "scripts": {
+    "start": "ts-node src/taobao-login.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "slider",
+    "captcha",
+    "taobao"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^11.3.0",
+    "playwright": "^1.51.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4"
+  }
+}
