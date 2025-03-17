@@ -10,6 +10,29 @@ import { getSkuPage as getSkuPageApi } from '@api/sku/sku.api';
 import type { SkuPageResp } from '@model/sku/sku';
 import { SkuPushStepsForm } from './components';
 
+function copyToClipboard(inputText: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const textarea = document.createElement('textarea')
+    textarea.value = inputText
+    textarea.style.position = 'fixed' // 避免滚动到底部
+    document.body.appendChild(textarea)
+    textarea.select()
+
+    try {
+      const successful = document.execCommand('copy')
+      if (successful) {
+        resolve()
+      } else {
+        reject(new Error('无法复制文本'))
+      }
+    } catch (err) {
+      reject(err)
+    } finally {
+      document.body.removeChild(textarea)
+    }
+  })
+}
+
 type DataType = {
   id: number;
   sourceAccount: string;
@@ -108,7 +131,15 @@ export default function SkuManage() {
       width: 150,
       render: (_, record) => [
         <Button key="edit" type="link" style={{ paddingRight: 0 }} onClick={() => { window.open(record.url, '_blank'); }}>打开上家商品</Button>,
-        <Button key="copy" type="link"style={{ paddingLeft: 0 }}  onClick={async () => { await navigator.clipboard.writeText(record.url || '') }}>
+        <Button key="copy" type="link"style={{ paddingLeft: 0 }}  onClick={async () => { 
+          try {
+            await copyToClipboard(record.url || '')
+            message.success('复制成功')
+          } catch (error) {
+            console.error(error)
+            message.error('复制失败')
+          }
+        }}>
           复制上家链接
         </Button>
         // <Button key="delete" type="link" danger style={{ paddingLeft: 0 }} onClick={async () => {
