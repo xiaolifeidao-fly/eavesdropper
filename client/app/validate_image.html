@@ -2,31 +2,37 @@
 
 <head>
     <script>
+
+        function fillStyle(iframe, validateParams){
+            if(validateParams){
+                const validateParamsObj = JSON.parse(decodeBase64(validateParams));
+                let style = "";
+                if(validateParamsObj.dialogSize?.width){
+                    style = style + "width: " + validateParamsObj.dialogSize.width + "px;";
+                }
+                if(validateParamsObj.dialogSize?.height){
+                    style = style + "height: " + validateParamsObj.dialogSize.height + "px;";
+                }
+                if(validateParamsObj.attributes?.style){
+                    style = style + validateParamsObj.attributes.style + ";";
+                }
+                iframe.style = style;
+                return;
+            }
+            if(iframeUrl.includes("mtop.relationrecommend.wirelessrecommend.recommend")){
+                iframe.style = "position: absolute; inset: 0px; margin: auto; width: 420px; height: 320px; border: 0px; background: rgb(255, 255, 255); overflow: hidden; border-radius: 18px;"
+                return;
+            }
+            iframe.style = "position: absolute; inset: 0px; margin: auto; width: 420px; height: 320px; border: 0px; background: rgb(255, 255, 255); overflow: hidden; border-radius: 18px;";
+        }
+
         const params = new URLSearchParams(window.location.search);
         const iframeUrl = decodeBase64(params.get("iframeUrl"));
         const validateParams = params.get("validateParams");
         const iframe = document.createElement("iframe");
-        if(validateParams){
-            const validateParamsObj = JSON.parse(decodeBase64(validateParams));
-            let style = "";
-            if(validateParamsObj.dialogSize?.width){
-                style = style + "width: " + validateParamsObj.dialogSize.width + "px;";
-            }
-            if(validateParamsObj.dialogSize?.height){
-                style = style + "height: " + validateParamsObj.dialogSize.height + "px;";
-            }
-            if(validateParamsObj.attributes?.style){
-                style = style + validateParamsObj.attributes.style + ";";
-            }
-            iframe.style = style;
-        }else{
-            iframe.style.width = "800px";
-            iframe.style.height = "800px";
-        }
-        if(iframeUrl.includes("mtop.relationrecommend.wirelessrecommend.recommend")){
-            iframe.style = "position: absolute; inset: 0px; margin: auto; width: 420px; height: 320px; border: 0px; background: rgb(255, 255, 255); overflow: hidden; border-radius: 18px;"
-        }
+        fillStyle(iframe, validateParams);
         iframe.src = iframeUrl;
+        iframe.id = "validate_iframe";
         document.body.appendChild(iframe);
          // Base64 解码函数
         function decodeBase64(encodedStr) {

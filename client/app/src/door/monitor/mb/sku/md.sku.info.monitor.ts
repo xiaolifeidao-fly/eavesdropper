@@ -86,6 +86,27 @@ export class MbShopDetailMonitorChain extends MbMonitorChain<{}>{
 }
 
 
+export class MbPublishSearchMonitor extends MbMonitorResponse<{}>{
+    getKey(): string {
+        return "publishSearch";
+    }
+
+    getApiName(): string[] {
+        return ["sell/ai/category.htm"];
+    }
+
+    public needResponseHeaderData(): boolean{
+        return true;
+    }
+
+    public async getResponseData(response: Response): Promise<DoorEntity<{}>> {
+        return new DoorEntity(true, {})
+    }
+
+    
+}
+
+
 export class MbSkuPublishDraffMonitor extends MbMonitorResponse<{}>{
 
     getApiName(): string[] {

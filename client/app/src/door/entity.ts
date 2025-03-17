@@ -6,16 +6,18 @@ export class DoorEntity<T>{
     data : T;
     headerData : { [key: string]: any; };
     requestBody : { [key: string]: any; };
+    responseHeaderData : { [key: string]: any; };
     url: string;
     validateUrl : string | undefined;
     validateParams : { [key: string]: any; } | undefined;
-    constructor(code: boolean = true, data: T = {} as T, url: string = "", headerData : { [key: string]: string; } = {}, requestBody : { [key: string]: any; } = {}, validateUrl : string | undefined = undefined){
+    constructor(code: boolean = true, data: T = {} as T, url: string = "", headerData : { [key: string]: string; } = {}, requestBody : { [key: string]: any; } = {}, validateUrl : string | undefined = undefined, responseHeaderData : { [key: string]: any; } = {}){
         this.code = code;
         this.data = data;
         this.headerData = headerData;
         this.requestBody = requestBody;
         this.url = url;
         this.validateUrl = validateUrl;
+        this.responseHeaderData = responseHeaderData;
     }
 
     setValidateParams(params: { [key: string]: any; }){
@@ -48,5 +50,9 @@ export class DoorEntity<T>{
 
     public getUrl(){
         return this.url;
+    }
+
+    public getResponseHeaderData(){
+        return this.responseHeaderData;
     }
 }

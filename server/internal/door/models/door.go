@@ -61,3 +61,14 @@ func (f *DoorFileRecord) TableName() string {
 func (s *SearchSkuRecord) TableName() string {
 	return "search_sku_record"
 }
+
+type DoorCategory struct {
+	database.BaseEntity
+	PddCatId  string `json:"pdd_cat_id"`
+	TbCatId   string `json:"tb_cat_id"`
+	TbCatName string `json:"tb_cat_name"`
+}
+
+func (u *DoorCategory) TableName() string {
+	return "door_category"
+}

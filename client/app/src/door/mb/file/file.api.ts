@@ -27,6 +27,7 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
     const fileQueryMonitor = new MbFileQueryMonitor();
     const paths = getFilePaths(skuFileNames);
     const unUploadFiles = await getUnUploadFile(fileQueryMonitor.getType(), resourceId, paths);
+    log.info("unUploadFiles size ", unUploadFiles.length);
     if(unUploadFiles.length === 0){
         const skuFiles = await getSkuFiles(skuItemId, resourceId);
         return {
@@ -98,17 +99,26 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
     for(let filePath of unUploadFiles){
         const form = new FormData();
         //合并headerData
-        const headers = {
+        const headers : { [key: string]: string } = {
             ...headerData,
             ...form.getHeaders(),
             ...{
                 "Origin" : "https://qn.taobao.com",
-                "Connection" : "keep-alive",
-                "Sec-Fetch-Dest" : "empty",
-                "Sec-Fetch-Mode" : "cors",
-                "Sec-Fetch-Site" : "same-site"
+                "Connection" : "keep-alive"
             }
         }
+        headers['accept'] = "application/json, text/plain, */*";
+        headers['accept-language'] = "zh-CN,zh;q=0.9";
+        headers['cache-control'] = "no-cache";
+        headers['pragma'] = "no-cache";
+        headers['priority'] = "u=0, i";
+        headers['sec-fetch-dest'] = "empty";
+        headers['sec-fetch-mode'] = "cors";
+        headers['sec-fetch-site'] = "same-origin";
+        headers['Referer'] = "https://myseller.taobao.com/home.htm/sucai-tu/home";
+        headers['Origin'] = "https://myseller.taobao.com";
+        headers['Host'] = "stream-upload.taobao.com";
+        headers['x-requested-with'] = "XMLHttpRequest";
         form.append('file', fs.createReadStream(filePath), path.basename(filePath));
         // 发送 POST 请求
         let attempt = 0; // 当前尝试次数

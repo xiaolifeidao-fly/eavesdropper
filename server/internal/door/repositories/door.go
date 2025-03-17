@@ -43,3 +43,11 @@ func (r *DoorFileRecordRepository) FindBySourceAndResourceIdAndFileKey(source st
 func (r *SearchSkuRecordRepository) FindBySearchTypeAndPddSkuId(searchType string, pddSkuId string) (*models.SearchSkuRecord, error) {
 	return r.GetOne("select * from search_sku_record where type = ? and pdd_sku_id = ? order by id desc limit 1", searchType, pddSkuId)
 }
+
+type DoorCategoryRepository struct {
+	database.Repository[*models.DoorCategory]
+}
+
+func (r *DoorCategoryRepository) FindByPddCatId(pddCatId string) (*models.DoorCategory, error) {
+	return r.GetOne("select * from door_category where pdd_cat_id = ?", pddCatId)
+}

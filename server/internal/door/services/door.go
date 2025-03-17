@@ -17,6 +17,7 @@ var doorRecordRepository = database.NewRepository[repositories.DoorRecordReposit
 var doorFileRecordRepository = database.NewRepository[repositories.DoorFileRecordRepository]()
 var searchSkuRecordRepository = database.NewRepository[repositories.SearchSkuRecordRepository]()
 var doorCatPropRepository = database.NewRepository[repositories.DoorCatPropRepository]()
+var doorCategoryRepository = database.NewRepository[repositories.DoorCategoryRepository]()
 
 func FindByDoorKeyAndItemKeyAndType(doorKey string, itemKey string, itemType string) (*dto.DoorRecordDTO, error) {
 	doorRecord, err := doorRecordRepository.FindByDoorKeyAndItemKeyAndType(doorKey, itemKey, itemType)
@@ -182,4 +183,30 @@ func GetDoorCatPropsByAi(params map[string]interface{}) (any, error) {
 		}
 	}
 	return nil, nil
+}
+
+func GetDoorCategoryByPddCatId(pddCatId string) (*dto.DoorCategoryDTO, error) {
+	doorCategory, err := doorCategoryRepository.FindByPddCatId(pddCatId)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTO[dto.DoorCategoryDTO](doorCategory), nil
+}
+
+func CreateDoorCategory(doorCategoryDTO *dto.DoorCategoryDTO) (*dto.DoorCategoryDTO, error) {
+	doorCategory, err := doorCategoryRepository.FindByPddCatId(doorCategoryDTO.PddCatId)
+	if err != nil {
+		return nil, err
+	}
+	if doorCategory != nil {
+		doorCategory.TbCatId = doorCategoryDTO.TbCatId
+		doorCategory.TbCatName = doorCategoryDTO.TbCatName
+	} else {
+		doorCategory = database.ToPO[models.DoorCategory](doorCategoryDTO)
+	}
+	doorCategory, err = doorCategoryRepository.SaveOrUpdate(doorCategory)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTO[dto.DoorCategoryDTO](doorCategory), nil
 }

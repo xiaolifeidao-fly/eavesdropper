@@ -74,6 +74,21 @@ export class SearchSkuRecord {
     }
 }
 
+export class DoorCategory {
+    id: number | undefined;
+    pddCatId: string;
+    tbCatId: string;
+    tbCatName: string;
+    
+    constructor(id: number | undefined, pddCatId: string, tbCatId: string, tbCatName: string) {
+        this.id = id;
+        this.pddCatId = pddCatId;
+        this.tbCatId = tbCatId;
+        this.tbCatName = tbCatName;
+    }
+}
+
+
 export class DoorSkuCatProp {
     id: number | undefined;
     source: string;

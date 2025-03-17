@@ -1,780 +1,183 @@
-    {
-        "mergeSourcePids": [
-            "1627207",
-            "1216"
+{
+    "success": true,
+    "data": {
+        "category": [
+            {
+                "id": 213002,
+                "name": "靠垫/抱枕",
+                "path": [
+                    "居家布艺",
+                    "靠枕/抱枕新",
+                    "靠垫/抱枕"
+                ],
+                "idpath": [
+                    122852001,
+                    201305305,
+                    213002
+                ],
+                "publish": true,
+                "isBrand": false,
+                "leaf": true,
+                "submitId": 213002
+            }
         ],
-        "matchFlag": false,
-        "saleAttr": {
-            "hasImage": "true",
-            "comboProperty": "",
-            "label": "款式",
-            "packPro": "",
-            "pid": "1627207",
-            "values": [
-                {
-                    "text": "小橘子 + 200x220cm【凉席+枕套2只】",
-                    "value": "-1",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 1.5m凉席+枕套2只+2.0m夏被",
-                    "value": "-3",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 1.5m凉席+枕套2只+1.5m夏被",
-                    "value": "-5",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 1.8m凉席+枕套2只+2.0m夏被",
-                    "value": "-7",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 90x200cm【凉席+枕套1只】",
-                    "value": "-9",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 150x200cm【单人单夏被】",
-                    "value": "-11",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 1.2m凉席+枕套1只+1.5m夏被",
-                    "value": "-13",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 200x230cm【双人单夏被】",
-                    "value": "-15",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 120x200cm【凉席+枕套1只】",
-                    "value": "-17",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 150x200cm【凉席+枕套2只】",
-                    "value": "-19",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 110x150cm【儿童单夏被】",
-                    "value": "-21",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 2.0m凉席+枕套2只+2.0m夏被",
-                    "value": "-23",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 180x200cm【凉席+枕套2只】",
-                    "value": "-25",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小橘子 + 0.9m凉席+枕套1只+1.5m夏被",
-                    "value": "-27",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01OF6S8925vomeYuuPT_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 200x220cm【凉席+枕套2只】",
-                    "value": "-29",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 1.5m凉席+枕套2只+2.0m夏被",
-                    "value": "-31",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 1.5m凉席+枕套2只+1.5m夏被",
-                    "value": "-33",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 1.8m凉席+枕套2只+2.0m夏被",
-                    "value": "-35",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 90x200cm【凉席+枕套1只】",
-                    "value": "-37",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 150x200cm【单人单夏被】",
-                    "value": "-39",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 1.2m凉席+枕套1只+1.5m夏被",
-                    "value": "-41",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 200x230cm【双人单夏被】",
-                    "value": "-43",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 120x200cm【凉席+枕套1只】",
-                    "value": "-45",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 150x200cm【凉席+枕套2只】",
-                    "value": "-47",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 110x150cm【儿童单夏被】",
-                    "value": "-49",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 2.0m凉席+枕套2只+2.0m夏被",
-                    "value": "-51",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 180x200cm【凉席+枕套2只】",
-                    "value": "-53",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "雨花石 + 0.9m凉席+枕套1只+1.5m夏被",
-                    "value": "-55",
-                    "image": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01fxHwc025vomf9UZlP_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 200x220cm【凉席+枕套2只】",
-                    "value": "-57",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 1.5m凉席+枕套2只+2.0m夏被",
-                    "value": "-59",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 1.5m凉席+枕套2只+1.5m夏被",
-                    "value": "-61",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 1.8m凉席+枕套2只+2.0m夏被",
-                    "value": "-63",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 90x200cm【凉席+枕套1只】",
-                    "value": "-65",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 150x200cm【单人单夏被】",
-                    "value": "-67",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 1.2m凉席+枕套1只+1.5m夏被",
-                    "value": "-69",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 200x230cm【双人单夏被】",
-                    "value": "-71",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 120x200cm【凉席+枕套1只】",
-                    "value": "-73",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 150x200cm【凉席+枕套2只】",
-                    "value": "-75",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 110x150cm【儿童单夏被】",
-                    "value": "-77",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 2.0m凉席+枕套2只+2.0m夏被",
-                    "value": "-79",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 180x200cm【凉席+枕套2只】",
-                    "value": "-81",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "小熊花朵 + 0.9m凉席+枕套1只+1.5m夏被",
-                    "value": "-83",
-                    "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01jWg8TM25vomf9RUVW_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 200x220cm【凉席+枕套2只】",
-                    "value": "-85",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 1.5m凉席+枕套2只+2.0m夏被",
-                    "value": "-87",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 1.5m凉席+枕套2只+1.5m夏被",
-                    "value": "-89",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 1.8m凉席+枕套2只+2.0m夏被",
-                    "value": "-91",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 90x200cm【凉席+枕套1只】",
-                    "value": "-93",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 150x200cm【单人单夏被】",
-                    "value": "-95",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 1.2m凉席+枕套1只+1.5m夏被",
-                    "value": "-97",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 200x230cm【双人单夏被】",
-                    "value": "-99",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 120x200cm【凉席+枕套1只】",
-                    "value": "-101",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 150x200cm【凉席+枕套2只】",
-                    "value": "-103",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 110x150cm【儿童单夏被】",
-                    "value": "-105",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 2.0m凉席+枕套2只+2.0m夏被",
-                    "value": "-107",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 180x200cm【凉席+枕套2只】",
-                    "value": "-109",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                },
-                {
-                    "text": "宇宙恐龙 + 0.9m凉席+枕套1只+1.5m夏被",
-                    "value": "-111",
-                    "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01RurMqY25vombmrU5s_!!695637589.jpg",
-                    "sortOrder": ""
-                }
-            ],
-            "oldPid": "1218"
-        },
-        "subItem": {
-            "name": "p-1627207",
-            "uiType": "newColorSelect",
-            "descriptions": {
-                "data": {
-                    "label": "颜色分类",
-                    "name": "颜色分类",
-                    "dataSource": [
-                        {
-                            "label": "颜色分类",
-                            "dataSource": [
-                                {
-                                    "type": "text",
-                                    "dataSource": [
-                                        {
-                                            "msg": "<p>选择或输入颜色，选择标准颜色可增加搜索/导购机会，标准色还可填写颜色备注信息（偏深、偏亮等）<a href='https://helpcenter.taobao.com/servicehall/knowledge_detail?kwdContentId=140689689665360896&pointId=399385564309115855&isFormContentLayout=true' target='_blank'>查看详情</a></p>"
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            "label": "填写说明",
-                            "dataSource": [
-                                {
-                                    "type": "text",
-                                    "dataSource": [
-                                        {
-                                            "msg": "<p>1、填写字数要求不超过30个字（60个字符），15个字以内展示效果更佳</p><p>2、建议添加属性图片，将有助于消费者快捷选择，提升转化</p>"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-            "label": "颜色分类",
-            "info": {
-                "help": [
-                    "<b style='color:#ff6600'>请选择或直接输入主色，标准颜色可增加搜索/导购机会</b>，还可填写颜色备注信息（偏深、偏亮等），建议不要超过15个字。<a href='//helpcenter.tmall.com/servicehall/knowledge_detail?knowledgeId=1060905572' target='_blank'>查看详情</a><br>属性图上传功能更新，亲可以在属性选择后直接上传图片哦！",
-                    "颜色名称最大长度为130个字符(65个汉字)"
-                ]
-            },
-            "required": false,
-            "maxLength": 130,
-            "multiple": true,
-            "maxItems": 600,
-            "maxCustomItems": 56,
-            "hasSort": true,
-            "showRemark": true,
-            "remarkMaxLength": 30,
-            "totalTextLengthLimit": 32,
-            "totalTextLengthLimitTip": "标题和备注总长度过长可能折叠，请缩短至16个汉字/32个字符",
+        "product": {
             "dataSource": [
                 {
-                    "groupId": 19547332,
-                    "text": "白色系",
-                    "rgb": "#ffffff",
-                    "colors": [
+                    "text": "个人护理/保健/按摩器材>>按摩椅/沙发",
+                    "propName": "类目",
+                    "value": "50018406",
+                    "spuPublishType": "single",
+                    "maxSpuNum": 24,
+                    "children": [
                         {
-                            "value": 28321,
-                            "text": "乳白色",
-                            "rgb": "#fffbf0"
-                        },
-                        {
-                            "value": 28320,
-                            "text": "白色",
-                            "rgb": "#FFFFFF"
-                        },
-                        {
-                            "value": 4266701,
-                            "text": "米白色",
-                            "rgb": "#eedeb0"
-                        }
-                    ]
-                },
-                {
-                    "groupId": 8121627,
-                    "text": "灰色系",
-                    "rgb": "#808080",
-                    "colors": [
-                        {
-                            "value": 28332,
-                            "text": "浅灰色",
-                            "rgb": "#e4e4e4"
-                        },
-                        {
-                            "value": 3232478,
-                            "text": "深灰色",
-                            "rgb": "#666666"
-                        },
-                        {
-                            "value": 28334,
-                            "text": "灰色",
-                            "rgb": "#808080"
-                        },
-                        {
-                            "value": 28330,
-                            "text": "银色",
-                            "rgb": "#c0c0c0"
-                        }
-                    ]
-                },
-                {
-                    "groupId": 3516042,
-                    "text": "黑色系",
-                    "rgb": "#000000",
-                    "colors": [
-                        {
-                            "value": 28341,
-                            "text": "黑色",
-                            "rgb": "#000000"
-                        }
-                    ]
-                },
-                {
-                    "groupId": 3325939,
-                    "text": "红色系",
-                    "rgb": "#ff0000",
-                    "colors": [
-                        {
-                            "value": 4950473,
-                            "text": "桔红色",
-                            "rgb": "#ff7500"
-                        },
-                        {
-                            "value": 3594022,
-                            "text": "玫红色",
-                            "rgb": "#df1b76"
-                        },
-                        {
-                            "value": 3232480,
-                            "text": "粉红色",
-                            "rgb": "#ffb6c1"
-                        },
-                        {
-                            "value": 28326,
-                            "text": "红色",
-                            "rgb": "#ff0000"
-                        },
-                        {
-                            "value": 4464174,
-                            "text": "藕色",
-                            "rgb": "#eed0d8"
-                        },
-                        {
-                            "value": 3743025,
-                            "text": "西瓜红",
-                            "rgb": "#f05654"
-                        },
-                        {
-                            "value": 28327,
-                            "text": "酒红色",
-                            "rgb": "#990000"
-                        }
-                    ]
-                },
-                {
-                    "groupId": 3427736,
-                    "text": "黄色系",
-                    "rgb": "#ffff00",
-                    "colors": [
-                        {
-                            "value": 28331,
-                            "text": "卡其色",
-                            "rgb": "#c3b091"
-                        },
-                        {
-                            "value": 15409374,
-                            "text": "姜黄色",
-                            "rgb": "#ffc773"
-                        },
-                        {
-                            "value": 20412615,
-                            "text": "明黄色",
-                            "rgb": "#ffff01"
-                        },
-                        {
-                            "value": 30155,
-                            "text": "杏色",
-                            "rgb": "#f7eed6"
-                        },
-                        {
-                            "value": 132476,
-                            "text": "柠檬黄",
-                            "rgb": "#ffec43"
-                        },
-                        {
-                            "value": 90554,
-                            "text": "桔色",
-                            "rgb": "#ffa500"
-                        },
-                        {
-                            "value": 60092,
-                            "text": "浅黄色",
-                            "rgb": "#faff72"
-                        },
-                        {
-                            "value": 6134424,
-                            "text": "荧光黄",
-                            "rgb": "#eaff56"
-                        },
-                        {
-                            "value": 28328,
-                            "text": "金色",
-                            "rgb": "#ffd700"
-                        },
-                        {
-                            "value": 130166,
-                            "text": "香槟色",
-                            "rgb": "#f0daab"
-                        },
-                        {
-                            "value": 28324,
-                            "text": "黄色",
-                            "rgb": "#ffff00"
-                        }
-                    ]
-                },
-                {
-                    "groupId": 6303197,
-                    "text": "绿色系",
-                    "rgb": "#008000",
-                    "colors": [
-                        {
-                            "value": 3232483,
-                            "text": "军绿色",
-                            "rgb": "#5d762a"
-                        },
-                        {
-                            "value": 80557,
-                            "text": "墨绿色",
-                            "rgb": "#057748"
-                        },
-                        {
-                            "value": 30156,
-                            "text": "浅绿色",
-                            "rgb": "#98fb98"
-                        },
-                        {
-                            "value": 28335,
-                            "text": "绿色",
-                            "rgb": "#008000"
-                        },
-                        {
-                            "value": 8588036,
-                            "text": "翠绿色",
-                            "rgb": "#0aa344"
-                        },
-                        {
-                            "value": 6535235,
-                            "text": "荧光绿",
-                            "rgb": "#23fa07"
-                        },
-                        {
-                            "value": 3455405,
-                            "text": "青色",
-                            "rgb": "#00e09e"
-                        }
-                    ]
-                },
-                {
-                    "groupId": 3547657,
-                    "text": "蓝色系",
-                    "rgb": "#0000fe",
-                    "colors": [
-                        {
-                            "value": 3232484,
-                            "text": "天蓝色",
-                            "rgb": "#44cef6"
-                        },
-                        {
-                            "value": 5138330,
-                            "text": "孔雀蓝",
-                            "rgb": "#00a4c5"
-                        },
-                        {
-                            "value": 3707775,
-                            "text": "宝蓝色",
-                            "rgb": "#4b5cc4"
-                        },
-                        {
-                            "value": 28337,
-                            "text": "浅蓝色",
-                            "rgb": "#d2f0f4"
-                        },
-                        {
-                            "value": 28340,
-                            "text": "深蓝色",
-                            "rgb": "#041690"
-                        },
-                        {
-                            "value": 5483105,
-                            "text": "湖蓝色",
-                            "rgb": "#30dff3"
-                        },
-                        {
-                            "value": 28338,
-                            "text": "蓝色",
-                            "rgb": "#0000fe"
-                        },
-                        {
-                            "value": 28866,
-                            "text": "藏青色",
-                            "rgb": "#2e4e7e"
-                        }
-                    ]
-                },
-                {
-                    "groupId": 3560058,
-                    "text": "紫色系",
-                    "rgb": "#800080",
-                    "colors": [
-                        {
-                            "value": 4104877,
-                            "text": "浅紫色",
-                            "rgb": "#ede0e6"
-                        },
-                        {
-                            "value": 3232479,
-                            "text": "深紫色",
-                            "rgb": "#430653"
-                        },
-                        {
-                            "value": 5167321,
-                            "text": "紫红色",
-                            "rgb": "#8b0062"
-                        },
-                        {
-                            "value": 80882,
-                            "text": "紫罗兰",
-                            "rgb": "#b7ace4"
-                        },
-                        {
-                            "value": 28329,
-                            "text": "紫色",
-                            "rgb": "#800080"
-                        }
-                    ]
-                },
-                {
-                    "groupId": 5497335,
-                    "text": "棕色系",
-                    "rgb": "#7c4b00",
-                    "colors": [
-                        {
-                            "value": 129819,
-                            "text": "咖啡色",
-                            "rgb": "#603912"
-                        },
-                        {
-                            "value": 3232481,
-                            "text": "巧克力色",
-                            "rgb": "#d2691e"
-                        },
-                        {
-                            "value": 6071353,
-                            "text": "栗色",
-                            "rgb": "#60281e"
-                        },
-                        {
-                            "value": 30158,
-                            "text": "浅棕色",
-                            "rgb": "#b35c44"
-                        },
-                        {
-                            "value": 3232482,
-                            "text": "深卡其布色",
-                            "rgb": "#bdb76b"
-                        },
-                        {
-                            "value": 6588790,
-                            "text": "深棕色",
-                            "rgb": "#7c4b00"
-                        },
-                        {
-                            "value": 132069,
-                            "text": "褐色",
-                            "rgb": "#855b00"
-                        },
-                        {
-                            "value": 3224419,
-                            "text": "驼色",
-                            "rgb": "#a88462"
-                        }
-                    ]
-                },
-                {
-                    "groupId": 14089179,
-                    "text": "花色系",
-                    "rgb": "assortment",
-                    "colors": [
-                        {
-                            "value": 130164,
-                            "text": "花色"
-                        }
-                    ]
-                },
-                {
-                    "groupId": 15495009,
-                    "text": "透明系",
-                    "rgb": "transparent",
-                    "colors": [
-                        {
-                            "value": 107121,
-                            "text": "透明",
-                            "rgb": "transparent"
+                            "text": "OGAWA/奥佳华",
+                            "propName": "品牌",
+                            "value": "4454726",
+                            "spuInfos": [
+                                {
+                                    "title": "OGAWA/奥佳华 OG7828",
+                                    "spuId": 8118736302,
+                                    "image": "//img.alicdn.com/imgextra/i1/6000000001519/O1CN01NoIsPT1N5keeYXxxW_!!6000000001519-0-remus.jpg",
+                                    "saleProps": {
+                                        "1627207": "光翼灰"
+                                    },
+                                    "spuDetailDO": {
+                                        "spuId": 0,
+                                        "image": "//img.alicdn.com/imgextra/i1/6000000001519/O1CN01NoIsPT1N5keeYXxxW_!!6000000001519-0-remus.jpg",
+                                        "title": "OGAWA/奥佳华 OG7828",
+                                        "keyProp": [
+                                            {
+                                                "name": "20000",
+                                                "text": "品牌",
+                                                "value": "OGAWA/奥佳华"
+                                            },
+                                            {
+                                                "name": "8067299",
+                                                "text": "型号",
+                                                "value": "OG7828"
+                                            }
+                                        ],
+                                        "bindProp": [
+                                            {
+                                                "name": "122216344",
+                                                "text": "附加功能",
+                                                "value": "AI语音控制"
+                                            },
+                                            {
+                                                "name": "122216344",
+                                                "text": "附加功能",
+                                                "value": "内置音箱"
+                                            },
+                                            {
+                                                "name": "122216344",
+                                                "text": "附加功能",
+                                                "value": "蓝牙连接"
+                                            },
+                                            {
+                                                "name": "148750292",
+                                                "text": "是否智能操控",
+                                                "value": "是"
+                                            },
+                                            {
+                                                "name": "10184821",
+                                                "text": "导轨类型",
+                                                "value": "SL型导轨"
+                                            },
+                                            {
+                                                "name": "34339",
+                                                "text": "机芯类型",
+                                                "value": "3D机械手按摩"
+                                            },
+                                            {
+                                                "name": "148754276",
+                                                "text": "脚底按摩方式",
+                                                "value": "滚轮式+凸点按摩"
+                                            },
+                                            {
+                                                "name": "20019",
+                                                "text": "功能",
+                                                "value": "局部热疗"
+                                            },
+                                            {
+                                                "name": "20019",
+                                                "text": "功能",
+                                                "value": "按摩点位调节"
+                                            },
+                                            {
+                                                "name": "20019",
+                                                "text": "功能",
+                                                "value": "气囊力度调节"
+                                            },
+                                            {
+                                                "name": "20019",
+                                                "text": "功能",
+                                                "value": "滚轮速度调节"
+                                            },
+                                            {
+                                                "name": "20019",
+                                                "text": "功能",
+                                                "value": "蓝牙连接"
+                                            },
+                                            {
+                                                "name": "20019",
+                                                "text": "功能",
+                                                "value": "按摩强度调节"
+                                            },
+                                            {
+                                                "name": "20019",
+                                                "text": "功能",
+                                                "value": "自动侦测功能"
+                                            },
+                                            {
+                                                "name": "7131005",
+                                                "text": "气囊个数",
+                                                "value": "31个(含)-60个(含)"
+                                            },
+                                            {
+                                                "name": "29112",
+                                                "text": "安装方式",
+                                                "value": "免安装"
+                                            },
+                                            {
+                                                "name": "122276162",
+                                                "text": "椅子类型",
+                                                "value": "按摩椅"
+                                            }
+                                        ],
+                                        "saleProp": [
+                                            {
+                                                "name": "1627207",
+                                                "text": "颜色分类",
+                                                "value": "光翼灰 "
+                                            }
+                                        ]
+                                    },
+                                    "publishParams": {
+                                        "categorySelect": {
+                                            "submitId": 50018406
+                                        },
+                                        "gpfRenderTrace": "213e035417419323103797847e1441",
+                                        "fromSearch": true,
+                                        "spuId": 8118736302,
+                                        "fromAIPublish": true,
+                                        "fromStandardSpuPublish": true
+                                    },
+                                    "brandId": 4454726,
+                                    "categoryId": 50018406,
+                                    "readonly": false,
+                                    "parentIdPath": "50018406_4454726"
+                                }
+                            ]
                         }
                     ]
                 }
-            ],
-            "showUploadImage": true,
-            "isCustomSelectSaleProp": false,
-            "showUploadImageCondition": false,
-            "showUploadImageConditionCheckStatus": false,
-            "candidateProp": null,
-            "isNewComponent": true,
-            "suggestUrl": "asyncOpt.htm?optType=new_suggest_color&catId=50008246&aliColor=true&pid=1627207",
-            "checkUrl": "asyncOpt.htm?optType=new_check_custom_color&catId=50008246&aliColor=true&pid=1627207",
-            "hasCustomProp": true
+            ]
         },
-        "pid": "1627207",
-        "salePid": "1218",
-        "hadAssign": true,
-        "hadImage": false
+        "similar": {
+            "total": 0,
+            "currentPage": 1,
+            "pageSize": 12
+        }
     }
-]
+}

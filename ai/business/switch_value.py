@@ -61,9 +61,9 @@ class SwitchValueProcessor(AiProcessor):
 
     def fix_ai_value(self, first_data : dict, ai_target_data : dict, ori_data_list : list) -> dict:
         for ori_data in ori_data_list:
-            if(ori_data['code'] == ai_target_data['code']):
+            if(str(ori_data['code']) == str(ai_target_data['code'])):
                 ai_target_data['value'] = ori_data['correct_value']
                 return ai_target_data
-        ai_target_data['value'] = first_data['correct_value']
-        ai_target_data['code'] = first_data['code']
+        ai_target_data['value'] = str(first_data['correct_value'])
+        ai_target_data['code'] = str(first_data['code'])
         return ai_target_data
