@@ -11,6 +11,8 @@ import { registerRpc } from './register/rpc';
 import { init } from './store';
 import Store from 'electron-store';
 import { initPlatform } from '@src/door/engine';
+import { validateTest } from '@src/validator/image.validator.test';
+import { onResponse, syncPrice } from '@src/door/mb/sku/mb.publish.on';
 
 
 log.info("app load")
@@ -88,7 +90,6 @@ export const start = () => {
       registerFileProtocol();
 
       await createDefaultWindow();
-
       if(mainWindow){
         // 设置自动更新
         // setupAutoUpdater(mainWindow);
@@ -99,12 +100,17 @@ export const start = () => {
         // }, 60 * 1000) // 60秒检查一次更新
       }
     });
+    validateTest(1, {}, "https://www.ishumei.com/account/register.html?crmSource=%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81%E7%A0%81-banner", {
+      dialogSize : {
+          "width" : 800,
+          "height" : 800
+      }
+    });
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
         app.quit();
       }
     });
-    
     app.on('activate', async () => {
       if (mainWindow === null) {
         await createDefaultWindow();

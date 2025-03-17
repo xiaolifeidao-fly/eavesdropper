@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"server/common/server/controller"
+	"server/common/server/middleware"
 	"server/internal/sku/services"
 	"server/internal/sku/services/dto"
 	"strconv"
@@ -12,8 +13,8 @@ import (
 func LoadSkuFileInfoRouter(router *gin.RouterGroup) {
 	r := router.Group("/sku/file")
 	{
-		r.POST("/save", SaveSkuFile)
-		r.GET("/get", GetSkuFile)
+		r.Use(middleware.Authorization()).POST("/save", SaveSkuFile)
+		r.Use(middleware.Authorization()).GET("/get", GetSkuFile)
 	}
 }
 

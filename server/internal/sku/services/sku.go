@@ -112,3 +112,13 @@ func CreateSkuMapper(skuMapperDTO *dto.SkuMapperDto) (*dto.SkuMapperDto, error) 
 
 	return database.ToDTO[dto.SkuMapperDto](skuMapper), nil
 }
+
+func GetSkuByPublishResourceIdAndPublishSkuId(publishResourceId uint64, publishSkuId string, status string) (*dto.SkuDTO, error) {
+	skuRepository := repositories.SkuRepository
+
+	sku, err := skuRepository.GetSkuByPublishResourceIdAndPublishSkuIdAndStatus(publishResourceId, publishSkuId, status)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTO[dto.SkuDTO](sku), nil
+}

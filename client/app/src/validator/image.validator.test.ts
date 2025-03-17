@@ -8,6 +8,7 @@ import { Frame, Page } from "playwright-core";
 import { v4 as uuidv4 } from 'uuid';
 import sharp from "sharp";
 import axios from "axios";
+import { slideSlider } from "./image.validator";
 
 const {app, BrowserWindow } = require('electron');
 
@@ -63,153 +64,7 @@ const createBrowserView = async (resourceId : number, header : {[key:string]:any
     // windowInstance.addBrowserView(browserView);
  }
 
- /**
- * 封装的滑块滑动函数 - 从起始位置滑动到目标位置
- * @param page Playwright页面对象
- * @param startPosition 起始位置坐标 {x, y}
- * @param endPosition 目标位置坐标 {x, y}
- * @returns 滑动操作是否成功完成
- */
-export async function slideSlider(
-    page: Page, 
-    startPosition: { x: number, y: number }, 
-    endPosition: { x: number, y: number }
-  ): Promise<boolean> {
-    try {
-      console.log(`执行滑块滑动: 从(${startPosition.x}, ${startPosition.y}) 滑动到 (${endPosition.x}, ${endPosition.y})`);
-      
-      // 计算滑动距离
-      const distance = endPosition.x - startPosition.x;
-      
-      if (distance <= 0) {
-        console.error('滑动距离必须为正值');
-        return false;
-      }
-      
-      // 使用简化版轨迹生成算法
-      const moveTrack = generateSimpleTrack(distance);
-      console.log(`生成了 ${moveTrack.length} 个移动点`);
-      
-      // 开始滑动操作
-      console.log('开始执行滑动操作...');
-      
-      // 直接移动到滑块位置
-      await page.mouse.move(startPosition.x, startPosition.y, { steps: 5 });
-      await randomDelay(300, 500);
-      await page.mouse.down();
-      await randomDelay(100, 200);
-      
-      // 执行移动轨迹
-      let currentX = startPosition.x;
-      let currentY = startPosition.y;
-      let totalDelay = 0;
-      
-      for (const [index, point] of moveTrack.entries()) {
-        // 移动到新位置
-        currentX += point.xOffset;
-        currentY += point.yOffset;
-        
-        // 确保只有正向移动
-        currentX = Math.max(startPosition.x, currentX);
-        
-        // 检查范围，确保不会移出屏幕
-        currentX = Math.min(page.viewportSize()!.width - 1, currentX);
-        currentY = Math.max(0, Math.min(page.viewportSize()!.height - 1, currentY));
-        
-        const options = index === 0 ? { steps: 1 } : {};
-        await page.mouse.move(currentX, currentY, options);
-        
-        // 确保最后几步的延迟更长，以展示减速效果
-        let delay;
-        if (index > moveTrack.length * 0.8) {
-          delay = 30 + Math.random() * 20;
-        } else {
-          delay = point.delay;
-        }
-        
-        await page.waitForTimeout(delay);
-        totalDelay += delay;
-      }
-      
-      console.log(`滑动轨迹执行完成，总耗时: ${totalDelay}ms`);
-      
-      // 确保最终位置接近目标但不过头
-      const finalPosition = Math.min(endPosition.x - 2, currentX);
-      await page.mouse.move(finalPosition, currentY, { steps: 3 });
-      await randomDelay(200, 300);
-      
-      // 松开鼠标
-      await page.mouse.up();
-      
-      return true;
-    } catch (error) {
-      console.error('滑动操作失败:', error);
-      return false;
-    }
-  }
-  
-  /**
- * 生成简化的滑动轨迹，专注于平滑自然的移动，无回拉
- * @param distance 总滑动距离
- * @returns 移动轨迹点数组
- */
-function generateSimpleTrack(distance: number) {
-    // 使用更简单的轨迹生成算法，确保滑动平滑且不回拉
-    const track = [];
-    const totalSteps = 40 + Math.floor(Math.random() * 10); // 40-50步
-    
-    // 使用正弦加速度模型
-    for (let i = 0; i < totalSteps; i++) {
-      const ratio = i / totalSteps;
-      
-      // 使用正弦函数创建加速-减速曲线
-      const acceleration = Math.sin(ratio * Math.PI);
-      const stepDistance = (distance / totalSteps) * acceleration * 1.5;
-      
-      // 确保步进值始终为正（向前移动）
-      const xOffset = Math.max(0.5, stepDistance);
-      
-      // 添加很小的垂直抖动
-      const yOffset = (Math.random() * 2 - 1) * 0.8;
-      
-      // 计算合适的延迟 - 开始和结束时较慢，中间较快
-      let delay;
-      if (ratio < 0.2 || ratio > 0.8) {
-        delay = 25 + Math.random() * 15; // 较慢
-      } else {
-        delay = 15 + Math.random() * 10; // 较快
-      }
-      
-      track.push({
-        xOffset,
-        yOffset,
-        delay
-      });
-    }
-    
-    // 确保末尾没有回拉操作，最后几步都是向前的小步移动
-    for (let i = 0; i < 4; i++) {
-      track.push({
-        xOffset: 1.0 + Math.random() * 0.5, // 小幅向前移动
-        yOffset: (Math.random() * 2 - 1) * 0.3, // 几乎不做垂直移动
-        delay: 40 + Math.random() * 30 // 较长的延迟，模拟减速
-      });
-    }
-    
-    return track;
-  }
-
-  /**
- * 随机延迟函数
- * @param min 最小延迟(ms)
- * @param max 最大延迟(ms)
- */
-async function randomDelay(min: number, max: number) {
-    const delay = Math.floor(min + Math.random() * (max - min));
-    await new Promise(resolve => setTimeout(resolve, delay));
-    return delay;
-  }
-class ValidateItem {
+class ValidateItemTest {
     waitResolve: (value: {header: {[key:string]:any}, result: boolean}) => void = () => {};
     waitPromise: Promise<{header: {[key:string]:any}, result: boolean}>;
     resourceId: number;
@@ -241,12 +96,12 @@ class ValidateItem {
 
 }
 
-class ValidateQueueProcessor {
-    private queue: ValidateItem[] = [];
-    private waiting: ((value: ValidateItem) => void)[] = [];
+class ValidateQueueProcessorTest {
+    private queue: ValidateItemTest[] = [];
+    private waiting: ((value: ValidateItemTest) => void)[] = [];
 
     // 非阻塞的 put 方法
-    public put(item: ValidateItem): void {
+    public put(item: ValidateItemTest): void {
         if (this.waiting.length > 0) {
             const resolve = this.waiting.shift();
             if (resolve) {
@@ -258,14 +113,14 @@ class ValidateQueueProcessor {
     }
 
     // 阻塞的 take 方法
-    public take(): ValidateItem|undefined {
+    public take(): ValidateItemTest|undefined {
         if (this.queue.length > 0) {
             return this.queue.shift();
         }
         return undefined;
     }
 }
-const validateQueueProcessor = new ValidateQueueProcessor();
+const validateQueueProcessor = new ValidateQueueProcessorTest();
 
 async function waitTimes(times : number){
     return await new Promise((resolve) => {
@@ -273,8 +128,8 @@ async function waitTimes(times : number){
     });
 }
 
-export async function validate(resourceId : number, header : {[key:string]:any}, validateUrl : string, validateParams : { [key: string]: any } | undefined){
-    const validateItem = new ValidateItem(resourceId, header, validateUrl, validateParams);
+export async function validateTest(resourceId : number, header : {[key:string]:any}, validateUrl : string, validateParams : { [key: string]: any } | undefined){
+    const validateItem = new ValidateItemTest(resourceId, header, validateUrl, validateParams);
     validateQueueProcessor.put(validateItem);
     return await validateItem.wait();
 }
@@ -289,7 +144,7 @@ async function getFrame(page: Page) {
     const frame = await page.mainFrame();
     for (const child of frame.childFrames()) {
         const url = await child.url();
-        if(url.includes("api/upload.api/_____tmd_____/punish")){
+        if(url.includes("https://www.ishumei.com/account/register.html")){
             log.info("get from childFrame ", url);
             return child;
         }
@@ -302,17 +157,12 @@ async function validateAction(page : Page, ...params : any[]){
     try{
         const validateUrl = params[0];
         const validateParams = params[1];
-        if(validateUrl.includes("mtop.relationrecommend.wirelessrecommend.recommend") || validateUrl.includes("x5step=2")){
-            return;
-        }
-        if(validateParams){
-            return;
-        }
         let frame = await getFrame(page);
-        const element = frame.locator("#puzzle-captcha-question-img").first(); // 选择要截图的元素
+        const element = frame.locator(".shumei_captcha_loaded_img_bg").first(); // 选择要截图的元素
         if (element) {
             const qrCodeFileName = uuidv4() + ".jpeg";
             const qrCodeFilePath = path.join(path.dirname(app.getAppPath()),'resource','temp', qrCodeFileName);
+            log.info("validateAction qrCodeFilePath ", await element.getAttribute("src"));
             const buffer = await element.screenshot({ path: qrCodeFilePath}); // 保存截图
             const imageSharp = sharp(buffer);
             const boundingBox = await element.boundingBox();
@@ -327,7 +177,8 @@ async function validateAction(page : Page, ...params : any[]){
                 log.info("slideContent is ", slideContent);
                 if (slideContent && slideContent.code == 200){
                     console.log("slideContent.data.px_distance ====", slideContent.data.px_distance);
-                    const slider = await frame.locator('#puzzle-captcha-btn').first();
+                    // await moveCaptchaVerifyImgSlide(page, frame, slideContent.data.px_distance);
+                    const slider = await frame.locator('.shumei_captcha_slide_btn').first();
                     if (slider) {
                         const sliderBox = await slider.boundingBox();
                         console.log("sliderBox x ====", sliderBox);
@@ -338,8 +189,7 @@ async function validateAction(page : Page, ...params : any[]){
                         const startY = sliderBox.y + sliderBox.height / 2; // 起始位置的 Y 坐标
                         let endX = startX + slideContent.data.px_distance; // 目标位置的 X 坐标
                         await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
-                    }                
-                    // await moveCaptchaVerifyImgSlide(page, frame, slideContent.data.px_distance);
+                    }     
                     // await humanLikeDragHorizontally(page, frame,"#puzzle-captcha-btn", slideContent.data.px_distance, {
                     //     maxVerticalVariation: 2,
                     //     speedVariation: 0.02,
@@ -355,7 +205,7 @@ async function validateAction(page : Page, ...params : any[]){
 }
 
 async function moveCaptchaVerifyImgSlide(page : Page, frame : Frame, distance : number){
-    const slider = await frame.locator('#puzzle-captcha-btn').first();
+    const slider = await frame.locator('.shumei_captcha_slide_btn').first();
     if (slider) {
         const sliderBox = await slider.boundingBox();
         console.log("sliderBox x ====", sliderBox);

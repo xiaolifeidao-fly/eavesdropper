@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"server/common/server/controller"
+	"server/common/server/middleware"
 	"server/internal/sku/services"
 	"server/internal/sku/services/dto"
 	"strconv"
@@ -12,9 +13,9 @@ import (
 func LoadSkuDraftInfoRouter(router *gin.RouterGroup) {
 	r := router.Group("/sku/draft")
 	{
-		r.POST("/active", ActiveSkuDraft)
-		r.GET("/get", GetSkuDraft)
-		r.GET("/expire", ExpireSkuDraft)
+		r.Use(middleware.Authorization()).POST("/active", ActiveSkuDraft)
+		r.Use(middleware.Authorization()).GET("/get", GetSkuDraft)
+		r.Use(middleware.Authorization()).GET("/expire", ExpireSkuDraft)
 	}
 }
 

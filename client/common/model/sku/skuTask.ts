@@ -123,7 +123,8 @@ export class SkuTaskStep {
     public message: string|undefined,
     public status: string|undefined,
     public groupCode: string,
-    public validateUrl: string | undefined = undefined
+    public validateUrl: string | undefined = undefined,
+    public needNextSkip: boolean = false
   ) {
     this.id = id
     this.stepKey = stepKey
@@ -133,6 +134,7 @@ export class SkuTaskStep {
     this.status = status
     this.groupCode = groupCode
     this.validateUrl = validateUrl
+    this.needNextSkip = needNextSkip
   }
 }
 export const STEP_INIT = "INIT"

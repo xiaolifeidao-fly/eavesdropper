@@ -27,7 +27,6 @@ async function clickSaveDraf(page: Page) {
 
 export class SkuBuildDraftStep extends AbsPublishStep{
 
-
     async doStep(): Promise<StepResult> {
         const resourceId = this.getParams("resourceId");
         const skuItem = this.getParams("skuItem");
@@ -690,21 +689,6 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             return "https://item.upload.taobao.com/sell/v2/publish.htm?commendItem=true&commendItemId=" + itemId;
         }
         return "https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=" + skuDraftId;
-    }
-
-    async getSkuDraftIdFromDB(resourceId: number, skuItemId: string) {
-        const skuDraft = await getSkuDraft(resourceId, skuItemId);
-        if (!skuDraft) {
-            return undefined;
-        }
-        if (skuDraft.status == "active") {
-            const skuDraftId = skuDraft.skuDraftId;
-            if(skuDraftId == 'undefined'){
-                return undefined;
-            }
-            return skuDraftId;
-        }
-        return undefined;
     }
 
     async activeDraft(resourceId: number, skuItemId: string, skuDraftId: string) {

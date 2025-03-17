@@ -10,6 +10,7 @@ import (
 	"server/common/server/middleware"
 	"server/internal/sku/services"
 	"server/internal/sku/services/dto"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -22,7 +23,23 @@ func LoadSkuRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).GET("/check-existence", CheckSkuExistence)
 		r.Use(middleware.Authorization()).GET("/page", PageSku)
 		r.Use(middleware.Authorization()).POST("/mappers", CreateSkuMappers)
+		r.Use(middleware.Authorization()).GET("/get/:publishResourceId/:publishSkuId", GetSkuByPublishResourceIdAndPublishSkuId)
 	}
+}
+
+func GetSkuByPublishResourceIdAndPublishSkuId(ctx *gin.Context) {
+	publishResourceId, err := strconv.ParseUint(ctx.Param("publishResourceId"), 10, 64)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	publishSkuId := ctx.Param("publishSkuId")
+	sku, err := services.GetSkuByPublishResourceIdAndPublishSkuId(publishResourceId, publishSkuId, services.SKU_SUCCESS)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, sku)
 }
 
 // CreateSkuMapper

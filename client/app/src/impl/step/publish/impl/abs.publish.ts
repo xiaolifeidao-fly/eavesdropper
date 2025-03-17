@@ -5,6 +5,7 @@ import { Page } from "playwright";
 import { DoorSkuDTO, SkuItem } from "@model/door/sku";
 import { DoorEntity } from "@src/door/entity";
 import { PriceRangeConfig } from "@model/sku/skuTask";
+import { getSkuDraft } from "@api/sku/sku.draft";
 
 export async function elementIsExist(page: Page, selector: string){
     return page.evaluate((selectorKey) => {
@@ -243,6 +244,21 @@ export abstract class AbsPublishStep extends StepUnit{
             return undefined;
         }
         return dataSource[0];
+    }
+
+    async getSkuDraftIdFromDB(resourceId: number, skuItemId: string) {
+        const skuDraft = await getSkuDraft(resourceId, skuItemId);
+        if (!skuDraft) {
+            return undefined;
+        }
+        if (skuDraft.status == "active") {
+            const skuDraftId = skuDraft.skuDraftId;
+            if(skuDraftId == 'undefined'){
+                return undefined;
+            }
+            return skuDraftId;
+        }
+        return undefined;
     }
 
     async getDefaultCatPropValueByPinPai(pid: string, requestHeader : { [key: string]: any }, catId: string, startTraceId: string, itemId: string){

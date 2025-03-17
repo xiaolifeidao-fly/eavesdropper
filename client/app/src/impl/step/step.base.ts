@@ -80,7 +80,7 @@ export abstract class StepHandler {
             if(i == 0){
                 stepUnit.setWithParams(withParams);
             }
-            result = await stepUnit.do();
+            result = await stepUnit.do(result?.needNextSkip || false);
             if(!result.result){
                 result = await this.validateAndRetry(stepUnit, result);
                 if(!result.result){
@@ -101,7 +101,7 @@ export abstract class StepHandler {
         }
         if(validateResult.result && validateResult.header){
             stepUnit.setValidateTag(true);
-            return await stepUnit.do();
+            return await stepUnit.do(result.needNextSkip);
         }
         return result;
     }

@@ -35,7 +35,8 @@ export class StepResult {
     public validateUrl : string | undefined
     public validateParams : { [key: string]: any } | undefined
     public sourceUrl : string | undefined
-    constructor(result : boolean, message : string, responseData : StepResponse[] = [], header : { [key: string]: any } | undefined = undefined, validateUrl : string | undefined = undefined, validateParams : { [key: string]: any } | undefined = undefined, sourceUrl : string | undefined = undefined){
+    public needNextSkip : boolean
+    constructor(result : boolean, message : string, responseData : StepResponse[] = [], header : { [key: string]: any } | undefined = undefined, validateUrl : string | undefined = undefined, validateParams : { [key: string]: any } | undefined = undefined, sourceUrl : string | undefined = undefined, needNextSkip : boolean = false){
         this.result = result
         this.message = message
         this.responseData = responseData
@@ -43,6 +44,11 @@ export class StepResult {
         this.validateUrl = validateUrl
         this.validateParams = validateParams
         this.sourceUrl = sourceUrl
+        this.needNextSkip = needNextSkip
+    }
+
+    setNeedNextSkip(needNextSkip : boolean){
+        this.needNextSkip = needNextSkip;
     }
 }
 
@@ -53,10 +59,20 @@ export abstract class StepUnit {
     private header : { [key: string]: any } | undefined;
     private context : StepContext;
     private validateTag : boolean = false;
-
+    private skip : boolean;
+    
     constructor(step : SkuTaskStep, context : StepContext){
         this.step = step;
         this.context = context;
+        this.skip = false;
+    }
+
+    public isSkip() : boolean{
+        return this.skip;
+    }
+
+    setSkip(isSkip : boolean){
+        this.skip = isSkip;
     }
 
     public async init(saveFlag : boolean = true){
@@ -153,7 +169,7 @@ export abstract class StepUnit {
         return this.header
     }
 
-    async do() {
+    async do(needNextSkip : boolean) {
         try {
             if (this.step.status === STEP_DONE) {
                 log.warn(`step ${this.step.code} is done`)
@@ -161,6 +177,12 @@ export abstract class StepUnit {
             }
             await this.pendingStep();
             log.info("doStep start ", this.step.code);
+            if(this.isSkip() && !needNextSkip){
+                this.step.status = STEP_DONE;
+                this.step.message = "跳过"
+                log.info("doStep skip ", this.step.code);
+                return new StepResult(true, "跳过");
+            }
             const result = await this.doStep();
             if(result.result){
                 this.step.status = STEP_DONE;
@@ -169,6 +191,7 @@ export abstract class StepUnit {
                 this.step.status = STEP_ERROR;
                 this.step.message = result.message;
             }
+            this.step.needNextSkip = result.needNextSkip;
             if(result.responseData && result.responseData.length > 0){
                 this.setParamsByResponse(result.responseData);
             }

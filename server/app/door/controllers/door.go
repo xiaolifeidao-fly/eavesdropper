@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"server/common/server/controller"
+	"server/common/server/middleware"
 	"server/internal/door/services"
 	"server/internal/door/services/dto"
 	"server/internal/door/services/handler"
@@ -13,19 +14,19 @@ import (
 func LoadDoorRouter(router *gin.RouterGroup) {
 	r := router.Group("/doors")
 	{
-		r.POST("/save", SaveDoorRecord)
-		r.GET("/get", GetDoorRecord)
-		r.POST("/file/save", SaveDoorFileRecord)
-		r.GET("/file/get", GetDoorFileRecord)
-		r.GET("/file/getByKey", GetDoorFileRecordByKey)
-		r.POST("/sku/parse/:source", ParseDoorSkuInfo)
-		r.GET("/sku/search", SearchSkuRecord)
-		r.POST("/sku/search/save", SaveSearchSkuRecord)
-		r.POST("/cat/prop/save", SaveDoorCatProp)
-		r.GET("/cat/prop/get", GetDoorCatProps)
-		r.POST("/cat/prop/ai", GetDoorCatPropsByAi)
-		r.GET("/category/get", GetDoorCategoryByPddCatId)
-		r.POST("/category/save", SaveDoorCategory)
+		r.Use(middleware.Authorization()).POST("/save", SaveDoorRecord)
+		r.Use(middleware.Authorization()).GET("/get", GetDoorRecord)
+		r.Use(middleware.Authorization()).POST("/file/save", SaveDoorFileRecord)
+		r.Use(middleware.Authorization()).GET("/file/get", GetDoorFileRecord)
+		r.Use(middleware.Authorization()).GET("/file/getByKey", GetDoorFileRecordByKey)
+		r.Use(middleware.Authorization()).POST("/sku/parse/:source", ParseDoorSkuInfo)
+		r.Use(middleware.Authorization()).GET("/sku/search", SearchSkuRecord)
+		r.Use(middleware.Authorization()).POST("/sku/search/save", SaveSearchSkuRecord)
+		r.Use(middleware.Authorization()).POST("/cat/prop/save", SaveDoorCatProp)
+		r.Use(middleware.Authorization()).GET("/cat/prop/get", GetDoorCatProps)
+		r.Use(middleware.Authorization()).POST("/cat/prop/ai", GetDoorCatPropsByAi)
+		r.Use(middleware.Authorization()).GET("/category/get", GetDoorCategoryByPddCatId)
+		r.Use(middleware.Authorization()).POST("/category/save", SaveDoorCategory)
 	}
 }
 
