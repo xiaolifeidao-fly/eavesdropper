@@ -8,7 +8,6 @@ import { Frame, Page } from "playwright-core";
 import { v4 as uuidv4 } from 'uuid';
 import sharp from "sharp";
 import axios from "axios";
-import { slideSlider } from "./image.validator";
 
 const {app, BrowserWindow } = require('electron');
 
@@ -188,7 +187,7 @@ async function validateAction(page : Page, ...params : any[]){
                         const startX = sliderBox.x + sliderBox.width / 2; // 起始位置的 X 坐标
                         const startY = sliderBox.y + sliderBox.height / 2; // 起始位置的 Y 坐标
                         let endX = startX + slideContent.data.px_distance; // 目标位置的 X 坐标
-                        await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
+                        // await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
                     }     
                     // await humanLikeDragHorizontally(page, frame,"#puzzle-captcha-btn", slideContent.data.px_distance, {
                     //     maxVerticalVariation: 2,
