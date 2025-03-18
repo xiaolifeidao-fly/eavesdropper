@@ -82,7 +82,7 @@ export const getDoorCategoryByPddCatId = async (pddCatId: string) : Promise<Door
 }
 
 export const saveDoorCategory = async (doorCategory: DoorCategory) : Promise<DoorCategory|undefined> => {
-    if(!doorCategory.pddCatId || doorCategory.pddCatId == ""){
+    if(doorCategory.pddCatId == undefined || doorCategory.pddCatId == ""){
         return undefined;
 
     }

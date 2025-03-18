@@ -132,10 +132,13 @@ export abstract class StepHandler {
         if(stepCodes.length != stepUnits.length){
             return await this.buildSteps();
         }
+        const dbStepCodeMap : { [key: string]: string } = {};
+        for(const step of stepUnits){
+            dbStepCodeMap[step.step.code] = step.step.code;
+        }
         for (let i = 0; i < stepCodes.length; i++) {
             const stepCode = stepCodes[i];
-            const stepUnit = stepUnits[i];
-            if(stepUnit.step.code != stepCode){
+            if(!dbStepCodeMap[stepCode]){
                 return await this.buildSteps();
             }
         }
