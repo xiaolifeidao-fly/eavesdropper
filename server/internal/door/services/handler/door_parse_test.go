@@ -26,7 +26,7 @@ func TestDoorInfoParse(t *testing.T) {
 
 func TestPddDoorInfoParse(t *testing.T) {
 	// 读取文件
-	doorInfoJson, _ := os.ReadFile("pdd_door_info.json")
+	doorInfoJson, _ := os.ReadFile("pdd_sku.json")
 
 	var doorInfoMap map[string]interface{}
 	json.Unmarshal(doorInfoJson, &doorInfoMap)

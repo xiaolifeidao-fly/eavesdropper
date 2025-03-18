@@ -255,7 +255,12 @@ func pddParseDoorSkuSaleInfoSalesSkus(skus []map[string]interface{}) []*dto.Sale
 
 		salesSku.SalePropPath = salePropPath
 
-		salesSku.Price = sku["groupPrice"].(string)
+		groupPrice := sku["groupPrice"].(string)
+		salesSku.Price = groupPrice
+		if priceDisplayInterface, ok := sku["priceDisplay"]; ok {
+			priceDisplay := priceDisplayInterface.(map[string]interface{})
+			salesSku.Price = priceDisplay["price"].(string)
+		}
 
 		var quantity float64
 		quantityInterface := sku["quantity"]
