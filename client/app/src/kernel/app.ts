@@ -100,12 +100,12 @@ export const start = () => {
         // }, 60 * 1000) // 60秒检查一次更新
       }
     });
-    validateTest(1, {}, "https://www.ishumei.com/account/register.html?crmSource=%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81%E7%A0%81-banner", {
-      dialogSize : {
-          "width" : 800,
-          "height" : 800
-      }
-    });
+    // validateTest(1, {}, "https://www.ishumei.com/account/register.html?crmSource=%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81%E7%A0%81-banner", {
+    //   dialogSize : {
+    //       "width" : 800,
+    //       "height" : 800
+    //   }
+    // });
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
         app.quit();

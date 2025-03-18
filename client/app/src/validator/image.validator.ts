@@ -299,59 +299,60 @@ async function getFrame(page: Page) {
 }
 
 async function validateAction(page : Page, ...params : any[]){
-    try{
-        const validateUrl = params[0];
-        const validateParams = params[1];
-        if(validateUrl.includes("mtop.relationrecommend.wirelessrecommend.recommend") || validateUrl.includes("x5step=2")){
-            return;
-        }
-        if(validateParams){
-            return;
-        }
-        let frame = await getFrame(page);
-        const element = frame.locator("#puzzle-captcha-question-img").first(); // 选择要截图的元素
-        if (element) {
-            const qrCodeFileName = uuidv4() + ".jpeg";
-            const qrCodeFilePath = path.join(path.dirname(app.getAppPath()),'resource','temp', qrCodeFileName);
-            const buffer = await element.screenshot({ path: qrCodeFilePath}); // 保存截图
-            const imageSharp = sharp(buffer);
-            const boundingBox = await element.boundingBox();
-            const width = boundingBox?.width;
-            const height = boundingBox?.height;
-            log.info("validate width ", width,  " height ", height);
-            const imageBuffer = await imageSharp
-            .resize(Number(width), Number(height)).toBuffer() // 设置宽高
-            const imageBase64 = await convertImageToBase64WithHeader(imageBuffer);
-            if(imageBase64){
-                const slideContent = await getSlideContent(imageBase64);
-                log.info("slideContent is ", slideContent);
-                if (slideContent && slideContent.code == 200){
-                    console.log("slideContent.data.px_distance ====", slideContent.data.px_distance);
-                    const slider = await frame.locator('#puzzle-captcha-btn').first();
-                    if (slider) {
-                        const sliderBox = await slider.boundingBox();
-                        console.log("sliderBox x ====", sliderBox);
-                        if(!sliderBox){
-                            return;
-                        }
-                        const startX = sliderBox.x + sliderBox.width / 2; // 起始位置的 X 坐标
-                        const startY = sliderBox.y + sliderBox.height / 2; // 起始位置的 Y 坐标
-                        let endX = startX + slideContent.data.px_distance; // 目标位置的 X 坐标
-                        await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
-                    }                
-                    // await moveCaptchaVerifyImgSlide(page, frame, slideContent.data.px_distance);
-                    // await humanLikeDragHorizontally(page, frame,"#puzzle-captcha-btn", slideContent.data.px_distance, {
-                    //     maxVerticalVariation: 2,
-                    //     speedVariation: 0.02,
-                    //     steps: 100
-                    // });
-                }
-            }
+    // try{
+    //     const validateUrl = params[0];
+    //     const validateParams = params[1];
+    //     if(validateUrl.includes("mtop.relationrecommend.wirelessrecommend.recommend")){
+    //         return;
+    //     }
+    //     if(validateParams){
+    //         return;
+    //     }
+    //     let frame = await getFrame(page);
+    //     const element = frame.locator("#puzzle-captcha-question-img").first(); // 选择要截图的元素
+    //     if (element) {
+    //         const qrCodeFileName = uuidv4() + ".jpeg";
+    //         const qrCodeFilePath = path.join(path.dirname(app.getAppPath()),'resource','temp', qrCodeFileName);
+    //         const buffer = await element.screenshot({ path: qrCodeFilePath}); // 保存截图
+    //         const imageSharp = sharp(buffer);
+    //         const boundingBox = await element.boundingBox();
+    //         const width = boundingBox?.width;
+    //         const height = boundingBox?.height;
+    //         log.info("validate width ", width,  " height ", height);
+    //         const imageBuffer = await imageSharp
+    //         .resize(Number(width), Number(height)).toBuffer() // 设置宽高
+    //         const imageBase64 = await convertImageToBase64WithHeader(imageBuffer);
+    //         if(imageBase64){
+    //             const slideContent = await getSlideContent(imageBase64);
+    //             log.info("slideContent is ", slideContent);
+    //             if (slideContent && slideContent.code == 200){
+    //                 console.log("slideContent.data.px_distance ====", slideContent.data.px_distance);
+    //                 // const slider = await frame.locator('#puzzle-captcha-btn').first();
+    //                 // if (slider) {
+    //                 //     const sliderBox = await slider.boundingBox();
+    //                 //     console.log("sliderBox x ====", sliderBox);
+    //                 //     if(!sliderBox){
+    //                 //         return;
+    //                 //     }
+    //                 //     //随机5位小数 值为0.    
+    //                 //     const startX = sliderBox.x + sliderBox.width / 2 + 0.123122; // 起始位置的 X 坐标
+    //                 //     const startY = sliderBox.y + sliderBox.height / 2 + 0.323122; // 起始位置的 Y 坐标
+    //                 //     let endX = startX + slideContent.data.px_distance; // 目标位置的 X 坐标
+    //                 //     await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
+    //                 // }                
+    //                 await moveCaptchaVerifyImgSlide(page, frame, slideContent.data.px_distance);
+    //                 // await humanLikeDragHorizontally(page, frame,"#puzzle-captcha-btn", slideContent.data.px_distance, {
+    //                 //     maxVerticalVariation: 2,
+    //                 //     speedVariation: 0.02,
+    //                 //     steps: 100
+    //                 // });
+    //             }
+    //         }
           
-        }
-    }catch(error){
-        log.error("openLoginPageAction error", error);
-    }
+    //     }
+    // }catch(error){
+    //     log.error("openLoginPageAction error", error);
+    // }
 }
 
 async function moveCaptchaVerifyImgSlide(page : Page, frame : Frame, distance : number){
@@ -362,8 +363,8 @@ async function moveCaptchaVerifyImgSlide(page : Page, frame : Frame, distance : 
         if(!sliderBox){
             return;
         }
-        const startX = sliderBox.x + sliderBox.width / 2; // 起始位置的 X 坐标
-        const startY = sliderBox.y + sliderBox.height / 2; // 起始位置的 Y 坐标
+        const startX = sliderBox.x + sliderBox.width / 2 + 0.23244; // 起始位置的 X 坐标
+        const startY = sliderBox.y + sliderBox.height / 2 + 0.25244; // 起始位置的 Y 坐标
         let endX = startX + distance; // 目标位置的 X 坐标
         
         // 确保随机值在合理范围内
@@ -382,7 +383,7 @@ async function moveCaptchaVerifyImgSlide(page : Page, frame : Frame, distance : 
         await page.waitForTimeout(200); // 按下后短暂停顿
         
         // 增加步数使移动更平滑
-        const steps = 100; // 总步数增加为原来的2倍
+        const steps = 25; // 总步数增加为原来的2倍
         
         // 第一阶段：加速移动到随机超出点
         const firstStageSteps = Math.floor(steps * 0.6); // 60%的步数用于第一阶段
