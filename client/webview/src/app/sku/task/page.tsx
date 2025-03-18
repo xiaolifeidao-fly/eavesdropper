@@ -13,8 +13,6 @@ import { transformArrayToObject } from '@utils/convert'
 export default function SkuTaskManage() {
 
   const actionRef = useRef<ActionType>();
-  const [visible, setVisible] = useState(false);
-
   const { refreshPage } = useRefreshPage();
 
   const [sourceMap, setSourceMap] = useState<Record<string, any>>();
