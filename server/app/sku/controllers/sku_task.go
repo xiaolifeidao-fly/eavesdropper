@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"server/app/sku/vo"
 	"server/common"
+	"server/common/base/page"
+	baseVO "server/common/base/vo"
 	"server/common/converter"
 	"server/common/middleware/logger"
 	"server/common/server/controller"
 	"server/common/server/middleware"
+	resourceDTO "server/internal/resource/services/dto"
 	"server/internal/sku/services"
 	"server/internal/sku/services/dto"
 	"strconv"
@@ -24,6 +27,7 @@ func LoadSkuTaskRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).GET("/steps/:resourceId/:groupCode/:stepKey", GetSkuTaskSteps)
 		r.Use(middleware.Authorization()).POST("/steps/:resourceId/:groupCode/:stepKey/init", InitSkuStep)
 		r.Use(middleware.Authorization()).POST("/steps/save", SaveSkuTaskStep)
+		r.Use(middleware.Authorization()).GET("/page", PageSkuTask)
 	}
 }
 
@@ -88,7 +92,7 @@ func AddSkuTask(ctx *gin.Context) {
 		priceRangeByte, _ := json.Marshal(req.PriceRange)
 		taskDTO.PriceRate = string(priceRangeByte)
 	}
-	taskDTO.Status = string(dto.SkuTaskStatusPending)
+	taskDTO.Status = dto.SkuTaskStatusPending.Value
 	taskDTO.UserID = common.GetLoginUserID()
 	taskDTO.CreatedBy = common.GetLoginUserID()
 	taskDTO.UpdatedBy = common.GetLoginUserID()
@@ -121,4 +125,46 @@ func UpdateSkuTask(ctx *gin.Context) {
 
 	logger.Infof("UpdateSkuTask req: %+v", req)
 	controller.OK(ctx, "更新成功")
+}
+
+// PageSkuTask
+// @Description 分页查询任务
+func PageSkuTask(ctx *gin.Context) {
+	var err error
+
+	var req vo.SkuTaskPageReq
+	if err = controller.Bind(ctx, &req, binding.Form); err != nil {
+		logger.Errorf("PageSkuTask Bind error: %v", err)
+		controller.Error(ctx, "参数错误")
+		return
+	}
+	userID := common.GetLoginUserID()
+	req.UserID = userID
+
+	param := converter.ToDTO[dto.SkuTaskPageParamDTO](&req)
+	var pageDTO *page.Page[dto.SkuTaskPageDTO]
+	if pageDTO, err = services.PageSkuTask(param); err != nil {
+		logger.Errorf("PageSkuTask failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	pageData := make([]*vo.SkuTaskPageResp, 0)
+	for _, pageDTO := range pageDTO.Data {
+		resp := &vo.SkuTaskPageResp{}
+		converter.Copy(resp, pageDTO)
+		var statusLableValue baseVO.LabelValueVO
+		if skuTaskStatusEnum := dto.GetSkuTaskStatusEnum(pageDTO.Status); skuTaskStatusEnum != nil {
+			converter.Copy(&statusLableValue, skuTaskStatusEnum)
+			resp.StatusLableValue = statusLableValue
+		}
+		var sourceLableValue baseVO.LabelValueVO
+		if sourceLableValueEnum := resourceDTO.GetResourceSourceEnumByValue(pageDTO.Source); sourceLableValueEnum != nil {
+			converter.Copy(&sourceLableValue, sourceLableValueEnum)
+			resp.SourceLableValue = sourceLableValue
+		}
+		pageData = append(pageData, resp)
+	}
+
+	controller.OK(ctx, page.BuildPage(pageDTO.PageInfo, pageData))
 }

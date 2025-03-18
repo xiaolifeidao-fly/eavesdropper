@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"server/common"
+	"server/common/base/page"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
 	"server/internal/sku/models"
@@ -114,9 +115,28 @@ func GetSkuTaskPriceRangeConfigByTaskID(id uint64) ([]*dto.PriceRangeConfigDTO, 
 	}
 
 	priceRangeConfigs := make([]*dto.PriceRangeConfigDTO, 0)
-	if err = json.Unmarshal([]byte(priceRateStr), priceRangeConfigs); err != nil {
+	if err = json.Unmarshal([]byte(priceRateStr), &priceRangeConfigs); err != nil {
 		return nil, errors.New("价格区间配置转换失败")
 	}
 
 	return priceRangeConfigs, nil
+}
+
+func PageSkuTask(param *dto.SkuTaskPageParamDTO) (*page.Page[dto.SkuTaskPageDTO], error) {
+	var err error
+	skuTaskRepository := repositories.SkuTaskRepository
+
+	var count int64
+	var pageData = make([]*dto.SkuTaskPageDTO, 0)
+	if err = skuTaskRepository.Page(&models.SkuTask{}, *param, param.Query, &pageData, &count); err != nil {
+		return nil, err
+	}
+
+	if count <= 0 {
+		return page.BuildEmptyPage[dto.SkuTaskPageDTO](param.ToPageInfo(count)), nil
+	}
+
+	pageDTO := page.BuildPage(param.ToPageInfo(count), pageData)
+
+	return pageDTO, nil
 }

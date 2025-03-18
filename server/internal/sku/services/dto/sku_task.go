@@ -2,26 +2,46 @@ package dto
 
 import (
 	"errors"
+	"server/common/base"
 	"server/common/base/dto"
+	"server/common/base/page"
 )
 
-type SkuTaskStatus string
+type SkuTaskStatusEnum struct {
+	Label string `json:"label"`
+	Value string `json:"value"`
+	Color string `json:"color"`
+}
 
-const (
-	SkuTaskStatusPending SkuTaskStatus = "pending"
-	SkuTaskStatusRunning SkuTaskStatus = "running"
-	SkuTaskStatusDone    SkuTaskStatus = "done"
-	SkuTaskStatusFailed  SkuTaskStatus = "failed"
+var (
+	SkuTaskStatusPending *SkuTaskStatusEnum = &SkuTaskStatusEnum{"待执行", "pending", "blue"}
+	SkuTaskStatusRunning *SkuTaskStatusEnum = &SkuTaskStatusEnum{"执行中", "running", "green"}
+	SkuTaskStatusDone    *SkuTaskStatusEnum = &SkuTaskStatusEnum{"已完成", "done", "green"}
+	SkuTaskStatusFailed  *SkuTaskStatusEnum = &SkuTaskStatusEnum{"失败", "failed", "red"}
 )
 
-func (s SkuTaskStatus) Validate() error {
-	if s == SkuTaskStatusPending ||
-		s == SkuTaskStatusRunning ||
-		s == SkuTaskStatusDone ||
-		s == SkuTaskStatusFailed {
+func (s SkuTaskStatusEnum) Validate() error {
+	if s == *SkuTaskStatusPending ||
+		s == *SkuTaskStatusRunning ||
+		s == *SkuTaskStatusDone ||
+		s == *SkuTaskStatusFailed {
 		return nil
 	}
 	return errors.New("status enum failed")
+}
+
+func GetSkuTaskStatusEnum(status string) *SkuTaskStatusEnum {
+	switch status {
+	case SkuTaskStatusPending.Value:
+		return SkuTaskStatusPending
+	case SkuTaskStatusRunning.Value:
+		return SkuTaskStatusRunning
+	case SkuTaskStatusDone.Value:
+		return SkuTaskStatusDone
+	case SkuTaskStatusFailed.Value:
+		return SkuTaskStatusFailed
+	}
+	return nil
 }
 
 type SkuTaskDTO struct {
@@ -48,4 +68,26 @@ type UpdateSkuTaskDTO struct {
 	Status string               `json:"status"`
 	Remark string               `json:"remark"`
 	Items  []*AddSkuTaskItemDTO `json:"items"`
+}
+
+type SkuTaskPageParamDTO struct {
+	page.Query `search:"-"`
+	UserId     uint64 `search:"type:eq;table:sku_task;column:user_id"`
+	Account    string `search:"type:eq;table:resource;column:account"`
+	Source     string `search:"type:eq;table:sku_task;column:source"`
+	_          string `search:"type:order;table:sku_task;column:id;default:desc"`
+	_          any    `search:"type:isNull;table:sku_task;column:deleted_at"`
+	_          any    `search:"type:left;table:sku_task;join:auth_user;as:user;on:id:user_id"`
+	_          any    `search:"type:left;table:sku_task;join:resource;as:resource;on:id:publish_resource_id"`
+}
+
+type SkuTaskPageDTO struct {
+	ID              uint64    `json:"id" select:"table:sku_task;column:id"`
+	ResourceID      uint64    `json:"resourceId" select:"table:sku_task;column:publish_resource_id;as:ResourceID"`
+	ResourceAccount string    `json:"resourceAccount" select:"table:resource;column:account;as:ResourceAccount"`
+	Status          string    `json:"status" select:"table:sku_task;column:status"`
+	Source          string    `json:"source" select:"table:sku_task;column:source"`
+	Count           int       `json:"count" select:"table:sku_task;column:count"`
+	CreatedBy       string    `json:"createdBy" select:"table:user;column:nickname;as:CreatedBy"`
+	CreatedAt       base.Time `json:"createdAt" select:"table:sku_task;column:created_at"`
 }

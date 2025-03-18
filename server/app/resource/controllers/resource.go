@@ -35,6 +35,7 @@ func LoadResourceRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).GET("/source", GetResourceSourceList)
 		r.Use(middleware.Authorization()).GET("/tag", GetResourceTagList)
 		r.Use(middleware.Authorization()).GET("/main", GetMainResourceList)
+		r.Use(middleware.Authorization()).GET("/all", GetAllResourceList)
 		r.Use(middleware.Authorization()).GET("/sync/all", getSyncResourceList)
 		r.Use(middleware.Authorization()).GET("/:id/userId", GetUserIdByResourceId)
 	}
@@ -243,6 +244,23 @@ func GetMainResourceList(ctx *gin.Context) {
 	var resources []*dto.ResourceDTO
 	if resources, err = services.GetResourceByUserIDAndTag(userID, tag); err != nil {
 		logger.Errorf("GetMainResourceList failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, resources)
+}
+
+// GetAllResourceList
+// @Description 获取主账号资源列表
+// @Router /resource/all [get]
+func GetAllResourceList(ctx *gin.Context) {
+	var err error
+
+	userID := common.GetLoginUserID()
+
+	var resources []*dto.ResourceDTO
+	if resources, err = services.GetResourceByUserID(userID); err != nil {
+		logger.Errorf("GetAllResourceList failed, with error is %v", err)
 		controller.Error(ctx, err.Error())
 		return
 	}

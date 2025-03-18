@@ -68,17 +68,23 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   // 获取登录用户信息
   const fetchUserInfo = async () => {
-    const resp = await getLoginUserInfoApi();
-    if (!resp) {
-      await removeItem(REQUEST_HEADER_TOKEN)
-      setLoginToken(null);
-      setUser(null);
+    try {
+      const resp = await getLoginUserInfoApi();
+      if (!resp) {
+        clearUserLogin()
+        // 跳转到登录页
+        if (window.location.pathname !== "/auth/login") {
+          window.location.href = "/auth/login";
+        }
+      }
+      setUser(resp);
+    } catch (error) {
+      clearUserLogin()
       // 跳转到登录页
       if (window.location.pathname !== "/auth/login") {
         window.location.href = "/auth/login";
       }
     }
-    setUser(resp);
   }
 
   // login 逻辑

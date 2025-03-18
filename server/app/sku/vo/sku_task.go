@@ -1,6 +1,10 @@
 package vo
 
 import (
+	"errors"
+	"server/common/base"
+	"server/common/base/page"
+	"server/common/base/vo"
 	"server/internal/sku/services/dto"
 )
 
@@ -29,7 +33,12 @@ type UpdateSkuTaskReq struct {
 
 func (r *UpdateSkuTaskReq) Validate() error {
 	status := r.Status
-	if err := dto.SkuTaskStatus(status).Validate(); err != nil {
+
+	skuTaskStatusEnum := dto.GetSkuTaskStatusEnum(status)
+	if skuTaskStatusEnum == nil {
+		return errors.New("status enum failed")
+	}
+	if err := skuTaskStatusEnum.Validate(); err != nil {
 		return err
 	}
 
@@ -46,4 +55,25 @@ type AddSkuTaskItemReq struct {
 	Url    string `json:"url" binding:"required"`
 	Status string `json:"status" binding:"required"`
 	Remark string `json:"remark"`
+}
+
+type SkuTaskPageReq struct {
+	page.Query
+	vo.BaseVO
+	UserID  uint64 `form:"userId"`
+	Account string `form:"account"`
+	Source  string `form:"source"`
+}
+
+type SkuTaskPageResp struct {
+	ID               uint64          `json:"id"`
+	ResourceID       uint64          `json:"resourceId"`
+	ResourceAccount  string          `json:"resourceAccount"`
+	Status           string          `json:"status"`
+	StatusLableValue vo.LabelValueVO `json:"statusLableValue"`
+	Source           string          `json:"source"`
+	SourceLableValue vo.LabelValueVO `json:"sourceLableValue"`
+	Count            int             `json:"count"`
+	CreatedBy        string          `json:"createdBy"`
+	CreatedAt        base.Time       `json:"createdAt"`
 }

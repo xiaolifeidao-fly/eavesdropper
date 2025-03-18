@@ -1,3 +1,5 @@
+import { LabelValue } from '@model/base/base'
+
 export enum SkuTaskStatus {
   PENDING = 'pending',
   RUNNING = 'running',
@@ -137,6 +139,47 @@ export class SkuTaskStep {
     this.needNextSkip = needNextSkip
   }
 }
+
+export class SkuTaskPageReq {
+  constructor(
+    public current: number,
+    public pageSize: number,
+    public resourceId?: number,
+    public source?: string
+  ) {
+    this.current = current
+    this.pageSize = pageSize
+    this.resourceId = resourceId
+    this.source = source
+  }
+}
+
+export class SkuTaskPageResp {
+  constructor(
+    public id: number,
+    public resourceId: number,
+    public resourceAccount: string,
+    public status: string,
+    public statusLableValue: LabelValue,
+    public source: string,
+    public sourceLableValue: LabelValue,
+    public count: number,
+    public createdBy: string,
+    public createdAt: string,
+  ) {
+    this.id = id
+    this.resourceId = resourceId
+    this.resourceAccount = resourceAccount
+    this.status = status
+    this.statusLableValue = statusLableValue
+    this.source = source
+    this.sourceLableValue = sourceLableValue
+    this.count = count
+    this.createdBy = createdBy
+    this.createdAt = createdAt
+  }
+}
+
 export const STEP_INIT = "INIT"
 export const STEP_PENDING = "PENDING"
 export const STEP_DONE = "DONE"

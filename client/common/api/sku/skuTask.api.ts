@@ -1,7 +1,14 @@
 import { plainToClass } from 'class-transformer'
 
 import { getData, getDataList, instance } from '@utils/axios'
-import { AddSkuTaskReq, SkuTaskStep, UpdateSkuTaskReq } from '@model/sku/skuTask'
+import {
+  AddSkuTaskReq,
+  SkuTaskStep,
+  UpdateSkuTaskReq,
+  SkuTaskPageReq,
+  SkuTaskPageResp
+} from '@model/sku/skuTask'
+import { BasePageResp } from '@model/base/base'
 
 // 添加任务
 export const addSkuTask = async (req: AddSkuTaskReq) => {
@@ -27,4 +34,10 @@ export const saveSkuTaskStep = async (req: SkuTaskStep) => {
 
 export const initSkuStep = async (stepKey: string, resourceId: number, groupCode: string) => {
   return instance.post(`/sku/task/steps/${resourceId}/${groupCode}/${stepKey}/init`, {})
+}
+
+// 分页获取商品
+export const getSkuTaskPage = async (req: SkuTaskPageReq) => {
+  const result = await instance.get(`/sku/task/page`, { params: req })
+  return plainToClass(BasePageResp<SkuTaskPageResp>, result)
 }
