@@ -1,7 +1,7 @@
 import { plainToClass } from 'class-transformer'
 
 import { instance } from '@utils/axios'
-import { AddSkuReq, SkuPageReq, SkuPageResp, CheckSkuExistenceReq, SkuMapper } from '@model/sku/sku'
+import { AddSkuReq, SkuPageReq, SkuPageResp, CheckSkuExistenceReq, SkuMapper, Sku } from '@model/sku/sku'
 import { BasePageResp } from '@model/base/base'
 
 // 添加商品
@@ -24,4 +24,9 @@ export const getSkuPage = async (req: SkuPageReq) => {
 
 export const createSkuMappers = async (req: SkuMapper[]) => {
   await instance.post(`/sku/mappers`, req)
+}
+
+export const getSkuByPublishResourceIdAndPublishSkuId = async (publishResourceId: number, publishSkuId: string) => {
+  const result = await instance.get(`/sku/get/${publishResourceId}/${publishSkuId}`)
+  return plainToClass(Sku, result)
 }

@@ -81,6 +81,10 @@ export const getDoorCategoryByPddCatId = async (pddCatId: string) : Promise<Door
     return await getData(DoorCategory, "/doors/category/get", params);
 }
 
-export const saveDoorCategory = async (doorCategory: DoorCategory) : Promise<DoorCategory> => {
+export const saveDoorCategory = async (doorCategory: DoorCategory) : Promise<DoorCategory|undefined> => {
+    if(!doorCategory.pddCatId || doorCategory.pddCatId == ""){
+        return undefined;
+
+    }
     return await instance.post("/doors/category/save", doorCategory);
 }

@@ -49,11 +49,12 @@ var (
 
 type SkuTaskStepDTO struct {
 	dto.BaseDTO
-	StepKey     string `json:"StepKey"`
-	Status      string `json:"status"`
-	Code        string `json:"code"`
-	GroupCode   string `json:"groupCode"`
-	ValidateUrl string `json:"validateUrl"`
-	ResourceId  uint64 `json:"resourceId"`
-	Message     string `json:"message"`
+	StepKey      string `json:"StepKey"`
+	Status       string `json:"status"`
+	Code         string `json:"code"`
+	GroupCode    string `json:"groupCode"`
+	ValidateUrl  string `json:"validateUrl"`
+	ResourceId   uint64 `json:"resourceId"`
+	Message      string `json:"message"`
+	NeedNextSkip bool   `json:"needNextSkip"`
 }

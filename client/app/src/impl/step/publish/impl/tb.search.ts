@@ -21,6 +21,11 @@ export class TbSearchStep extends AbsPublishStep{
         return undefined;
     }
 
+    public isSkip(): boolean {
+        return true;
+    }
+
+
     async doStep(): Promise<StepResult> {
         const skuItem : DoorSkuDTO = this.getParams("skuItem");
         const title = skuItem.baseInfo.title;

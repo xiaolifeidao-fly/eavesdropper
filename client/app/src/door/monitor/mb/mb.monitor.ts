@@ -10,6 +10,35 @@ export abstract class MbMonitorRequest<T> extends MonitorRequest<T> {
 
 }
 
+export function buildValidateDoorEntity(result : {[key: string]: any}) : DoorEntity<any>|undefined{
+    if('ret' in result){
+        const ret = result.ret;
+        if(Array.isArray(ret)){
+            const retCode = ret[0];
+            if(retCode == 'FAIL_SYS_USER_VALIDATE'){
+                log.error("getResponseData error ", result);
+                const data = result.data as { [key: string]: any };
+                const doorEntity = new DoorEntity<any>(false, data);
+                doorEntity.validateUrl = result.data?.url;
+                const validateParams : { [key: string]: any } =  {};
+                if('dialogSize' in data){
+                    validateParams.dialogSize = data.dialogSize;
+                }
+                if('attributes' in data){
+                    validateParams.attributes = data.attributes;
+                }
+                doorEntity.setValidateParams(validateParams);
+                return doorEntity;
+            }
+            if(retCode == undefined ||!retCode.includes("SUCCESS")){
+                return new DoorEntity<any>(false, {});
+            }
+            return new DoorEntity<any>(true, result.data);
+        }
+    }
+    return undefined;
+}
+
 export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
 
     getType(): string{
@@ -40,32 +69,7 @@ export abstract class MbMonitorResponse<T> extends MonitorResponse<T> {
     }
 
     public buildDoorEntity(result : {[key: string]: any}) : DoorEntity<T>|undefined{
-        if('ret' in result){
-            const ret = result.ret;
-            if(Array.isArray(ret)){
-                const retCode = ret[0];
-                if(retCode == 'FAIL_SYS_USER_VALIDATE'){
-                    log.error("getResponseData error ", result);
-                    const data = result.data as { [key: string]: any };
-                    const doorEntity = new DoorEntity<T>(false, data as T);
-                    doorEntity.validateUrl = result.data?.url;
-                    const validateParams : { [key: string]: any } =  {};
-                    if('dialogSize' in data){
-                        validateParams.dialogSize = data.dialogSize;
-                    }
-                    if('attributes' in data){
-                        validateParams.attributes = data.attributes;
-                    }
-                    doorEntity.setValidateParams(validateParams);
-                    return doorEntity;
-                }
-                if(retCode == undefined ||!retCode.includes("SUCCESS")){
-                    return new DoorEntity<T>(false, {} as T);
-                }
-                return new DoorEntity<T>(true, result.data as T);
-            }
-        }
-        return undefined;
+        return buildValidateDoorEntity(result);
     }
 
     public async getResponseData(response: Response): Promise<DoorEntity<T>> {

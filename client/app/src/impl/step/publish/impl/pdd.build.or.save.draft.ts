@@ -39,9 +39,11 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
 
     getPublishUrl(skuDraftId: string | undefined, itemId: string) {
         if (!skuDraftId) {
+            if(itemId && itemId.length > 0){
+                return "https://item.upload.taobao.com/sell/v2/publish.htm?commendItem=true&commendItemId=" + itemId;
+            }
             const category = this.getParams("tbCategory");
             const url = "https://item.upload.taobao.com/sell/v2/publish.htm?catId=" + category.categoryId;
-            log.info("add bycategory url is ", url);
             return url;
         }
         return "https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=" + skuDraftId;

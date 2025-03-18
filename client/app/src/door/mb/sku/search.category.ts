@@ -2,27 +2,54 @@ import { MbPublishSearchMonitor } from "@src/door/monitor/mb/sku/md.sku.info.mon
 import { MbEngine } from "../mb.engine";
 import axios from "axios";
 import log from "electron-log";
+import { DoorEntity } from "@src/door/entity";
+import { buildValidateDoorEntity } from "@src/door/monitor/mb/mb.monitor";
 
-
-
-export async function searchCategory(publishResourceId : number, title : string){
-    const engine = new MbEngine(publishResourceId);
+async function getHeaderData(resourceId : number, validateTag : boolean){
+    let headerless = true;
+    if(validateTag){
+        headerless = false;
+    }
+    const searchStartTraceId = "searchStartTraceId";
+    const mbEngine = new MbEngine(resourceId, headerless);
+    if(headerless){
+        const headerData = mbEngine.getHeader();
+        //TODO cookie失效 要做处理
+        if(headerData){
+            return {header : headerData, startTraceId : mbEngine.getParams(searchStartTraceId)};
+        }
+    }
     try{
-        const page = await engine.init();
+        const page = await mbEngine.init();
         if(!page){
             return undefined;
         }
-        const result = await engine.openWaitMonitor(page, "https://item.upload.taobao.com/sell/ai/category.htm?type=category", new MbPublishSearchMonitor());
+        const result = await mbEngine.openWaitMonitor(page, "https://item.upload.taobao.com/sell/ai/category.htm?type=category", new MbPublishSearchMonitor());
         if(!result || !result.getCode()){
             return undefined;
         }
-        const requestHeader = result.getHeaderData();
-        const responseHeader = result.getResponseHeaderData();
-        const startTraceId = responseHeader['S_tid'];
-        return await getCategoryInfo(requestHeader,startTraceId, title);
+        if(!result.code){
+            return undefined;
+        }
+        if(!headerless){
+            mbEngine.setHeader(result.getHeaderData());
+            mbEngine.setParams(searchStartTraceId, result.getResponseHeaderData()['S_tid']);
+        }
+        return result.getHeaderData();
     }finally{
-        engine.closePage();
+        await mbEngine.saveContextState();
+        await mbEngine.closePage();
     }
+}
+
+
+export async function searchCategory(publishResourceId : number, title : string, validateTag : boolean){
+    const headerData =  await getHeaderData(publishResourceId, validateTag);
+    if(!headerData){
+        return new DoorEntity<{}>(false, {});
+    }
+    const {header, startTraceId} = headerData;
+    return await getCategoryInfo(header,startTraceId, title);
 }
 
 async function getCategoryInfo(requestHeader : { [key: string]: any }, startTraceId: string, categoryKeyword: string) {
@@ -55,14 +82,20 @@ async function getCategoryInfo(requestHeader : { [key: string]: any }, startTrac
     });
     const data = response.data;
     if (!data.success) {
+        const doorEntity = buildValidateDoorEntity(data);
+        if(doorEntity){
+            log.error("搜索商品分类 出现验证码 ", data);
+            return doorEntity;
+        }
         log.error("搜索商品分类失败", data);
-        return undefined;
+        return new DoorEntity<{}>(false, {});
     }
     const categories = data.data?.category;
     if (!categories || categories.length == 0) {
         log.error("搜索商品分类失败", data);
-        return undefined;
+        return new DoorEntity<{}>(false, {});
     }
     const category = categories[0];
-    return {categoryId : category.id, categoryName : category.name};
+    const categoryData = {categoryId : category.id, categoryName : category.name};
+    return new DoorEntity<{}>(true, categoryData);
 }

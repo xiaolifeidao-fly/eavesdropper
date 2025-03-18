@@ -522,6 +522,15 @@ export abstract class DoorEngine<T = any> {
         return get(key);
     }
 
+    public setParams(key : string, value : any){
+        const paramsKey = this.getKey() + "_" + key;
+        set(paramsKey, value);
+    }
+
+    public getParams(key : string){
+        const paramsKey = this.getKey() + "_" + key;
+        return get(paramsKey);
+    }
     async createContext(){
         if(!this.browser){
             return;
@@ -600,6 +609,7 @@ export abstract class DoorEngine<T = any> {
         }
         const browser = await chromium.launch({
             headless: this.headless,
+            slowMo : 100,
             executablePath: storeBrowserPath,
             args: [
                 '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',

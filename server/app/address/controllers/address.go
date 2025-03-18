@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"server/common/server/controller"
+	"server/common/server/middleware"
 	"server/internal/address/services"
 	"server/internal/address/services/dto"
 	shopServices "server/internal/shop/services"
@@ -13,10 +14,10 @@ import (
 func LoadAddressRouter(router *gin.RouterGroup) {
 	r := router.Group("/address")
 	{
-		r.Use().GET("/template", GetAddressTemplateByKeywords)
-		r.Use().GET("/:keywords", GetAddressByKeywords)
-		r.Use().POST("/template/save", SaveAddressTemplate)
-		r.Use().POST("/save", SaveAddress)
+		r.Use(middleware.Authorization()).GET("/template", GetAddressTemplateByKeywords)
+		r.Use(middleware.Authorization()).GET("/:keywords", GetAddressByKeywords)
+		r.Use(middleware.Authorization()).POST("/template/save", SaveAddressTemplate)
+		r.Use(middleware.Authorization()).POST("/save", SaveAddress)
 	}
 }
 

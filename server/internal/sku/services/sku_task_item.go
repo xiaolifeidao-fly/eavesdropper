@@ -59,6 +59,7 @@ func SaveSkuTaskStep(stepDTO *dto.SkuTaskStepDTO) (*dto.SkuTaskStepDTO, error) {
 		dbStep.ValidateUrl = stepDTO.ValidateUrl
 		dbStep.Status = stepDTO.Status
 		dbStep.Message = stepDTO.Message
+		dbStep.NeedNextSkip = stepDTO.NeedNextSkip
 	} else {
 		dbStep = database.ToPO[models.SkuTaskStep](stepDTO)
 	}

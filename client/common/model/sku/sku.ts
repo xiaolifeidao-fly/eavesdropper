@@ -14,6 +14,7 @@ export class Sku {
     public publishResourceId?: number,
     public status?: string,
     public url?: string,
+    public source?: string,
     public publishTime?: string,
     public publishSkuId?: string,
   ) {
@@ -24,6 +25,7 @@ export class Sku {
     this.publishResourceId = publishResourceId
     this.status = status
     this.url = url
+    this.source = source
     this.publishTime = publishTime
     this.publishSkuId = publishSkuId
   }
