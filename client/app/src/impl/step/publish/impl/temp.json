@@ -1,183 +1,160 @@
-{
-    "success": true,
-    "data": {
-        "category": [
+[
+    {
+        "hasImage": "true",
+        "comboProperty": "",
+        "label": "花型",
+        "packPro": "",
+        "pid": "8137",
+        "values": [
             {
-                "id": 213002,
-                "name": "靠垫/抱枕",
-                "path": [
-                    "居家布艺",
-                    "靠枕/抱枕新",
-                    "靠垫/抱枕"
-                ],
-                "idpath": [
-                    122852001,
-                    201305305,
-                    213002
-                ],
-                "publish": true,
-                "isBrand": false,
-                "leaf": true,
-                "submitId": 213002
+                "text": "兰格熊先生【亲肤加厚水洗棉】",
+                "value": "26550996692",
+                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01zR5DF225vomin98zZ_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "碎花小熊【亲肤加厚水洗棉】",
+                "value": "26550999554",
+                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01fSylFy25vomiKyOBl_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "棋盘格【亲肤加厚水洗棉】",
+                "value": "26551169503",
+                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "藕粉菲菲兔【亲肤加厚水洗棉】",
+                "value": "26550994661",
+                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01zdhYwi25vomijtxql_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "幸运蓝鲸【亲肤加厚水洗棉】",
+                "value": "26551003323",
+                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01yvt2GU25vombxIr8y_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "爵士马格纹【亲肤加厚水洗棉】",
+                "value": "26551165381",
+                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN010imCSm25vomjcRXX9_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "花间兔子【亲肤加厚水洗棉】",
+                "value": "26551076023",
+                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01QT7rvp25vomiKz7wx_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "型男兰格【亲肤加厚水洗棉】",
+                "value": "26550993749",
+                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01dO8lK725vomgrTqal_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "小熊饼干【亲肤加厚水洗棉】",
+                "value": "26550989988",
+                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01b88fXA25vomjABvIs_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "Lucky熊【亲肤加厚水洗棉】",
+                "value": "26550998706",
+                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01q79V1725vomgEDYN2_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "kitty猫【亲肤加厚水洗棉】",
+                "value": "26551156195",
+                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01GN6lSP25vomhwjeMo_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "多彩郁金香【亲肤加厚水洗棉】",
+                "value": "26551007208",
+                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01VbZ8Ds25vombxHeK9_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "萌宠卡皮巴拉【亲肤加厚水洗棉】",
+                "value": "26551002390",
+                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01wIDYWX25vomgrSRKA_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "碎花蝴蝶结【亲肤加厚水洗棉】",
+                "value": "26550999600",
+                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN018sIBXy25vomkVFgoo_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "橙意满满【亲肤加厚水洗棉】",
+                "value": "26551079667",
+                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01DoJNnD25vomkVIuOg_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "snoopy【亲肤加厚水洗棉】",
+                "value": "26551114931",
+                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN019jjDXJ25vomk6UJwh_!!695637589.jpg",
+                "sortOrder": ""
             }
         ],
-        "product": {
-            "dataSource": [
-                {
-                    "text": "个人护理/保健/按摩器材>>按摩椅/沙发",
-                    "propName": "类目",
-                    "value": "50018406",
-                    "spuPublishType": "single",
-                    "maxSpuNum": 24,
-                    "children": [
-                        {
-                            "text": "OGAWA/奥佳华",
-                            "propName": "品牌",
-                            "value": "4454726",
-                            "spuInfos": [
-                                {
-                                    "title": "OGAWA/奥佳华 OG7828",
-                                    "spuId": 8118736302,
-                                    "image": "//img.alicdn.com/imgextra/i1/6000000001519/O1CN01NoIsPT1N5keeYXxxW_!!6000000001519-0-remus.jpg",
-                                    "saleProps": {
-                                        "1627207": "光翼灰"
-                                    },
-                                    "spuDetailDO": {
-                                        "spuId": 0,
-                                        "image": "//img.alicdn.com/imgextra/i1/6000000001519/O1CN01NoIsPT1N5keeYXxxW_!!6000000001519-0-remus.jpg",
-                                        "title": "OGAWA/奥佳华 OG7828",
-                                        "keyProp": [
-                                            {
-                                                "name": "20000",
-                                                "text": "品牌",
-                                                "value": "OGAWA/奥佳华"
-                                            },
-                                            {
-                                                "name": "8067299",
-                                                "text": "型号",
-                                                "value": "OG7828"
-                                            }
-                                        ],
-                                        "bindProp": [
-                                            {
-                                                "name": "122216344",
-                                                "text": "附加功能",
-                                                "value": "AI语音控制"
-                                            },
-                                            {
-                                                "name": "122216344",
-                                                "text": "附加功能",
-                                                "value": "内置音箱"
-                                            },
-                                            {
-                                                "name": "122216344",
-                                                "text": "附加功能",
-                                                "value": "蓝牙连接"
-                                            },
-                                            {
-                                                "name": "148750292",
-                                                "text": "是否智能操控",
-                                                "value": "是"
-                                            },
-                                            {
-                                                "name": "10184821",
-                                                "text": "导轨类型",
-                                                "value": "SL型导轨"
-                                            },
-                                            {
-                                                "name": "34339",
-                                                "text": "机芯类型",
-                                                "value": "3D机械手按摩"
-                                            },
-                                            {
-                                                "name": "148754276",
-                                                "text": "脚底按摩方式",
-                                                "value": "滚轮式+凸点按摩"
-                                            },
-                                            {
-                                                "name": "20019",
-                                                "text": "功能",
-                                                "value": "局部热疗"
-                                            },
-                                            {
-                                                "name": "20019",
-                                                "text": "功能",
-                                                "value": "按摩点位调节"
-                                            },
-                                            {
-                                                "name": "20019",
-                                                "text": "功能",
-                                                "value": "气囊力度调节"
-                                            },
-                                            {
-                                                "name": "20019",
-                                                "text": "功能",
-                                                "value": "滚轮速度调节"
-                                            },
-                                            {
-                                                "name": "20019",
-                                                "text": "功能",
-                                                "value": "蓝牙连接"
-                                            },
-                                            {
-                                                "name": "20019",
-                                                "text": "功能",
-                                                "value": "按摩强度调节"
-                                            },
-                                            {
-                                                "name": "20019",
-                                                "text": "功能",
-                                                "value": "自动侦测功能"
-                                            },
-                                            {
-                                                "name": "7131005",
-                                                "text": "气囊个数",
-                                                "value": "31个(含)-60个(含)"
-                                            },
-                                            {
-                                                "name": "29112",
-                                                "text": "安装方式",
-                                                "value": "免安装"
-                                            },
-                                            {
-                                                "name": "122276162",
-                                                "text": "椅子类型",
-                                                "value": "按摩椅"
-                                            }
-                                        ],
-                                        "saleProp": [
-                                            {
-                                                "name": "1627207",
-                                                "text": "颜色分类",
-                                                "value": "光翼灰 "
-                                            }
-                                        ]
-                                    },
-                                    "publishParams": {
-                                        "categorySelect": {
-                                            "submitId": 50018406
-                                        },
-                                        "gpfRenderTrace": "213e035417419323103797847e1441",
-                                        "fromSearch": true,
-                                        "spuId": 8118736302,
-                                        "fromAIPublish": true,
-                                        "fromStandardSpuPublish": true
-                                    },
-                                    "brandId": 4454726,
-                                    "categoryId": 50018406,
-                                    "readonly": false,
-                                    "parentIdPath": "50018406_4454726"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        "similar": {
-            "total": 0,
-            "currentPage": 1,
-            "pageSize": 12
-        }
+        "distinctImageNum": 16
+    },
+    {
+        "hasImage": "true",
+        "comboProperty": "",
+        "label": "尺寸",
+        "packPro": "",
+        "pid": "1216",
+        "values": [
+            {
+                "text": "1.8m四件套【180*220cm被套】",
+                "value": "6853754972",
+                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "2.0m四件套【200*230cm被套】",
+                "value": "6853781242",
+                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "单被套【150*200cm】",
+                "value": "324873474",
+                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "单被套【200*230cm】",
+                "value": "136311478",
+                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "1.5m四件套【150*200cm被套】",
+                "value": "6853771434",
+                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "1.2m三件套【150*200cm被套】",
+                "value": "3007697106",
+                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
+                "sortOrder": ""
+            },
+            {
+                "text": "单被套【180*220cm】",
+                "value": "136311252",
+                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
+                "sortOrder": ""
+            }
+        ],
+        "distinctImageNum": 1
     }
-}
+]

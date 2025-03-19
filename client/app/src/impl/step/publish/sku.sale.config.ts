@@ -77,7 +77,7 @@ const saleConfigMap : { [key: string]: SkuSaleConfig } = {
 function buildDefaultByComboboxSaleProps(subItem : { [key: string]: any }) {
     let saleProp : SalesAttrValue[] = [];
     const label = subItem.label;
-    if(label == "尺码"){
+    if(label.includes("尺码") || label.includes("尺寸")){
         saleProp.push(new SalesAttrValue("其他", "10122","",""))
         return new SalesAttr(subItem.label, saleProp, "false", "", "", subItem.name.split("-")[1]);
     }
@@ -664,32 +664,39 @@ export class RebuildSalePro{
     }
     
     sortMergeSaleAttr(salesAttrs : SalesAttr[], saleMapper : SaleMapper) {
-        if(saleMapper.hadAssign && saleMapper.saleAttr){
-            for(let i = 0; i < salesAttrs.length; i++){
-                if(salesAttrs[i].pid == saleMapper.saleAttr.pid){
-                     const saleAttr = salesAttrs[i];
-                     salesAttrs[i] = salesAttrs[0];
-                     salesAttrs[0] = saleAttr;
-                }
-            }
-            return salesAttrs;
-        }
+        // if(saleMapper.hadAssign && saleMapper.saleAttr){
+        //     for(let i = 0; i < salesAttrs.length; i++){
+        //         if(salesAttrs[i].pid == saleMapper.saleAttr.pid){
+        //              const saleAttr = salesAttrs[i];
+        //              salesAttrs[i] = salesAttrs[0];
+        //              salesAttrs[0] = saleAttr;
+        //         }
+        //     }
+        //     return salesAttrs;
+        // }
     
-        let maxLenthIndex : number = -1;
+        let maxDistinctImageNumIndex : number = -1;
         for(let i = 0; i < salesAttrs.length; i++){
             const saleAttr = salesAttrs[i];
-            if(saleAttr.hasImage){
-                if(maxLenthIndex == -1 || (salesAttrs[maxLenthIndex].values.length < saleAttr.values.length)){
-                    maxLenthIndex = i;
+            this.initImageNum(saleAttr);
+            const currentDistinctImageNum = saleAttr.distinctImageNum;
+            if(maxDistinctImageNumIndex == -1 || currentDistinctImageNum > 0){
+                if(maxDistinctImageNumIndex == -1){
+                    maxDistinctImageNumIndex = i;
+                    continue;
+                }
+                if(currentDistinctImageNum > salesAttrs[maxDistinctImageNumIndex].distinctImageNum){
+                    maxDistinctImageNumIndex = i;
                 }
             }
         }
-        if(maxLenthIndex != -1){
-            const saleAttr = salesAttrs[maxLenthIndex];
-            salesAttrs[maxLenthIndex] = salesAttrs[0];
+        if(maxDistinctImageNumIndex != -1){
+            const saleAttr = salesAttrs[maxDistinctImageNumIndex];
+            salesAttrs[maxDistinctImageNumIndex] = salesAttrs[0];
             salesAttrs[0] = saleAttr;
             return salesAttrs;
         }
+        let maxLenthIndex : number = -1;
         for(let i = 0; i < salesAttrs.length; i++){
             const saleAttr = salesAttrs[i];
             if(maxLenthIndex == -1 || (salesAttrs[maxLenthIndex].values.length < saleAttr.values.length)){
@@ -702,6 +709,36 @@ export class RebuildSalePro{
         return salesAttrs;
     }
     
+    sortAndReplaceSaleMapper(saleMapper : SaleMapper, salesAttrs : SalesAttr[]) {
+        const firstSaleAttr = salesAttrs[0];
+        if(firstSaleAttr.distinctImageNum > 0){
+            return;
+        }
+        const saleAttr = saleMapper.saleAttr;
+        if(!saleAttr){
+            return;
+        }
+       
+    }
+
+    initImageNum(saleAttr : SalesAttr){
+        if(!saleAttr.hasImage || !saleAttr.values){
+            saleAttr.distinctImageNum = 0;
+            return;
+        }
+        if(saleAttr.hasImage == "false"){
+            saleAttr.distinctImageNum = 0;
+            return;
+        }
+        const imageMap : {[key : string]:any} = {};
+        for(const value of saleAttr.values){
+            if(value.image){
+                imageMap[value.image] = true;
+            }
+        }
+        saleAttr.distinctImageNum = Object.keys(imageMap).length;
+    }
+
     mergeSaleProp(salesAttrs : SalesAttr[], saleMapper : SaleMapper) {
         if(!saleMapper){
             log.warn("未找到需要合并的 saleMapper");

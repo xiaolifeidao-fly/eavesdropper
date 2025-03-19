@@ -134,6 +134,7 @@ export class PublishSkuStep extends AbsPublishStep {
         const tbCategory = this.getParams("tbCategory");
         if(tbCategory){
             const doorCategory = new DoorCategory(undefined, skuItem.baseInfo.catId, String(tbCategory.categoryId), tbCategory.categoryName);
+            log.info(" saveDoorCategory info ", doorCategory);
             await saveDoorCategory(doorCategory);
         }
     }

@@ -72,6 +72,7 @@ export class SalesAttr {
     label: string;
     pid : string;
     isSaleAddValues: boolean = false;
+    distinctImageNum : number = 0;
     @Type(() => SalesAttrValue)
     values: SalesAttrValue[];
     oldPid: string|null = null  ;
@@ -85,6 +86,7 @@ export class SalesAttr {
         this.pid = pid;
         this.oldPid = oldPid;
     }
+
 }
 
 export class SalesSku {

@@ -66,7 +66,7 @@ export class UpdateDraftStep extends AbsPublishStep {
                 return new StepResult(false, "获取更新草稿新页面失败");
             }
             const commonData = await this.getCommonData(page);
-            this.fillCategory(commonData);
+            await this.fillCategory(commonData);
             const requestHeader = this.getHeader(); 
             if(!requestHeader){
                 log.error("requestHeader is null");
@@ -99,8 +99,11 @@ export class UpdateDraftStep extends AbsPublishStep {
     async fillCategory(commonData : { [key : string] : any }){
         const catId = commonData.data.components?.guaranteeService?.props?.icmp?.global?.catId;
         if(catId){
-            log.info("update draft catId is", catId);
-            // this.setParams("tbCategory", {"categoryId" : catId, "categoryName" : ""});
+            const tbCategory = this.getParams("tbCategory");
+            if(tbCategory && String(tbCategory.categoryId) != String(catId)){
+                log.info("update draft catId is", catId);
+                this.setParams("tbCategory", {"categoryId" : catId, "categoryName" : ""});
+            }
         }
     }
 
