@@ -11,6 +11,23 @@ type skuTaskItemRepository struct {
 	database.Repository[*models.SkuTaskItem]
 }
 
+// GetStatusCountByTaskIDs 根据taskIDs获取任务项状态的数量
+func (r *skuTaskItemRepository) GetStatusCountByTaskIDs(taskIDs []uint64) ([]*models.SkuTaskItemStatusCount, error) {
+	var err error
+	sql := `
+	select task_id, status, count(id) as count
+	from sku_task_item
+	where task_id in (?)
+	group by task_id, status
+	`
+
+	entities, err := database.GetListByEntity(r.Db, sql, &models.SkuTaskItemStatusCount{}, taskIDs)
+	if err != nil {
+		return nil, err
+	}
+	return entities, nil
+}
+
 type SkuTaskStepRepository struct {
 	database.Repository[*models.SkuTaskStep]
 }

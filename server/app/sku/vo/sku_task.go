@@ -76,4 +76,9 @@ type SkuTaskPageResp struct {
 	Count            int             `json:"count"`
 	CreatedBy        string          `json:"createdBy"`
 	CreatedAt        base.Time       `json:"createdAt"`
+	ShopName         string          `json:"shopName"`
+	SuccessCount     int             `json:"successCount"`
+	FailedCount      int             `json:"failedCount"`
+	CancelCount      int             `json:"cancelCount"`
+	ExistenceCount   int             `json:"existenceCount"`
 }

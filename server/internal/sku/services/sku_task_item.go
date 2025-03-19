@@ -81,3 +81,15 @@ func FindSkuTaskStepByKeyAndResourceIdAndGroupCode(key string, resourceId uint64
 func DeleteSkuTaskStepByKeyAndResourceIdAndGroupCode(key string, resourceId uint64, groupCode string) error {
 	return skuTaskStepRepository.DeleteByKeyAndResourceIdAndGroupCode(key, resourceId, groupCode)
 }
+
+func GetSkuTaskItemStatusCount(taskIDs []uint64) ([]*dto.SkuTaskItemStatusCountDTO, error) {
+	var err error
+	skuTaskItemRepository := repositories.SkuTaskItemRepository
+
+	var skuTaskItemStatusCounts []*models.SkuTaskItemStatusCount
+	if skuTaskItemStatusCounts, err = skuTaskItemRepository.GetStatusCountByTaskIDs(taskIDs); err != nil {
+		logger.Errorf("GetSkuTaskItemStatusCount failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+	return converter.ToDTOs[dto.SkuTaskItemStatusCountDTO](skuTaskItemStatusCounts), nil
+}

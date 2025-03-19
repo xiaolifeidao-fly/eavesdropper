@@ -77,17 +77,24 @@ type SkuTaskPageParamDTO struct {
 	Source     string `search:"type:eq;table:sku_task;column:source"`
 	_          string `search:"type:order;table:sku_task;column:id;default:desc"`
 	_          any    `search:"type:isNull;table:sku_task;column:deleted_at"`
+	_          any    `search:"type:isNull;table:shop;column:deleted_at"`
 	_          any    `search:"type:left;table:sku_task;join:auth_user;as:user;on:id:user_id"`
 	_          any    `search:"type:left;table:sku_task;join:resource;as:resource;on:id:publish_resource_id"`
+	_          any    `search:"type:left;table:resource;join:shop;as:shop;on:resource_id:id"`
 }
 
 type SkuTaskPageDTO struct {
 	ID              uint64    `json:"id" select:"table:sku_task;column:id"`
 	ResourceID      uint64    `json:"resourceId" select:"table:sku_task;column:publish_resource_id;as:ResourceID"`
 	ResourceAccount string    `json:"resourceAccount" select:"table:resource;column:account;as:ResourceAccount"`
+	ShopName        string    `json:"shopName" select:"table:shop;column:name;as:ShopName"`
 	Status          string    `json:"status" select:"table:sku_task;column:status"`
 	Source          string    `json:"source" select:"table:sku_task;column:source"`
 	Count           int       `json:"count" select:"table:sku_task;column:count"`
 	CreatedBy       string    `json:"createdBy" select:"table:user;column:nickname;as:CreatedBy"`
 	CreatedAt       base.Time `json:"createdAt" select:"table:sku_task;column:created_at"`
+	SuccessCount    int       `json:"successCount"`
+	FailedCount     int       `json:"failedCount"`
+	CancelCount     int       `json:"cancelCount"`
+	ExistenceCount  int       `json:"existenceCount"`
 }

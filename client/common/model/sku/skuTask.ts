@@ -166,6 +166,11 @@ export class SkuTaskPageResp {
     public count: number,
     public createdBy: string,
     public createdAt: string,
+    public shopName: string,
+    public successCount: number,
+    public failedCount: number,
+    public cancelCount: number,
+    public existenceCount: number,
   ) {
     this.id = id
     this.resourceId = resourceId
@@ -177,6 +182,11 @@ export class SkuTaskPageResp {
     this.count = count
     this.createdBy = createdBy
     this.createdAt = createdAt
+    this.shopName = shopName
+    this.successCount = successCount
+    this.failedCount = failedCount
+    this.cancelCount = cancelCount
+    this.existenceCount = existenceCount
   }
 }
 

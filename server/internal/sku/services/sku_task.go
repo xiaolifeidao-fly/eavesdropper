@@ -136,7 +136,41 @@ func PageSkuTask(param *dto.SkuTaskPageParamDTO) (*page.Page[dto.SkuTaskPageDTO]
 		return page.BuildEmptyPage[dto.SkuTaskPageDTO](param.ToPageInfo(count)), nil
 	}
 
+	fillSkuTaskPageStatistics(pageData)
 	pageDTO := page.BuildPage(param.ToPageInfo(count), pageData)
 
 	return pageDTO, nil
+}
+
+func fillSkuTaskPageStatistics(skuTaskPageDTOs []*dto.SkuTaskPageDTO) error {
+	var err error
+	taskIDs := make([]uint64, 0)
+	skuTaskPageDTOMap := make(map[uint64]*dto.SkuTaskPageDTO)
+	for _, skuTaskPageDTO := range skuTaskPageDTOs {
+		taskID := skuTaskPageDTO.ID
+		taskIDs = append(taskIDs, taskID)
+		skuTaskPageDTOMap[taskID] = skuTaskPageDTO
+	}
+	var itemStatusCounts []*dto.SkuTaskItemStatusCountDTO
+	if itemStatusCounts, err = GetSkuTaskItemStatusCount(taskIDs); err != nil {
+		return err
+	}
+
+	for _, itemStatusCount := range itemStatusCounts {
+		taskID := itemStatusCount.TaskID
+		if skuTaskPageDTO, ok := skuTaskPageDTOMap[taskID]; ok {
+			itemStatus := itemStatusCount.Status
+			switch itemStatus {
+			case string(dto.SkuTaskItemStatusSuccess):
+				skuTaskPageDTO.SuccessCount += itemStatusCount.Count
+			case string(dto.SkuTaskItemStatusFailed):
+				skuTaskPageDTO.FailedCount += itemStatusCount.Count
+			case string(dto.SkuTaskItemStatusCancel):
+				skuTaskPageDTO.CancelCount += itemStatusCount.Count
+			case string(dto.SkuTaskItemStatusExistence):
+				skuTaskPageDTO.ExistenceCount += itemStatusCount.Count
+			}
+		}
+	}
+	return nil
 }

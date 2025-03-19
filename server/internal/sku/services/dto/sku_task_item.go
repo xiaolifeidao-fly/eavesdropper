@@ -58,3 +58,9 @@ type SkuTaskStepDTO struct {
 	Message      string `json:"message"`
 	NeedNextSkip bool   `json:"needNextSkip"`
 }
+
+type SkuTaskItemStatusCountDTO struct {
+	TaskID uint64 `json:"taskId"`
+	Status string `json:"status"`
+	Count  int    `json:"count"`
+}

@@ -14,6 +14,12 @@ func (s *SkuTaskItem) TableName() string {
 	return "sku_task_item"
 }
 
+type SkuTaskItemStatusCount struct {
+	TaskID uint64 `json:"taskId"`
+	Status string `json:"status"`
+	Count  int    `json:"count"`
+}
+
 type SkuTaskStep struct {
 	database.BaseEntity
 	StepKey      string `json:"step_key"`
