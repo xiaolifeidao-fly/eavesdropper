@@ -3,8 +3,8 @@ package dto
 import "server/common/base/dto"
 
 var (
-	TaoBao = ResourceSourceEnum{"淘宝", "taobao", "blue", "https://item.taobao.com/item.htm?id=%s"}
-	Pdd    = ResourceSourceEnum{"拼多多", "pdd", "blue", "https://mobile.yangkeduo.com/goods1.html?goods_id=%s"}
+	TaoBao = ResourceSourceEnum{"某宝", "taobao", "blue", "https://item.taobao.com/item.htm?id=%s"}
+	Pdd    = ResourceSourceEnum{"拼西西", "pdd", "blue", "https://mobile.yangkeduo.com/goods1.html?goods_id=%s"}
 )
 
 type ResourceSourceEnum struct {

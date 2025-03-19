@@ -44,7 +44,7 @@ func BatchAddCategory(ctx *gin.Context) {
 }
 
 // GetTBCategories
-// @Description 获取淘宝的分类
+// @Description 获取某宝的分类
 func GetTBCategories(ctx *gin.Context) {
 	var err error
 

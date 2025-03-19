@@ -6,12 +6,12 @@ import (
 )
 
 const (
-	// ResourceSourceTaobao       = "taobao" // 淘宝
-	// ResourceSourceTaobaoLabel  = "淘宝"
+	// ResourceSourceTaobao       = "taobao" // 某宝
+	// ResourceSourceTaobaoLabel  = "某宝"
 	// ResourceSourceTaobaoSkuUrl = "https://item.taobao.com/item.htm?id=%s"
 
-	// ResourceSourcePdd       = "pdd" // 拼多多
-	// ResourceSourcePddLabel  = "拼多多"
+	// ResourceSourcePdd       = "pdd" // 拼西西
+	// ResourceSourcePddLabel  = "拼西西"
 	// ResourceSourcePddSkuUrl = "https://mobile.yangkeduo.com/goods1.html?goods_id=%s"
 
 	ResourceTagMain      = "main" // 主号
