@@ -8,7 +8,7 @@ import { Frame, Page } from "playwright-core";
 import { v4 as uuidv4 } from 'uuid';
 import sharp from "sharp";
 import axios from "axios";
-import { humanLikeDrag, humanLikeMouseMove } from "@src/door/utils/page.utils";
+import { humanLikeDrag, humanLikeMouseMove, simulateHumanPresenceSimple, slideSlider } from "@src/door/utils/page.utils";
 
 const {app, BrowserWindow } = require('electron');
 
@@ -25,7 +25,7 @@ const createBrowserView = async (resourceId : number, header : {[key:string]:any
     //     });
     // }
      // 修改请求头
-     console.log(header);
+     log.info(header);
      sessionInstance.webRequest.onBeforeSendHeaders((details, callback) => {
         details.requestHeaders['Referer'] = validateUrl;
         details.requestHeaders['Sec-Fetch-Dest'] = 'image';
@@ -142,8 +142,13 @@ function encodeBase64(str : string) {
 
 async function getFrame(page: Page) {
     const frame = await page.mainFrame();
-    for (const child of frame.childFrames()) {
+    const childFrames = await frame.childFrames();
+    for (const child of childFrames) {
         const url = await child.url();
+        if(url.includes("mtop.relationrecommend.wirelessrecommend.recommend")){
+            log.info("get from childFrame ", url);
+            return child;
+        }
         if(url.includes("api/upload.api/_____tmd_____/punish")){
             log.info("get from childFrame ", url);
             return child;
@@ -157,84 +162,132 @@ async function validateAction(page : Page, ...params : any[]){
     try{
         const validateUrl = params[0];
         const validateParams = params[1];
+        const autoFlag = params[2];
+        let preResult = params[3];
+        if(!autoFlag){
+            return;
+        }
         if(validateUrl.includes("mtop.relationrecommend.wirelessrecommend.recommend")){
+            log.info("validateAction auto start");
+            let frame = await getFrame(page);
+            await validateByCaptcha(page, frame, preResult);
+            log.info("validateAction auto end");
             return;
         }
         if(validateParams){
             return;
         }
-        let frame = await getFrame(page);
-        const element = frame.locator("#puzzle-captcha-question-img").first(); // 选择要截图的元素
-        if (element) {
-            const qrCodeFileName = uuidv4() + ".jpeg";
-            const qrCodeFilePath = path.join(path.dirname(app.getAppPath()),'resource','temp', qrCodeFileName);
-            const buffer = await element.screenshot({ path: qrCodeFilePath}); // 保存截图
-            const imageSharp = sharp(buffer);
-            const boundingBox = await element.boundingBox();
-            const width = boundingBox?.width;
-            const height = boundingBox?.height;
-            log.info("validate width ", width,  " height ", height);
-            const imageBuffer = await imageSharp
-            .resize(Number(width), Number(height)).toBuffer() // 设置宽高
-            const imageBase64 = await convertImageToBase64WithHeader(imageBuffer);
-            if(imageBase64){
-                const slideContent = await getSlideContent(imageBase64);
-                log.info("slideContent is ", slideContent);
-                if (slideContent && slideContent.code == 200){
-                    console.log("slideContent.data.px_distance ====", slideContent.data.px_distance);
-                    const slider = await frame.locator('#puzzle-captcha-btn').first();
-                    if (slider) {
-                        const sliderBox = await slider.boundingBox();
-                        console.log("sliderBox x ====", sliderBox);
-                        if(!sliderBox){
-                            return;
-                        }
-                        
-                        //随机5位小数 值为0.    
-                        const startX = sliderBox.x + sliderBox.width / 2 + 0.123122; // 起始位置的 X 坐标
-                        const startY = sliderBox.y + sliderBox.height / 2 + 0.323122; // 起始位置的 Y 坐标
-                        log.info("humanLikeMouseMove startX ====", startX, "startY ====", startY);
-                        await humanLikeMouseMove(page, 233, 333, startX, startY);
-                        let endX = startX + slideContent.data.px_distance; // 目标位置的 X 坐标
-                        const endY = sliderBox.y + sliderBox.height / 2 + 0.123132;;
-                        // await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
-                        log.info("humanLikeDrag startX ====", startX, "startY ====", startY);
-                        await humanLikeDrag(page, startX, startY, endX, endY);
-                    }
-                    // await moveCaptchaVerifyImgSlide(page, frame, slideContent.data.px_distance);
-                    // await humanLikeDragHorizontally(page, frame,"#puzzle-captcha-btn", slideContent.data.px_distance, {
-                    //     maxVerticalVariation: 2,
-                    //     speedVariation: 0.02,
-                    //     steps: 100
-                    // });
-                }
-            }
-          
-        }
+        // let frame = await getFrame(page);
+        // await validateByPuzzleCaptcha(page, frame);
+
     }catch(error){
         log.error("openLoginPageAction error", error);
     }
 }
 
-async function moveCaptchaVerifyImgSlide(page : Page, frame : Frame, distance : number){
-    const slider = await frame.locator('#puzzle-captcha-btn').first();
-    if (slider) {
-        const sliderBox = await slider.boundingBox();
-        console.log("sliderBox x ====", sliderBox);
-        if(!sliderBox){
-            return;
-        }
-        const startX = sliderBox.x + sliderBox.width / 2 + 0.23244; // 起始位置的 X 坐标
-        const startY = sliderBox.y + sliderBox.height / 2 + 0.25244; // 起始位置的 Y 坐标
-        let endX = startX + distance; // 目标位置的 X 坐标
+
+async function validateByCaptcha(page : Page, frame : Frame, preResult : boolean = true){
+  if(!preResult){
+      const errorLoading = frame.locator("#nc_1_wrapper .errloading").first();
+      if (await errorLoading.isVisible({ timeout: 1000 })) {
+        log.info("validateByCaptcha click errLoading found");
+        await errorLoading.click();
+        await page.waitForTimeout(3000);
+      }else{
+        log.info("validateByCaptcha click errLoading not found");
+      }
+  }
+
+  const slider = frame.locator("#nc_1_n1z").first(); // 选择要截图的元素
+  if (slider) {
+      const sliderBox = await slider.boundingBox();
+      log.info("sliderBox x ====", sliderBox);
+      if(!sliderBox){
+          return;
+      }
+      const trackBox = frame.locator("#nc_1__scale_text").first();
+      const trackBoxBoundingBox = await trackBox.boundingBox();
+      log.info("trackBoxBoundingBox ====", trackBoxBoundingBox);
+      if(!trackBoxBoundingBox){
+          return;
+      }
+      //随机5位小数 值为0.    
+      const startX = sliderBox.x + sliderBox.width / 2;// 起始位置的 X 坐标
+      const startY = sliderBox.y + sliderBox.height / 2; // 起始位置的 Y 坐标
+
+      // 计算滑动距离 - 每次尝试使用略微不同的距离
+      //生成5位随机小数
+      const random = Math.random();
+      const random5 = random.toFixed(5);
+
+      let endX = trackBoxBoundingBox.x + trackBoxBoundingBox.width - 2 - parseFloat(random5);
+      // 确保不会滑过头
+      const distance = Math.max(10, Math.min(endX - startX, trackBoxBoundingBox.width * 0.95)) + 50;
+      log.info("distance ====", distance);
+      endX = startX + distance;
+      await simulateHumanPresenceSimple(page, sliderBox.x, sliderBox.y);
+
+      await slideSlider(page, {x: startX, y: startY}, {x: endX, y: startY});
+  }
+}
+async function validateByPuzzleCaptcha(page : Page, frame : Frame){
+  const element = frame.locator("#puzzle-captcha-question-img").first(); // 选择要截图的元素
+  if (element) {
+      const qrCodeFileName = uuidv4() + ".jpeg";
+      const qrCodeFilePath = path.join(path.dirname(app.getAppPath()),'resource','temp', qrCodeFileName);
+      const buffer = await element.screenshot({ path: qrCodeFilePath}); // 保存截图
+      const imageSharp = sharp(buffer);
+      const boundingBox = await element.boundingBox();
+      const width = boundingBox?.width;
+      const height = boundingBox?.height;
+      log.info("validate width ", width,  " height ", height);
+      const imageBuffer = await imageSharp
+      .resize(Number(width), Number(height)).toBuffer() // 设置宽高
+      const imageBase64 = await convertImageToBase64WithHeader(imageBuffer);
+      if(imageBase64){
+          const slideContent = await getSlideContent(imageBase64);
+          log.info("slideContent is ", slideContent);
+          if (slideContent && slideContent.code == 200){
+              log.info("slideContent.data.px_distance ====", slideContent.data.px_distance);
+              const slider = await frame.locator('#puzzle-captcha-btn').first();
+              if (slider) {
+                  const sliderBox = await slider.boundingBox();
+                  log.info("sliderBox x ====", sliderBox);
+                  if(!sliderBox){
+                      return;
+                  }
+                  
+                  //随机5位小数 值为0.    
+                  const startX = sliderBox.x + sliderBox.width / 2 + 0.123122; // 起始位置的 X 坐标
+                  const startY = sliderBox.y + sliderBox.height / 2 + 0.323122; // 起始位置的 Y 坐标
+                  // log.info("humanLikeMouseMove startX ====", startX, "startY ====", startY);
+                  // await humanLikeMouseMove(page, 233, 333, startX, startY);
+                  let endX = startX + slideContent.data.px_distance; // 目标位置的 X 坐标
+                  const endY = sliderBox.y + sliderBox.height / 2 + 0.123132;;
+                  // await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
+                  log.info("humanLikeDrag startX ====", startX, "startY ====", startY);
+                  // await humanLikeDrag(page, startX, startY, endX, endY);
+                  await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
+              }
+              // await humanLikeDragHorizontally(page, frame,"#puzzle-captcha-btn", slideContent.data.px_distance, {
+              //     maxVerticalVariation: 2,
+              //     speedVariation: 0.02,
+              //     steps: 100
+              // });
+          }
+      }
+  }
+}
+
+async function moveCaptchaVerifyImgSlide(page : Page, startX : number, startY : number, endX : number, slideWidth : number){
         
         // 确保随机值在合理范围内
-        const maxRandomOffset = Math.min(10, sliderBox.width * 0.1); // 最大随机偏移量，不超过滑块宽度的10%
+        const maxRandomOffset = Math.min(10, slideWidth * 0.1); // 最大随机偏移量，不超过滑块宽度的10%
         const randomEndNext = endX + Math.random() * maxRandomOffset; // 随机超出目标位置
         const randomEndPre = Math.max(startX + 5, endX - Math.random() * maxRandomOffset); // 随机回退位置，确保大于起始位置
         
-        console.log("startX ====", startX, "startY ====", startY, "endX ====", endX);
-        console.log("randomEndNext ====", randomEndNext, "randomEndPre ====", randomEndPre);
+        log.info("startX ====", startX, "startY ====", startY, "endX ====", endX);
+        log.info("randomEndNext ====", randomEndNext, "randomEndPre ====", randomEndPre);
         
         // 增加初始等待时间，模拟人类思考
         await page.waitForTimeout(500);
@@ -300,8 +353,7 @@ async function moveCaptchaVerifyImgSlide(page : Page, frame : Frame, distance : 
         await page.mouse.move(endX, startY); // 最终位置回到原始Y坐标
         await page.waitForTimeout(300); // 到达目标位置后短暂停顿
         await page.mouse.up(); // 释放鼠标
-        console.log('Slider moved successfully with irregular pattern (X and Y axis) at 5x slower speed');
-    }
+        log.info('Slider moved successfully with irregular pattern (X and Y axis) at 5x slower speed');
     // 增加完成后的等待时间
     await page.waitForTimeout(5000); // 从2000增加到5000
 }
@@ -400,7 +452,7 @@ async function humanLikeDragHorizontally(
 async function convertImageToBase64WithHeader(imageInfo : Buffer<ArrayBufferLike>) {
     try {
       const mimeType = "image/jpeg";
-      console.log('Base64 Image with Header:', mimeType);
+      log.info('Base64 Image with Header:', mimeType);
       // 转换为 Base64 编码
       const base64Image = imageInfo.toString('base64');
       return `data:${mimeType};base64,${base64Image}`;
@@ -423,48 +475,67 @@ async function getSlideContent(imageInfo : string) {
   }
 
 
+ async function validateImage(validateItem : ValidateItem, autoFlag : boolean = false){
+      const engine = new MbEngine(validateItem.resourceId, autoFlag);
+      try{
+          const page = await engine.init();
+          const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource',"validate_image.html");
+          const validateUrl = validateItem.validateUrl;
+          if(page){
+            let url = "file://" + sessionDirPath + "?iframeUrl=" + encodeBase64(validateUrl);
+            const validateParams = validateItem.validateParams;
+            if(validateParams){
+                url += "&validateParams=" + encodeBase64(JSON.stringify(validateParams));
+            }
+            let result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor(), {}, validateAction, validateUrl, validateParams, autoFlag, true);
+            let validateNum = 0;
+            while(!isValidateSuccess(result) && validateNum <=3 ){
+                validateNum++;
+                log.info("checkValidate error retry validate ", validateNum);
+                engine.resetMonitor();
+                result = await engine.openWaitMonitor(page, undefined, new ImageValidatorMonitor(), {}, validateAction, validateUrl, validateParams, autoFlag, false);
+            }
+            return result;
+        }
+      } catch(error){
+          log.error("checkValidate error", error);
+          validateItem.resolve({}, false);
+          return undefined;
+      }finally{
+          engine.closePage();
+      }
+ }
+
 
 function checkValidate(){
     setInterval(async () => {
         const validateItem = validateQueueProcessor.take();
         if(validateItem){
-            const engine = new MbEngine(validateItem.resourceId, false);
-            try{
-                const page = await engine.init();
-                const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource',"validate_image.html");
-            if(page){
-                let url = "file://" + sessionDirPath + "?iframeUrl=" + encodeBase64(validateItem.validateUrl);
-                const validateParams = validateItem.validateParams;
-                if(validateParams){
-                    url += "&validateParams=" + encodeBase64(JSON.stringify(validateParams));
-                }
-                let result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor(), {}, validateAction, validateItem.validateUrl, validateParams);
-                let validateNum = 0;
-                while(!isValidateSuccess(result) && validateNum <=3 ){
-                    validateNum++;
-                    log.info("checkValidate error retry validate ", validateNum);
-                    engine.resetMonitor();
-                    result = await engine.openWaitMonitor(page, undefined, new ImageValidatorMonitor(), {}, validateAction, validateItem.validateUrl, validateParams);
-                }
-                if(isValidateSuccess(result)){
-                    validateItem.resolve(result.getHeaderData(), true);
-                }else{
-                    validateItem.resolve({}, false);
-                }
+            const url = validateItem.validateUrl; 
+            let autoFlag = false;
+            if(url.includes("mtop.relationrecommend.wirelessrecommend.recommend")){
+                autoFlag = true;
             }
-            } catch(error){
-                log.error("checkValidate error", error);
+            log.info("validateImage autoFlag ", autoFlag);
+            let result = await validateImage(validateItem, autoFlag);
+            if(!isValidateSuccess(result) && autoFlag){
+                result = await validateImage(validateItem, false);
+            }
+            if(result && isValidateSuccess(result)){
+                validateItem.resolve(result.getHeaderData(), true);
+            }else{
                 validateItem.resolve({}, false);
-            }finally{
-                engine.closePage();
             }
         }   
     }, 1000);
 }
 
 
-function isValidateSuccess(result : DoorEntity<any>){
-    if(!result || !result.getCode()){
+function isValidateSuccess(result : DoorEntity<any>|undefined){
+    if(!result){
+        return false;
+    }
+    if(!result.getCode()){
         return false;
     }
     return true;

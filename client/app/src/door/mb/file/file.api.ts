@@ -1,4 +1,4 @@
-import { FileData, FileInfo, getFileKey } from "@src/door/monitor/mb/file/file";
+import { FileData, FileInfo, getFileKey, MbFileUploadMonitor } from "@src/door/monitor/mb/file/file";
 
 import { getSkuFiles, saveSkuFile } from "@api/sku/sku.file";
 import axios from "axios";
@@ -7,7 +7,7 @@ import path from "path";
 import FormData from 'form-data';
 import { DoorFileRecord } from "@model/door/door";
 import { SkuFile } from "@model/sku/sku.file";
-import { getUnUploadFile } from "./file";
+import { getUnUploadFile, uploadFile } from "./file";
 import { MbFileQueryMonitor } from "@src/door/monitor/mb/file/file";
 import { MbEngine } from "../mb.engine";
 import { saveDoorFileRecord } from "@api/door/file.api";
@@ -48,7 +48,7 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
     const skuFiles = await getSkuFiles(skuItemId, resourceId);
     return {
         skuFiles : skuFiles,
-        validateUrl : uploadResult,
+        validateData : uploadResult,
         header : header
     };
 }
@@ -156,7 +156,18 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
                 const retCode = ret[0];
                 if(retCode == 'FAIL_SYS_USER_VALIDATE'){
                     log.error("MbFileUploadMonitor getResponseData error ", data);
-                    return data.data.url;
+                    const validateData = data.data;
+                    const validateParams : { [key: string]: any } =  {};
+                    if('dialogSize' in validateData){
+                        validateParams.dialogSize = validateData.dialogSize;
+                    }
+                    if('attributes' in validateData){
+                        validateParams.attributes = validateData.attributes;
+                    }
+                    return {
+                        validateUrl : validateData.url,
+                        validateParams : validateParams
+                    };
                 }
             }
         }

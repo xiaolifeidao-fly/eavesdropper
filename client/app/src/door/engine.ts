@@ -34,7 +34,16 @@ export abstract class DoorEngine<T = any> {
     height : number;
     usePersistentContext : boolean;
 
-    constructor(resourceId : number, headless: boolean = true, chromePath: string = "", usePersistentContext : boolean = false){
+    needValidateImage : boolean = false;
+
+    browserArgs : string[] = [
+        '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
+        '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
+        '--disable-setuid-sandbox',
+        '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
+      ];
+
+    constructor(resourceId : number, headless: boolean = true, chromePath: string = "", usePersistentContext : boolean = false, browserArgs : string[]|undefined = undefined){
         this.resourceId = resourceId;
         this.usePersistentContext = usePersistentContext;
         if(chromePath){
@@ -43,6 +52,9 @@ export abstract class DoorEngine<T = any> {
             this.chromePath = this.getChromePath();
         }
         this.headless = headless;
+        if(browserArgs){
+            this.browserArgs = browserArgs;
+        }
         try{
             const primaryDisplay = screen.getPrimaryDisplay();
             this.width = primaryDisplay.workAreaSize.width;
@@ -54,6 +66,9 @@ export abstract class DoorEngine<T = any> {
         }
     }
 
+    setNeedValidateImage(needValidateImage : boolean){
+        this.needValidateImage = needValidateImage;
+    }
 
     getChromePath() : string | undefined{
         return process.env.CHROME_PATH;
@@ -593,7 +608,7 @@ export abstract class DoorEngine<T = any> {
     }
 
     getBrowserKey(){
-        let key = this.headless.toString();
+        let key = this.headless.toString() + "_" + this.needValidateImage.toString();
         if (this.chromePath) {
             key += "_" + this.chromePath;
         }
@@ -607,17 +622,15 @@ export abstract class DoorEngine<T = any> {
         if(browserMap.has(key)){
             return browserMap.get(key);
         }
+        const args = [
+            ...this.browserArgs,
+            '--window-size=' + this.width + ',' + this.height
+        ]
         const browser = await chromium.launch({
             headless: this.headless,
             slowMo : 100,
             executablePath: storeBrowserPath,
-            args: [
-                '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
-                '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
-                '--disable-setuid-sandbox',
-                '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
-                '--window-size=' + this.width + ',' + this.height
-              ]
+            args: args
         });
         browserMap.set(key, browser);
         return browser;
