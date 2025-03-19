@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react';
-import { Tag, Button, message, Space } from 'antd';
+import { Tag, Button, message, Modal } from 'antd';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
 import styles from './index.module.less';
@@ -10,6 +10,9 @@ import { getSkuTaskPage as getSkuTaskPageApi } from '@api/sku/skuTask.api';
 import { getResourceSourceList } from '@api/resource/resource.api';
 import { transformArrayToObject } from '@utils/convert'
 import { SkuTaskStatus } from '@model/sku/skuTask'
+import { SkuTaskItemList } from './components'
+
+const pollingTime = 5000
 
 export default function SkuTaskManage() {
 
@@ -17,7 +20,8 @@ export default function SkuTaskManage() {
   const { refreshPage } = useRefreshPage();
 
   const [sourceMap, setSourceMap] = useState<Record<string, any>>();
-  const [polling, setPolling] = useState<number>(2000); // 表格轮询间隔
+  const [showItemList, setShowItemList] = useState<boolean>(false)
+  const [showTaskId, setShowTaskId] = useState<number>(0)
 
   useEffect(() => {
     getResourceSourceList().then(resp => {
@@ -28,7 +32,8 @@ export default function SkuTaskManage() {
 
   // 查看任务
   const handleView = (taskId: number) => {
-    message.success(`查看任务: ${taskId}`)
+    setShowItemList(true)
+    setShowTaskId(taskId)
   }
 
   // 停止任务
@@ -108,7 +113,7 @@ export default function SkuTaskManage() {
               失败: <Tag color={'red'} style={{ width: '40px', textAlign: 'center' }}>{record.failedCount}</Tag>
             </div>
             <div style={{ textAlign: 'center' }}>
-              已取消: <Tag color={'orange'} style={{ width: '40px', textAlign: 'center' }}>{record.cancelCount}</Tag>
+              未执行: <Tag color={'orange'} style={{ width: '40px', textAlign: 'center' }}>{record.cancelCount}</Tag>
             </div>
             <div style={{ textAlign: 'center' }}>
               已存在: <Tag color={'gold'} style={{ width: '40px', textAlign: 'center' }}>{record.existenceCount}</Tag>
@@ -121,6 +126,7 @@ export default function SkuTaskManage() {
       title: '操作',
       search: false,
       align: 'center',
+      key: 'operate',
       render: (_, record) => {
         return (
           <div style={{ display: 'flex', gap: '4px' }}> {/* 设置间距为 4px */}
@@ -178,13 +184,29 @@ export default function SkuTaskManage() {
                 total: pageInfo.total,
               };
             }}
-            polling={polling}
+            polling={pollingTime}
             pagination={{
               pageSize: 10,
             }}
           />
         </div>
       </main>
+
+      {showItemList && showTaskId !== 0 && (
+        <Modal
+          open={showItemList}
+          title={`批次${showTaskId}任务明细`}
+          width={1200}
+          onCancel={() => {
+            setShowItemList(false)
+          }}
+          onOk={() => {
+            setShowItemList(false)
+          }}
+        >
+          <SkuTaskItemList taskId={showTaskId}/>
+        </Modal>
+      )}
     </Layout>
   );
 }

@@ -105,13 +105,15 @@ export class AddSkuTaskItemReq {
     public url: string,
     public status: string,
     public source: string,
-    public remark?: string
+    public remark?: string,
+    public skuId?: number,
   ) {
     this.taskId = taskId
     this.url = url
     this.status = status
-    this.source = source;
+    this.source = source
     this.remark = remark
+    this.skuId = skuId
   }
 }
 

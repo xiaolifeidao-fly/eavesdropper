@@ -8,6 +8,8 @@ type SkuTaskItem struct {
 	Url    string `json:"url"`
 	Status string `json:"status"`
 	Remark string `json:"remark"`
+	SkuID  uint64 `json:"skuId"`
+	Source string `json:"source"`
 }
 
 func (s *SkuTaskItem) TableName() string {

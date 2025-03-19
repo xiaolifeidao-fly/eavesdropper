@@ -18,3 +18,8 @@ func (r *skuRepository) GetSkuByPublishResourceIdAndSourceSkuIdAndSource(publish
 func (r *skuRepository) GetSkuByPublishResourceIdAndPublishSkuIdAndStatus(publishResourceId uint64, publishSkuId string, status string) (*models.Sku, error) {
 	return r.GetOne("select * from sku where publish_resource_id = ? and publish_sku_id = ? and status = ? and deleted_at is null order by id desc limit 1", publishResourceId, publishSkuId, status)
 }
+
+func (r *skuRepository) GetByID(id uint64) (*models.Sku, error) {
+	sql := "select * from sku where deleted_at is null and id = ?"
+	return r.GetOne(sql, id)
+}

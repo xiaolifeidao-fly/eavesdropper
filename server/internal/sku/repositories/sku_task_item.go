@@ -28,6 +28,11 @@ func (r *skuTaskItemRepository) GetStatusCountByTaskIDs(taskIDs []uint64) ([]*mo
 	return entities, nil
 }
 
+func (r *skuTaskItemRepository) GetItemListByTaskID(taskID uint64) ([]*models.SkuTaskItem, error) {
+	sql := "select * from sku_task_item where deleted_at is null and task_id = ?"
+	return r.GetList(sql, taskID)
+}
+
 type SkuTaskStepRepository struct {
 	database.Repository[*models.SkuTaskStep]
 }

@@ -41,12 +41,6 @@ func (r *UpdateSkuTaskReq) Validate() error {
 	if err := skuTaskStatusEnum.Validate(); err != nil {
 		return err
 	}
-
-	for _, item := range r.Items {
-		if err := dto.SkuTaskItemStatus(item.Status).Validate(); err != nil {
-			return err
-		}
-	}
 	return nil
 }
 
@@ -55,6 +49,7 @@ type AddSkuTaskItemReq struct {
 	Url    string `json:"url" binding:"required"`
 	Status string `json:"status" binding:"required"`
 	Remark string `json:"remark"`
+	Source string `json:"source"`
 }
 
 type SkuTaskPageReq struct {

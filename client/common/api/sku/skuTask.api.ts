@@ -36,7 +36,7 @@ export const initSkuStep = async (stepKey: string, resourceId: number, groupCode
   return instance.post(`/sku/task/steps/${resourceId}/${groupCode}/${stepKey}/init`, {})
 }
 
-// 分页获取商品
+// 分页获取商品任务
 export const getSkuTaskPage = async (req: SkuTaskPageReq) => {
   const result = await instance.get(`/sku/task/page`, { params: req })
   return plainToClass(BasePageResp<SkuTaskPageResp>, result)

@@ -161,13 +161,13 @@ func fillSkuTaskPageStatistics(skuTaskPageDTOs []*dto.SkuTaskPageDTO) error {
 		if skuTaskPageDTO, ok := skuTaskPageDTOMap[taskID]; ok {
 			itemStatus := itemStatusCount.Status
 			switch itemStatus {
-			case string(dto.SkuTaskItemStatusSuccess):
+			case dto.SkuTaskItemStatusSuccess.Value:
 				skuTaskPageDTO.SuccessCount += itemStatusCount.Count
-			case string(dto.SkuTaskItemStatusFailed):
+			case dto.SkuTaskItemStatusFailed.Value:
 				skuTaskPageDTO.FailedCount += itemStatusCount.Count
-			case string(dto.SkuTaskItemStatusCancel):
+			case dto.SkuTaskItemStatusCancel.Value:
 				skuTaskPageDTO.CancelCount += itemStatusCount.Count
-			case string(dto.SkuTaskItemStatusExistence):
+			case dto.SkuTaskItemStatusExistence.Value:
 				skuTaskPageDTO.ExistenceCount += itemStatusCount.Count
 			}
 		}

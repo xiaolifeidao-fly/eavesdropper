@@ -372,6 +372,7 @@ export class MbSkuApiImpl extends MbSkuApi {
                     }
                     taskItem.remark = skuResult.remark;
                 } else {
+                    taskItem.skuId = skuResult.id
                     statistic.successNum = statistic.successNum + 1;
                 }
                 taskItems.push(taskItem); // 添加任务项

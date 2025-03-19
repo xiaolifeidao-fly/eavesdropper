@@ -122,3 +122,15 @@ func GetSkuByPublishResourceIdAndPublishSkuId(publishResourceId uint64, publishS
 	}
 	return database.ToDTO[dto.SkuDTO](sku), nil
 }
+
+func GetSkuByID(id uint64) (*dto.SkuDTO, error) {
+	var err error
+	skuRepository := repositories.SkuRepository
+
+	var sku *models.Sku
+	if sku, err = skuRepository.GetByID(id); err != nil {
+		logger.Errorf("GetSkuByID failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+	return database.ToDTO[dto.SkuDTO](sku), nil
+}

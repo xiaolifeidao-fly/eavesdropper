@@ -93,3 +93,15 @@ func GetSkuTaskItemStatusCount(taskIDs []uint64) ([]*dto.SkuTaskItemStatusCountD
 	}
 	return converter.ToDTOs[dto.SkuTaskItemStatusCountDTO](skuTaskItemStatusCounts), nil
 }
+
+func GetSkuTaskItemListByTaskID(taskID uint64) ([]*dto.SkuTaskItemDTO, error) {
+	var err error
+	skuTaskItemRepository := repositories.SkuTaskItemRepository
+
+	var itemList []*models.SkuTaskItem
+	if itemList, err = skuTaskItemRepository.GetItemListByTaskID(taskID); err != nil {
+		logger.Errorf("GetSkuTaskItemListByTaskID failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+	return database.ToDTOs[dto.SkuTaskItemDTO](itemList), nil
+}
