@@ -66,6 +66,7 @@ type AddSkuTaskItemDTO struct {
 	Status string `json:"status"`
 	Remark string `json:"remark"`
 	Source string `json:"source"`
+	SkuID  uint64 `json:"skuId"`
 }
 
 var (

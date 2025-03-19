@@ -50,6 +50,7 @@ type AddSkuTaskItemReq struct {
 	Status string `json:"status" binding:"required"`
 	Remark string `json:"remark"`
 	Source string `json:"source"`
+	SkuID  uint64 `json:"skuId"`
 }
 
 type SkuTaskPageReq struct {
