@@ -1,13 +1,13 @@
-import { 
-    FundOutlined, 
-    LayoutOutlined, 
-    BarChartOutlined, 
-    DesktopOutlined, 
-    ScheduleOutlined, 
-    CalculatorOutlined, 
-    UserOutlined, 
+import {
+    FundOutlined,
+    LayoutOutlined,
+    BarChartOutlined,
+    DesktopOutlined,
+    ScheduleOutlined,
+    CalculatorOutlined,
+    UserOutlined,
     WalletOutlined,
-    BuildOutlined 
+    BuildOutlined
 } from '@ant-design/icons';
 import React from 'react';
 
@@ -41,29 +41,20 @@ const getNavList = () => {
             label: '店铺管理'
         },
         {
-            key: '',
+            key: '/sku',
             icon: <LayoutOutlined />,
             label: '商品管理',
-            children: [
-                {
-                    key: '/sku',
-                    icon: <LayoutOutlined />,
-                    label: '商品管理'
-                },
-                {
-                    key: '/sku/task',
-                    icon: <LayoutOutlined />,
-                    label: '任务管理'
-                },
-                
-            ]
         },
+        {
+            key: '/sku/task',
+            icon: <LayoutOutlined />,
+            label: '任务管理'
+        }
         // {
         //     key: '/shop2',
         //     icon: <LayoutOutlined />,
         //     label: '店铺管理2'
         // },
-        
     ]
 }
 
