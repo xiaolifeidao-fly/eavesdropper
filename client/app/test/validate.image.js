@@ -76,50 +76,50 @@ async function getBrowserContext(){
     //   bypassCSP: true,
     // });
     const page = await browser.newPage();
-    // await page.goto('file:///Users/fly/Documents/develop/project/develop/private/eavesdropper/client/resource/validate_image.html?iframeUrl=aHR0cHM6Ly9zdHJlYW0tdXBsb2FkLnRhb2Jhby5jb206NDQzLy9hcGkvdXBsb2FkLmFwaS9fX19fX3RtZF9fX19fL3B1bmlzaD94NXNlY2RhdGE9eGQyZjc3NzQyY2QxNTk5ZmQxNGQ5NDg0ODdhYTdlN2IzZDExNDU5Y2Y5ZWMxYTExNzgxNzQyMzcyNDU5YTE4NTUxNDQxMzhhMzcyNzU5NDAzYWJhYWMyZG4yMjE5NDg5MzU0NzUxamNhcHB1enpsZV9fYnhfX3N0cmVhbS11cGxvYWQudGFvYmFvLmNvbSUzQTQ0MyUyRmFwaSUyRnVwbG9hZC5hcGkmeDVzdGVwPTImYWN0aW9uPWNhcHRjaGFjYXBwdXp6bGUmcHVyZUNhcHRjaGE9');
-    const validateUrl = "https://error.item.taobao.com/error/noitem?itemid=811803022077";
-    const validateParams = {
-        dialogSize : {
-            "width" : 800,
-            "height" : 800
-        }
-      }
-    let url = "file:///Users/fly/Documents/develop/project/develop/private/eavesdropper/client/resource/validate_image.html?iframeUrl=" + encodeBase64(validateUrl);
-    url += "&validateParams=" + encodeBase64(JSON.stringify(validateParams));
+    await page.goto('file:///Users/fly/Documents/develop/project/develop/private/eavesdropper/client/resource/validate_image.html?iframeUrl=aHR0cHM6Ly9zdHJlYW0tdXBsb2FkLnRhb2Jhby5jb206NDQzLy9hcGkvdXBsb2FkLmFwaS9fX19fX3RtZF9fX19fL3B1bmlzaD94NXNlY2RhdGE9eGQyZjc3NzQyY2QxNTk5ZmQxNGQ5NDg0ODdhYTdlN2IzZDExNDU5Y2Y5ZWMxYTExNzgxNzQyMzcyNDU5YTE4NTUxNDQxMzhhMzcyNzU5NDAzYWJhYWMyZG4yMjE5NDg5MzU0NzUxamNhcHB1enpsZV9fYnhfX3N0cmVhbS11cGxvYWQudGFvYmFvLmNvbSUzQTQ0MyUyRmFwaSUyRnVwbG9hZC5hcGkmeDVzdGVwPTImYWN0aW9uPWNhcHRjaGFjYXBwdXp6bGUmcHVyZUNhcHRjaGE9');
+    // const validateUrl = "https://error.item.taobao.com/error/noitem?itemid=811803022077";
+    // const validateParams = {
+    //     dialogSize : {
+    //         "width" : 800,
+    //         "height" : 800
+    //     }
+    //   }
+    // let url = "file:///Users/fly/Documents/develop/project/develop/private/eavesdropper/client/resource/validate_image.html?iframeUrl=" + encodeBase64(validateUrl);
+    // url += "&validateParams=" + encodeBase64(JSON.stringify(validateParams));
 
     await page.goto(url);
     await page.waitForTimeout(5000);
     const frame = await getFrame(page);
-    const slider = frame.locator("#nc_1_n1z").first(); // 选择要截图的元素
-    if (slider) {
-        const sliderBox = await slider.boundingBox();
-        console.log("sliderBox x ====", sliderBox);
-        if(!sliderBox){
-            return;
-        }
-        const trackBox = frame.locator("#nc_1__scale_text").first();
-        const trackBoxBoundingBox = await trackBox.boundingBox();
-        console.log("trackBoxBoundingBox ====", trackBoxBoundingBox);
-        //随机5位小数 值为0.    
-        const startX = sliderBox.x + sliderBox.width / 2;// 起始位置的 X 坐标
-        const startY = sliderBox.y + sliderBox.height / 2; // 起始位置的 Y 坐标
+    // const slider = frame.locator("#nc_1_n1z").first(); // 选择要截图的元素
+    // if (slider) {
+    //     const sliderBox = await slider.boundingBox();
+    //     console.log("sliderBox x ====", sliderBox);
+    //     if(!sliderBox){
+    //         return;
+    //     }
+    //     const trackBox = frame.locator("#nc_1__scale_text").first();
+    //     const trackBoxBoundingBox = await trackBox.boundingBox();
+    //     console.log("trackBoxBoundingBox ====", trackBoxBoundingBox);
+    //     //随机5位小数 值为0.    
+    //     const startX = sliderBox.x + sliderBox.width / 2;// 起始位置的 X 坐标
+    //     const startY = sliderBox.y + sliderBox.height / 2; // 起始位置的 Y 坐标
 
-        // 计算滑动距离 - 每次尝试使用略微不同的距离
-        //生成5位随机小数
-        const random = Math.random();
-        const random5 = random.toFixed(5);
+    //     // 计算滑动距离 - 每次尝试使用略微不同的距离
+    //     //生成5位随机小数
+    //     const random = Math.random();
+    //     const random5 = random.toFixed(5);
 
-        let endX = trackBoxBoundingBox.x + trackBoxBoundingBox.width - 2 - random5;
-        // 确保不会滑过头
-        const distance = Math.max(10, Math.min(endX - startX, trackBoxBoundingBox.width * 0.95)) + 50;
-        console.log("distance ====", distance);
-        endX = startX + distance;
-        await simulateHumanPresenceSimple(page, sliderBox.x, sliderBox.y);
+    //     let endX = trackBoxBoundingBox.x + trackBoxBoundingBox.width - 2 - random5;
+    //     // 确保不会滑过头
+    //     const distance = Math.max(10, Math.min(endX - startX, trackBoxBoundingBox.width * 0.95)) + 50;
+    //     console.log("distance ====", distance);
+    //     endX = startX + distance;
+    //     await simulateHumanPresenceSimple(page, sliderBox.x, sliderBox.y);
 
-        await slideSlider(page, {x: startX, y: startY}, {x: endX, y: startY});
-    }
+    //     await slideSlider(page, {x: startX, y: startY}, {x: endX, y: startY});
+    // }
 
-    // await validateByPuzzleCaptcha(page, frame);
+    await validateByPuzzleCaptcha(page, frame);
     // await handleSliderVerificationInFrame(page, frame);
 })();
 
