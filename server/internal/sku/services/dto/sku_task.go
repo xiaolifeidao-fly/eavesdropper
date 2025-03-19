@@ -44,6 +44,10 @@ func GetSkuTaskStatusEnum(status string) *SkuTaskStatusEnum {
 	return nil
 }
 
+func GetSkuTaskStatusEnums() []*SkuTaskStatusEnum {
+	return []*SkuTaskStatusEnum{SkuTaskStatusPending, SkuTaskStatusRunning, SkuTaskStatusDone, SkuTaskStatusFailed}
+}
+
 type SkuTaskDTO struct {
 	dto.BaseDTO
 	UserID            uint64 `json:"userId"`
@@ -75,6 +79,7 @@ type SkuTaskPageParamDTO struct {
 	UserId     uint64 `search:"type:eq;table:sku_task;column:user_id"`
 	Account    string `search:"type:eq;table:resource;column:account"`
 	Source     string `search:"type:eq;table:sku_task;column:source"`
+	Status     string `search:"type:eq;table:sku_task;column:status"`
 	_          string `search:"type:order;table:sku_task;column:id;default:desc"`
 	_          any    `search:"type:isNull;table:sku_task;column:deleted_at"`
 	_          any    `search:"type:isNull;table:shop;column:deleted_at"`

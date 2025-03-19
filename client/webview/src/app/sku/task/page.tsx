@@ -6,7 +6,7 @@ import Layout from '@/components/layout';
 import styles from './index.module.less';
 
 import useRefreshPage from '@/components/RefreshPage'
-import { getSkuTaskPage as getSkuTaskPageApi } from '@api/sku/skuTask.api';
+import { getSkuTaskPage as getSkuTaskPageApi, GetSkuTaskStatusLabelValue } from '@api/sku/skuTask.api';
 import { getResourceSourceList } from '@api/resource/resource.api';
 import { transformArrayToObject } from '@utils/convert'
 import { SkuTaskStatus } from '@model/sku/skuTask'
@@ -20,6 +20,7 @@ export default function SkuTaskManage() {
   const { refreshPage } = useRefreshPage();
 
   const [sourceMap, setSourceMap] = useState<Record<string, any>>();
+  const [statusMap, setStatusMap] = useState<Record<string, any>>();
   const [showItemList, setShowItemList] = useState<boolean>(false)
   const [showTaskId, setShowTaskId] = useState<number>(0)
 
@@ -27,6 +28,10 @@ export default function SkuTaskManage() {
     getResourceSourceList().then(resp => {
       const result = transformArrayToObject(resp)
       setSourceMap(result)
+    })
+    GetSkuTaskStatusLabelValue().then(resp => {
+      const result = transformArrayToObject(resp)
+      setStatusMap(result)
     })
   }, [])
 
@@ -84,9 +89,11 @@ export default function SkuTaskManage() {
     },
     {
       title: '状态',
-      search: false,
+      search: true,
       key: 'status',
       align: 'center',
+      valueType: 'select',
+      valueEnum: statusMap,
       render: (_, record) => {
         return (
           <Tag color={record.statusLableValue.color}>

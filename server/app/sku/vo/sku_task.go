@@ -58,6 +58,7 @@ type SkuTaskPageReq struct {
 	UserID  uint64 `form:"userId"`
 	Account string `form:"account"`
 	Source  string `form:"source"`
+	Status  string `form:"status"`
 }
 
 type SkuTaskPageResp struct {

@@ -8,7 +8,7 @@ import {
   SkuTaskPageReq,
   SkuTaskPageResp
 } from '@model/sku/skuTask'
-import { BasePageResp } from '@model/base/base'
+import { BasePageResp, LabelValue } from '@model/base/base'
 
 // 添加任务
 export const addSkuTask = async (req: AddSkuTaskReq) => {
@@ -40,4 +40,10 @@ export const initSkuStep = async (stepKey: string, resourceId: number, groupCode
 export const getSkuTaskPage = async (req: SkuTaskPageReq) => {
   const result = await instance.get(`/sku/task/page`, { params: req })
   return plainToClass(BasePageResp<SkuTaskPageResp>, result)
+}
+
+// 分页获取商品任务
+export const GetSkuTaskStatusLabelValue = async () => {
+  const result = await instance.get('/sku/task/status/enums')
+  return plainToClass(Array<LabelValue>, result)
 }

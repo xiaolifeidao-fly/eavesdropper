@@ -28,6 +28,7 @@ func LoadSkuTaskRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).POST("/steps/:resourceId/:groupCode/:stepKey/init", InitSkuStep)
 		r.Use(middleware.Authorization()).POST("/steps/save", SaveSkuTaskStep)
 		r.Use(middleware.Authorization()).GET("/page", PageSkuTask)
+		r.Use(middleware.Authorization()).GET("/status/enums", GetSkuTaskStatusLabelValue)
 	}
 }
 
@@ -73,7 +74,6 @@ func SaveSkuTaskStep(ctx *gin.Context) {
 	controller.OK(ctx, result)
 }
 
-// AddSkuTask
 // AddSkuTask
 // @Description 添加任务
 func AddSkuTask(ctx *gin.Context) {
@@ -167,4 +167,11 @@ func PageSkuTask(ctx *gin.Context) {
 	}
 
 	controller.OK(ctx, page.BuildPage(pageDTO.PageInfo, pageData))
+}
+
+// GetSkuTaskStatusLabelValue
+// @Description 获取任务状态枚举
+// @Router /sku/task/status/enums [get]
+func GetSkuTaskStatusLabelValue(ctx *gin.Context) {
+	controller.OK(ctx, dto.GetSkuTaskStatusEnums())
 }
