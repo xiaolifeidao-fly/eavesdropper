@@ -35,10 +35,13 @@ function copyToClipboard(inputText: string): Promise<void> {
 const SkuTaskItemList = (props: SkuTaskItemListProp) => {
 
   const [itemList, setItemList] = useState<any[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     getSkuTaskItemByTaskId(props.taskId).then(resp => {
       setItemList(resp)
+    }).finally(() => {
+      setLoading(false)
     })
   }, [props.taskId])
 
@@ -113,7 +116,7 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
               style={{ display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
               onClick={async () => {
                 try {
-                  await copyToClipboard(record.url || '')
+                  await copyToClipboard(record.newSkuUrl || '')
                   message.success('复制成功')
                 } catch (error) {
                   console.error(error)
@@ -130,7 +133,7 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
   ]
 
   return <>
-    <Table rowKey="id" columns={columns} dataSource={itemList} />
+    <Table rowKey="id" columns={columns} dataSource={itemList} loading={loading}/>
   </>
 }
 
