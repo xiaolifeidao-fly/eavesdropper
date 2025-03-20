@@ -322,37 +322,19 @@ export class MbSkuApiImpl extends MbSkuApi {
     async batchPublishSkus(publishResourceId : number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls : string[]) : Promise<SkuTask|undefined>{
         // 1. 创建task记录
         const count = skuUrls.length;
-        const priceRate = publishConfig.priceRate;
-        const req = new AddSkuTaskReq(count, publishResourceId, skuSource,  "", priceRate);
-        const taskId = await addSkuTask(req) as number;
-
         const taskApi = new TaskApi()
-        log.info('------<>--------')
-        await taskApi.startTask(taskId)
-        log.info('------<>--------')
+        let skuTask = new SkuTask(0, SkuTaskStatus.PENDING, count, publishResourceId, skuSource, publishConfig);
+        skuTask = await taskApi.startTask(skuTask)
 
-        const skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId, skuSource, publishConfig);
         // 异步操作
         this.asyncBatchPublishSku(skuTask, skuUrls);
         //返回任务
         return skuTask;
     }
 
-    async isTaskStop(taskId: number): Promise<boolean> {
-        const store = new StoreApi();
-        const taskKey = `task_${taskId}`;
-        const taskStoreStatus = await store.getItem(taskKey);
-        log.info('taskStoreStatus: ', taskStoreStatus)
-        return !taskStoreStatus
-    }
-
-    async removeTaskFlag(taskId: number) {
-        const store = new StoreApi();
-        const taskKey = `task_${taskId}`;
-        await store.removeItem(taskKey);
-    }
-
     async asyncBatchPublishSku(task : SkuTask, skuUrls : string[]) : Promise<void>{
+        const taskApi = new TaskApi()
+
         let taskStatus = SkuTaskStatus.RUNNING;
         const statistic = new SkuPublishStatitic(task.id, task.count, 0, 0, taskStatus);
 
@@ -367,7 +349,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             for(;i < skuUrls.length; i++){
                 // 模拟延迟
                 // await new Promise(resolve => setTimeout(resolve, 1000));
-                if(await this.isTaskStop(task.id)){
+                if(await taskApi.isTaskStop(task.id)){
                     taskStatus = SkuTaskStatus.DONE;
                     break;
                 }
@@ -412,7 +394,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             statistic.status = taskStatus;
             this.send("onPublishSkuMessage", undefined, statistic); // 发送进度
         } finally {
-            await this.removeTaskFlag(task.id)
+            await taskApi.removeTaskFlag(task.id)
             for (;i<skuUrls.length;i++){
                 let itemStatus = SkuTaskItemStatus.CANCEL;
                 if (taskStatus == SkuTaskStatus.ERROR){
