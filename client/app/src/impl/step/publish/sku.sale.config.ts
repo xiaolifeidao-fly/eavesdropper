@@ -487,34 +487,34 @@ export class RebuildSalePro{
 
     async assignOtherSaleAttrs(saleMappers : SaleMapper[], unAssignSaleAttrs : SalesAttr[]){
         const allowAssignSaleMappers = this.getAllowAssignSaleMappers(saleMappers, unAssignSaleAttrs);
-            log.info("allowAssignSaleMappers is ", allowAssignSaleMappers);
-            if(allowAssignSaleMappers.length == 0){
-                log.warn(`未找到能分配的 subItem`);
-                return [];
-            }
-            const needMergeSaleAttrs : SalesAttr[] = [];
-            let needMegerSaleMapper = undefined;
-            for(let i = 0; i < unAssignSaleAttrs.length; i++){
-                const unAssignSaleAttr = unAssignSaleAttrs[i];
-                if(this.allowMerge(allowAssignSaleMappers, unAssignSaleAttrs.length, i)){
-                    needMergeSaleAttrs.push(unAssignSaleAttr);
-                    if(!needMegerSaleMapper){
-                        needMegerSaleMapper = allowAssignSaleMappers[i];
-                    }
-                    continue;
+        log.info("allowAssignSaleMappers is ", allowAssignSaleMappers);
+        if(allowAssignSaleMappers.length == 0){
+            log.warn(`未找到能分配的 subItem`);
+            return [];
+        }
+        const needMergeSaleAttrs : SalesAttr[] = [];
+        let needMegerSaleMapper = undefined;
+        for(let i = 0; i < unAssignSaleAttrs.length; i++){
+            const unAssignSaleAttr = unAssignSaleAttrs[i];
+            if(this.allowMerge(allowAssignSaleMappers, unAssignSaleAttrs.length, i)){
+                needMergeSaleAttrs.push(unAssignSaleAttr);
+                if(!needMegerSaleMapper){
+                    needMegerSaleMapper = allowAssignSaleMappers[i];
                 }
-                unAssignSaleAttr.oldPid = unAssignSaleAttr.pid;
-                const saleMapper = allowAssignSaleMappers[i];
-                unAssignSaleAttr.pid = saleMapper.subItem.name.split("-")[1];
-                saleMapper.hadAssign = true;
-                saleMapper.matchFlag = true;
-                saleMapper.saleAttr = unAssignSaleAttr;
-                saleMapper.salePid = unAssignSaleAttr.oldPid;
+                continue;
             }
-            log.info("needMergeSaleAttrs is ", needMergeSaleAttrs);
-            if(needMergeSaleAttrs.length > 0 && needMegerSaleMapper){
-               this.mergeSaleProp(needMergeSaleAttrs, needMegerSaleMapper);
-            }
+            unAssignSaleAttr.oldPid = unAssignSaleAttr.pid;
+            const saleMapper = allowAssignSaleMappers[i];
+            unAssignSaleAttr.pid = saleMapper.subItem.name.split("-")[1];
+            saleMapper.hadAssign = true;
+            saleMapper.matchFlag = true;
+            saleMapper.saleAttr = unAssignSaleAttr;
+            saleMapper.salePid = unAssignSaleAttr.oldPid;
+        }
+        log.info("needMergeSaleAttrs is ", needMergeSaleAttrs);
+        if(needMergeSaleAttrs.length > 0 && needMegerSaleMapper){
+            this.mergeSaleProp(needMergeSaleAttrs, needMegerSaleMapper);
+        }
     }
 
 
@@ -595,8 +595,56 @@ export class RebuildSalePro{
                 }
             }
         }
+        await this.fixImage(saleMappers);
         await this.fillSale(doorSkuSaleInfo, saleMappers, minPrice);
         return saleMappers;
+    }
+
+    async fixImage(saleMappers : SaleMapper[]){
+        const imageSaleMappers : SaleMapper[] = [];
+        for(const saleMapper of saleMappers){
+            if(!saleMapper.hadAssign){
+                continue;
+            }
+            const subItem = saleMapper.subItem;
+            if(subItem.showUploadImage){
+                const saleAttr = saleMapper.saleAttr;
+                if(saleAttr){
+                    this.initImageNum(saleAttr);
+                }
+                imageSaleMappers.push(saleMapper);
+            }
+        }
+        log.info("imageSaleMappers.length is ", imageSaleMappers.length);
+        let distinctImageIndex : number = 0;
+        let currentDistinctImageNum : number = 0;
+        for(let i = 0; i < imageSaleMappers.length; i++){
+            const saleMapper = imageSaleMappers[i];
+            const saleAttr = saleMapper.saleAttr;
+            if(!saleAttr){
+                continue;
+            }
+            const distinctImageNum = saleAttr.distinctImageNum;
+            if(distinctImageNum > currentDistinctImageNum){
+                distinctImageIndex = i;
+                currentDistinctImageNum = distinctImageNum;
+            }
+        }
+        log.info("distinctImageIndex is ", distinctImageIndex); 
+        log.info("currentDistinctImageNum is ", currentDistinctImageNum);
+        for(let i = 0; i < imageSaleMappers.length; i++){
+            if(i == distinctImageIndex){
+                continue;
+            }
+            const saleMapper = imageSaleMappers[i];
+            const saleAttr = saleMapper.saleAttr;
+            if(!saleAttr){
+                continue;
+            }
+            for(const value of saleAttr.values){
+                value.image = "";
+            }
+        }
     }
 
     isAssignRequired(saleMappers : SaleMapper[], subItem : { [key: string]: any }) {
