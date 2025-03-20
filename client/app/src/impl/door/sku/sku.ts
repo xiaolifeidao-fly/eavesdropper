@@ -411,6 +411,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             }
             // 更新任务状态
             const req = new UpdateSkuTaskReq(taskStatus, taskRemark, taskItems);
+            log.info('UpdateSkuTaskReq: ', taskItems)
             await updateSkuTask(task.id, req);
         }
         return
