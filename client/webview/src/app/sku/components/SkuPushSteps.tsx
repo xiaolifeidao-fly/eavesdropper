@@ -52,9 +52,9 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   }
 
   const onCancel = () => {
-    if (taskId > 0) {
-      store.removeItem(`task_${taskId}`);
-    }
+    // if (taskId > 0) {
+    //   store.removeItem(`task_${taskId}`);
+    // }
     props.setVisible(false);
     setTaskId(0);
     setCurrent(0);

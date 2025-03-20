@@ -11,6 +11,7 @@ import { getResourceSourceList } from '@api/resource/resource.api';
 import { transformArrayToObject } from '@utils/convert'
 import { SkuTaskStatus } from '@model/sku/skuTask'
 import { SkuTaskItemList } from './components'
+import { TaskApi } from '@eleapi/door/task/task';
 
 const pollingTime = 5000
 
@@ -43,7 +44,9 @@ export default function SkuTaskManage() {
 
   // 停止任务
   const handleStop = (taskId: number) => {
-    message.success(`停止任务: ${taskId}`)
+    const taskApi = new TaskApi()
+    taskApi.stop(taskId)
+    message.success('停止任务成功')
   }
 
   // 重新发布
@@ -144,7 +147,7 @@ export default function SkuTaskManage() {
             >
               查看
             </Button>
-            {record.status === SkuTaskStatus.RUNNING ? ( // 如果状态是 running，显示停止按钮
+            {record.status === SkuTaskStatus.RUNNING || record.status === SkuTaskStatus.PENDING ? ( // 如果状态是 running，显示停止按钮
               <Button
                 type="link"
                 onClick={() => handleStop(record.id)} // 停止操作
@@ -157,6 +160,7 @@ export default function SkuTaskManage() {
                 type="link"
                 onClick={() => handleRepublish(record.id)} // 重新发布操作
                 style={{ color: '#52c41a', display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
+                disabled
               >
                 重新发布
               </Button>

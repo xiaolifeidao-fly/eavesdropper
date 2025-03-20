@@ -34,6 +34,7 @@ import { PddSkuPublishHandler, SkuPublishHandler } from "@src/impl/step/publish/
 import { getUrlParameter } from "@utils/url.util";
 import { PDD, TB } from "@enums/source";
 import { StepHandler } from "@src/impl/step/step.base";
+import { TaskApi } from "@eleapi/door/task/task";
 export class MbSkuApiImpl extends MbSkuApi {
 
 
@@ -325,6 +326,11 @@ export class MbSkuApiImpl extends MbSkuApi {
         const req = new AddSkuTaskReq(count, publishResourceId, skuSource,  "", priceRate);
         const taskId = await addSkuTask(req) as number;
 
+        const taskApi = new TaskApi()
+        log.info('------<>--------')
+        await taskApi.startTask(taskId)
+        log.info('------<>--------')
+
         const skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId, skuSource, publishConfig);
         // 异步操作
         this.asyncBatchPublishSku(skuTask, skuUrls);
@@ -332,32 +338,41 @@ export class MbSkuApiImpl extends MbSkuApi {
         return skuTask;
     }
 
+    async isTaskStop(taskId: number): Promise<boolean> {
+        const store = new StoreApi();
+        const taskKey = `task_${taskId}`;
+        const taskStoreStatus = await store.getItem(taskKey);
+        log.info('taskStoreStatus: ', taskStoreStatus)
+        return !taskStoreStatus
+    }
+
+    async removeTaskFlag(taskId: number) {
+        const store = new StoreApi();
+        const taskKey = `task_${taskId}`;
+        await store.removeItem(taskKey);
+    }
+
     async asyncBatchPublishSku(task : SkuTask, skuUrls : string[]) : Promise<void>{
         let taskStatus = SkuTaskStatus.RUNNING;
         const statistic = new SkuPublishStatitic(task.id, task.count, 0, 0, taskStatus);
 
-        // 设置任务状态为进行中
-        const store = new StoreApi();
-        const taskKey = `task_${task.id}`;
-        await store.setItem(taskKey, true);
-
         let progress = 0;
         let taskRemark = "";
         let taskItems: AddSkuTaskItemReq[] = [];
+
+        await new Promise(resolve => setTimeout(resolve, 60*1000));
 
         let i = 0;
         try {
             for(;i < skuUrls.length; i++){
                 // 模拟延迟
                 // await new Promise(resolve => setTimeout(resolve, 1000));
-
-                const skuUrl = skuUrls[i];
-                const taskStoreStatus = await store.getItem(taskKey);
-                if(!taskStoreStatus){
+                if(await this.isTaskStop(task.id)){
                     taskStatus = SkuTaskStatus.DONE;
                     break;
                 }
 
+                const skuUrl = skuUrls[i];
                 const taskItem = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.SUCCESS, task.source, taskRemark);
 
                 //发布商品
@@ -397,7 +412,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             statistic.status = taskStatus;
             this.send("onPublishSkuMessage", undefined, statistic); // 发送进度
         } finally {
-            await store.removeItem(taskKey);
+            await this.removeTaskFlag(task.id)
             for (;i<skuUrls.length;i++){
                 let itemStatus = SkuTaskItemStatus.CANCEL;
                 if (taskStatus == SkuTaskStatus.ERROR){
