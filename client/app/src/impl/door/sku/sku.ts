@@ -2,7 +2,6 @@
 import {  InvokeType, Protocols } from "@eleapi/base";
 import { MbShopDetailMonitorChain } from "@src/door/monitor/mb/sku/md.sku.info.monitor";
 import { MbSkuApi } from "@eleapi/door/sku/mb.sku";
-import { StoreApi } from "@eleapi/store/store";
 import { formatDate } from "@utils/date";
 import { MbEngine } from "@src/door/mb/mb.engine";
 import { addSku, checkSkuExistence } from "@api/sku/sku.api";
@@ -35,6 +34,7 @@ import { getUrlParameter } from "@utils/url.util";
 import { PDD, TB } from "@enums/source";
 import { StepHandler } from "@src/impl/step/step.base";
 import { TaskApi } from "@eleapi/door/task/task";
+import { TaskApiImpl } from "../task/task";
 export class MbSkuApiImpl extends MbSkuApi {
 
 
@@ -322,7 +322,7 @@ export class MbSkuApiImpl extends MbSkuApi {
     async batchPublishSkus(publishResourceId : number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls : string[]) : Promise<SkuTask|undefined>{
         // 1. 创建task记录
         const count = skuUrls.length;
-        const taskApi = new TaskApi()
+        const taskApi = new TaskApiImpl();
         let skuTask = new SkuTask(0, SkuTaskStatus.PENDING, count, publishResourceId, skuSource, publishConfig);
         skuTask = await taskApi.startTask(skuTask)
 
@@ -333,7 +333,7 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
     async asyncBatchPublishSku(task : SkuTask, skuUrls : string[]) : Promise<void>{
-        const taskApi = new TaskApi()
+        const taskApi = new TaskApiImpl();
 
         let taskStatus = SkuTaskStatus.RUNNING;
         const statistic = new SkuPublishStatitic(task.id, task.count, 0, 0, taskStatus);
@@ -341,8 +341,6 @@ export class MbSkuApiImpl extends MbSkuApi {
         let progress = 0;
         let taskRemark = "";
         let taskItems: AddSkuTaskItemReq[] = [];
-
-        await new Promise(resolve => setTimeout(resolve, 60*1000));
 
         let i = 0;
         try {

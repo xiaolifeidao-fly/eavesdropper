@@ -47,6 +47,7 @@ export default function SkuTaskManage() {
     const taskApi = new TaskApi()
     taskApi.stop(taskId)
     message.success('停止任务成功')
+    refreshPage(actionRef, false)
   }
 
   // 重新发布
