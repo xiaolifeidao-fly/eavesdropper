@@ -11,11 +11,11 @@ import (
 	"server/internal/sku/services/dto"
 )
 
-func BatchAddSkuTaskItem(addSkuTaskItemDTOs []*dto.AddSkuTaskItemDTO) error {
+func BatchAddSkuTaskItem(addSkuTaskItemDTOs []*dto.AddSkuTaskItemDTO) ([]*dto.SkuTaskItemDTO, error) {
 	var err error
 
 	if len(addSkuTaskItemDTOs) == 0 {
-		return nil
+		return nil, nil
 	}
 
 	itemDTOs := make([]*dto.SkuTaskItemDTO, 0)
@@ -27,11 +27,11 @@ func BatchAddSkuTaskItem(addSkuTaskItemDTOs []*dto.AddSkuTaskItemDTO) error {
 		itemDTOs = append(itemDTOs, &itemDTO)
 	}
 
-	if _, err = batchSaveSkuTaskItem(itemDTOs); err != nil {
-		return err
+	if itemDTOs, err = batchSaveSkuTaskItem(itemDTOs); err != nil {
+		return nil, err
 	}
 
-	return nil
+	return itemDTOs, nil
 }
 
 func batchSaveSkuTaskItem(itemDTOs []*dto.SkuTaskItemDTO) ([]*dto.SkuTaskItemDTO, error) {

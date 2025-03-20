@@ -15,7 +15,12 @@ export class TaskApiImpl extends TaskApi {
     const req = new AddSkuTaskReq(count, publishResourceId, skuSource, '', publishConfig.priceRate)
     const taskId = (await addSkuTask(req)) as number
 
-    let skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId, skuSource, publishConfig)
+    let taskItems: AddSkuTaskItemReq[] = []
+    for (let i = 0; i < skuUrls.length; i++) {
+      const item = new AddSkuTaskItemReq(0, skuUrls[0], SkuTaskItemStatus.PENDING, skuSource)
+      taskItems.push(item)
+    }
+    let skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId, skuSource, publishConfig, taskItems)
     this.setTaskStartFlag(skuTask.id, true)
 
     // 异步执行任务

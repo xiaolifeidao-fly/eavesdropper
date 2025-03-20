@@ -5,6 +5,7 @@ import (
 	"errors"
 	"server/common"
 	"server/common/base/page"
+	"server/common/converter"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
 	"server/internal/sku/models"
@@ -12,27 +13,37 @@ import (
 	"server/internal/sku/services/dto"
 )
 
-func CreateSkuTask(skuTaskDTO *dto.SkuTaskDTO) (uint64, error) {
+func CreateSkuTask(addSkuTaskDTO *dto.AddSkuTaskDTO) (*dto.SkuTaskDTO, error) {
 	var err error
 
+	skuTaskDTO := converter.ToDTO[dto.SkuTaskDTO](addSkuTaskDTO)
 	if skuTaskDTO, err = saveSkuTask(skuTaskDTO); err != nil {
-		return 0, err
+		return nil, err
 	}
 
-	return skuTaskDTO.ID, nil
+	for _, item := range addSkuTaskDTO.Items {
+		item.TaskId = skuTaskDTO.ID
+	}
+
+	var taskItems []*dto.SkuTaskItemDTO
+	if taskItems, err = BatchAddSkuTaskItem(addSkuTaskDTO.Items); err != nil {
+		return nil, err
+	}
+	skuTaskDTO.Items = taskItems
+	return skuTaskDTO, nil
 }
 
-func UpdateSkuTask(skuTaskUpdateDTO *dto.UpdateSkuTaskDTO) error {
+func UpdateSkuTask(skuTaskUpdateDTO *dto.UpdateSkuTaskDTO) (*dto.SkuTaskDTO, error) {
 	var err error
 
 	taskID := skuTaskUpdateDTO.ID
 	skuTaskDTO, err := getSkuTask(taskID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if skuTaskDTO.ID <= 0 {
-		return errors.New("任务不存在")
+		return nil, errors.New("任务不存在")
 	}
 
 	skuTaskDTO.Status = skuTaskUpdateDTO.Status
@@ -40,7 +51,7 @@ func UpdateSkuTask(skuTaskUpdateDTO *dto.UpdateSkuTaskDTO) error {
 	skuTaskDTO.UpdatedBy = common.GetLoginUserID()
 
 	if _, err = updateSkuTask(skuTaskDTO); err != nil {
-		return err
+		return nil, err
 	}
 
 	for _, item := range skuTaskUpdateDTO.Items {
@@ -48,11 +59,12 @@ func UpdateSkuTask(skuTaskUpdateDTO *dto.UpdateSkuTaskDTO) error {
 	}
 
 	// 更新任务项
-	if err = BatchAddSkuTaskItem(skuTaskUpdateDTO.Items); err != nil {
-		return err
+	var taskItems []*dto.SkuTaskItemDTO
+	if taskItems, err = BatchAddSkuTaskItem(skuTaskUpdateDTO.Items); err != nil {
+		return nil, err
 	}
-
-	return nil
+	skuTaskDTO.Items = taskItems
+	return skuTaskDTO, nil
 }
 
 func saveSkuTask(skuTaskDTO *dto.SkuTaskDTO) (*dto.SkuTaskDTO, error) {

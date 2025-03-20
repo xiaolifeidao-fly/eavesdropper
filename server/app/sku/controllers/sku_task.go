@@ -86,8 +86,7 @@ func AddSkuTask(ctx *gin.Context) {
 		return
 	}
 
-	var taskID uint64
-	taskDTO := converter.ToDTO[dto.SkuTaskDTO](&req)
+	taskDTO := converter.ToDTO[dto.AddSkuTaskDTO](&req)
 	if req.PriceRange != nil {
 		priceRangeByte, _ := json.Marshal(req.PriceRange)
 		taskDTO.PriceRate = string(priceRangeByte)
@@ -96,12 +95,13 @@ func AddSkuTask(ctx *gin.Context) {
 	taskDTO.UserID = common.GetLoginUserID()
 	taskDTO.CreatedBy = common.GetLoginUserID()
 	taskDTO.UpdatedBy = common.GetLoginUserID()
-	if taskID, err = services.CreateSkuTask(taskDTO); err != nil {
+	var skuTaskDTO *dto.SkuTaskDTO
+	if skuTaskDTO, err = services.CreateSkuTask(taskDTO); err != nil {
 		logger.Errorf("AddSkuTask failed, with error is %v", err)
 		controller.Error(ctx, err.Error())
 		return
 	}
-	controller.OK(ctx, taskID)
+	controller.OK(ctx, skuTaskDTO)
 }
 
 // UpdateSkuTask
@@ -116,15 +116,14 @@ func UpdateSkuTask(ctx *gin.Context) {
 		return
 	}
 
+	var skuTaskDTO *dto.SkuTaskDTO
 	updateTaskDTO := converter.ToDTO[dto.UpdateSkuTaskDTO](&req)
-	if err = services.UpdateSkuTask(updateTaskDTO); err != nil {
+	if skuTaskDTO, err = services.UpdateSkuTask(updateTaskDTO); err != nil {
 		logger.Errorf("UpdateSkuTask failed, with error is %v", err)
 		controller.Error(ctx, err.Error())
 		return
 	}
-
-	logger.Infof("UpdateSkuTask req: %+v", req)
-	controller.OK(ctx, "更新成功")
+	controller.OK(ctx, skuTaskDTO)
 }
 
 // PageSkuTask

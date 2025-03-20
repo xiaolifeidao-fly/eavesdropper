@@ -4,7 +4,8 @@ export enum SkuTaskStatus {
   PENDING = 'pending',
   RUNNING = 'running',
   DONE = 'done',
-  ERROR = 'failed'
+  ERROR = 'failed',
+  STOP = 'stop'
 }
 
 export class SkuTask {
@@ -15,12 +16,14 @@ export class SkuTask {
     public publishResourceId: number,
     public source: string,
     public skuPublishConfig?: SkuPublishConfig,
+    public items?: AddSkuTaskItemReq[],
   ) {
     this.id = id
     this.status = status
     this.count = count
     this.publishResourceId = publishResourceId
     this.skuPublishConfig = skuPublishConfig
+    this.items = items
   }
 }
 
@@ -95,6 +98,7 @@ export class UpdateSkuTaskReq {
 }
 
 export enum SkuTaskItemStatus {
+  PENDING = 'pending',
   SUCCESS = 'success',
   FAILED = 'failed',
   CANCEL = 'cancel',

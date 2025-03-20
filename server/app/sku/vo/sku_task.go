@@ -22,6 +22,7 @@ type AddSkuTaskReq struct {
 	Remark            string                 `json:"remark"`
 	Source            string                 `json:"source"`
 	PriceRange        []*PriceRangeConfigReq `json:"priceRange"`
+	Items             []*AddSkuTaskItemReq   `json:"items"`
 }
 
 type UpdateSkuTaskReq struct {
@@ -45,7 +46,7 @@ func (r *UpdateSkuTaskReq) Validate() error {
 }
 
 type AddSkuTaskItemReq struct {
-	TaskID uint64 `json:"taskId" binding:"required"`
+	TaskID uint64 `json:"taskId"`
 	Url    string `json:"url" binding:"required"`
 	Status string `json:"status" binding:"required"`
 	Remark string `json:"remark"`

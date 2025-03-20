@@ -14,16 +14,18 @@ type SkuTaskStatusEnum struct {
 }
 
 var (
-	SkuTaskStatusPending *SkuTaskStatusEnum = &SkuTaskStatusEnum{"待执行", "pending", "blue"}
-	SkuTaskStatusRunning *SkuTaskStatusEnum = &SkuTaskStatusEnum{"执行中", "running", "green"}
+	SkuTaskStatusPending *SkuTaskStatusEnum = &SkuTaskStatusEnum{"待执行", "pending", "gray"}
+	SkuTaskStatusRunning *SkuTaskStatusEnum = &SkuTaskStatusEnum{"执行中", "running", "blue"}
 	SkuTaskStatusDone    *SkuTaskStatusEnum = &SkuTaskStatusEnum{"已完成", "done", "green"}
 	SkuTaskStatusFailed  *SkuTaskStatusEnum = &SkuTaskStatusEnum{"失败", "failed", "red"}
+	SkuTaskStatusStop    *SkuTaskStatusEnum = &SkuTaskStatusEnum{"已停止", "stop", "orange"}
 )
 
 func (s SkuTaskStatusEnum) Validate() error {
 	if s == *SkuTaskStatusPending ||
 		s == *SkuTaskStatusRunning ||
 		s == *SkuTaskStatusDone ||
+		s == *SkuTaskStatusStop ||
 		s == *SkuTaskStatusFailed {
 		return nil
 	}
@@ -45,18 +47,31 @@ func GetSkuTaskStatusEnum(status string) *SkuTaskStatusEnum {
 }
 
 func GetSkuTaskStatusEnums() []*SkuTaskStatusEnum {
-	return []*SkuTaskStatusEnum{SkuTaskStatusPending, SkuTaskStatusRunning, SkuTaskStatusDone, SkuTaskStatusFailed}
+	return []*SkuTaskStatusEnum{SkuTaskStatusPending, SkuTaskStatusRunning, SkuTaskStatusDone, SkuTaskStatusFailed, SkuTaskStatusStop}
 }
 
 type SkuTaskDTO struct {
 	dto.BaseDTO
-	UserID            uint64 `json:"userId"`
-	PublishResourceID uint64 `json:"publishResourceId"`
-	Status            string `json:"status"`
-	Remark            string `json:"remark"`
-	Count             int    `json:"count"`
-	PriceRate         string `json:"priceRate"`
-	Source            string `json:"source"`
+	UserID            uint64            `json:"userId"`
+	PublishResourceID uint64            `json:"publishResourceId"`
+	Status            string            `json:"status"`
+	Remark            string            `json:"remark"`
+	Count             int               `json:"count"`
+	PriceRate         string            `json:"priceRate"`
+	Source            string            `json:"source"`
+	Items             []*SkuTaskItemDTO `json:"items"`
+}
+
+type AddSkuTaskDTO struct {
+	dto.BaseDTO
+	UserID            uint64               `json:"userId"`
+	PublishResourceID uint64               `json:"publishResourceId"`
+	Status            string               `json:"status"`
+	Remark            string               `json:"remark"`
+	Count             int                  `json:"count"`
+	PriceRate         string               `json:"priceRate"`
+	Source            string               `json:"source"`
+	Items             []*AddSkuTaskItemDTO `json:"items"`
 }
 
 type PriceRangeConfigDTO struct {
