@@ -26,7 +26,7 @@ type AddSkuTaskReq struct {
 }
 
 type UpdateSkuTaskReq struct {
-	ID     uint64               `uri:"id" binding:"required"`
+	Id     uint64               `uri:"id"`
 	Status string               `json:"status" binding:"required"`
 	Remark string               `json:"remark"`
 	Items  []*AddSkuTaskItemReq `json:"items"`

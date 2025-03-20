@@ -84,6 +84,7 @@ export class TaskApiImpl extends TaskApi {
         if (progress % 200 == 0 || taskStatus === SkuTaskStatus.DONE) {
           // 更新任务状态
           const req = new UpdateSkuTaskReq(taskStatus, taskRemark, taskItems)
+          log.info('taskId: ', task.id, ' updateSkuTask req: ', req)
           await updateSkuTask(task.id, req)
           taskItems = []
         }
