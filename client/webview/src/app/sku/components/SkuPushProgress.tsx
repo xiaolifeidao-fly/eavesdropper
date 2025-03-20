@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Progress, Table, message, Tag, Button, Popover } from 'antd';
 import type { TableColumnsType } from 'antd';
 
-import { MbSkuApi } from '@eleapi/door/sku/mb.sku';
 import { SkuPublishResult } from "@model/sku/sku";
 import { SkuPublishStatitic, SkuPublishConfig } from "@model/sku/skuTask";
 import { SkuStatus } from "@model/sku/sku";
 import { SkuTask, SkuTaskStatus } from "@model/sku/skuTask";
+import { TaskApi } from '@eleapi/door/task/task';
 
 interface SkuPushInfo {
   key?: number;
@@ -43,7 +43,19 @@ interface OnPublishSkuMessageParam {
   statistic: SkuPublishStatitic
 }
 
-const mbSkuApi = new MbSkuApi();
+const ProgressTitle: React.FC<{ skuPushStatus: SkuTaskStatus | undefined }> = ({ skuPushStatus }) => {
+  let title = '正在发布商品,请稍等...'
+  if (skuPushStatus === undefined) {
+    title = '正在发布商品,请稍等...'
+  } else if (skuPushStatus === SkuTaskStatus.DONE) {
+    title = '商品发布完成'
+  } else if (skuPushStatus === SkuTaskStatus.ERROR) {
+    title = '商品发布失败'
+  }
+  return <p style={{ margin: '5px 0' }}>{title}</p>
+}
+
+const taskApi = new TaskApi();
 
 const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
 
@@ -51,6 +63,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
   const [pushCount, setPushCount] = useState(0);
   const [successCount, setSuccessCount] = useState(0);
   const [errorCount, setErrorCount] = useState(0);
+  const [skuPushStatus, setPushStatus] = useState<SkuTaskStatus|undefined>(undefined)
 
   const columns: TableColumnsType<SkuPushInfo> = [
     {
@@ -101,18 +114,21 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
   ];
 
   const onPublishSkuMessage: (param: OnPublishSkuMessageParam) => void = (param: OnPublishSkuMessageParam) => {
+    console.log("onPublishSkuMessage: ", param);
     const sku = param.sku;
     const statistic = param.statistic;
-    console.log("onPublishSkuMessage: ", sku, statistic);
     if (sku == undefined){
       if (statistic.status == SkuTaskStatus.ERROR){
-        props.onPublishFinish(true);
+        setPushStatus(SkuTaskStatus.ERROR)
+        message.error(statistic.remark ?? "异常错误");
+      } else if (statistic.status == SkuTaskStatus.DONE) {
+        setPushStatus(SkuTaskStatus.DONE)
       }
-      message.error("异常错误");
+      props.onPublishFinish(true);
       return;
     }
 
-    let status = SkuPushStatus.ERROR;
+    let status;
     switch (sku.status) {
       case SkuStatus.SUCCESS:
         setSuccessCount(prevCount => prevCount + 1);
@@ -140,6 +156,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     setPushCount(prevCount => prevCount + 1);
 
     if (statistic.status === SkuTaskStatus.DONE) {
+      setPushStatus(SkuTaskStatus.DONE)
       props.onPublishFinish(true);
     }
   };
@@ -157,12 +174,12 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     } 
 
     // 监听商品发布消息
-    mbSkuApi.onPublishSkuMessage(callback).then(() => {
+    taskApi.onPublishSkuMessage(callback).then(() => {
 
       const urls = props.urls.map(item => item.url);
 
       // 监听任务完成之后批量发布商品
-      mbSkuApi.batchPublishSkus(props.publishResourceId, props.publishConfig, props.skuSource, urls).then((task?: SkuTask) => {
+      taskApi.startTask(props.publishResourceId, props.publishConfig, props.skuSource, urls).then((task?: SkuTask) => {
         console.log("batchPublishSkus task: ", task);
         if (task) {
           props.setTaskId(task.id as number);
@@ -179,7 +196,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <p style={{ margin: '5px 0' }}>正在发布商品,请稍等...</p>
+        <ProgressTitle skuPushStatus={skuPushStatus} />
         <p style={{ margin: '5px 0' }}>
           已处理:{pushCount}/{props.urls.length}{successCount > 0 && <>,成功数:{successCount}</>}{errorCount > 0 && <>,失败数:{errorCount}</>}
         </p>
@@ -198,5 +215,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     </>
   )
 }
+
+
 
 export default SkuPushProgress;

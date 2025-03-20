@@ -54,13 +54,15 @@ export class SkuPublishStatitic {
     public totalNum: number,
     public successNum: number,
     public errorNum: number,
-    public status: string
+    public status: string,
+    public remark?: string
   ) {
     this.taskId = taskId
     this.totalNum = totalNum
     this.successNum = successNum
     this.errorNum = errorNum
     this.status = status
+    this.remark = remark
   }
 }
 

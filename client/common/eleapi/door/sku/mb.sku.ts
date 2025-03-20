@@ -22,10 +22,4 @@ export class MbSkuApi extends ElectronApi {
     async batchPublishSkus(publishResourceId : number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls : string[]) : Promise<SkuTask|undefined>{
         return await this.invokeApi("batchPublishSkus", publishResourceId, publishConfig, skuSource, skuUrls);
     }
-
-    @InvokeType(Protocols.TRRIGER)
-    async onPublishSkuMessage(callback : (sku : SkuPublishResult | undefined, statistic : SkuPublishStatitic) => void){
-        return await this.onMessage("onPublishSkuMessage",callback);
-    }
-
 }
