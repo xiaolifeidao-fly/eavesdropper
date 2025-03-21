@@ -6,14 +6,15 @@ import {
   SkuTaskStep,
   UpdateSkuTaskReq,
   SkuTaskPageReq,
-  SkuTaskPageResp
+  SkuTaskPageResp,
+  SkuTask
 } from '@model/sku/skuTask'
 import { BasePageResp, LabelValue } from '@model/base/base'
 
 // 添加任务
 export const addSkuTask = async (req: AddSkuTaskReq) => {
   const result = await instance.post(`/sku/task`, req)
-  return plainToClass(Number, result)
+  return plainToClass(SkuTask, result)
 }
 
 // 更新任务
