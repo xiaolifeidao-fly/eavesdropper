@@ -3,29 +3,46 @@ import log from 'electron-log'
 import { TaskApi } from '@eleapi/door/task/task'
 import { InvokeType, Protocols } from '@eleapi/base'
 import { StoreApi } from '@eleapi/store/store'
-import { AddSkuTaskItemReq, AddSkuTaskReq, SkuPublishConfig, SkuPublishStatitic, SkuTask, SkuTaskItemStatus, SkuTaskStatus, UpdateSkuTaskReq } from '@model/sku/skuTask'
+import { AddSkuTaskReq, SkuPublishConfig, SkuPublishStatitic, SkuTask, SkuTaskStatus, UpdateSkuTaskReq } from '@model/sku/skuTask'
+import { AddSkuTaskItemReq, SkuTaskItemStatus } from '@model/sku/sku-task-item'
 import { addSkuTask, updateSkuTask } from '@api/sku/skuTask.api'
 import { MbSkuApiImpl } from '../sku/sku'
 import { SkuStatus } from '@model/sku/sku'
 
+// 任务Map
+const taskMap = new Map<number, SkuTask>()
+
 export class TaskApiImpl extends TaskApi {
+  getTaskMap(): Map<number, SkuTask> {
+    return taskMap
+  }
+
+  @InvokeType(Protocols.INVOKE)
+  async getTask(taskId: number): Promise<SkuTask | undefined> {
+    return taskMap.get(taskId)
+  }
+
+  @InvokeType(Protocols.INVOKE)
+  async pushTask(skuTask: SkuTask) {
+    taskMap.set(skuTask.id, skuTask)
+  }
+
   @InvokeType(Protocols.INVOKE)
   async startTask(publishResourceId: number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls: string[]): Promise<SkuTask> {
     const count = skuUrls.length
-    const req = new AddSkuTaskReq(count, publishResourceId, skuSource, '', publishConfig.priceRate)
-    const taskId = (await addSkuTask(req)) as number
-
     let taskItems: AddSkuTaskItemReq[] = []
     for (let i = 0; i < skuUrls.length; i++) {
       const item = new AddSkuTaskItemReq(0, skuUrls[0], SkuTaskItemStatus.PENDING, skuSource)
       taskItems.push(item)
     }
-    let skuTask = new SkuTask(taskId, SkuTaskStatus.PENDING, count, publishResourceId, skuSource, publishConfig, taskItems)
-    this.setTaskStartFlag(skuTask.id, true)
-
-    // 异步执行任务
-    this.asyncStartSkuTask(skuTask, skuUrls)
-
+    const req = new AddSkuTaskReq(count, publishResourceId, skuSource)
+    req.priceRange = publishConfig.priceRate
+    req.items = taskItems
+    const skuTask = await addSkuTask(req) // 保存任务
+    skuTask.skuPublishConfig = publishConfig
+    await this.setTaskStartFlag(skuTask.id, true)
+    // this.pushTask(skuTask) // 将任务添加到内存中
+    this.asyncStartSkuTask(skuTask, skuUrls) // 异步执行任务
     return skuTask
   }
 
@@ -39,10 +56,11 @@ export class TaskApiImpl extends TaskApi {
     let taskStatus = SkuTaskStatus.RUNNING
     const statistic = new SkuPublishStatitic(task.id, task.count, 0, 0, taskStatus)
 
+    const items = task.items ?? []
     const skuApi = new MbSkuApiImpl()
     let i = 0
     try {
-      for (; i < skuUrls.length; i++) {
+      for (; i < items.length; i++) {
         // 模拟延迟
         // await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -53,38 +71,41 @@ export class TaskApiImpl extends TaskApi {
         }
 
         // 发布商品
-        const skuUrl = skuUrls[i]
-        const taskItem = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.SUCCESS, task.source, taskRemark)
+        const item = items[i]
+        const skuUrl = item.url ?? ''
+        const itemReq = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.SUCCESS, task.source, taskRemark, item.id)
         const skuResult = await skuApi.publishSku(task.publishResourceId, task.source, skuUrl, task.id, task.skuPublishConfig)
         skuResult.key = progress
         switch (skuResult.status) {
-          case SkuStatus.ERROR:
-            statistic.errorNum += 1
-            taskItem.status = SkuTaskItemStatus.FAILED
-            taskItem.remark = skuResult.remark
-            break
           case SkuStatus.EXISTENCE:
             statistic.errorNum += 1
-            taskItem.status = SkuTaskItemStatus.EXISTENCE
-            taskItem.remark = skuResult.remark
+            itemReq.status = SkuTaskItemStatus.EXISTENCE
+            itemReq.remark = skuResult.remark
             break
           case SkuStatus.SUCCESS:
-            taskItem.skuId = skuResult.id
             statistic.successNum += 1
-            taskItem.status = SkuTaskItemStatus.SUCCESS
+            itemReq.skuId = skuResult.id
+            itemReq.status = SkuTaskItemStatus.SUCCESS
+            break
+          case SkuStatus.ERROR:
+            statistic.errorNum += 1
+            itemReq.status = SkuTaskItemStatus.FAILED
+            itemReq.remark = skuResult.remark
+            break
+          default:
+            statistic.errorNum += 1
+            itemReq.status = SkuTaskItemStatus.FAILED
+            itemReq.remark = '错误:未知的商品发布结果'
             break
         }
-        taskItems.push(taskItem) // 添加任务项
+        taskItems.push(itemReq) // 添加任务项
 
         taskStatus = progress == task.count - 1 ? SkuTaskStatus.DONE : taskStatus
         statistic.status = taskStatus
         this.send('onPublishSkuMessage', skuResult, statistic) // 发送进度
 
-        // 更新任务状态
         if (progress % 200 == 0 || taskStatus === SkuTaskStatus.DONE) {
-          // 更新任务状态
           const req = new UpdateSkuTaskReq(taskStatus, taskRemark, taskItems)
-          log.info('taskId: ', task.id, ' updateSkuTask req: ', req)
           await updateSkuTask(task.id, req)
           taskItems = []
         }

@@ -33,6 +33,11 @@ func (r *skuTaskItemRepository) GetItemListByTaskID(taskID uint64) ([]*models.Sk
 	return r.GetList(sql, taskID)
 }
 
+func (r *skuTaskItemRepository) GetByID(id uint64) (*models.SkuTaskItem, error) {
+	sql := "select * from sku_task_item where deleted_at is null and id = ?"
+	return r.GetOne(sql, id)
+}
+
 type SkuTaskStepRepository struct {
 	database.Repository[*models.SkuTaskStep]
 }

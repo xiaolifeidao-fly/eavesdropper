@@ -1,5 +1,52 @@
 import { LabelValue } from '@model/base/base'
 
+export class SkuTaskItem {
+  constructor(
+    public id?: number,
+    public taskId?: number,
+    public url?: string,
+    public status?: string,
+    public source?: string,
+    public remark?: string,
+    public skuId?: number
+  ) {
+    this.id = id
+    this.taskId = taskId
+    this.url = url
+    this.status = status
+    this.source = source
+    this.remark = remark
+    this.skuId = skuId
+  }
+}
+
+export enum SkuTaskItemStatus {
+  PENDING = 'pending',
+  SUCCESS = 'success',
+  FAILED = 'failed',
+  CANCEL = 'cancel',
+  EXISTENCE = 'existence'
+}
+
+export class AddSkuTaskItemReq {
+  constructor(
+    public taskId: number,
+    public url: string,
+    public status: string,
+    public source: string,
+    public remark?: string,
+    public skuId?: number,
+    public id?: number,
+  ) {
+    this.taskId = taskId
+    this.url = url
+    this.status = status
+    this.source = source
+    this.remark = remark
+    this.skuId = skuId
+    this.id = id
+  }
+}
 export class SkuTaskItemResp {
   constructor(
     public id: number,

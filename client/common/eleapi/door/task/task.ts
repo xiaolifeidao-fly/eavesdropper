@@ -8,6 +8,16 @@ export class TaskApi extends ElectronApi {
   }
 
   @InvokeType(Protocols.INVOKE)
+  async getTask(taskId: number): Promise<SkuTask | undefined> {
+    return await this.invokeApi('getTask', taskId)
+  }
+
+  @InvokeType(Protocols.INVOKE)
+  async pushTask(skuTask: SkuTask) {
+    return await this.invokeApi('pushTask', skuTask)
+  }
+
+  @InvokeType(Protocols.INVOKE)
   async startTask(publishResourceId: number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls: string[]): Promise<SkuTask> {
     return await this.invokeApi('startTask', publishResourceId, publishConfig, skuSource, skuUrls)
   }

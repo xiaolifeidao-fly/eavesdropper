@@ -6,19 +6,10 @@ import { formatDate } from "@utils/date";
 import { MbEngine } from "@src/door/mb/mb.engine";
 import { addSku, checkSkuExistence } from "@api/sku/sku.api";
 import { SkuPublishResult, AddSkuReq, SkuStatus, CheckSkuExistenceReq } from "@model/sku/sku";
-import { addSkuTask, updateSkuTask } from "@api/sku/skuTask.api";
 import {
-  AddSkuTaskReq,
-  UpdateSkuTaskReq,
-  SkuTask,
-  SkuPublishStatitic,
-  SkuTaskStatus,
-  AddSkuTaskItemReq,
-  SkuTaskItemStatus,
   SkuPublishConfig
 } from '@model/sku/skuTask'
 import { plainToClass } from 'class-transformer'
-import { parseSku } from "@api/door/door.api";
 import { DoorSkuDTO } from "@model/door/sku";
 import axios from "axios";
 import fs from 'fs';
@@ -29,12 +20,10 @@ import { uploadByFileApi } from "@src/door/mb/file/file.api";
 import { DoorEntity } from "@src/door/entity";
 import { app } from "electron";
 import sharp from "sharp";
-import { PddSkuPublishHandler, SkuPublishHandler } from "@src/impl/step/publish/sku.publish.handler";
+import { PddSkuPublishHandler } from "@src/impl/step/publish/sku.publish.handler";
 import { getUrlParameter } from "@utils/url.util";
 import { PDD, TB } from "@enums/source";
 import { StepHandler } from "@src/impl/step/step.base";
-import { TaskApi } from "@eleapi/door/task/task";
-import { TaskApiImpl } from "../task/task";
 export class MbSkuApiImpl extends MbSkuApi {
 
 

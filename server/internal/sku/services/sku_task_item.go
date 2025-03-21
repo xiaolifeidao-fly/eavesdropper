@@ -34,6 +34,35 @@ func BatchAddSkuTaskItem(addSkuTaskItemDTOs []*dto.AddSkuTaskItemDTO) ([]*dto.Sk
 	return itemDTOs, nil
 }
 
+func BatchUpdateSkuTaskItem(addSkuTaskItemDTOs []*dto.AddSkuTaskItemDTO) ([]*dto.SkuTaskItemDTO, error) {
+	var err error
+
+	if len(addSkuTaskItemDTOs) == 0 {
+		return nil, nil
+	}
+
+	itemDTOs := make([]*dto.SkuTaskItemDTO, 0)
+	for _, addSkuTaskItemDTO := range addSkuTaskItemDTOs {
+		var itemDTO *dto.SkuTaskItemDTO
+		if itemDTO, err = GetSkuTaskItemByID(addSkuTaskItemDTO.ID); err != nil {
+			return nil, err
+		}
+
+		if itemDTO == nil || itemDTO.ID == 0 {
+			converter.Copy(&itemDTO, addSkuTaskItemDTO)
+			itemDTO.CreatedBy = common.GetLoginUserID()
+		}
+		itemDTO.UpdatedBy = common.GetLoginUserID()
+		itemDTOs = append(itemDTOs, itemDTO)
+	}
+
+	if itemDTOs, err = batchSaveSkuTaskItem(itemDTOs); err != nil {
+		return nil, err
+	}
+
+	return itemDTOs, nil
+}
+
 func batchSaveSkuTaskItem(itemDTOs []*dto.SkuTaskItemDTO) ([]*dto.SkuTaskItemDTO, error) {
 	var err error
 	skuTaskItemRepository := repositories.SkuTaskItemRepository
@@ -46,6 +75,19 @@ func batchSaveSkuTaskItem(itemDTOs []*dto.SkuTaskItemDTO) ([]*dto.SkuTaskItemDTO
 
 	itemDTOs = database.ToDTOs[dto.SkuTaskItemDTO](items)
 	return itemDTOs, nil
+}
+
+func GetSkuTaskItemByID(id uint64) (*dto.SkuTaskItemDTO, error) {
+	var err error
+	skuTaskItemRepository := repositories.SkuTaskItemRepository
+
+	var item *models.SkuTaskItem
+	if item, err = skuTaskItemRepository.GetByID(id); err != nil {
+		logger.Errorf("GetSkuTaskItemByID failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
+
+	return database.ToDTO[dto.SkuTaskItemDTO](item), nil
 }
 
 var skuTaskStepRepository = database.NewRepository[repositories.SkuTaskStepRepository]()

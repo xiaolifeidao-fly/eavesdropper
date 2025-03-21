@@ -54,13 +54,8 @@ func UpdateSkuTask(skuTaskUpdateDTO *dto.UpdateSkuTaskDTO) (*dto.SkuTaskDTO, err
 		return nil, err
 	}
 
-	for _, item := range skuTaskUpdateDTO.Items {
-		item.Source = skuTaskDTO.Source
-	}
-
-	// 更新任务项
 	var taskItems []*dto.SkuTaskItemDTO
-	if taskItems, err = BatchAddSkuTaskItem(skuTaskUpdateDTO.Items); err != nil {
+	if taskItems, err = BatchUpdateSkuTaskItem(skuTaskUpdateDTO.Items); err != nil {
 		return nil, err
 	}
 	skuTaskDTO.Items = taskItems

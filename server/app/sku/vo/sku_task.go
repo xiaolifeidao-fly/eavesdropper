@@ -46,6 +46,7 @@ func (r *UpdateSkuTaskReq) Validate() error {
 }
 
 type AddSkuTaskItemReq struct {
+	ID     uint64 `json:"id"`
 	TaskID uint64 `json:"taskId"`
 	Url    string `json:"url" binding:"required"`
 	Status string `json:"status" binding:"required"`

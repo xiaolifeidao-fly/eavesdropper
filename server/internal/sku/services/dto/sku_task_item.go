@@ -64,6 +64,7 @@ type SkuTaskItemDTO struct {
 }
 
 type AddSkuTaskItemDTO struct {
+	ID     uint64 `json:"id"`
 	TaskId uint64 `json:"taskId"`
 	Url    string `json:"url"`
 	Status string `json:"status"`

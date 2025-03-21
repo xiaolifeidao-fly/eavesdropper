@@ -1,4 +1,5 @@
 import { LabelValue } from '@model/base/base'
+import { AddSkuTaskItemReq, SkuTaskItem } from '@model/sku/sku-task-item'
 
 export enum SkuTaskStatus {
   PENDING = 'pending',
@@ -16,7 +17,7 @@ export class SkuTask {
     public publishResourceId: number,
     public source: string,
     public skuPublishConfig?: SkuPublishConfig,
-    public items?: AddSkuTaskItemReq[],
+    public items?: SkuTaskItem[],
   ) {
     this.id = id
     this.status = status
@@ -76,12 +77,14 @@ export class AddSkuTaskReq {
     public source: string,
     public remark?: string,
     public priceRange?: PriceRangeConfig[],
+    public items?: AddSkuTaskItemReq[],
   ) {
     this.count = count
     this.publishResourceId = publishResourceId
     this.source = source
     this.remark = remark
     this.priceRange = priceRange
+    this.items = items
   }
 }
 
@@ -96,34 +99,6 @@ export class UpdateSkuTaskReq {
     this.items = items
   }
 }
-
-export enum SkuTaskItemStatus {
-  PENDING = 'pending',
-  SUCCESS = 'success',
-  FAILED = 'failed',
-  CANCEL = 'cancel',
-  EXISTENCE = 'existence'
-}
-
-export class AddSkuTaskItemReq {
-  constructor(
-    public taskId: number,
-    public url: string,
-    public status: string,
-    public source: string,
-    public remark?: string,
-    public skuId?: number,
-  ) {
-    this.taskId = taskId
-    this.url = url
-    this.status = status
-    this.source = source
-    this.remark = remark
-    this.skuId = skuId
-  }
-}
-
-
 export class SkuTaskStep {
   constructor(
     public id: number|undefined,
