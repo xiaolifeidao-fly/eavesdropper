@@ -230,7 +230,7 @@ export class MbSkuApiImpl extends MbSkuApi {
         if (!uplodaData){
             return [];
         }
-        if(uplodaData.validateUrl && uplodaData.header){
+        if(uplodaData.validateData && uplodaData.validateData.validateUrl && uplodaData.header){
             return [];
         }
         return uplodaData.skuFiles;

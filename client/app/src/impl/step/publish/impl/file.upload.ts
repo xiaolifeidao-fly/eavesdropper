@@ -2,7 +2,7 @@ import { MbSkuApiImpl } from "@src/impl/door/sku/sku";
 import { StepResponse, StepResult, StepUnit } from "../../step.unit";
 import { uploadFile } from "@src/door/mb/file/file";
 import { FileInfo, MbFileUploadMonitor } from "@src/door/monitor/mb/file/file";
-
+import log from "electron-log";
 
 export class SkuPublishFileUploadStep extends StepUnit{
 
@@ -18,7 +18,8 @@ export class SkuPublishFileUploadStep extends StepUnit{
         const validateUrl = uploadResult.validateData?.validateUrl;
         const validateParams = uploadResult.validateData?.validateParams;
         const header = uploadResult.header;
-        if(!uploadResult){
+        if(uploadResult && validateUrl){
+            log.info("uploadResult validate is ", validateUrl);
             return new StepResult(false, "上传图片[验证失败]", [
                 new StepResponse("imageFileList", [])
             ], header, validateUrl, validateParams);
@@ -27,7 +28,7 @@ export class SkuPublishFileUploadStep extends StepUnit{
             return new StepResult(false, "上传图片失败");
         }
         this.setParams("skuItem", skuItem);
-        return new StepResult(false, "上传成功", [
+        return new StepResult(true, "上传成功", [
             new StepResponse("imageFileList", imageFileList)
         ]);
     }

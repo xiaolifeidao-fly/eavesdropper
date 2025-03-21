@@ -177,8 +177,10 @@ async function validateAction(page : Page, ...params : any[]){
         if(validateParams){
             return;
         }
-        // let frame = await getFrame(page);
-        // await validateByPuzzleCaptcha(page, frame);
+        // if(validateUrl.includes("api/upload.api/_____tmd_____/punish")){
+        //     let frame = await getFrame(page);
+        //     await validateByPuzzleCaptcha(page, frame);
+        // }
 
     }catch(error){
         log.error("openLoginPageAction error", error);
@@ -258,13 +260,13 @@ async function validateByPuzzleCaptcha(page : Page, frame : Frame){
                   }
                   
                   //随机5位小数 值为0.    
-                  const startX = sliderBox.x + sliderBox.width / 2 + 0.123122; // 起始位置的 X 坐标
-                  const startY = sliderBox.y + sliderBox.height / 2 + 0.323122; // 起始位置的 Y 坐标
+                  const startX = sliderBox.x + sliderBox.width / 2;
+                  const startY = sliderBox.y + sliderBox.height / 2;
                   // log.info("humanLikeMouseMove startX ====", startX, "startY ====", startY);
                   // await humanLikeMouseMove(page, 233, 333, startX, startY);
                   let endX = startX + slideContent.data.px_distance; // 目标位置的 X 坐标
-                  const endY = sliderBox.y + sliderBox.height / 2 + 0.123132;;
                   // await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
+                  await simulateHumanPresenceSimple(page, sliderBox.x, sliderBox.y);
                   log.info("humanLikeDrag startX ====", startX, "startY ====", startY);
                   // await humanLikeDrag(page, startX, startY, endX, endY);
                   await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
@@ -493,6 +495,7 @@ async function getSlideContent(imageInfo : string) {
                 validateNum++;
                 log.info("checkValidate error retry validate ", validateNum);
                 engine.resetMonitor();
+                engine.resetListener(page);
                 result = await engine.openWaitMonitor(page, undefined, new ImageValidatorMonitor(), {}, validateAction, validateUrl, validateParams, autoFlag, false);
             }
             return result;

@@ -32,7 +32,7 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
         const skuFiles = await getSkuFiles(skuItemId, resourceId);
         return {
             skuFiles : skuFiles,
-            validateUrl : undefined,
+            validateData : undefined,
             header : undefined
         };
     }
@@ -40,7 +40,7 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
     if(!header){
         return {
             skuFiles : [],
-            validateUrl : undefined,
+            validateData : undefined,
             header : undefined
         };
     }
@@ -66,13 +66,14 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
             return headerData;
         }
     }
+    let result;
     try{
         const page = await mbEngine.init();
         if(!page){
             return undefined;
         }
         mbEngine.addMonitor(fileQueryMonitor);
-        const result = await mbEngine.openWaitMonitor(page, "https://qn.taobao.com/home.htm/sucai-tu/home", fileQueryMonitor);
+        result = await mbEngine.openWaitMonitor(page, "https://qn.taobao.com/home.htm/sucai-tu/home", fileQueryMonitor);
         if(!result.code){
             return {
                 skuFiles : [],
@@ -85,7 +86,9 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
         }
         return result.getHeaderData();
     }finally{
-        await mbEngine.saveContextState();
+        if(result){
+            await mbEngine.saveContextState(result.getHeaderData());
+        }
         await mbEngine.closePage();
     }
 }
@@ -157,11 +160,15 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
                 if(retCode == 'FAIL_SYS_USER_VALIDATE'){
                     log.error("MbFileUploadMonitor getResponseData error ", data);
                     const validateData = data.data;
-                    const validateParams : { [key: string]: any } =  {};
+                    let validateParams : { [key: string]: any } | undefined =  undefined;
                     if('dialogSize' in validateData){
+                        validateParams = {}
                         validateParams.dialogSize = validateData.dialogSize;
                     }
                     if('attributes' in validateData){
+                        if(!validateParams){
+                            validateParams = {};
+                        }
                         validateParams.attributes = validateData.attributes;
                     }
                     return {

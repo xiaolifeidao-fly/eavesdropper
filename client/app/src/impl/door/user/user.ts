@@ -42,8 +42,9 @@ export class MbUserApiImpl extends MbUserApi {
             monitor.setMonitorTimeout(60000);
             let loginResult = false;
             monitor.setHandler(async (request : any, response : any) => {
-                log.info("login monitor request ", await request?.allHeaders());
-                engine.saveContextState();
+                const header = await request?.allHeaders();
+                log.info("login monitor request ", header);
+                engine.saveContextState(header);
                 loginResult = true;
                 return { "loginResult": true };
             });

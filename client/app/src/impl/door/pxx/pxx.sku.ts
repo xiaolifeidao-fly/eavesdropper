@@ -30,10 +30,11 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             const context = engine.getContext();
             monitor.setMonitorTimeout(60000);
             let loginResult = false;
-            monitor.setHandler(async (request, response) => {
-                log.info("login monitor request ", await request?.allHeaders());
+            monitor.setHandler(async (request : any, response) => {
+                const header = await request?.allHeaders();
+                log.info("login monitor request ", header);
                 loginResult = true;
-                engine.saveContextState();
+                engine.saveContextState(header);
                 return { "loginResult": true };
             });
             log.info("open wait monitor");

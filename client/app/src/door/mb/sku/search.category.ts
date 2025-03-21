@@ -19,12 +19,13 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
             return {header : headerData, startTraceId : mbEngine.getParams(searchStartTraceId)};
         }
     }
+    let result;
     try{
         const page = await mbEngine.init();
         if(!page){
             return undefined;
         }
-        const result = await mbEngine.openWaitMonitor(page, "https://item.upload.taobao.com/sell/ai/category.htm?type=category", new MbPublishSearchMonitor());
+        result = await mbEngine.openWaitMonitor(page, "https://item.upload.taobao.com/sell/ai/category.htm?type=category", new MbPublishSearchMonitor());
         if(!result || !result.getCode()){
             return undefined;
         }
@@ -37,7 +38,9 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
         }
         return result.getHeaderData();
     }finally{
-        await mbEngine.saveContextState();
+        if(result){
+            await mbEngine.saveContextState(result.getHeaderData());
+        }
         await mbEngine.closePage();
     }
 }

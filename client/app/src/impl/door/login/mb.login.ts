@@ -130,7 +130,7 @@ export class MbLoginApiImpl extends MbLoginApi {
                 const resultData = result.getData();
                 if(resultData.result == "1"){
                     log.info("inputLoginInfo login success");
-                    await engine.saveContextState();
+                    await engine.saveContextState(result.getHeaderData());
                     return new DoorEntity<{}>(true, resultData.message);
                 }
                 if(resultData.result == "2"){
@@ -190,18 +190,21 @@ export class MbLoginApiImpl extends MbLoginApi {
         }
     }
 
-    async awaitByLoginResult(engine : MbEngine<{}>, page : Page){
-        await engine.saveContextState();
+    async awaitByLoginResult(header : {[key : string] : any}, engine : MbEngine<{}>, page : Page){
+        engine.saveContextState(header);
         setTimeout(async () => {
             try{
                 const monitor = new MdLoginMonitor();
                 let loginResult = false;
-            monitor.setHandler(async (request, response) => {
-                log.info("login monitor request ", await request?.allHeaders());
-                await engine.saveContextState();
-                loginResult = true;
-                return { "loginResult": true };
-            });
+                monitor.setHandler(async (request, response) => {
+                    const header = await request?.allHeaders();
+                    log.info("login monitor request ", header);
+                    if(header){
+                        engine.saveContextState(header);
+                    }
+                    loginResult = true;
+                    return { "loginResult": true };
+                });
             engine.resetMonitor();
             engine.resetListener(page);
             const result = await engine.openWaitMonitor(page, "https://myseller.taobao.com/home.htm/QnworkbenchHome", monitor, {});
@@ -240,12 +243,13 @@ export class MbLoginApiImpl extends MbLoginApi {
         log.info("loginByValidateCode fill validateCode");
         await frame.locator("#btn-submit").first().click();
         log.info("loginByValidateCode click submit start");
-        await responsePromise;
+        const response = await responsePromise;
+        const header = await response?.allHeaders();
         await page.waitForTimeout(3000);
         frame = await getFrame(page, "identity_verify.htm");
         if(!frame){
             log.warn("loginByValidateCode frame is null");
-            return await this.awaitByLoginResult(engine, page);
+            return await this.awaitByLoginResult(header, engine, page);
         }
         log.info("loginByValidateCode click submit end");
         const errorText = await frame.evaluate(() => {
@@ -261,7 +265,7 @@ export class MbLoginApiImpl extends MbLoginApi {
             return new DoorEntity<{}>(false, errorText);
         }
         await page.waitForTimeout(3000);
-        return await this.awaitByLoginResult(engine, page);
+        return await this.awaitByLoginResult(header, engine, page);
     }
 
     @InvokeType(Protocols.INVOKE)
@@ -277,8 +281,11 @@ export class MbLoginApiImpl extends MbLoginApi {
             monitor.setMonitorTimeout(60000);
             let loginResult = false;
             monitor.setHandler(async (request, response) => {
-                log.info("login monitor request ", await request?.allHeaders());
-                engine.saveContextState();
+                const header = await request?.allHeaders();
+                log.info("login monitor request ", header);
+                if(header){
+                    engine.saveContextState(header);
+                }
                 loginResult = true;
                 return { "loginResult": true };
             });
