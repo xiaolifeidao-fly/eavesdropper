@@ -8,7 +8,8 @@ export class SkuTaskItem {
     public status?: string,
     public source?: string,
     public remark?: string,
-    public skuId?: number
+    public skuId?: number,
+    public name?: string,
   ) {
     this.id = id
     this.taskId = taskId
@@ -17,6 +18,7 @@ export class SkuTaskItem {
     this.source = source
     this.remark = remark
     this.skuId = skuId
+    this.name = name
   }
 }
 

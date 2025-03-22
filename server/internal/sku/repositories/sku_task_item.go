@@ -11,6 +11,15 @@ type skuTaskItemRepository struct {
 	database.Repository[*models.SkuTaskItem]
 }
 
+func (r *skuTaskItemRepository) BatchUpdate(items []*models.SkuTaskItem) ([]*models.SkuTaskItem, error) {
+	var err error
+
+	if err = r.Db.Save(items).Error; err == nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 // GetStatusCountByTaskIDs 根据taskIDs获取任务项状态的数量
 func (r *skuTaskItemRepository) GetStatusCountByTaskIDs(taskIDs []uint64) ([]*models.SkuTaskItemStatusCount, error) {
 	var err error

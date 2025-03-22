@@ -49,14 +49,15 @@ func BatchUpdateSkuTaskItem(addSkuTaskItemDTOs []*dto.AddSkuTaskItemDTO) ([]*dto
 		}
 
 		if itemDTO == nil || itemDTO.ID == 0 {
-			converter.Copy(&itemDTO, addSkuTaskItemDTO)
+			itemDTO = &dto.SkuTaskItemDTO{}
 			itemDTO.CreatedBy = common.GetLoginUserID()
 		}
+		converter.Copy(&itemDTO, addSkuTaskItemDTO)
 		itemDTO.UpdatedBy = common.GetLoginUserID()
 		itemDTOs = append(itemDTOs, itemDTO)
 	}
 
-	if itemDTOs, err = batchSaveSkuTaskItem(itemDTOs); err != nil {
+	if itemDTOs, err = batchUpdateSkuTaskItem(itemDTOs); err != nil {
 		return nil, err
 	}
 
@@ -74,6 +75,18 @@ func batchSaveSkuTaskItem(itemDTOs []*dto.SkuTaskItemDTO) ([]*dto.SkuTaskItemDTO
 	}
 
 	itemDTOs = database.ToDTOs[dto.SkuTaskItemDTO](items)
+	return itemDTOs, nil
+}
+
+func batchUpdateSkuTaskItem(itemDTOs []*dto.SkuTaskItemDTO) ([]*dto.SkuTaskItemDTO, error) {
+	var err error
+	skuTaskItemRepository := repositories.SkuTaskItemRepository
+
+	items := database.ToPOs[models.SkuTaskItem](itemDTOs)
+	if items, err = skuTaskItemRepository.BatchUpdate(items); err != nil {
+		logger.Errorf("batchUpdateSkuTaskItem failed, with error is %v", err)
+		return nil, errors.New("数据库操作失败")
+	}
 	return itemDTOs, nil
 }
 

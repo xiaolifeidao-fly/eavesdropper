@@ -20,7 +20,7 @@ export const addSkuTask = async (req: AddSkuTaskReq) => {
 // 更新任务
 export const updateSkuTask = async (taskId: number, req: UpdateSkuTaskReq) => {
   const result = await instance.put(`/sku/task/${taskId}`, req)
-  return plainToClass(String, result)
+  return plainToClass(SkuTask, result)
 }
 
 // 获取任务步骤

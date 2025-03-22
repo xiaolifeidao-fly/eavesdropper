@@ -4,7 +4,7 @@ import { TaskApi } from '@eleapi/door/task/task'
 import { InvokeType, Protocols } from '@eleapi/base'
 import { StoreApi } from '@eleapi/store/store'
 import { AddSkuTaskReq, SkuPublishConfig, SkuPublishStatitic, SkuTask, SkuTaskStatus, UpdateSkuTaskReq } from '@model/sku/skuTask'
-import { AddSkuTaskItemReq, SkuTaskItemStatus } from '@model/sku/sku-task-item'
+import { AddSkuTaskItemReq, SkuTaskItem, SkuTaskItemStatus } from '@model/sku/sku-task-item'
 import { addSkuTask, updateSkuTask } from '@api/sku/skuTask.api'
 import { MbSkuApiImpl } from '../sku/sku'
 import { SkuStatus } from '@model/sku/sku'
@@ -27,6 +27,24 @@ export class TaskApiImpl extends TaskApi {
     taskMap.set(skuTask.id, skuTask)
   }
 
+  updateTaskItem(taskId: number, item: SkuTaskItem) {
+    const task = taskMap.get(taskId)
+    if (task === undefined) {
+      return
+    }
+
+    const items = task.items
+    if (items === undefined || items.length <= 0) {
+      return
+    }
+
+    task.items = items.map((i) => {
+      return i.id == item.id ? item : i
+    })
+
+    taskMap.set(taskId, task)
+  }
+
   @InvokeType(Protocols.INVOKE)
   async startTask(publishResourceId: number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls: string[]): Promise<SkuTask> {
     const count = skuUrls.length
@@ -41,13 +59,13 @@ export class TaskApiImpl extends TaskApi {
     const skuTask = await addSkuTask(req) // 保存任务
     skuTask.skuPublishConfig = publishConfig
     await this.setTaskStartFlag(skuTask.id, true)
-    // this.pushTask(skuTask) // 将任务添加到内存中
-    this.asyncStartSkuTask(skuTask, skuUrls) // 异步执行任务
+    this.asyncStartSkuTask(skuTask) // 异步执行任务
     return skuTask
   }
 
   // 异步执行任务
-  async asyncStartSkuTask(task: SkuTask, skuUrls: string[]) {
+  async asyncStartSkuTask(task: SkuTask) {
+    // this.pushTask(task) // 将任务添加到内存中
     let progress = 0
     let taskRemark = ''
     let taskItems: AddSkuTaskItemReq[] = []
@@ -73,7 +91,8 @@ export class TaskApiImpl extends TaskApi {
         // 发布商品
         const item = items[i]
         const skuUrl = item.url ?? ''
-        const itemReq = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.SUCCESS, task.source, taskRemark, item.id)
+        const itemReq = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.SUCCESS, task.source, taskRemark)
+        itemReq.id = item.id
         const skuResult = await skuApi.publishSku(task.publishResourceId, task.source, skuUrl, task.id, task.skuPublishConfig)
         skuResult.key = progress
         switch (skuResult.status) {
@@ -100,6 +119,8 @@ export class TaskApiImpl extends TaskApi {
         }
         taskItems.push(itemReq) // 添加任务项
 
+        // item.name = skuResult.name
+        // this.updateTaskItem(task.id, item)
         taskStatus = progress == task.count - 1 ? SkuTaskStatus.DONE : taskStatus
         statistic.status = taskStatus
         this.send('onPublishSkuMessage', skuResult, statistic) // 发送进度
@@ -109,6 +130,8 @@ export class TaskApiImpl extends TaskApi {
           await updateSkuTask(task.id, req)
           taskItems = []
         }
+
+        progress++
       }
     } catch (error: any) {
       log.info('asyncStartSkuTask error: ', error)
@@ -117,8 +140,11 @@ export class TaskApiImpl extends TaskApi {
     } finally {
       await this.removeTaskFlag(task.id)
       this.send('onPublishSkuMessage', undefined, statistic) // 发送进度
-      for (; i < skuUrls.length; i++) {
-        const taskItem = new AddSkuTaskItemReq(task.id, skuUrls[i], SkuTaskItemStatus.FAILED, task.source, '')
+      for (; i < items.length; i++) {
+        const item = items[i]
+        const skuUrl = item.url ?? ''
+        const taskItem = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.FAILED, task.source, '')
+        taskItem.id = item.id
         if (isStop) {
           taskItem.status = SkuTaskItemStatus.CANCEL
           taskItem.remark = '发布取消'
@@ -132,7 +158,7 @@ export class TaskApiImpl extends TaskApi {
       }
 
       if (taskItems.length > 0) {
-        const req = new UpdateSkuTaskReq(taskStatus, taskRemark, taskItems)
+        const req = new UpdateSkuTaskReq(SkuTaskStatus.DONE, taskRemark, taskItems)
         await updateSkuTask(task.id, req)
       }
     }

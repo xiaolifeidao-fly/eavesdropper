@@ -45,16 +45,6 @@ func (r *UpdateSkuTaskReq) Validate() error {
 	return nil
 }
 
-type AddSkuTaskItemReq struct {
-	ID     uint64 `json:"id"`
-	TaskID uint64 `json:"taskId"`
-	Url    string `json:"url" binding:"required"`
-	Status string `json:"status" binding:"required"`
-	Remark string `json:"remark"`
-	Source string `json:"source"`
-	SkuID  uint64 `json:"skuId"`
-}
-
 type SkuTaskPageReq struct {
 	page.Query
 	vo.BaseVO

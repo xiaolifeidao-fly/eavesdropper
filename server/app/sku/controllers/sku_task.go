@@ -108,23 +108,12 @@ func AddSkuTask(ctx *gin.Context) {
 // @Description 更新任务
 func UpdateSkuTask(ctx *gin.Context) {
 	var err error
-	// paramId := ctx.Param("id")
-	// if paramId == "" {
-	// 	controller.Error(ctx, "taskId 参数错误")
-	// 	return
-	// }
-	// taskId, err := strconv.ParseUint(paramId, 10, 64)
-	// if err != nil {
-	// 	controller.Error(ctx, "taskId 参数错误")
-	// 	return
-	// }
 	var req vo.UpdateSkuTaskReq
-	if err := controller.Bind(ctx, &req, binding.JSON); err != nil {
+	if err := controller.Bind(ctx, &req, nil, binding.JSON); err != nil {
 		logger.Infof("UpdateSkuTask Bind error: %v", err)
 		controller.Error(ctx, "参数错误")
 		return
 	}
-	// req.Id = taskId
 	var skuTaskDTO *dto.SkuTaskDTO
 	updateTaskDTO := converter.ToDTO[dto.UpdateSkuTaskDTO](&req)
 	if skuTaskDTO, err = services.UpdateSkuTask(updateTaskDTO); err != nil {
