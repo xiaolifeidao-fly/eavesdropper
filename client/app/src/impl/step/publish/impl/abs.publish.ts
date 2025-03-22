@@ -199,7 +199,8 @@ export abstract class AbsPublishStep extends StepUnit{
             const switchValues = await this.switchCatPropValue(key, dataSource, value, requestHeader, catId, startTraceId, skuItemDTO);
             newCatProp[key] = switchValues
         }
-        if(!('p-20000' in newCatProp)){
+        const pinPai = newCatProp['p-20000'];
+        if(!pinPai || Object.keys(pinPai).length == 0){
             newCatProp['p-20000'] = await this.getDefaultCatPropValueByPinPai("p-20000", requestHeader, catId, startTraceId, skuItemDTO.itemId);
         }
         draftData.catProp = newCatProp;
@@ -277,34 +278,23 @@ export abstract class AbsPublishStep extends StepUnit{
 
     async switchCatPropValue(proKey: string, dataSource: { [key: string]: any }[], value: string[], requestHeader : { [key: string]: any }, catId: string, startTraceId: string, skuItem: DoorSkuDTO) {
         // const newValues: { value: string, text: string }[] = [];
-        let newValues: any = {};
         for (const catValue of value) {
-            let hasFound = false;
             for (const data of dataSource) {
                 if (data.text == catValue) {
-                    hasFound = true;
-                    newValues = {
+                    return {
                         value: data.value,
                         text: data.text
                     }
                 }
             }
-            if (!hasFound) {
-                const categoryInfo = await this.getCategoryInfo(proKey, requestHeader, catId, startTraceId, skuItem.itemId, catValue);
-                if (categoryInfo) {
-                    newValues = {
-                        value: categoryInfo.value,
-                        text: categoryInfo.text
-                    };
-                }else{
-                    newValues = {
-                        value: -1,
-                        text: catValue
-                    };
-                }
-            
+            const categoryInfo = await this.getCategoryInfo(proKey, requestHeader, catId, startTraceId, skuItem.itemId, catValue);
+            if (categoryInfo) {
+                return {
+                    value: categoryInfo.value,
+                    text: categoryInfo.text
+                };
             }
         }
-        return newValues;
+        return {};
     }
 }
