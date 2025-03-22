@@ -169,6 +169,7 @@ async function validateAction(page : Page, ...params : any[]){
         }
         if(validateUrl.includes("mtop.relationrecommend.wirelessrecommend.recommend")){
             log.info("validateAction auto start");
+            await page.waitForTimeout(3000);
             let frame = await getFrame(page);
             await validateByCaptcha(page, frame, preResult);
             log.info("validateAction auto end");
@@ -478,7 +479,7 @@ async function getSlideContent(imageInfo : string) {
 
 
  async function validateImage(validateItem : ValidateItem, autoFlag : boolean = false){
-      const engine = new MbEngine(validateItem.resourceId, autoFlag);
+      const engine = new MbEngine(validateItem.resourceId, false);
       try{
           const page = await engine.init();
           const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource',"validate_image.html");
@@ -486,7 +487,7 @@ async function getSlideContent(imageInfo : string) {
           if(page){
             let url = "file://" + sessionDirPath + "?iframeUrl=" + encodeBase64(validateUrl);
             const validateParams = validateItem.validateParams;
-            if(validateParams){
+            if(validateParams && Object.keys(validateParams).length > 0){
                 url += "&validateParams=" + encodeBase64(JSON.stringify(validateParams));
             }
             let result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor(), {}, validateAction, validateUrl, validateParams, autoFlag, true);

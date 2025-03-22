@@ -80,13 +80,14 @@ export abstract class StepHandler {
             if(i == 0){
                 stepUnit.setWithParams(withParams);
             }
-            result = await stepUnit.do(result?.needNextSkip || false);
-            if(!result.result){
-                result = await this.validateAndRetry(stepUnit, result);
-                if(!result.result){
-                    return result;
+            const stepResult = await stepUnit.do(result?.needNextSkip || false);
+            if(!stepResult.result){
+                const validateResult = await this.validateAndRetry(stepUnit, stepResult);
+                if(!validateResult.result){
+                    return validateResult;
                 }
             }
+            result = stepResult;
         }
         return result;
     }

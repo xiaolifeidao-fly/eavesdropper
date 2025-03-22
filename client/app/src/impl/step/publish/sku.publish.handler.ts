@@ -48,10 +48,10 @@ export class PddSkuPublishHandler extends StepHandler {
     buildStepConfig(): StepConfig {
         const stepConfig = new StepConfig();
         stepConfig.register("PddSkuGetStep", PddSkuGetStep)
-        stepConfig.register("SkuPublishFileUploadStep", SkuPublishFileUploadStep)
         stepConfig.register("SearchSkuStep", TbPublishSearchStep)
         stepConfig.register("SkuBuildPreCheckStep", SkuPddBuildPreCheckStep)
         stepConfig.register("TbSearchStep", TbSearchStep)
+        stepConfig.register("SkuPublishFileUploadStep", SkuPublishFileUploadStep)
         stepConfig.register("PddSkuBuildDraftStep", PddSkuBuildDraftStep)
         stepConfig.register("UpdateDraftStep", UpdateDraftStep)
         stepConfig.register("PublishSkuStep", PublishSkuStep)

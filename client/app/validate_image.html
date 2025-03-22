@@ -4,7 +4,8 @@
     <script>
 
         function fillStyle(iframe, validateParams){
-            if(validateParams){
+            console.log(validateParams);
+            if(validateParams && Object.keys(validateParams).length > 0){
                 const validateParamsObj = JSON.parse(decodeBase64(validateParams));
                 let style = "";
                 if(validateParamsObj.dialogSize?.width){

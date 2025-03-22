@@ -14,11 +14,19 @@ export class TbSearchStep extends AbsPublishStep{
 
 
     async getSkuId(pddSkuId: string): Promise<string | undefined> {
+        const skuId = await this.getSkuIdByCache(pddSkuId);
+        if(skuId){
+            return skuId;
+        }
         const result = await searchSkuRecord("mb", pddSkuId);
         if(result){
             return result.skuId;
         }
         return undefined;
+    }
+
+    async getSkuIdByCache(pddSkuId: string): Promise<string | undefined> {
+        return this.getParams("searchSkuId" + "_" + pddSkuId);
     }
 
     public isSkip(): boolean {
@@ -36,6 +44,9 @@ export class TbSearchStep extends AbsPublishStep{
         const pddSkuId = skuItem.baseInfo.itemId;
         let skuId = await this.getSkuId(pddSkuId);
         if(skuId){
+            if(skuId == ""){
+                return new StepResult(true, "skuId is empty");
+            }
             skuItem.itemId = skuId;
             this.setParams("skuItem", skuItem);
             return new StepResult(true, skuId);
@@ -63,8 +74,8 @@ export class TbSearchStep extends AbsPublishStep{
     async getSkuIdBySearchResult(result : DoorEntity<any>, title : string, pddSkuId : string){
         if(result && result.code){
             const itemsArray = result.data?.itemsArray;
-            log.info("搜索商品信息结果为：", itemsArray);
             if(!itemsArray || itemsArray.length === 0){
+                this.setParams("searchSkuId" + "_" + pddSkuId, "");
                 return undefined;
             }
             const skuId = this.matchSkuId(title, itemsArray);
@@ -73,6 +84,7 @@ export class TbSearchStep extends AbsPublishStep{
                 await saveSearchSkuRecord(searchRecord);
                 return String(skuId);
             }
+            this.setParams("searchSkuId" + "_" + pddSkuId, "");
         }
         return undefined;
     }
