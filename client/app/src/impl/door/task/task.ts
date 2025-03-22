@@ -50,7 +50,7 @@ export class TaskApiImpl extends TaskApi {
     const count = skuUrls.length
     let taskItems: AddSkuTaskItemReq[] = []
     for (let i = 0; i < skuUrls.length; i++) {
-      const item = new AddSkuTaskItemReq(0, skuUrls[0], SkuTaskItemStatus.PENDING, skuSource)
+      const item = new AddSkuTaskItemReq(0, skuUrls[i], SkuTaskItemStatus.PENDING, skuSource)
       taskItems.push(item)
     }
     const req = new AddSkuTaskReq(count, publishResourceId, skuSource)
@@ -182,7 +182,7 @@ export class TaskApiImpl extends TaskApi {
     }
     return true
   }
-
+ 
   @InvokeType(Protocols.INVOKE)
   async removeTaskFlag(taskId: number) {
     const store = new StoreApi()

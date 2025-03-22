@@ -51,7 +51,7 @@ export class TbPublishSearchStep extends AbsPublishStep{
                     new StepResponse("validateUrl", result.validateUrl)
                 ], result.getHeaderData(), result.validateUrl, result.getValidateParams());            
             }
-            return new StepResult(false, "获取商品分类失败");
+            return new StepResult(true, "搜索商品分类失败");
         }
         log.info("搜索商品分类成功", result);
         this.setParams("tbCategory", result.getData());

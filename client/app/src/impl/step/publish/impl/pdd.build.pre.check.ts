@@ -40,6 +40,13 @@ export class SkuPddBuildPreCheckStep extends AbsPublishStep{
 
 
     async doStep(): Promise<StepResult> {
+        const category = this.getParams("tbCategory");
+        log.info("category is ", category);
+        if(!category || !category.categoryId || category.categoryId == ""){
+            const stepResult = new StepResult(true, "获取商品分类失败") ;
+            stepResult.setNeedNextSkip(true);
+            return stepResult;
+        }
         const resourceId = this.getParams("resourceId");
         const skuItem = this.getParams("skuItem");
         const mbEngine = new MbEngine(resourceId);
@@ -51,7 +58,7 @@ export class SkuPddBuildPreCheckStep extends AbsPublishStep{
             const itemId = skuItem.baseInfo.itemId;
             const tbItemId = skuItem.itemId;
             let skuDraftId = await this.getSkuDraftIdFromDB(resourceId, itemId);
-            let url = this.getPublishUrl(skuDraftId, tbItemId);
+            let url = this.getPublishUrl(category, skuDraftId, tbItemId);
             log.info("check publish url is ", url);
             await page.goto(url);
             let commonData = await this.getCommonData(page);
@@ -113,8 +120,7 @@ export class SkuPddBuildPreCheckStep extends AbsPublishStep{
     }
 
 
-    getPublishUrl(skuDraftId: string | undefined, itemId: string) {
-        const category = this.getParams("tbCategory");
+    getPublishUrl(category: { [key: string]: any }, skuDraftId: string | undefined, itemId: string) {
         const url = "https://item.upload.taobao.com/sell/v2/publish.htm?catId=" + category.categoryId;
         return url;
     }

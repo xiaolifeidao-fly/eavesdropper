@@ -173,7 +173,9 @@ export abstract class StepUnit {
         try {
             if (this.step.status === STEP_DONE) {
                 log.warn(`step ${this.step.code} is done`)
-                return new StepResult(true, "");
+                const result = new StepResult(true, "");
+                result.setNeedNextSkip(this.step.needNextSkip);
+                return result;
             }
             await this.pendingStep();
             log.info("doStep start ", this.step.code);

@@ -63,6 +63,7 @@ export class TbSearchStep extends AbsPublishStep{
     async getSkuIdBySearchResult(result : DoorEntity<any>, title : string, pddSkuId : string){
         if(result && result.code){
             const itemsArray = result.data?.itemsArray;
+            log.info("搜索商品信息结果为：", itemsArray);
             if(!itemsArray || itemsArray.length === 0){
                 return undefined;
             }
