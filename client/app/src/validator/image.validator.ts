@@ -479,7 +479,7 @@ async function getSlideContent(imageInfo : string) {
 
 
  async function validateImage(validateItem : ValidateItem, autoFlag : boolean = false){
-      const engine = new MbEngine(validateItem.resourceId, false);
+      const engine = new MbEngine(validateItem.resourceId, autoFlag);
       try{
           const page = await engine.init();
           const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource',"validate_image.html");

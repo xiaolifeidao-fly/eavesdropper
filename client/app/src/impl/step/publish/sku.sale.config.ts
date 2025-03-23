@@ -206,27 +206,25 @@ export class RebuildSalePro{
     }
 
     matchSaleMapper(salesAttrs : { [key: string]: SalesAttr }, subItem: { [key: string]: any }, imageFlag : boolean) {
+        const uiType = subItem.uiType;
+        const saleConfig = saleConfigMap[uiType];
+        const label = subItem.label;
         for(const key in salesAttrs){
             const saleAttr = salesAttrs[key];
             if(!saleAttr){
                 continue;
             }
-            const uiType = subItem.uiType;
-            const saleConfig = saleConfigMap[uiType];
-            const label = subItem.label;
             const pddLable = saleAttr.label;
-            if(subItem.required){
-                const saleValue = saleConfig.buildSalesAttr(subItem);
-                return new SaleMapper(saleValue, subItem, null, true, false);
-            }
             if(pddLable == label || label.includes(pddLable) || pddLable.includes(label)){
-                if(!saleConfig.allowInput){
-                    return undefined;
+                if(saleConfig.allowInput){
+                    const saleProp = saleConfig.buildSaleProp(saleAttr, subItem);
+                    return new SaleMapper(saleProp.saleAttr, subItem, saleProp.saleAttr.oldPid, true, imageFlag, true);
                 }
-                const saleProp = saleConfig.buildSaleProp(saleAttr, subItem);
-                return new SaleMapper(saleProp.saleAttr, subItem, saleProp.saleAttr.oldPid, true, imageFlag, true);
             }
-            
+        }
+        if(subItem.required){
+            const saleValue = saleConfig.buildSalesAttr(subItem);
+            return new SaleMapper(saleValue, subItem, null, true, false);
         }
         return undefined;
     }
