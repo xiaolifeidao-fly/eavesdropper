@@ -24,6 +24,8 @@ import { PddSkuPublishHandler } from "@src/impl/step/publish/sku.publish.handler
 import { getUrlParameter } from "@utils/url.util";
 import { PDD, TB } from "@enums/source";
 import { StepHandler } from "@src/impl/step/step.base";
+import { getSkuDraft } from "@api/sku/sku.draft";
+import { openMbDraft } from "@src/door/mb/sku/mb.publish.on";
 export class MbSkuApiImpl extends MbSkuApi {
 
 
@@ -309,6 +311,30 @@ export class MbSkuApiImpl extends MbSkuApi {
             skuPublishResult.remark = error.message;
             return skuPublishResult;
         }   
+    }
+
+    @InvokeType(Protocols.INVOKE)
+    async openDraft(resourceId : number, sourceSkuId : string) : Promise<{status : string, message : string}>{
+        log.info("openDraft", resourceId, sourceSkuId);
+        const skuDraft = await getSkuDraft(resourceId, sourceSkuId);
+        if(!skuDraft || skuDraft.status != "active"){
+            return {
+                "status" : "error",
+                "message" : "草稿不存在"
+            };
+        }
+        const draftId = skuDraft.skuDraftId;
+        if(!draftId){
+            return {
+                "status" : "error",
+                "message" : "草稿不存在"
+            };
+        }
+        await openMbDraft(resourceId, draftId);
+        return {
+            "status" : "success",
+            "message" : "草稿打开成功"
+        };
     }
 }
 

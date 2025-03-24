@@ -22,4 +22,9 @@ export class MbSkuApi extends ElectronApi {
     async batchPublishSkus(publishResourceId : number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls : string[]) : Promise<SkuTask|undefined>{
         return await this.invokeApi("batchPublishSkus", publishResourceId, publishConfig, skuSource, skuUrls);
     }
+
+    @InvokeType(Protocols.INVOKE)
+    async openDraft(resourceId : number, sourceSkuId : string) : Promise<{status : string, message : string}>{
+        return await this.invokeApi("openDraft", resourceId, sourceSkuId);
+    }
 }

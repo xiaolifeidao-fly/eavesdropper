@@ -12,18 +12,35 @@ import { transformArrayToObject } from '@utils/convert'
 import { SkuTaskStatus } from '@model/sku/skuTask'
 import { SkuTaskItemList } from './components'
 import { TaskApi } from '@eleapi/door/task/task';
+import SkuPushStepsForm from '../components/SkuPushSteps';
 
 const pollingTime = 5000
+type DataType = {
+  id: number;
+  sourceAccount: string;
+  shopName: string;
+  skuName: string;
+  publishTime: string;
+  publishStatus: number;
+  url: string;
+  publishUrl: string;
+}
+
 
 export default function SkuTaskManage() {
 
   const actionRef = useRef<ActionType>();
-  const { refreshPage } = useRefreshPage();
 
   const [sourceMap, setSourceMap] = useState<Record<string, any>>();
   const [statusMap, setStatusMap] = useState<Record<string, any>>();
   const [showItemList, setShowItemList] = useState<boolean>(false)
   const [showTaskId, setShowTaskId] = useState<number>(0)
+
+  const [visible, setVisible] = useState(false);
+
+  const { refreshPage } = useRefreshPage();
+
+
 
   useEffect(() => {
     getResourceSourceList().then(resp => {
@@ -183,6 +200,11 @@ export default function SkuTaskManage() {
             actionRef={actionRef}
             options={false}
             toolBarRender={() => [
+              <Button key="export" onClick={() => {
+                setVisible(true);
+              }}>
+                发布商品
+              </Button>,
             ]}
             request={async (params) => {
               const { data: list, pageInfo } = await getSkuTaskPageApi({
@@ -219,6 +241,10 @@ export default function SkuTaskManage() {
           <SkuTaskItemList taskId={showTaskId}/>
         </Modal>
       )}
+       {/* 发布商品 */}
+       <SkuPushStepsForm visible={visible} setVisible={setVisible} onClose={() => {
+            refreshPage(actionRef, false);
+          }} />
     </Layout>
   );
 }

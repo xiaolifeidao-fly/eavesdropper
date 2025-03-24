@@ -45,6 +45,7 @@ export class AddSkuTaskItemReq {
     public id?: number,
     public sourceSkuId?: string,
     public title?: string,
+    public resourceId?: number,
   ) {
     this.taskId = taskId
     this.url = url
@@ -55,6 +56,7 @@ export class AddSkuTaskItemReq {
     this.id = id
     this.sourceSkuId = sourceSkuId
     this.title = title
+    this.resourceId = resourceId
   }
 }
 export class SkuTaskItemResp {

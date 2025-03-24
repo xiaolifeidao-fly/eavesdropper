@@ -36,6 +36,12 @@ func GetSkuTaskItemList(ctx *gin.Context) {
 		return
 	}
 
+	skuTaskDTO, err := services.GetSkuTask(req.TaskID)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+
 	resp := make([]*vo.GetSkuTaskItemListResp, 0)
 	for _, item := range skuTaskItemList {
 		itemResp := &vo.GetSkuTaskItemListResp{}
@@ -45,7 +51,7 @@ func GetSkuTaskItemList(ctx *gin.Context) {
 			converter.Copy(&sourceLableValue, sourceLableValueEnum)
 			itemResp.SourceLableValue = sourceLableValue
 		}
-
+		itemResp.ResourceId = skuTaskDTO.PublishResourceID
 		var statusLableValue baseVO.LabelValueVO
 		if statusLableValueEnum := dto.GetSkuTaskItemStatusEnumByValue(itemResp.Status); statusLableValueEnum != nil {
 			converter.Copy(&statusLableValue, statusLableValueEnum)
@@ -68,7 +74,7 @@ func GetSkuTaskItemList(ctx *gin.Context) {
 		}
 
 		itemResp.SourceSkuID = skuDTO.SourceSkuID
-		itemResp.Name = skuDTO.Name
+		itemResp.Title = skuDTO.Name
 		itemResp.NewSkuUrl = services.GetSkuSourceUrl(skuDTO.Source, skuDTO.PublishSkuID)
 	}
 	controller.OK(ctx, resp)

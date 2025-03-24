@@ -15,6 +15,7 @@ type GetSkuTaskItemListResp struct {
 	Url              string          `json:"url"`
 	Status           string          `json:"status"`
 	StatusLableValue vo.LabelValueVO `json:"statusLableValue"`
+	ResourceId       uint64          `json:"resourceId"`
 	Remark           string          `json:"remark"`
 	SkuID            uint64          `json:"skuId"`
 	Name             string          `json:"name"`

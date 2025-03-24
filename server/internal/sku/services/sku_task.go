@@ -37,7 +37,7 @@ func UpdateSkuTask(skuTaskUpdateDTO *dto.UpdateSkuTaskDTO) (*dto.SkuTaskDTO, err
 	var err error
 
 	taskID := skuTaskUpdateDTO.ID
-	skuTaskDTO, err := getSkuTask(taskID)
+	skuTaskDTO, err := GetSkuTask(taskID)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func updateSkuTask(skuTaskDTO *dto.SkuTaskDTO) (*dto.SkuTaskDTO, error) {
 	return skuTaskDTO, nil
 }
 
-func getSkuTask(id uint64) (*dto.SkuTaskDTO, error) {
+func GetSkuTask(id uint64) (*dto.SkuTaskDTO, error) {
 	var err error
 	skuRepository := repositories.SkuTaskRepository
 

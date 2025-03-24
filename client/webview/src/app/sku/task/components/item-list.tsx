@@ -1,9 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { Table, Tag, Button, message } from 'antd'
+import { Table, Tag, Button, message, Spin } from 'antd'
 import { ColumnsType } from 'antd/es/table';
 
 import { getSkuTaskItemByTaskId } from '@api/sku/sku-task-item'
+import { MbSkuApi } from '@eleapi/door/sku/mb.sku';
 
 interface SkuTaskItemListProp {
   taskId: number
@@ -36,7 +37,7 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
 
   const [itemList, setItemList] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-
+  const [openDraftLoading, setOpenDraftLoading] = useState<boolean>(false)
   useEffect(() => {
     getSkuTaskItemByTaskId(props.taskId).then(resp => {
       setItemList(resp)
@@ -54,9 +55,9 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
     },
     {
       title: '商品名称',
-      dataIndex: 'name',
+      dataIndex: 'title',
       align: 'center',
-      key: 'name'
+      key: 'title'
     },
     {
       title: '状态',
@@ -110,11 +111,11 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
             >
               复制上家链接
             </Button>
-            <Button
-              type="link"
-              disabled={!record.newSkuUrl}
-              style={{ display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
-              onClick={async () => {
+            {record.newSkuUrl && (
+              <Button
+                type="link"
+                style={{ display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
+                onClick={async () => {
                 try {
                   await copyToClipboard(record.newSkuUrl || '')
                   message.success('复制成功')
@@ -126,6 +127,30 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
             >
               复制当前商品链接
             </Button>
+            )}
+            {record.status !== 'success' && (
+              <Button
+                style={{ display: 'inline-block', paddingLeft: '4px' }}
+                onClick={async () => {
+                  try{
+                    console.log("openDraft", record.resourceId, record.sourceSkuId);
+                    setOpenDraftLoading(true)
+                    const skuApi = new MbSkuApi();
+                    const result = await skuApi.openDraft(record.resourceId, record.sourceSkuId);
+                    if(result.status != "success"){
+                        message.error(result.message);
+                    } 
+                  }catch(error){
+                    console.error(error)
+                    message.error('打开草稿失败')
+                  }finally{
+                    setOpenDraftLoading(false)
+                  }
+                }}
+              >
+                打开草稿
+              </Button>
+            )}  
           </div>
         )
       }
@@ -133,7 +158,9 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
   ]
 
   return <>
-    <Table rowKey="id" columns={columns} dataSource={itemList} loading={loading}/>
+    <Spin spinning={openDraftLoading}> 
+      <Table rowKey="id" columns={columns} dataSource={itemList} loading={loading}/>
+    </Spin>
   </>
 }
 

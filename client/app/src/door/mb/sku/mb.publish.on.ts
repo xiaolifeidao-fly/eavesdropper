@@ -112,3 +112,12 @@ async function printPirce(responseData : {[key: string]: any}, resourceId : numb
     }
 }
 
+
+export async function openMbDraft(resourceId : number, draftId : string){
+    const engine = new MbEngine(resourceId, false);
+    const page = await engine.init("https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=" + draftId)
+    if(!page){
+        return;
+    }
+    await page.waitForTimeout(2000);
+}
