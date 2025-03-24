@@ -285,16 +285,18 @@ export abstract class DoorEngine<T = any> {
                 }
             }
             const data = await responseMonitor.getResponseData(response);
-            if(data && data.code){
-                if(responseMonitor.needStoreContext(this.getKey(), allHeaders)){
-                    log.info("session reset save context state");
-                    await this.saveContextState(headerData);
-                }
-            }
             data.url = url;
             data.headerData = headerData;
             data.requestBody = requestBody;
             data.responseHeaderData = responseHeaderData;
+            if(data && data.code){
+                if(headerData && Object.keys(headerData).length > 0){
+                    if(responseMonitor.needStoreContext(this.getKey(), headerData)){
+                        log.info("session reset save context state");
+                        await this.saveContextState(headerData);
+                    }
+                }
+            }
             responseMonitor._doCallback(data, response.request(), response);
             responseMonitor.setFinishTag(true);
         }
@@ -529,6 +531,9 @@ export abstract class DoorEngine<T = any> {
     }
 
     public setHeader(header : {[key : string] : any}){
+        if(!header || Object.keys(header).length == 0){
+            return;
+        }
         const key = this.getHeaderKey();
         set(key, header);
     }

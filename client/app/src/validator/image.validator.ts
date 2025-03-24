@@ -179,10 +179,10 @@ async function validateAction(page : Page, ...params : any[]){
         if(validateParams){
             return;
         }
-        if(validateUrl.includes("api/upload.api/_____tmd_____/punish")){
-            let frame = await getFrame(page);
-            await validateByPuzzleCaptcha(page, frame, retryCount);
-        }
+        // if(validateUrl.includes("api/upload.api/_____tmd_____/punish")){
+        //     let frame = await getFrame(page);
+        //     await validateByPuzzleCaptcha(page, frame, retryCount);
+        // }
 
     }catch(error){
         log.error("openLoginPageAction error", error);
@@ -339,7 +339,7 @@ function checkValidate(){
         if(validateItem){
             const url = validateItem.validateUrl; 
             let autoFlag = false;
-            if(url.includes("mtop.relationrecommend.wirelessrecommend.recommend") || url.includes("api/upload.api/_____tmd_____/punish")){
+            if(url.includes("mtop.relationrecommend.wirelessrecommend.recommend")){
                 autoFlag = true;
             }
             log.info("validateImage autoFlag ", autoFlag);

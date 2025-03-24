@@ -97,7 +97,6 @@ export class TaskApiImpl extends TaskApi {
       for (; i < items.length; i++) {
         // 模拟延迟
         // await new Promise(resolve => setTimeout(resolve, 1000));
-
         // 判断任务是否手动停止
         if (await this.isTaskStop(task.id)) {
           isStop = true
@@ -151,6 +150,7 @@ export class TaskApiImpl extends TaskApi {
         }
         progress++
       }
+      log.info('asyncStartSkuTask done')
       this.updateTaskStatus(task.id, SkuTaskStatus.DONE);
     } catch (error: any) {
       log.info('asyncStartSkuTask error: ', error)
@@ -189,7 +189,8 @@ export class TaskApiImpl extends TaskApi {
   }
 
   async isTaskStop(taskId: number) {
-    if(taskMap.get(taskId)) {
+    const status = taskMap.get(taskId);
+    if(status === SkuTaskStatus.STOP) {
       return true;
     }
     return false;

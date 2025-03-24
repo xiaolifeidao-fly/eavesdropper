@@ -126,10 +126,11 @@ export class MbLoginApiImpl extends MbLoginApi {
                 }
                 return new DoorEntity<{}>(false, "请先验证图形验证码");
             }
+            log.info("inputLoginInfo result is ", result);
             if(result.getCode()){
                 const resultData = result.getData();
                 if(resultData.result == "1"){
-                    log.info("inputLoginInfo login success");
+                    log.info("inputLoginInfo login success", result.getHeaderData());
                     await engine.saveContextState(result.getHeaderData());
                     return new DoorEntity<{}>(true, resultData.message);
                 }
