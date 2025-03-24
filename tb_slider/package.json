@@ -5,6 +5,7 @@
   "main": "src/taobao-login.ts",
   "scripts": {
     "start": "ts-node src/taobao-login.ts",
+    "start-slide": "ts-node src/taobao-slide.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,12 +19,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.8.4",
     "fs-extra": "^11.3.0",
     "playwright": "^1.51.0",
+    "sharp": "^0.32.6",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
   "devDependencies": {
-    "@types/fs-extra": "^11.0.4"
+    "@types/axios": "^0.14.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/sharp": "^0.31.1"
   }
 }
