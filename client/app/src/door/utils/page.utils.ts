@@ -165,6 +165,7 @@ export async function slideSlider(
   try {
     console.log(`执行滑块滑动: 从(${startPosition.x}, ${startPosition.y}) 滑动到 (${endPosition.x}, ${endPosition.y})`);
     
+
     // 计算滑动距离
     const distance = endPosition.x - startPosition.x;
     
@@ -306,7 +307,7 @@ function generateSimpleTrack(distance: number) {
 /**
  * 高度模拟人类的滑块滑动函数 
  */
-async function slideSliderV2(
+export async function slideSliderV2(
   page: Page, 
   startPosition: { x: number, y: number }, 
   endPosition: { x: number, y: number },
