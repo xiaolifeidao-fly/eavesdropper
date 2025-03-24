@@ -95,6 +95,8 @@ export class TaskApiImpl extends TaskApi {
         itemReq.id = item.id
         const skuResult = await skuApi.publishSku(task.publishResourceId, task.source, skuUrl, task.id, task.skuPublishConfig)
         skuResult.key = progress
+        itemReq.sourceSkuId = skuResult.sourceSkuId
+        itemReq.title = skuResult.name
         switch (skuResult.status) {
           case SkuStatus.EXISTENCE:
             statistic.errorNum += 1
@@ -117,6 +119,7 @@ export class TaskApiImpl extends TaskApi {
             itemReq.remark = '错误:未知的商品发布结果'
             break
         }
+        log.info('itemReq: ', itemReq)
         taskItems.push(itemReq) // 添加任务项
 
         // item.name = skuResult.name

@@ -279,6 +279,11 @@ export class MbSkuApiImpl extends MbSkuApi {
             if(!result || !result.result){
                 skuPublishResult.status = SkuStatus.ERROR;
                 skuPublishResult.remark = result?.message || "发布商品失败";
+                const skuItem = publishHandler.getParams("skuItem");
+                if(skuItem){
+                    skuPublishResult.name = skuItem.baseInfo.title;
+                    skuPublishResult.sourceSkuId = skuItem.baseInfo.itemId;
+                }
                 return skuPublishResult;
             }
             const skuItem = publishHandler.getParams("skuItem");

@@ -9,6 +9,8 @@ export class SkuTaskItem {
     public source?: string,
     public remark?: string,
     public skuId?: number,
+    public sourceSkuId?: string,
+    public title?: string,
     public name?: string,
   ) {
     this.id = id
@@ -18,6 +20,8 @@ export class SkuTaskItem {
     this.source = source
     this.remark = remark
     this.skuId = skuId
+    this.sourceSkuId = sourceSkuId
+    this.title = title
     this.name = name
   }
 }
@@ -39,6 +43,8 @@ export class AddSkuTaskItemReq {
     public remark?: string,
     public skuId?: number,
     public id?: number,
+    public sourceSkuId?: string,
+    public title?: string,
   ) {
     this.taskId = taskId
     this.url = url
@@ -47,6 +53,8 @@ export class AddSkuTaskItemReq {
     this.remark = remark
     this.skuId = skuId
     this.id = id
+    this.sourceSkuId = sourceSkuId
+    this.title = title
   }
 }
 export class SkuTaskItemResp {
@@ -62,7 +70,8 @@ export class SkuTaskItemResp {
     public source: string,
     public sourceLableValue: LabelValue,
     public createdAt: string,
-    public newSkuUrl: string
+    public newSkuUrl: string,
+    public title: string
   ) {
     this.id = id
     this.taskId = taskId
@@ -76,5 +85,6 @@ export class SkuTaskItemResp {
     this.sourceLableValue = sourceLableValue
     this.createdAt = createdAt
     this.newSkuUrl = newSkuUrl
+    this.title = title
   }
 }

@@ -55,22 +55,26 @@ func GetSkuTaskItemStatusEnumByValue(value string) *SkuTaskItemStatusEnum {
 
 type SkuTaskItemDTO struct {
 	dto.BaseDTO
-	TaskId uint64 `json:"taskId"`
-	Url    string `json:"url"`
-	Status string `json:"status"`
-	Remark string `json:"remark"`
-	SkuID  uint64 `json:"skuId"`
-	Source string `json:"source"`
+	TaskId      uint64 `json:"taskId"`
+	Url         string `json:"url"`
+	Status      string `json:"status"`
+	Remark      string `json:"remark"`
+	SkuID       uint64 `json:"skuId"`
+	Source      string `json:"source"`
+	SourceSkuId string `json:"sourceSkuId"`
+	Title       string `json:"title"`
 }
 
 type AddSkuTaskItemDTO struct {
-	ID     uint64 `json:"id"`
-	TaskId uint64 `json:"taskId"`
-	Url    string `json:"url"`
-	Status string `json:"status"`
-	Remark string `json:"remark"`
-	Source string `json:"source"`
-	SkuID  uint64 `json:"skuId"`
+	ID          uint64 `json:"id"`
+	TaskId      uint64 `json:"taskId"`
+	Url         string `json:"url"`
+	Status      string `json:"status"`
+	Remark      string `json:"remark"`
+	Source      string `json:"source"`
+	SkuID       uint64 `json:"skuId"`
+	SourceSkuId string `json:"sourceSkuId"`
+	Title       string `json:"title"`
 }
 
 var (
