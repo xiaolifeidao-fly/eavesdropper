@@ -118,7 +118,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         this.fillStartTime(draftData);
         await this.fixSaleProp(commonData, skuItem);
         await this.fillTiltle(skuItem, draftData);
-        await this.fillCategoryList(skuItem, draftData, commonData, result.getHeaderData(), catId, startTraceId);
+        // await this.fillCategoryList(skuItem, draftData, commonData, result.getHeaderData(), catId, startTraceId);
         await this.fillPropExt(commonData, skuItem, draftData);
         await this.fillMainImage(imageFileList, draftData);
         await this.fillSellInfo(commonData, skuItem, draftData);

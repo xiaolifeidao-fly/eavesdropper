@@ -148,6 +148,10 @@ export abstract class AbsPublishStep extends StepUnit{
         return commonData;
     }
 
+    isNumber(str: string){
+        return !isNaN(Number(str));
+    }
+
     public async fillCategoryList(skuItemDTO: DoorSkuDTO, draftData: { [key: string]: any }, commonData: { [key: string]: any }, requestHeader : { [key: string]: any }, catId: string, startTraceId: string) {
         const excludeList = [""];
         const skuItems = skuItemDTO.baseInfo.skuItems;
@@ -166,7 +170,12 @@ export abstract class AbsPublishStep extends StepUnit{
             const uiType = catProp.uiType;
             const value = skuItem.text;
             if(uiType == "taoSirProp"){
-                newCatProp[key] = parseInt(value[0]);
+                const targetValue = value[0];
+                if(this.isNumber(targetValue)){
+                    newCatProp[key] = parseInt(targetValue);
+                }else{
+                    newCatProp[key] = value[0];
+                }
                 log.info("taoSirProp is ", newCatProp[key]);
                 continue;
             }
@@ -199,12 +208,36 @@ export abstract class AbsPublishStep extends StepUnit{
             const switchValues = await this.switchCatPropValue(key, dataSource, value, requestHeader, catId, startTraceId, skuItemDTO);
             newCatProp[key] = switchValues
         }
-        const pinPai = newCatProp['p-20000'];
-        if(!pinPai || Object.keys(pinPai).length == 0){
-            newCatProp['p-20000'] = await this.getDefaultCatPropValueByPinPai("p-20000", requestHeader, catId, startTraceId, skuItemDTO.itemId);
-        }
+        let brand = newCatProp['p-20000'];
+        brand = await this.checkAndUpdateBrand(brand, skuItemDTO, requestHeader, catId, startTraceId);
+        newCatProp['p-20000'] = brand;
         draftData.catProp = newCatProp;
     }
+
+    async checkAndUpdateBrand(brand: { [key: string]: any }, skuItemDTO: DoorSkuDTO, requestHeader : { [key: string]: any }, catId: string, startTraceId: string){
+        if(!brand || Object.keys(brand).length == 0){
+            return await this.getDefaultCatPropValueByBrand("p-20000", requestHeader, catId, startTraceId, skuItemDTO.itemId);
+        }
+        const targetBrand = brand.text;
+        if(targetBrand.includes("无品牌")){
+            return brand;
+        }
+        const skuItems = skuItemDTO.baseInfo.skuItems;
+        for(const skuItem of skuItems){
+            const brandLabel = skuItem.value;
+            if(brandLabel == "品牌"){
+                const brandValue = skuItem.text[0];
+                if(brandValue != targetBrand){
+                    log.info("source brand is ", brandValue, " target brand is ", targetBrand);
+                    return await this.getDefaultCatPropValueByBrand("p-20000", requestHeader, catId, startTraceId, skuItemDTO.itemId);
+                }
+            }
+        }
+        return brand;
+    }
+
+
+    
 
 
     getCatPro(skuItem: SkuItem, catProps: any) {
@@ -262,7 +295,7 @@ export abstract class AbsPublishStep extends StepUnit{
         return undefined;
     }
 
-    async getDefaultCatPropValueByPinPai(pid: string, requestHeader : { [key: string]: any }, catId: string, startTraceId: string, itemId: string){
+    async getDefaultCatPropValueByBrand(pid: string, requestHeader : { [key: string]: any }, catId: string, startTraceId: string, itemId: string){
         const result = await this.getCategoryInfo(pid, requestHeader, catId, startTraceId, itemId, "无品牌")
         if(result){
             return { 
