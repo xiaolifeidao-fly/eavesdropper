@@ -160,13 +160,13 @@ export default function SkuManage() {
             columns={columns}
             actionRef={actionRef}
             options={false}
-            toolBarRender={() => [
-              <Button key="export" onClick={() => {
-                setVisible(true);
-              }}>
-                发布商品
-              </Button>,
-            ]}
+            // toolBarRender={() => [
+            //   <Button key="export" onClick={() => {
+            //     setVisible(true);
+            //   }}>
+            //     发布商品
+            //   </Button>,
+            // ]}
             request={async (params) => {
               const { data: list, pageInfo } = await getSkuPageApi({
                 ...params,
@@ -186,9 +186,9 @@ export default function SkuManage() {
           />
 
           {/* 发布商品 */}
-          <SkuPushStepsForm visible={visible} setVisible={setVisible} onClose={() => {
+          {/* <SkuPushStepsForm visible={visible} setVisible={setVisible} onClose={() => {
             refreshPage(actionRef, false);
-          }} />
+          }} /> */}
         </div>
       </main>
     </Layout>

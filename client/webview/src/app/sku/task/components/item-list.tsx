@@ -130,6 +130,7 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
             )}
             {record.status !== 'success' && (
               <Button
+                type="link"
                 style={{ display: 'inline-block', paddingLeft: '4px' }}
                 onClick={async () => {
                   try{
