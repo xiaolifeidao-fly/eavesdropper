@@ -310,9 +310,7 @@ async function slideSliderV2(
   page: Page, 
   startPosition: { x: number, y: number }, 
   endPosition: { x: number, y: number },
-  speedFactor: number = 1.0,
-  trackRecorder?: (track: {x: number, y: number, t: number}[]) => void
-): Promise<boolean> {
+  speedFactor: number = 1.0): Promise<boolean> {
   try {
     console.log(`执行滑块滑动: 从(${startPosition.x}, ${startPosition.y}) 滑动到 (${endPosition.x}, ${endPosition.y}), 速度因子: ${speedFactor}`);
     
@@ -461,11 +459,6 @@ async function slideSliderV2(
     
     // 保存轨迹到文件
     // saveTrackToFile(actualTrack);
-    
-    // 如果提供了轨迹记录回调，调用它
-    if (trackRecorder && actualTrack.length > 0) {
-      trackRecorder(actualTrack);
-    }
     
     return true;
   } catch (error) {
