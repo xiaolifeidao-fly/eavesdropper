@@ -3,47 +3,63 @@ import log from 'electron-log'
 import { TaskApi } from '@eleapi/door/task/task'
 import { InvokeType, Protocols } from '@eleapi/base'
 import { StoreApi } from '@eleapi/store/store'
-import { AddSkuTaskReq, SkuPublishConfig, SkuPublishStatitic, SkuTask, SkuTaskStatus, UpdateSkuTaskReq } from '@model/sku/skuTask'
+import { AddSkuTaskReq, SkuPublishConfig, SkuPublishStatitic, SkuTask, SkuTaskPageResp, SkuTaskStatus, UpdateSkuTaskReq } from '@model/sku/skuTask'
 import { AddSkuTaskItemReq, SkuTaskItem, SkuTaskItemStatus } from '@model/sku/sku-task-item'
 import { addSkuTask, updateSkuTask } from '@api/sku/skuTask.api'
 import { MbSkuApiImpl } from '../sku/sku'
 import { SkuStatus } from '@model/sku/sku'
+import { LabelValue } from '@model/base/base'
+
+
+const taskStatusMap : { [key: string]: { label: string, value: string, color: string } } = {
+    'pending': { label: '待执行', value: 'pending', color: 'gray' },
+    'running': { label: '执行中', value: 'running', color: 'blue' },
+    'done': { label: '已完成', value: 'done', color: 'green' },
+    'failed': { label: '失败', value: 'failed', color: 'red' },
+    'stop': { label: '已停止', value: 'stop', color: 'orange' },
+}
+
 
 // 任务Map
-const taskMap = new Map<number, SkuTask>()
+const taskMap = new Map<number, String>()
 
 export class TaskApiImpl extends TaskApi {
-  getTaskMap(): Map<number, SkuTask> {
-    return taskMap
+
+  getStatusFromMemory(item : SkuTaskPageResp) {
+    const status = item.status;
+    if(status === 'running') {
+      const cacheStatus = taskMap.get(item.id);
+      if(cacheStatus === undefined) {
+         return taskStatusMap['stop'];
+      }
+      return taskStatusMap[String(cacheStatus)];
+    }
+    return undefined;
   }
 
   @InvokeType(Protocols.INVOKE)
-  async getTask(taskId: number): Promise<SkuTask | undefined> {
-    return taskMap.get(taskId)
-  }
-
-  @InvokeType(Protocols.INVOKE)
-  async pushTask(skuTask: SkuTask) {
-    taskMap.set(skuTask.id, skuTask)
-  }
-
-  updateTaskItem(taskId: number, item: SkuTaskItem) {
-    const task = taskMap.get(taskId)
-    if (task === undefined) {
-      return
-    }
-
-    const items = task.items
-    if (items === undefined || items.length <= 0) {
-      return
-    }
-
-    task.items = items.map((i) => {
-      return i.id == item.id ? item : i
+  async rebuildTaskList(list: SkuTaskPageResp[]) {
+    return list.map(item => {
+       const status = item.status;
+       if(status === 'running') {
+          const memoryStatus = this.getStatusFromMemory(item);
+          if(memoryStatus === undefined) {
+            return item;
+          }
+          item.status = memoryStatus.value;
+          item.statusLableValue = new LabelValue(memoryStatus.label, memoryStatus.value, memoryStatus.color);
+          return item;
+       }
+       return item;
     })
-
-    taskMap.set(taskId, task)
   }
+
+  async updateTaskStatus(taskId: number, status: string) {
+    taskMap.set(taskId, status)
+    const req = new UpdateSkuTaskReq(status, "", [])
+    await updateSkuTask(taskId, req);
+  }
+
 
   @InvokeType(Protocols.INVOKE)
   async startTask(publishResourceId: number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls: string[]): Promise<SkuTask> {
@@ -58,8 +74,8 @@ export class TaskApiImpl extends TaskApi {
     req.items = taskItems
     const skuTask = await addSkuTask(req) // 保存任务
     skuTask.skuPublishConfig = publishConfig
-    await this.setTaskStartFlag(skuTask.id, true)
     this.asyncStartSkuTask(skuTask) // 异步执行任务
+    this.updateTaskStatus(skuTask.id, SkuTaskStatus.RUNNING)
     return skuTask
   }
 
@@ -133,15 +149,15 @@ export class TaskApiImpl extends TaskApi {
           await updateSkuTask(task.id, req)
           taskItems = []
         }
-
         progress++
       }
+      this.updateTaskStatus(task.id, SkuTaskStatus.DONE);
     } catch (error: any) {
       log.info('asyncStartSkuTask error: ', error)
       statistic.status = SkuTaskStatus.ERROR
       statistic.remark = error.message
+      this.updateTaskStatus(task.id, SkuTaskStatus.ERROR);
     } finally {
-      await this.removeTaskFlag(task.id)
       this.send('onPublishSkuMessage', undefined, statistic) // 发送进度
       for (; i < items.length; i++) {
         const item = items[i]
@@ -165,39 +181,18 @@ export class TaskApiImpl extends TaskApi {
         await updateSkuTask(task.id, req)
       }
     }
-    return
   }
 
   @InvokeType(Protocols.INVOKE)
   async stop(taskId: number) {
-    if (await this.isTaskStop(taskId)) {
-      return
-    }
-    this.setTaskStartFlag(taskId, false)
+    taskMap.delete(taskId);
   }
 
-  @InvokeType(Protocols.INVOKE)
   async isTaskStop(taskId: number) {
-    const store = new StoreApi()
-    const result = await store.getItem(this.getTaskKey(taskId))
-    if (result === undefined || result === true) {
-      return false
+    if(taskMap.get(taskId)) {
+      return true;
     }
-    return true
-  }
- 
-  @InvokeType(Protocols.INVOKE)
-  async removeTaskFlag(taskId: number) {
-    const store = new StoreApi()
-    await store.removeItem(this.getTaskKey(taskId))
+    return false;
   }
 
-  getTaskKey(taskId: number) {
-    return `task_${taskId}`
-  }
-
-  async setTaskStartFlag(taskId: number, status: boolean) {
-    const store = new StoreApi()
-    await store.setItem(this.getTaskKey(taskId), status)
-  }
 }

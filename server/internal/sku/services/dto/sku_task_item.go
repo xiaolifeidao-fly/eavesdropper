@@ -30,7 +30,7 @@ type SkuTaskItemStatusEnum struct {
 }
 
 var (
-	SkuTaskItemStatusPending   *SkuTaskItemStatusEnum = &SkuTaskItemStatusEnum{"代发布", "pending", "blue"}
+	SkuTaskItemStatusPending   *SkuTaskItemStatusEnum = &SkuTaskItemStatusEnum{"待发布", "pending", "blue"}
 	SkuTaskItemStatusSuccess   *SkuTaskItemStatusEnum = &SkuTaskItemStatusEnum{"成功", "success", "green"}
 	SkuTaskItemStatusFailed    *SkuTaskItemStatusEnum = &SkuTaskItemStatusEnum{"失败", "failed", "red"}
 	SkuTaskItemStatusCancel    *SkuTaskItemStatusEnum = &SkuTaskItemStatusEnum{"取消", "cancel", "gray"}

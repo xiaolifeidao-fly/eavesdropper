@@ -1,8 +1,14 @@
 import { SkuPublishResult } from '@model/sku/sku'
 import { ElectronApi, InvokeType, Protocols } from '@eleapi/base'
 import { SkuPublishConfig, SkuPublishStatitic, SkuTask } from '@model/sku/skuTask'
-
+import { SkuTaskPageResp } from '@model/sku/skuTask'
 export class TaskApi extends ElectronApi {
+
+  @InvokeType(Protocols.INVOKE)
+  async rebuildTaskList(list: SkuTaskPageResp[]) {
+    return await this.invokeApi('rebuildTaskList', list)
+  }
+
   getApiName(): string {
     return 'TaskApi'
   }
@@ -10,11 +16,6 @@ export class TaskApi extends ElectronApi {
   @InvokeType(Protocols.INVOKE)
   async getTask(taskId: number): Promise<SkuTask | undefined> {
     return await this.invokeApi('getTask', taskId)
-  }
-
-  @InvokeType(Protocols.INVOKE)
-  async pushTask(skuTask: SkuTask) {
-    return await this.invokeApi('pushTask', skuTask)
   }
 
   @InvokeType(Protocols.INVOKE)

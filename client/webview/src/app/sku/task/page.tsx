@@ -60,9 +60,9 @@ export default function SkuTaskManage() {
   }
 
   // 停止任务
-  const handleStop = (taskId: number) => {
+  const handleStop = async (taskId: number) => {
     const taskApi = new TaskApi()
-    taskApi.stop(taskId)
+    await taskApi.stop(taskId)
     message.success('停止任务成功')
     refreshPage(actionRef, false)
   }
@@ -165,24 +165,24 @@ export default function SkuTaskManage() {
             >
               查看
             </Button>
-            {record.status === SkuTaskStatus.RUNNING || record.status === SkuTaskStatus.PENDING ? ( // 如果状态是 running，显示停止按钮
-              <Button
-                type="link"
-                onClick={() => handleStop(record.id)} // 停止操作
-                style={{ color: '#ff4d4f', display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
-              >
-                停止发布
-              </Button>
-            ) : ( // 否则显示重新发布按钮
+            {(record.status === SkuTaskStatus.DONE || record.status === SkuTaskStatus.ERROR || record.status === SkuTaskStatus.PENDING) && (
               <Button
                 type="link"
                 onClick={() => handleRepublish(record.id)} // 重新发布操作
-                style={{ color: '#52c41a', display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
-                disabled
+                style={{ color: '#ffa500', display: 'inline-block', paddingLeft: '4px' }} // 橘黄色
               >
                 重新发布
               </Button>
             )}
+            {(record.status === SkuTaskStatus.STOP && (
+              <Button
+                type="link"
+                onClick={() => handleRepublish(record.id)} // 重新发布操作
+                style={{ color: '#52c41a', display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
+              >
+                继续执行
+              </Button>
+            ))}
           </div>
         )
       }
@@ -212,8 +212,10 @@ export default function SkuTaskManage() {
                 current: params.current ?? 1,
                 pageSize: params.pageSize ?? 10,
               })
+              const taskApi = new TaskApi()
+              const newList = await taskApi.rebuildTaskList(list)
               return {
-                data: list,
+                data: newList,
                 success: true,
                 total: pageInfo.total,
               };
