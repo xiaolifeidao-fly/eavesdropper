@@ -13,6 +13,7 @@ import axios from "axios";
 import { getOrSaveTemplateId } from "@src/door/mb/logistics/logistics";
 import { getUrlParameter } from "@utils/url.util";
 import { FoodSupport } from "../fill.food";
+import { AiFillSupport } from "../ai.fill";
 
 async function doAction(page: Page, ...doActionParams: any[]) {
     await page.waitForTimeout(1000);
@@ -124,6 +125,8 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         await this.fillMainImage(imageFileList, draftData);
         await this.fillSellInfo(commonData, skuItem, draftData);
         await this.fillLogisticsMode(resourceId, skuItem, draftData, commonData);
+        const aiFillSupport = new AiFillSupport(this.getParams("skuSource"));
+        await aiFillSupport.checkCatPropAndFix(draftData, skuItem, commonData);
         const imageDetailResult = this.fillImageDetail(draftData, imageFileList);
         if(!imageDetailResult){
             return {
