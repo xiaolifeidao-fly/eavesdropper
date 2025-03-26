@@ -292,6 +292,7 @@ export abstract class DoorEngine<T = any> {
             if(data && data.code){
                 if(headerData && Object.keys(headerData).length > 0){
                     if(responseMonitor.needStoreContext(this.getKey(), headerData)){
+                        this.setHeader(headerData);
                         log.info("session reset save context state");
                         await this.saveContextState(headerData);
                     }
@@ -520,7 +521,6 @@ export abstract class DoorEngine<T = any> {
         if(!this.context){
             return;
         }
-        this.setHeader(header);
         const sessionDir = this.getSessionDir();
         set(this.getKey(), sessionDir);
         await this.context.storageState({ path: sessionDir});

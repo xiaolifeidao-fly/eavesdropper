@@ -12,6 +12,7 @@ import { PriceRangeConfig } from "@model/sku/skuTask";
 import axios from "axios";
 import { getOrSaveTemplateId } from "@src/door/mb/logistics/logistics";
 import { getUrlParameter } from "@utils/url.util";
+import { FoodSupport } from "../fill.food";
 
 async function doAction(page: Page, ...doActionParams: any[]) {
     await page.waitForTimeout(1000);
@@ -118,7 +119,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         this.fillStartTime(draftData);
         await this.fixSaleProp(commonData, skuItem);
         await this.fillTiltle(skuItem, draftData);
-        // await this.fillCategoryList(skuItem, draftData, commonData, result.getHeaderData(), catId, startTraceId);
+        await this.fillCategoryList(skuItem, draftData, commonData, result.getHeaderData(), catId, startTraceId);
         await this.fillPropExt(commonData, skuItem, draftData);
         await this.fillMainImage(imageFileList, draftData);
         await this.fillSellInfo(commonData, skuItem, draftData);
@@ -130,6 +131,8 @@ export class SkuBuildDraftStep extends AbsPublishStep{
                 message : "fillImageDetail failed"
             };
         }
+        const foodSupport = new FoodSupport();
+        const foodResult = foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData);
         const updateResult = await this.updateDraftData(catId, newSkuDraftId, result.getHeaderData(), startTraceId, draftData);
         if(!updateResult){
             return {
@@ -137,7 +140,12 @@ export class SkuBuildDraftStep extends AbsPublishStep{
                 message : "updateDraftData failed"
             };
         }
-
+        if(!foodResult){
+            return {
+                draftData : undefined,
+                message : foodSupport.fillMessage
+            };
+        }
         return {
             draftData : {
                 catId: catId,
@@ -551,6 +559,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         }
         return null; // 如果没有匹配到日期，返回 null
     }
+
     
 
     getProps(componentsData: { [key: string]: any }, field: string){

@@ -14,6 +14,7 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
     const mbEngine = new MbEngine(resourceId, headerless);
     if(headerless){
         const headerData = mbEngine.getHeader();
+        log.info("headerData", headerData);
         //TODO cookie失效 要做处理
         if(headerData){
             return {header : headerData, startTraceId : mbEngine.getParams(searchStartTraceId)};
@@ -36,6 +37,7 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
             mbEngine.setHeader(result.getHeaderData());
             mbEngine.setParams(searchStartTraceId, result.getResponseHeaderData()['S_tid']);
         }
+        log.info("search category headerData", result.getHeaderData());
         return result.getHeaderData();
     }finally{
         if(result){

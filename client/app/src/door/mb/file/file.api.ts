@@ -89,7 +89,7 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
         if(result){
             await mbEngine.saveContextState(result.getHeaderData());
         }
-        await mbEngine.closePage();
+        // await mbEngine.closePage();
     }
 }
 

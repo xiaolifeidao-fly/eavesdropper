@@ -6,12 +6,15 @@ import { MbEngine } from "@src/door/mb/mb.engine";
 import { DoorSkuDTO, SkuItem } from "@model/door/sku";
 import { getDoorCatProps, getDoorCatPropsByAI, saveDoorCatProp } from "@api/door/door.api";
 import { DoorSkuCatProp } from "@model/door/door";
+import { FoodSupport } from "../fill.food";
 
 
 
 const excludeCatProp = ["p-20000"];
 
 const aiFillCategoryCode = ["p-20000-226407184"]
+
+
 
 
 export class UpdateDraftStep extends AbsPublishStep {
@@ -74,6 +77,11 @@ export class UpdateDraftStep extends AbsPublishStep {
             }
             await this.fillCategoryList(skuItem, draftData, commonData, requestHeader, catId, startTraceId);
             await this.fixRequiredData(draftData, skuItem, commonData);
+            const foodSupport = new FoodSupport();
+            const foodResult = foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData);
+            if(!foodResult){
+                return new StepResult(false, foodSupport.fillMessage);
+            }
             const validateResult = this.validateDraftData(draftData, skuItem, commonData);
             if(!validateResult.validateResult){
                 return new StepResult(false, validateResult.message);
@@ -106,6 +114,11 @@ export class UpdateDraftStep extends AbsPublishStep {
             }
         }
     }
+
+    async isFood(commonData : { [key : string] : any }){
+
+    }
+
 
     async fixInputByAI(draftData : { [key : string] : any }, skuItem : DoorSkuDTO, params : { [key : string] : any }){
         if(Object.keys(params).length == 0){
@@ -192,10 +205,12 @@ export class UpdateDraftStep extends AbsPublishStep {
                 if(checkResult){
                     continue;
                 }
+                log.info("draftCatPropValue is  ", catProp);
                 fixCatProp[propKey] = this.buildNewDataSource(catProp.label, dataSource);
                 continue;
             }
             if(catProp.required) {
+                log.info("fixCatProp is required ", catProp);
                 const dataSource = catProp.dataSource;
                 if(dataSource){
                     fixCatProp[propKey] = this.buildNewDataSource(catProp.label, dataSource);
