@@ -135,12 +135,12 @@ export class PublishSkuStep extends AbsPublishStep {
         const startTraceId = this.getParams("startTraceId");
         const updateDraftData = this.getParams("updateDraftData");
         const draftHeader = this.getParams("draftHeader");
-        const resourceId = this.getParams("resourceId");
         const draftId = this.getParams("draftId");
         const stepResult = await this.submit(catId, startTraceId, updateDraftData, draftHeader, draftId);
         const itemId = this.getParams("itemId");
         if(stepResult.result){
             await this.saveSkuCategory(this.getParams("skuItem"));
+            const resourceId = this.getParams("resourceId");
             await expireSkuDraft(resourceId, itemId);
         }
         return stepResult;
