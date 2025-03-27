@@ -63,7 +63,7 @@ async function publishSkuByPage(page: Page, ...doActionParams: any[]){
 
 export class PublishSkuStep extends AbsPublishStep {
 
-    async doStep(): Promise<StepResult> {
+    async publishByPage(){
         const draftId = this.getParams("draftId");
         const resourceId = this.getParams("resourceId");
         const engine = new MbEngine(resourceId);
@@ -128,6 +128,79 @@ export class PublishSkuStep extends AbsPublishStep {
         } finally{
             await engine.closePage();
         }
+    }
+
+    async doStep(): Promise<StepResult> {
+        const catId = this.getParams("catId");
+        const startTraceId = this.getParams("startTraceId");
+        const updateDraftData = this.getParams("updateDraftData");
+        const draftHeader = this.getParams("draftHeader");
+        const resourceId = this.getParams("resourceId");
+        const draftId = this.getParams("draftId");
+        const stepResult = await this.submit(catId, startTraceId, updateDraftData, draftHeader, draftId);
+        const itemId = this.getParams("itemId");
+        if(stepResult.result){
+            await this.saveSkuCategory(this.getParams("skuItem"));
+            await expireSkuDraft(resourceId, itemId);
+        }
+        return stepResult;
+    }
+
+    async submit(catId : string, startTraceId : string, updateDraftData : any, draftHeader : any, draftId : string){
+        try{
+            const url = "https://item.upload.taobao.com/sell/v2/submit.htm";
+            const data = {
+                "catId": catId,
+                "jsonBody": JSON.stringify(updateDraftData),
+                "globalExtendInfo": JSON.stringify({ "startTraceId": startTraceId })
+            };
+            const res = await axios.post(url, data, {
+                headers: draftHeader
+            })
+            const responseData = res.data;
+            log.info("responseData is ", responseData);
+            const type = responseData.models?.globalMessage?.type;
+            if(!type){
+                log.info("publish is error by ", responseData);
+                return new StepResult(false, "发布商品失败");
+            }
+            if(type == "error"){
+                log.info("publish is error by ", JSON.stringify(responseData));
+                const message = responseData.models?.formError?.tbExtractWay?.itemMessage?.template?.message;
+                if(message && message.length > 0){
+                    const msg = message[0].msg;
+                    return new StepResult(false, msg);
+                }
+                return new StepResult(false, "发布商品失败");
+            }
+            if(type == "warning"){
+                const message = responseData.models?.warning?.diagnoseViolationWarning?.tipsContent
+                log.info("publish is warning by ", JSON.stringify(responseData));
+                return new StepResult(false, message);
+            }
+            if(type == "success"){
+                const deleteResult = await this.deleteDraft(draftId);
+                if (!deleteResult) {
+                    log.info("deleteDraft failed ", deleteResult);
+                    return new StepResult(false, "删除草稿失败");
+                }
+                const successUrl = responseData.models?.globalMessage?.successUrl;
+                if(successUrl){
+                    const primaryIdMatch = successUrl.match(/primaryId=(\d+)/);
+                    let primaryId = null;
+                    if (primaryIdMatch && primaryIdMatch[1]) {
+                        primaryId = primaryIdMatch[1];
+                        this.setParams("newSkuId", primaryId);
+                    }
+                }
+                return new StepResult(true, "发布商品成功");
+            }
+            return new StepResult(false, "发布商品失败");
+        }catch(e){
+            log.error("submit draftData error ", e);
+            return new StepResult(false, "发布商品失败");
+        }
+
     }
 
     async saveSkuCategory(skuItem : DoorSkuDTO){

@@ -7,6 +7,7 @@ import { checkPropValue } from "../sku.prop.config";
 import { MbSkuApiImpl } from "@src/impl/door/sku/sku";
 import { parseSku } from "@api/door/door.api";
 import { TB } from "@enums/source";
+import { buildDefaultCombineContent, isNeedCombine, SaleProBuilder } from "../sku.sale.build";
 
 
 
@@ -14,7 +15,10 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
 
 
     override async fillSellInfo(commonData: { data: any }, skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[], saleProp: { [key: string]: { [key: string]: any }[] } }) {
-        const minPrice = await this.getPrice(Number(skuItem.doorSkuSaleInfo.price));
+        const priceRate = this.getParams("priceRate");
+        const components = commonData.data.components;
+        const saleProBuilder = new SaleProBuilder(priceRate, isNeedCombine(components));
+        const minPrice = await saleProBuilder.getPrice(Number(skuItem.doorSkuSaleInfo.price));
         draftData.price = minPrice;
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
         const salePropSubItems = commonData.data.components.saleProp.props.subItems;
@@ -30,7 +34,7 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
 
         // log.info("saleProps sku is ", JSON.stringify(skuItem.doorSkuSaleInfo.salesSkus));
 
-        await this.fillSellSku(skuItem, draftData);
+        await saleProBuilder.fillSellSku(skuItem, draftData);
     }
 
     async fixSaleProp(commonData: { data: any }, skuItem: DoorSkuDTO) {
@@ -121,76 +125,7 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
             }
         }
     }
-
-    async fillSellSku(skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[] }) {
-        const salesSkus = skuItem.doorSkuSaleInfo.salesSkus;
-        const skuList: { [key: string]: any }[] = [];
-        let quantity = 0;
-        let minPrice = 0;
-        for (const sale of salesSkus) {
-            quantity += Number(sale.quantity);
     
-            if (minPrice == 0 || Number(sale.price) < minPrice) {
-                minPrice = Number(sale.price);
-            }
-            skuList.push({
-                cspuId: 0,
-                skuPrice: await this.getPrice(Number(sale.price)),
-                skuBatchInventory: null,
-                action: { selected: true },
-                skuId: null,
-                skuStatus: 1,
-                skuStock: Number(sale.quantity),
-                skuQuality: { value: "mainSku", text: "单品", prefilled: true, prefilledText: { bottom: "<span style='color:#ff6600'>请确认分类</span>" } },
-                skuDetail: [],
-                skuCustomize: {
-                    "text": "否",
-                    "value": 0
-                },
-                disabled: false,
-                props: this.buildSalePros(sale.salePropPath, skuItem),
-                salePropKey: this.buildSalePropKey(sale.salePropPath),
-                errorInfo: {},
-                skuSpecification: null,
-                skuTitle: null
-            })
-        }
-        if (minPrice > 0) {
-            draftData.price = await this.getPrice(minPrice);
-        }
-        if (quantity > 0) {
-            draftData.quantity = quantity.toString();
-        }
-        draftData.sku = skuList;
-    
-    }
-
-    buildSalePropKey(salePropPath: string) {
-        const saleProps = salePropPath.split(";");
-        const salePropKey = [];
-        for (const saleProp of saleProps) {
-            const salePropIds = saleProp.split(":");
-            salePropKey.push(salePropIds[0] + "-" + salePropIds[1]);
-        }
-        return salePropKey.join("_");
-    }
-
-    
-    buildSalePros(sellPropPath: string, skuItem: DoorSkuDTO) {
-        const saleItems: { [key: string]: any }[] = [];
-        const saleProps = sellPropPath.split(";")
-        for (const saleProp of saleProps) {
-            const salePropIds = saleProp.split(":");
-            const saleParentId = salePropIds[0];
-            const salePropId = salePropIds[1];
-            const saleItem = this.buildSaleItem(saleParentId, salePropId, skuItem);
-            if (saleItem) {
-                saleItems.push(saleItem);
-            }
-        }
-        return saleItems;
-    }
-
     buildSaleItem(saleParentId: string, salePropId: string, skuItem: DoorSkuDTO) {
         const salesAttrs = skuItem.doorSkuSaleInfo.salesAttr["p-" + saleParentId];
         const saleProps = salesAttrs.values;

@@ -1,0 +1,89 @@
+{
+    "skuBarcodeType": {
+        "value": 1
+    },
+    "skuCatProp": {
+        "p-259916348": "巧比杯蘸酱饼干",
+        "p-227143751": "500g",
+        "p-186832700": "1包",
+        "p-3344920": "500.00g"
+    },
+    "foodTableGroup": {
+        "tableCompGroup": {
+            "skuFoodNutrientTable": {
+                "measurement": {
+                    "unit": "hundredGram"
+                }
+            }
+        },
+        "tableOcrCompGroup": {}
+    },
+    "foodSecurityGroup": {
+        "securityColumnGroup": {
+            "skuFoodPrdLicense": "SC11334160230808",
+            "skuFoodDesignCode": "0/ZY 0002S-2023",
+            "skuFoodFactoryName": "亳州市真元生物科技有限公司",
+            "skuFoodFactorySite": "安徽省亳州市谯城区栀子路6号安徽省希贾兹民族服饰有限公司1栋3楼",
+            "skuFoodMix": "详见包装",
+            "skuFoodPlanStorage": "详见包装",
+            "skuFoodPeriod": "270"
+        },
+        "securityOcrGroup": {}
+    },
+    "foodCustomDefineGroup": {
+        "customDefineColumnGroup": {},
+        "customDefineOcrGroup": {}
+    },
+    "skuFoodImages": [
+        {
+            "url": null
+        },
+        {
+            "url": null
+        },
+        {
+            "url": "https://img.alicdn.com/imgextra/i4/695637589/O1CN011uTIVk25vomqYsItl_!!695637589.jpg"
+        },
+        {
+            "url": null
+        },
+        {
+            "url": null
+        },
+        {
+            "url": null
+        }
+    ],
+    "skuBarcode": "0000000000000",
+    "idValue": {},
+    "skubarcode": "",
+    "pvs": [
+        {
+            "name": "p-31560",
+            "text": "多种口味",
+            "value": -41770271,
+            "label": "口味"
+        }
+    ],
+    "itemCatPropValue": {
+        "p-20000": {
+            "value": 1969326384,
+            "text": "豆有味"
+        },
+        "p-21299": {
+            "value": 27772,
+            "text": "中国大陆"
+        },
+        "p-6939376": {
+            "value": 28407,
+            "text": "包装"
+        },
+        "p-1626691": {
+            "value": 136135,
+            "text": "袋装"
+        },
+        "p-3344920": "65g",
+        "p-227143751": ""
+    },
+    "skuId": null
+}

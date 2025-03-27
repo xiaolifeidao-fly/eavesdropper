@@ -87,6 +87,9 @@ export class UpdateDraftStep extends AbsPublishStep {
             if(!updateResult){
                 return new StepResult(false, "更新草稿失败");
             }
+            this.setParams("updateDraftData", draftData);
+            this.setParams("draftHeader", requestHeader);
+            
             return new StepResult(true, "更新草稿成功");
         } catch (error) {
             log.error("UpdateDraftStep error", error);

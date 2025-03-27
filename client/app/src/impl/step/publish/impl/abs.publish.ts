@@ -101,38 +101,6 @@ export abstract class AbsPublishStep extends StepUnit{
         }
     }
 
-    async getPrice(price : number){
-        const priceRate : PriceRangeConfig[] | undefined = this.getParams("priceRate");
-        if(!priceRate || priceRate.length == 0){
-            return String(price);
-        }
-        // 找到适合当前价格的区间配置
-        const config = priceRate.find((config) => price >= config.minPrice && price <= config.maxPrice);
-        if (!config) {
-            return String(price);
-        }
-
-        // 计算价格
-        let finalPrice = price * config.priceMultiplier + config.fixedAddition;
-        // 根据 roundTo 进行舍入
-        switch (config.roundTo) {
-            case "yuan":
-                finalPrice = Math.round(finalPrice); // 四舍五入到元
-                break;
-            case "jiao":
-                finalPrice = Math.round(finalPrice * 10) / 10; // 四舍五入到角
-                break;
-            case "fen":
-                finalPrice = Math.round(finalPrice * 100) / 100; // 四舍五入到分
-                break;
-            default:
-                // 如果没有指定舍入单位，默认保留两位小数
-                finalPrice = Math.round(finalPrice * 100) / 100;
-                break;
-        }
-        return String(finalPrice);
-    }
-
     public async getCommonData(page: Page) {
         // 获取window对象中 json 数据 
         const commonData = await page.evaluate(() => {

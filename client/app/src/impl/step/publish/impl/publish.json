@@ -109,15 +109,8 @@
     },
     "attrPropTable": [],
     "assignUserAgreement": 1,
-    "spuConfirm": 1,
     "globalStock": {
         "value": "globalStock_0"
-    },
-    "departurePlace": {
-        "value": 0
-    },
-    "logisticsMode": {
-        "value": 2529666
     },
     "sale-card": {},
     "saleProp": {
@@ -419,14 +412,6 @@
         ]
     },
     "auctionVideos": [],
-    "desc": "",
-    "descForShenbiPc": {
-        "detail": null
-    },
-    "descForShenbiMobile": {
-        "cid": 0,
-        "descContainer": {}
-    },
     "descRepublicOfSell": {
         "descPageCommitParam": {
             "opt": 2,
@@ -576,7 +561,6 @@
     },
     "post-sale-service-card": {},
     "sevenDaySupport": 1,
-    "sevenDayOptional": 0,
     "guaranteeService": [
         {
             "value": "IND-SEC-brokenComp",
@@ -587,8 +571,6 @@
         "type": 2
     },
     "ysbCheckTask": 0,
-    "riskWarning": false,
-    "feedbackSubmit_catErrorWarning": false,
     "home-service-card": {},
     "aiFood-card": {},
     "product-card": {},
@@ -599,7 +581,6 @@
             "unit": "hundredGram"
         }
     },
-    "foodNutrientOCRContent": {},
     "foodPrdLicense": "SC11735042800164",
     "foodDesignCode": "GB/T 10782",
     "foodFactoryName": "将乐玉井坊食品有限公司",
