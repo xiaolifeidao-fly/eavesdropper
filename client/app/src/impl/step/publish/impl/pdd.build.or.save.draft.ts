@@ -7,7 +7,7 @@ import { checkPropValue } from "../sku.prop.config";
 import { MbSkuApiImpl } from "@src/impl/door/sku/sku";
 import { parseSku } from "@api/door/door.api";
 import { TB } from "@enums/source";
-import { buildDefaultCombineContent, isNeedCombine, SaleProBuilder } from "../sku.sale.build";
+import { buildDefaultCombineContent, isNeedCombine, isNeedSellPointCollection, SaleProBuilder } from "../sku.sale.build";
 
 
 
@@ -17,7 +17,11 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
     override async fillSellInfo(commonData: { data: any }, skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[], saleProp: { [key: string]: { [key: string]: any }[] } }) {
         const priceRate = this.getParams("priceRate");
         const components = commonData.data.components;
-        const saleProBuilder = new SaleProBuilder(priceRate, isNeedCombine(components));
+        const needCombine = isNeedCombine(components);
+        log.info("needCombine is ", needCombine);
+        const needSellPointCollection = isNeedSellPointCollection(components);
+        log.info("needSellPointCollection is ", needSellPointCollection);
+        const saleProBuilder = new SaleProBuilder(priceRate, needCombine, needSellPointCollection);
         const minPrice = await saleProBuilder.getPrice(Number(skuItem.doorSkuSaleInfo.price));
         draftData.price = minPrice;
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
@@ -25,9 +29,6 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
         // log.info("fillSellInfo start ", salePropSubItems);
         const rebuildSalePro = new RebuildSalePro(skuItem.baseInfo.itemId);
         const saleMappers = await rebuildSalePro.fixAndAssign(skuItem.doorSkuSaleInfo, salePropSubItems, Number(minPrice));
-        for(let saleMapper of saleMappers){
-            // log.info("saleMapper is ", JSON.stringify(saleMapper.saleAttr));
-        }
         const saleProps = rebuildSalePro.buildSaleProp(saleMappers, skuItem.doorSkuSaleInfo);
         draftData.saleProp = saleProps;
         // log.info("saleProps is ", JSON.stringify(saleProps));

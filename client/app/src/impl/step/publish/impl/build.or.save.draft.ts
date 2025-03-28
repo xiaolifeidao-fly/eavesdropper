@@ -9,12 +9,12 @@ import { SkuFileDetail } from "@model/sku/sku.file";
 import { DoorEntity } from "@src/door/entity";
 import { DoorSkuDTO, SkuItem } from "@model/door/sku";
 import { PriceRangeConfig } from "@model/sku/skuTask";
-import axios from "axios";
-import { getOrSaveTemplateId } from "@src/door/mb/logistics/logistics";
+import { getAddress, getOrSaveTemplateId } from "@src/door/mb/logistics/logistics";
 import { getUrlParameter } from "@utils/url.util";
 import { FoodSupport } from "../fill.food";
 import { AiFillSupport } from "../ai.fill";
-import { isNeedCombine, SaleProBuilder } from "../sku.sale.build";
+import { isNeedCombine, isNeedSellPointCollection, SaleProBuilder } from "../sku.sale.build";
+import { getAddressByKeywords } from "@api/address/address";
 
 async function doAction(page: Page, ...doActionParams: any[]) {
     await page.waitForTimeout(1000);
@@ -27,6 +27,7 @@ async function clickSaveDraf(page: Page) {
     await page.locator(".sell-draft-save-btn button").click();
 }
 
+const filterProCode = ["shippingArea","departurePlace"]
 
 export class SkuBuildDraftStep extends AbsPublishStep{
 
@@ -81,9 +82,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             };
         }
         await this.activeDraft(resourceId, skuItem.baseInfo.itemId, newSkuDraftId);
-        console.log("wait for networkidle start");
         await page.waitForLoadState('load');
-        console.log("wait for networkidle end");
         let commonData = await this.getCommonData(page);
         if (!commonData) {
             log.info("commonData not found ", commonData);
@@ -126,6 +125,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         await this.fillMainImage(imageFileList, draftData);
         await this.fillSellInfo(commonData, skuItem, draftData);
         await this.fillLogisticsMode(resourceId, skuItem, draftData, commonData);
+        await this.fillShippingArea(commonData, skuItem, draftData);
         const aiFillSupport = new AiFillSupport(this.getParams("skuSource"));
         await aiFillSupport.checkCatPropAndFix(draftData, skuItem, commonData);
         const imageDetailResult = this.fillImageDetail(draftData, imageFileList);
@@ -136,7 +136,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             };
         }
         const foodSupport = new FoodSupport();
-        const foodResult = foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData);
+        const foodResult = await foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData, catId, startTraceId, result.getHeaderData());
         const updateResult = await this.updateDraftData(catId, newSkuDraftId, result.getHeaderData(), startTraceId, draftData);
         if(!updateResult){
             return {
@@ -161,6 +161,34 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             message : "buildDraftData success"
         }
     }
+
+    async fillShippingArea(commonData : { [key: string]: any }, skuItem : DoorSkuDTO, draftData : { [key: string]: any }){
+        const shippingArea = commonData.data.components.shippingArea;
+        if(!shippingArea){
+            return;
+        }
+        const address = await getAddress(skuItem);
+        log.info("fillShippingArea address ", address);
+        if(address){
+            draftData.shippingArea = {
+                "type": "1",
+                "warehouseType": "1",
+                "value": {
+                    "text": address.cityName,
+                    "value": address.cityCode
+                }
+            }
+            return;
+        }
+        draftData.shippingArea = {
+            "type": "1",
+            "warehouseType": "1",
+            "value": {
+            }
+        }
+    }
+
+
 
     fillStartTime(draftData: { [key: string]: any }) {
         draftData.startTime = {
@@ -281,7 +309,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
     async fillSellInfo(commonData: { data: any }, skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[], saleProp: { [key: string]: { [key: string]: any }[] } }) {
         const priceRate : PriceRangeConfig[] | undefined = this.getParams("priceRate");
         const components = commonData.data.components;
-        const saleProBuilder = new SaleProBuilder(priceRate, isNeedCombine(components));
+        const saleProBuilder = new SaleProBuilder(priceRate, isNeedCombine(components), isNeedSellPointCollection(components));
         draftData.price = await saleProBuilder.getPrice(Number(skuItem.doorSkuSaleInfo.price));
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
         await this.fillSellProp(commonData, skuItem, draftData);
@@ -379,6 +407,9 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             if(!props || props.length == 0){
                 continue;
             }
+            if(filterProCode.includes(field)){
+                continue;
+            }
             const value = this.getPropValue(props, skuItem);
             if(value){
                 draftData[field] = value;
@@ -439,7 +470,11 @@ export class SkuBuildDraftStep extends AbsPublishStep{
                         }
                     }
                     if(fieldType == "rangePicker"){
-                        const range = text[0].split("至");
+                        const value = text[0];
+                        if(!value.includes("至")){
+                            continue;
+                        }
+                        const range = value.split("至");
                         if(range.length == 2){
                             const startDate = this.convertDateFormat(range[0]);
                             const endDate = this.convertDateFormat(range[1]);
@@ -624,6 +659,10 @@ export class SkuBuildDraftStep extends AbsPublishStep{
     }
 
     getCatIdFromUrl(result: DoorEntity<any>) {
+        const catId = this.getParams("catId");
+        if(catId){
+            return catId;
+        }
         const requestUrl = result.getUrl();
         const urlObj = new URL(requestUrl);
         const urlParams = new URLSearchParams(urlObj.search);

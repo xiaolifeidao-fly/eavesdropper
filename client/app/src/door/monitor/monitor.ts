@@ -184,8 +184,11 @@ export abstract class MonitorResponse<T> extends Monitor<T> {
         if(hadStore(key)){
             return false;
         }
-        setStore(key);
         return true;
+    }
+
+    setStoreContext(key : string){
+        setStore(key);
     }
 
 

@@ -131,7 +131,7 @@ export class MbLoginApiImpl extends MbLoginApi {
                 const resultData = result.getData();
                 if(resultData.result == "1"){
                     log.info("inputLoginInfo login success", result.getHeaderData());
-                    await engine.saveContextState(result.getHeaderData());
+                    await engine.saveContextState();
                     return new DoorEntity<{}>(true, resultData.message);
                 }
                 if(resultData.result == "2"){
@@ -192,7 +192,7 @@ export class MbLoginApiImpl extends MbLoginApi {
     }
 
     async awaitByLoginResult(header : {[key : string] : any}, engine : MbEngine<{}>, page : Page){
-        engine.saveContextState(header);
+        engine.saveContextState();
         setTimeout(async () => {
             try{
                 const monitor = new MdLoginMonitor();
@@ -201,7 +201,7 @@ export class MbLoginApiImpl extends MbLoginApi {
                     const header = await request?.allHeaders();
                     log.info("login monitor request ", header);
                     if(header){
-                        engine.saveContextState(header);
+                        engine.saveContextState();
                     }
                     loginResult = true;
                     return { "loginResult": true };
@@ -285,7 +285,7 @@ export class MbLoginApiImpl extends MbLoginApi {
                 const header = await request?.allHeaders();
                 log.info("login monitor request ", header);
                 if(header){
-                    engine.saveContextState(header);
+                    engine.saveContextState();
                 }
                 loginResult = true;
                 return { "loginResult": true };

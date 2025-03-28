@@ -34,7 +34,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                 const header = await request?.allHeaders();
                 log.info("login monitor request ", header);
                 loginResult = true;
-                engine.saveContextState(header);
+                engine.saveContextState();
                 return { "loginResult": true };
             });
             log.info("open wait monitor");

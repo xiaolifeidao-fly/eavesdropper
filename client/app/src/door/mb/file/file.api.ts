@@ -59,12 +59,9 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
         headerless = false;
     }
     const mbEngine = new MbEngine(resourceId, headerless);
-    if(headerless){
-        const headerData = mbEngine.getHeader();
-        //TODO cookie失效 要做处理
-        if(headerData){
-            return headerData;
-        }
+    const headerData = mbEngine.getHeader();
+    if(!validateTag && headerData){
+        return headerData;
     }
     let result;
     try{
@@ -86,10 +83,7 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
         }
         return result.getHeaderData();
     }finally{
-        if(result){
-            await mbEngine.saveContextState(result.getHeaderData());
-        }
-        // await mbEngine.closePage();
+        await mbEngine.closePage();
     }
 }
 

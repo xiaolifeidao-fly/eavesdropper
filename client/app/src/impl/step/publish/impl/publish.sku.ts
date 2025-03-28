@@ -204,9 +204,10 @@ export class PublishSkuStep extends AbsPublishStep {
     }
 
     async saveSkuCategory(skuItem : DoorSkuDTO){
-        const tbCategory = this.getParams("tbCategory");
+        let tbCategory = this.getParams("tbCategory");
         if(tbCategory){
-            const doorCategory = new DoorCategory(undefined, skuItem.baseInfo.catId, String(tbCategory.categoryId), tbCategory.categoryName);
+            const catId = this.getParams("catId");
+            const doorCategory = new DoorCategory(undefined, skuItem.baseInfo.catId, catId, tbCategory.categoryName);
             log.info(" saveDoorCategory info ", doorCategory);
             await saveDoorCategory(doorCategory);
         }

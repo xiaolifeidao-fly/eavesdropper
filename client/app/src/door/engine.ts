@@ -291,10 +291,13 @@ export abstract class DoorEngine<T = any> {
             data.responseHeaderData = responseHeaderData;
             if(data && data.code){
                 if(headerData && Object.keys(headerData).length > 0){
-                    if(responseMonitor.needStoreContext(this.getKey(), headerData)){
-                        this.setHeader(headerData);
+                    const key = this.getKey();
+                    const isNeedStoreContext = responseMonitor.needStoreContext(key, headerData);
+                    this.setHeader(headerData);
+                    if(isNeedStoreContext){
+                        responseMonitor.setStoreContext(key);
                         log.info("session reset save context state");
-                        await this.saveContextState(headerData);
+                        await this.saveContextState();
                     }
                 }
             }
@@ -517,7 +520,7 @@ export abstract class DoorEngine<T = any> {
 
     abstract getNamespace(): string;
 
-    public async saveContextState(header : {[key : string] : any}) {
+    public async saveContextState() {
         if(!this.context){
             return;
         }

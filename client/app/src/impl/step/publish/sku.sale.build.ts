@@ -17,6 +17,21 @@ export function isNeedCombine(components : { [key: string]: any }) : boolean {
     return false;
 }
 
+export function isNeedSellPointCollection(components : { [key: string]: any }) : boolean {
+    const attributes = components.sku.props.attributes;
+    for(const attribute in attributes){
+        if(attribute == "sellPointCollection"){
+            const sellPointCollection = attributes[attribute];
+            const defaultDataSource = sellPointCollection.config.defaultDataSource;
+            if(defaultDataSource && defaultDataSource.length > 0){
+                return true;
+            }
+            return false;
+        }
+    }
+    return false;
+}
+
 export function buildDefaultCombineContent() : { [key: string]: any } {
     return {
             "products": [
@@ -48,15 +63,17 @@ export class SaleProBuilder {
 
     private priceRate : PriceRangeConfig[] | undefined;
     private isNeedCombine : boolean;
+    private isNeedSellPointCollection : boolean;
 
-    constructor(priceRate : PriceRangeConfig[] | undefined, isNeedCombine : boolean = false){
+    constructor(priceRate : PriceRangeConfig[] | undefined, isNeedCombine : boolean = false, isNeedSellPointCollection : boolean = false ){
         this.priceRate = priceRate;
         this.isNeedCombine = isNeedCombine;
+        this.isNeedSellPointCollection = isNeedSellPointCollection;
     }
 
     
 
-    async buildSkuProp(sale : SalesSku, skuItem: DoorSkuDTO){
+    async buildSkuProp(sale : SalesSku, skuItem: DoorSkuDTO, index : number){
         const skuProp : { [key: string]: any } = {
             cspuId: 0,
             skuPrice: await this.getPrice(Number(sale.price)),
@@ -81,21 +98,32 @@ export class SaleProBuilder {
         if(this.isNeedCombine){
             skuProp.skuCombineContent = buildDefaultCombineContent();
         }
+        if(this.isNeedSellPointCollection && index == 0){
+            skuProp.sellPointCollection =  {
+                "value": 100,
+                "text": "店长主推",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>审核中，预计24h出结果</span>"
+                }
+            }
+        }
         return skuProp;
     }
 
-    async fillSellSku(skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[] }) {
+    async fillSellSku(skuItem: DoorSkuDTO, draftData: { [key: string]: any }) {
         const salesSkus = skuItem.doorSkuSaleInfo.salesSkus;
         const skuList: { [key: string]: any }[] = [];
         let quantity = 0;
         let minPrice = 0;
-        for (const sale of salesSkus) {
+        for (let index = 0; index < salesSkus.length; index++) {
+            const sale = salesSkus[index];
             quantity += Number(sale.quantity);
 
             if (minPrice == 0 || Number(sale.price) < minPrice) {
                 minPrice = Number(sale.price);
             }
-            const skuProps = await this.buildSkuProp(sale, skuItem);
+            const skuProps = await this.buildSkuProp(sale, skuItem, index);
             skuList.push(skuProps);
         }
         if (minPrice > 0) {

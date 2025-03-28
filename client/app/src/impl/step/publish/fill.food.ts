@@ -1,5 +1,6 @@
 
 import { DoorSkuDTO, SkuItem } from "@model/door/sku";
+import axios from "axios";
 import log from "electron-log";
 
 abstract class FoodHandler { 
@@ -99,6 +100,8 @@ class FoodFactorySiteHandler extends FoodHandler {
  * 保质期
  */
 class FoodPeriodHandler extends FoodHandler {
+
+
 
     needFill(draftData: { [key: string]: any; }): boolean {
         return true;
@@ -238,7 +241,7 @@ const foodHandlers : FoodHandler[] = [
 
 export class FoodSupport { 
 
-    fillResult : boolean ;
+    fillResult : boolean;
     fillMessage : string;
 
     constructor(fillResult : boolean = true, fillMessage : string = "食品类:"){
@@ -246,14 +249,40 @@ export class FoodSupport {
         this.fillMessage = fillMessage;
     }
 
-    doFill(components : { [key : string] : any }, skuItems : SkuItem[], draftData : { [key : string] : any }){
+    async doFill(components : { [key : string] : any }, skuItems : SkuItem[], draftData : { [key : string] : any }, catId : string, startTraceId : string, requestHeaders : { [key : string] : any }){
         if(!this.isFood(components)){
             return true;
         }
         this.fill(components, skuItems, draftData);
         this.againCheckAndFill(components, skuItems, draftData);
         this.checkResult(components, draftData);
+        if(this.fillResult){
+            await this.fillFoodFactory(catId, startTraceId, requestHeaders, draftData);
+        }
         return this.fillResult;
+    }
+
+    async fillFoodFactory(catId : string, startTraceId : string, headers : { [key : string] : any }, draftData : { [key : string] : any }){
+        const foodPrdLicense = draftData["foodPrdLicense"];
+        const url = "https://item.upload.taobao.com/sell/v2/asyncOpt.htm";
+        const data = {
+            optType: "foodPrdLicenseType",
+            catId: catId,
+            foodPrdLicense: foodPrdLicense,
+            globalExtendInfo: JSON.stringify({"startTraceId":startTraceId})
+        };
+        const response = await axios.post(url, data, {headers : headers});
+        const result = response.data;
+        if(result.models){
+            const formValues = result.models.formValues;
+            draftData["foodFactoryName"] = formValues?.foodFactoryName;
+            draftData["foodFactorySite"] = formValues?.foodFactorySite;
+        }else{
+            this.fillResult = false;
+            this.appendMessage("填充食品生产商失败");
+            log.error("fillFoodFactory error ", result);
+        }
+
     }
 
     fill(components : { [key : string] : any }, skuItems : SkuItem[], draftData : { [key : string] : any }){

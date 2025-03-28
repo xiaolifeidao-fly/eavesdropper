@@ -8,6 +8,7 @@ import { getDoorCatProps, getDoorCatPropsByAI, saveDoorCatProp } from "@api/door
 import { DoorSkuCatProp } from "@model/door/door";
 import { FoodSupport } from "../fill.food";
 import { AiFillSupport } from "../ai.fill";
+import { isNeedCombine, isNeedSellPointCollection, SaleProBuilder } from "../sku.sale.build";
 
 
 
@@ -50,6 +51,15 @@ export class UpdateDraftStep extends AbsPublishStep {
         step.setParams("multiDiscountPromotionValue", String(dataSource.max));
     }
 
+    async againFillSaleInfo(commonData : { [key : string] : any }, skuItem : DoorSkuDTO, draftData : { [key : string] : any }){
+        const priceRate = this.getParams("priceRate");
+        const components = commonData.data.components;
+        const needCombine = isNeedCombine(components);
+        const needSellPointCollection = isNeedSellPointCollection(components);
+        const saleProBuilder = new SaleProBuilder(priceRate, needCombine, needSellPointCollection);
+        await saleProBuilder.fillSellSku(skuItem, draftData, );
+    }
+
     async doStep(): Promise<StepResult> {
         const draftData = this.getParams("draftData");
         const draftId = this.getParams("draftId");
@@ -74,8 +84,9 @@ export class UpdateDraftStep extends AbsPublishStep {
             }
             await this.fillCategoryList(skuItem, draftData, commonData, requestHeader, catId, startTraceId);
             await this.fixRequiredData(draftData, skuItem, commonData);
+            await this.againFillSaleInfo(commonData, skuItem, draftData);
             const foodSupport = new FoodSupport();
-            const foodResult = foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData);
+            const foodResult = await foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData, catId, startTraceId, requestHeader);
             if(!foodResult){
                 return new StepResult(false, foodSupport.fillMessage);
             }

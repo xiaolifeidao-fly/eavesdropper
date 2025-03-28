@@ -49,9 +49,6 @@ function handlerPeriod(dataSource: { [key: string]: any }[], catValue: string){
     return undefined;
 }
 
-const specialCatProHandler: { [key: string]: (dataSource: { [key: string]: any }[], catValue: string) => any } = {
-    "保质期": handlerPeriod
-}
 
 
 export async function confirmProtocol(page: Page) {
@@ -161,15 +158,6 @@ export abstract class AbsPublishStep extends StepUnit{
             }
             if (!("dataSource" in catProp)) {
                 newCatProp[key] = value[0];
-                continue;
-            }
-            //特殊处理
-            if(catProp.label in specialCatProHandler){
-                const newValues = specialCatProHandler[catProp.label](catProp.dataSource, value[0]);
-                if(newValues){
-                    newCatProp[key] = newValues;
-                    continue;
-                }
                 continue;
             }
             const dataSource = catProp.dataSource;

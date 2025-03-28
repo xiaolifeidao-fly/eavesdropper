@@ -55,6 +55,15 @@ export async function getOrSaveTemplateId(resourceId: number, skuItem: DoorSkuDT
     return saveAddressByPage(resourceId, skuItem);
 }
 
+export async function getAddress(skuItem: DoorSkuDTO){
+    const logisticsMode = skuItem.doorSkuLogisticsInfo;
+    const deliveryFromAddr = logisticsMode.deliveryFromAddr;
+    if (!deliveryFromAddr || deliveryFromAddr == "") {
+        logisticsMode.deliveryFromAddr = "北京市";
+    }
+    return  await getAddressByKeywords(logisticsMode.deliveryFromAddr);
+}
+
 async function doAction(page: Page) {
     const tbToken = page.locator("#form1 input[name='_tb_token_']");
     if(tbToken){

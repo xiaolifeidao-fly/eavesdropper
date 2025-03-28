@@ -300,7 +300,7 @@ async function getSlideContent(imageInfo : string) {
   }
 
 
- async function validateImage(validateItem : ValidateItem, autoFlag : boolean = false){
+ async function validateImage(validateItem : ValidateItem, autoFlag : boolean = false, retryCount : number = 2){
       const engine = new MbEngine(validateItem.resourceId, autoFlag);
       try{
           const page = await engine.init();
@@ -314,7 +314,7 @@ async function getSlideContent(imageInfo : string) {
             }
             let result = await engine.openWaitMonitor(page, url, new ImageValidatorMonitor(), {}, validateAction, validateUrl, validateParams, autoFlag, true);
             let validateNum = 0;
-            while(!isValidateSuccess(result) && validateNum <=3 ){
+            while(!isValidateSuccess(result) && validateNum <=retryCount ){
                 validateNum++;
                 log.info("checkValidate error retry validate ", validateNum);
                 engine.resetMonitor();
@@ -343,9 +343,9 @@ function checkValidate(){
                 autoFlag = true;
             }
             log.info("validateImage autoFlag ", autoFlag);
-            let result = await validateImage(validateItem, autoFlag);
+            let result = await validateImage(validateItem, autoFlag, 1);
             if(!isValidateSuccess(result) && autoFlag){
-                result = await validateImage(validateItem, false);
+                result = await validateImage(validateItem, false, 2);
             }
             if(result && isValidateSuccess(result)){
                 validateItem.resolve(result.getHeaderData(), true);
