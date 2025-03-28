@@ -1,7 +1,7 @@
 {
     "frontDataLog": {
         "identityId": "general-taobao-100",
-        "mainCategoryId": 50026316,
+        "mainCategoryId": 50002766,
         "fromSmart": false,
         "fromStandardSpuPublish": false,
         "fromSearch": false,
@@ -10,27 +10,25 @@
         "fromSuggestion": false,
         "fromStandardCategory": false,
         "fromSpuBasePublish": false,
-        "fromAIPublish": true,
+        "fromAIPublish": false,
         "fromAICategory": false,
         "fromAIImage": false,
-        "traceId": "2150444717431489825541390e1c1b",
-        "gpfRenderTraceId": "2150444717431489825541390e1c1b",
-        "itemId": 902891563665,
-        "trueItemId": 902891563665,
-        "isEdit": true,
-        "pageUniqueId": "ai_pc",
+        "traceId": "213e023b17431773881572510e13d2",
+        "gpfRenderTraceId": "213e023b17431773881572510e13d2",
+        "trueItemId": 903782189937,
+        "isEdit": false,
+        "pageUniqueId": "pc",
         "newPublish": true
     },
     "auctionType": "b",
-    "sevenDayDefaultValue": 3,
-    "id": 902891563665,
+    "sevenDayDefaultValue": 1,
+    "id": 903782189937,
     "copyItemMode": 0,
     "postCouponPromotionId": null,
     "spuMatch": null,
-    "fromAIPublish": 1,
-    "croRule": "{\"url\":\"asyncOpt.htm?optType=croRuleAsyncCheck&catId=50013192\",\"input\":[\"id\",\"userId\",\"catId\",\"title\",\"desc\",\"descForShenbiPc\",\"sku\",\"price\",\"catProp\",\"saleProp\",\"descType\",\"shopping_title\",\"skuPublishSuggest\"]}",
+    "croRule": "{\"url\":\"asyncOpt.htm?optType=croRuleAsyncCheck&catId=50013080\",\"input\":[\"id\",\"userId\",\"catId\",\"title\",\"desc\",\"descForShenbiPc\",\"sku\",\"price\",\"catProp\",\"saleProp\",\"descType\",\"shopping_title\",\"skuPublishSuggest\"]}",
     "itemWithScProductItem": null,
-    "multiDiscountPromotionId": 84886893786,
+    "multiDiscountPromotionId": null,
     "batchInventoryTemplateId": null,
     "guideMaterialEnable": 1,
     "afterSaleVideo_videoId": null,
@@ -50,39 +48,37 @@
     "descRepublicEnable": 1,
     "skyLightRule": null,
     "recommendInfo": "{\"fromAiPublish\":false,\"fromNewImagePublish\":false,\"hasStructTitle\":false}",
-    "dbDraftId": 1228026276,
+    "dbDraftId": "1227656257",
     "draftIdKey": "dbDraftId",
     "firstStartTime": null,
-    "itemdiagnoseInfo": "{\"showNewVersion\":true,\"diagnoseIssueEntryList\":[{\"id\":\"mainImagesGroup\",\"value\":\"mainImagesGroup\",\"present\":\"食品卖点图未上传\",\"effect\":\"影响用户购买决策\",\"suggestion\":\"请上传食品类目卖点图\",\"feedbackUrl\":\"/taobao/diagnose/fb/asyncOpt.htm?optType=feedbackOpt&action=render&itemId=902891563665&diagnoseId=66&compname=mainImagesGroup&viewStatus=1\",\"code\":\"诊断发现问题\",\"type\":\"warn\",\"entryType\":\"FOOD_SELLING_POINT_PICTURE_CHECK\",\"diagnoseId\":66,\"feedbackButtonText\":\"申诉\",\"isImportant\":false},{\"id\":\"sku\",\"value\":\"sku\",\"present\":\"SKU文本增加规格信息\",\"effect\":\"影响搜索的价格展示、错误信息影响详情转化\",\"suggestion\":\"推荐以下SKU文本补充规格信息：【草莓味5袋】推荐补充信息：【108g*1袋】\\n<br>【黄桃味5袋】推荐补充信息：【108g*1袋】\\n<br>【草莓+黄桃两种混搭5袋】推荐补充信息：【108g*1袋】\\n<br>【草莓味10袋】推荐补充信息：【108g*1袋】\\n<br>【黄桃味10袋】推荐补充信息：【108g*1袋】\\n<br>【草莓+黄桃两种混搭10袋】推荐补充信息：【108g*1袋】\\n<br>【草莓味20袋】推荐补充信息：【108g*1袋】\\n<br>【黄桃味20袋】推荐补充信息：【108g*1袋】\\n<br>【草莓+黄桃两种混搭20袋】推荐补充信息：【108g*1袋】\\n<br>【荔枝味5袋】推荐补充信息：【108g*1袋】\\n<br>【荔枝味10袋】推荐补充信息：【108g*1袋】\\n<br>【荔枝味20袋】推荐补充信息：【108g*1袋】\\n<br>【葡萄味5袋】推荐补充信息：【108g*1袋】\\n<br>【葡萄味10袋】推荐补充信息：【108g*1袋】\\n<br>【葡萄味20袋】推荐补充信息：【108g*1袋】\\n<br>【口味随机混搭5袋】推荐补充信息：【108g*1袋】\\n<br>【口味随机混搭10袋】推荐补充信息：【108g*1袋】\\n<br>【口味随机混搭20袋】推荐补充信息：【108g*1袋】\\n\",\"feedbackUrl\":\"/taobao/diagnose/fb/asyncOpt.htm?optType=feedbackOpt&action=render&itemId=902891563665&diagnoseId=132&compname=sku&viewStatus=1\",\"code\":\"诊断发现问题\",\"type\":\"warn\",\"entryType\":\"FOOD_SKU_PRODUCT_VALID_CHECK\",\"diagnoseId\":132,\"feedbackButtonText\":\"申诉\",\"isImportant\":false}],\"total\":{\"qualityScore\":85.0,\"card\":{\"tip\":\"该商品暂时无法计算预计提升效果。\"}}}",
+    "itemdiagnoseInfo": "{\"showNewVersion\":true}",
     "diagnoseInvokeId": null,
-    "diagnoseSource": "2",
+    "diagnoseSource": null,
     "aliColorEnable": null,
     "mediaCenterEnable": null,
     "newMaterialEnable": null,
-    "foodNutrientOCRContent": {},
     "foodSecuritySubmit": false,
     "foodExtend": null,
-    "foodInfoOCRContent": null,
-    "catId": 50013192,
-    "userId": 2217023748919,
+    "catId": 50013080,
+    "userId": 695637589,
     "category": {
         "categorySelect": {
-            "id": 50013192,
-            "name": "果味/风味/果汁饮料",
+            "id": 50013080,
+            "name": "芒果干",
             "idpath": [
-                50026316,
-                50026398,
-                50013192
+                50002766,
+                50013061,
+                50013080
             ],
             "path": [
-                "咖啡/麦片/冲饮",
-                "饮料",
-                "果味/风味/果汁饮料"
+                "零食/坚果/特产",
+                "蜜饯/枣类/梅/果干/冻干",
+                "芒果干"
             ],
             "brand": false,
             "leaf": true,
             "publish": true,
-            "submitId": 50013192,
+            "submitId": 50013080,
             "empty": false
         }
     },
@@ -90,64 +86,27 @@
     "stuffStatus": {
         "value": 5
     },
-    "mainImagesGroup": {
-        "images": [
-            {
-                "url": "//img.alicdn.com/imgextra/i4/2217023748919/O1CN01q9gE8V2FkxYS9h2yW_!!2217023748919.jpg",
-                "pix": "800x800",
-                "width": "800",
-                "height": "800"
-            },
-            {
-                "url": "//img.alicdn.com/imgextra/i3/2217023748919/O1CN01yZDO9k2FkxYT7cTKT_!!2217023748919.jpg",
-                "pix": "800x800",
-                "width": "800",
-                "height": "800"
-            },
-            {
-                "url": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN01ORELkH2FkxYR0QqUT_!!2217023748919.jpg",
-                "pix": "800x800",
-                "width": "800",
-                "height": "800"
-            },
-            {
-                "url": "//img.alicdn.com/imgextra/i3/2217023748919/O1CN01oVv0HQ2FkxYLyTDXq_!!2217023748919.jpg",
-                "pix": "800x800",
-                "width": "800",
-                "height": "800"
-            },
-            {
-                "url": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01rTEmrw2FkxYLyRXaa_!!2217023748919.jpg",
-                "pix": "800x800",
-                "width": "800",
-                "height": "800"
-            }
-        ]
-    },
-    "auctionVideos": [],
-    "title": "水果捞果味饮料夏日拖肥80克休闲零食怀旧椰果肉包邮",
+    "title": "芒果干原切水果干蜜饯休闲零食酸甜果脯纯天然",
     "catProp": {
         "p-20000": {
             "value": 3246379,
             "text": "无品牌"
         },
-        "p-20000~1": "夏日拖肥",
-        "p-21299": {
-            "value": 27772,
+        "p-20000~1": "芒果干",
+        "p-1930001": {
+            "value": "27772",
             "text": "中国大陆"
         },
-        "p-21299-122450261": {
-            "value": 52862,
-            "text": "广东省"
+        "p-1930001-122450261": {
+            "value": "20213",
+            "text": "其他"
         },
         "p-6939376": {
-            "value": 28407,
-            "text": "包装"
+            "value": 92230,
+            "text": "散装"
         },
-        "p-1626691": {
-            "value": 20213,
-            "text": "其他"
-        }
+        "p-147956252": "500g",
+        "p-227143751": "22.2kg"
     },
     "attrPropTable": [],
     "assignUserAgreement": 1,
@@ -158,111 +117,27 @@
     "saleProp": {
         "p-122216494": [
             {
-                "value": -1362035789,
-                "text": "草莓味5袋",
-                "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01i1tDxK2FkxYURcmGo_!!2217023748919.jpg",
+                "text": "试吃-果干20.2g【贵在运费】",
+                "value": "-25926328150",
+                "img": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01dgJpGM25vomqLvHJx_!!695637589.jpg",
                 "pix": "800x800"
             },
             {
-                "value": -773961739,
-                "text": "黄桃味5袋",
-                "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN017NThyN2FkxYURcmHR_!!2217023748919.jpg",
+                "text": "【大片厚切】新货芒果干505g",
+                "value": "-26380758014",
+                "img": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01mTgIzS25vomt0baSe_!!695637589.jpg",
                 "pix": "800x800"
             },
             {
-                "value": -12394589228,
-                "text": "草莓+黄桃两种混搭5袋",
-                "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN017NThyN2FkxYURcmHR_!!2217023748919.jpg",
+                "text": "【大片厚切】新货芒果干255g",
+                "value": "-26381643990",
+                "img": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01PwMleY25vomr5JMKU_!!695637589.jpg",
                 "pix": "800x800"
             },
             {
-                "value": -1506394049,
-                "text": "草莓味10袋",
-                "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01i1tDxK2FkxYURcmGo_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -1792054830,
-                "text": "黄桃味10袋",
-                "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN017NThyN2FkxYURcmHR_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -8049074001,
-                "text": "草莓+黄桃两种混搭10袋",
-                "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01i1tDxK2FkxYURcmGo_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -1454078184,
-                "text": "草莓味20袋",
-                "img": "//img.alicdn.com/imgextra/i3/2217023748919/O1CN01cps4YN2FkxYQt8xR1_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -502225646,
-                "text": "黄桃味20袋",
-                "img": "//img.alicdn.com/imgextra/i3/2217023748919/O1CN01cps4YN2FkxYQt8xR1_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -8049074002,
-                "text": "草莓+黄桃两种混搭20袋",
-                "img": "//img.alicdn.com/imgextra/i3/2217023748919/O1CN01cps4YN2FkxYQt8xR1_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -1712957745,
-                "text": "荔枝味5袋",
-                "img": "//img.alicdn.com/imgextra/i4/2217023748919/O1CN01tgTSAw2FkxYSvvQJ0_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -1752648012,
-                "text": "荔枝味10袋",
-                "img": "//img.alicdn.com/imgextra/i4/2217023748919/O1CN01tgTSAw2FkxYSvvQJ0_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -1606166655,
-                "text": "荔枝味20袋",
-                "img": "//img.alicdn.com/imgextra/i4/2217023748919/O1CN01tgTSAw2FkxYSvvQJ0_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -1362035791,
-                "text": "葡萄味5袋",
-                "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01kxVIix2FkxYLyT5Ih_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -1708437484,
-                "text": "葡萄味10袋",
-                "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01kxVIix2FkxYLyT5Ih_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -1507400419,
-                "text": "葡萄味20袋",
-                "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01kxVIix2FkxYLyT5Ih_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -755401188,
-                "text": "口味随机混搭5袋",
-                "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN01CUhNgZ2FkxYSKQHE7_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -4680850703,
-                "text": "口味随机混搭10袋",
-                "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN01CUhNgZ2FkxYSKQHE7_!!2217023748919.jpg",
-                "pix": "800x800"
-            },
-            {
-                "value": -1893842399,
-                "text": "口味随机混搭20袋",
-                "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN01CUhNgZ2FkxYSKQHE7_!!2217023748919.jpg",
+                "text": "【大片厚切】新货芒果干105g",
+                "value": "-26291533841",
+                "img": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01BZBpqM25vomr5KMjT_!!695637589.jpg",
                 "pix": "800x800"
             }
         ]
@@ -274,862 +149,204 @@
     },
     "sku": [
         {
-            "cspuId": null,
-            "skuPrice": "10.12",
+            "cspuId": 0,
+            "skuPrice": "16.67",
+            "skuBatchInventory": null,
             "action": {
                 "selected": true
             },
-            "skuId": 5929629435111,
+            "skuId": null,
             "skuStatus": 1,
             "skuStock": 1000,
             "skuQuality": {
                 "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140974563665"
-            },
-            "disabled": false,
-            "sellPointCollection": {
-                "value": 100,
-                "text": "店长主推",
+                "text": "单品",
                 "prefilled": true,
                 "prefilledText": {
-                    "bottom": "<span style='color:#ff6600'>审核中，预计24h出结果</span>"
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
                 }
-            },
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -1362035789,
-                    "text": "草莓味5袋",
-                    "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01i1tDxK2FkxYURcmGo_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--1362035789",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "10.12",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435112,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
             },
             "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140975563665"
+            "skuCustomize": {
+                "text": "否",
+                "value": 0
             },
             "disabled": false,
             "props": [
                 {
                     "name": "p-122216494",
-                    "value": -773961739,
-                    "text": "黄桃味5袋",
-                    "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN017NThyN2FkxYURcmHR_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
+                    "value": "-26380758014",
+                    "text": "【大片厚切】新货芒果干505g",
+                    "pix": "800x871",
+                    "img": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01mTgIzS25vomt0baSe_!!695637589.jpg",
+                    "label": "重量"
                 }
             ],
-            "salePropKey": "122216494--773961739",
-            "errorInfo": {}
+            "salePropKey": "122216494--26380758014",
+            "errorInfo": {},
+            "skuSpecification": null,
+            "skuTitle": null
         },
         {
-            "cspuId": null,
-            "skuPrice": "10.12",
+            "cspuId": 0,
+            "skuPrice": "10.02",
+            "skuBatchInventory": null,
             "action": {
                 "selected": true
             },
-            "skuId": 5929629435113,
+            "skuId": null,
             "skuStatus": 1,
             "skuStock": 1000,
             "skuQuality": {
                 "value": "mainSku",
-                "text": "单品"
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
             },
             "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140976563665"
+            "skuCustomize": {
+                "text": "否",
+                "value": 0
             },
             "disabled": false,
             "props": [
                 {
                     "name": "p-122216494",
-                    "value": -12394589228,
-                    "text": "草莓+黄桃两种混搭5袋",
-                    "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN017NThyN2FkxYURcmHR_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
+                    "value": "-26381643990",
+                    "text": "【大片厚切】新货芒果干255g",
+                    "pix": "800x871",
+                    "img": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01PwMleY25vomr5JMKU_!!695637589.jpg",
+                    "label": "重量"
                 }
             ],
-            "salePropKey": "122216494--12394589228",
-            "errorInfo": {}
+            "salePropKey": "122216494--26381643990",
+            "errorInfo": {},
+            "skuSpecification": null,
+            "skuTitle": null
         },
         {
-            "cspuId": null,
-            "skuPrice": "14.72",
+            "cspuId": 0,
+            "skuPrice": "6.53",
+            "skuBatchInventory": null,
             "action": {
                 "selected": true
             },
-            "skuId": 5929629435114,
+            "skuId": null,
             "skuStatus": 1,
             "skuStock": 1000,
             "skuQuality": {
                 "value": "mainSku",
-                "text": "单品"
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
             },
             "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140977563665"
+            "skuCustomize": {
+                "text": "否",
+                "value": 0
             },
             "disabled": false,
             "props": [
                 {
                     "name": "p-122216494",
-                    "value": -1506394049,
-                    "text": "草莓味10袋",
-                    "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01i1tDxK2FkxYURcmGo_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
+                    "value": "-26291533841",
+                    "text": "【大片厚切】新货芒果干105g",
+                    "pix": "800x871",
+                    "img": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01BZBpqM25vomr5KMjT_!!695637589.jpg",
+                    "label": "重量"
                 }
             ],
-            "salePropKey": "122216494--1506394049",
-            "errorInfo": {}
+            "salePropKey": "122216494--26291533841",
+            "errorInfo": {},
+            "skuSpecification": null,
+            "skuTitle": null
         },
         {
-            "cspuId": null,
-            "skuPrice": "14.72",
+            "cspuId": 0,
+            "skuPrice": "3.22",
+            "skuBatchInventory": null,
             "action": {
                 "selected": true
             },
-            "skuId": 5929629435115,
+            "skuId": null,
             "skuStatus": 1,
             "skuStock": 1000,
             "skuQuality": {
                 "value": "mainSku",
-                "text": "单品"
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
             },
             "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140978563665"
+            "skuCustomize": {
+                "text": "否",
+                "value": 0
             },
             "disabled": false,
             "props": [
                 {
                     "name": "p-122216494",
-                    "value": -1792054830,
-                    "text": "黄桃味10袋",
-                    "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN017NThyN2FkxYURcmHR_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
+                    "value": "-25926328150",
+                    "text": "试吃-果干20.2g【贵在运费】",
+                    "pix": "800x871",
+                    "img": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01dgJpGM25vomqLvHJx_!!695637589.jpg",
+                    "label": "重量"
                 }
             ],
-            "salePropKey": "122216494--1792054830",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "14.72",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435116,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140979563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -8049074001,
-                    "text": "草莓+黄桃两种混搭10袋",
-                    "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01i1tDxK2FkxYURcmGo_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--8049074001",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "23.92",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435117,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140980563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -1454078184,
-                    "text": "草莓味20袋",
-                    "img": "//img.alicdn.com/imgextra/i3/2217023748919/O1CN01cps4YN2FkxYQt8xR1_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--1454078184",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "23.92",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435118,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140981563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -502225646,
-                    "text": "黄桃味20袋",
-                    "img": "//img.alicdn.com/imgextra/i3/2217023748919/O1CN01cps4YN2FkxYQt8xR1_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--502225646",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "23.92",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435119,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140982563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -8049074002,
-                    "text": "草莓+黄桃两种混搭20袋",
-                    "img": "//img.alicdn.com/imgextra/i3/2217023748919/O1CN01cps4YN2FkxYQt8xR1_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--8049074002",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "10.12",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435120,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140983563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -1712957745,
-                    "text": "荔枝味5袋",
-                    "img": "//img.alicdn.com/imgextra/i4/2217023748919/O1CN01tgTSAw2FkxYSvvQJ0_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--1712957745",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "14.72",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435121,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140984563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -1752648012,
-                    "text": "荔枝味10袋",
-                    "img": "//img.alicdn.com/imgextra/i4/2217023748919/O1CN01tgTSAw2FkxYSvvQJ0_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--1752648012",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "23.92",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435122,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140985563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -1606166655,
-                    "text": "荔枝味20袋",
-                    "img": "//img.alicdn.com/imgextra/i4/2217023748919/O1CN01tgTSAw2FkxYSvvQJ0_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--1606166655",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "10.12",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435123,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140986563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -1362035791,
-                    "text": "葡萄味5袋",
-                    "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01kxVIix2FkxYLyT5Ih_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--1362035791",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "14.72",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435124,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140987563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -1708437484,
-                    "text": "葡萄味10袋",
-                    "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01kxVIix2FkxYLyT5Ih_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--1708437484",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "23.92",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435125,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140988563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -1507400419,
-                    "text": "葡萄味20袋",
-                    "img": "//img.alicdn.com/imgextra/i1/2217023748919/O1CN01kxVIix2FkxYLyT5Ih_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--1507400419",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "10.12",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435126,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140989563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -755401188,
-                    "text": "口味随机混搭5袋",
-                    "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN01CUhNgZ2FkxYSKQHE7_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--755401188",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "14.72",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435127,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140990563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -4680850703,
-                    "text": "口味随机混搭10袋",
-                    "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN01CUhNgZ2FkxYSKQHE7_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--4680850703",
-            "errorInfo": {}
-        },
-        {
-            "cspuId": null,
-            "skuPrice": "23.92",
-            "action": {
-                "selected": true
-            },
-            "skuId": 5929629435128,
-            "skuStatus": 1,
-            "skuStock": 1000,
-            "skuQuality": {
-                "value": "mainSku",
-                "text": "单品"
-            },
-            "skuDetail": [],
-            "skuCombineContent": {
-                "products": [
-                    {
-                        "primaryKey": "barcode:6928590200041",
-                        "id": 1000503671620404,
-                        "barcode": "6928590200041",
-                        "count": 1,
-                        "title": "海玉小馍片(麻辣味) 108g*1袋",
-                        "imageUrl": "//img.alicdn.com/imgextra/i3/6000000001951/O1CN01lS5cba1QHbZZzDvit_!!6000000001951-2-remus.png",
-                        "spuId": 5965803316,
-                        "spuDetailUrl": "https://spu.taobao.com/product/spuDetail.htm?spuId=5965803316&providerId=8&hasWrapper=1&readonly=true",
-                        "readonly": false,
-                        "mock": false,
-                        "empty": false
-                    }
-                ],
-                "packageId": "223817140991563665"
-            },
-            "disabled": false,
-            "props": [
-                {
-                    "name": "p-122216494",
-                    "value": -1893842399,
-                    "text": "口味随机混搭20袋",
-                    "img": "//img.alicdn.com/imgextra/i2/2217023748919/O1CN01CUhNgZ2FkxYSKQHE7_!!2217023748919.jpg",
-                    "pix": "800x800",
-                    "label": "食品口味"
-                }
-            ],
-            "salePropKey": "122216494--1893842399",
-            "errorInfo": {}
+            "salePropKey": "122216494--25926328150",
+            "errorInfo": {},
+            "skuSpecification": null,
+            "skuTitle": null
         }
     ],
-    "price": "10.12",
-    "quantity": "18000",
+    "price": "3.22",
+    "quantity": "4000",
     "multiDiscountPromotion": {
+        "value": "9.5",
         "type": 1,
-        "promotionId": 84886893786,
-        "value": 9.5,
         "enable": true
     },
     "sizeinfo-card": {},
     "desc-card": {},
+    "mainImagesGroup": {
+        "images": [
+            {
+                "url": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01pGb12X25vomr5Jh3r_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "url": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01rR3TLI25vomsPCHQL_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "url": "https://img.alicdn.com/imgextra/i2/695637589/O1CN0145OwVW25vomu7RC9Y_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "url": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01sJSrP425vomqLtKeh_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "url": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01UHRCaX25vomr5Kpm7_!!695637589.jpg",
+                "pix": "800x800"
+            }
+        ]
+    },
+    "auctionVideos": [],
     "descRepublicOfSell": {
         "descPageCommitParam": {
             "opt": 2,
             "clientType": 1,
-            "bizSource": "sell",
-            "userId": 2217023748919,
-            "itemId": 902891563665,
+            "userId": 695637589,
+            "itemId": 0,
             "templateId": 0,
-            "detailParam": "null",
-            "templateContent": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN01M933Va2FkxYTYhz6j_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1080\",\"size\":177309,\"id\":1891908408338045700},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900092\",\"groupId\":\"group1743148900091\",\"selected\":false}],\"groupId\":\"group1743148900091\",\"id\":\"group1743148900091\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/2217023748919/O1CN01QpMdSj2FkxYSnXm4A_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"124\",\"size\":15227,\"id\":1891908407641124400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900093\",\"groupId\":\"group1743148900092\",\"selected\":false}],\"groupId\":\"group1743148900092\",\"id\":\"group1743148900092\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01tOuDKx2FkxYQGoCGN_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":178626,\"id\":1891908405325153500},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900094\",\"groupId\":\"group1743148900093\",\"selected\":false}],\"groupId\":\"group1743148900093\",\"id\":\"group1743148900093\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/2217023748919/O1CN01sGr3W72FkxYQGoX4K_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1047\",\"height\":\"1500\",\"size\":150674,\"id\":1891908405325233700},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900095\",\"groupId\":\"group1743148900094\",\"selected\":false}],\"groupId\":\"group1743148900094\",\"id\":\"group1743148900094\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN015c3bRM2FkxYSKP8QV_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":265226,\"id\":1891908407210551800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900096\",\"groupId\":\"group1743148900095\",\"selected\":false}],\"groupId\":\"group1743148900095\",\"id\":\"group1743148900095\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/2217023748919/O1CN01VDSTdP2FkxYTYkbHM_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":234896,\"id\":1891908408338669000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900097\",\"groupId\":\"group1743148900096\",\"selected\":false}],\"groupId\":\"group1743148900096\",\"id\":\"group1743148900096\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN01CoH1xm2FkxYT7dsea_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":266026,\"id\":1891908407938106400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900098\",\"groupId\":\"group1743148900097\",\"selected\":false}],\"groupId\":\"group1743148900097\",\"id\":\"group1743148900097\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/2217023748919/O1CN01okmhdT2FkxYQGoSvT_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":264934,\"id\":1891908405325217800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900099\",\"groupId\":\"group1743148900098\",\"selected\":false}],\"groupId\":\"group1743148900098\",\"id\":\"group1743148900098\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01vaxVEr2FkxYT7dseq_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":175249,\"id\":1891908407938106400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900100\",\"groupId\":\"group1743148900099\",\"selected\":false}],\"groupId\":\"group1743148900099\",\"id\":\"group1743148900099\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01ikiv9q2FkxYSiaimX_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1068\",\"height\":\"1500\",\"size\":143622,\"id\":1891908407567945200},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900101\",\"groupId\":\"group1743148900100\",\"selected\":false}],\"groupId\":\"group1743148900100\",\"id\":\"group1743148900100\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01LAM0ci2FkxYTYgqR5_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":234693,\"id\":1891908408337774000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900102\",\"groupId\":\"group1743148900101\",\"selected\":false}],\"groupId\":\"group1743148900101\",\"id\":\"group1743148900101\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN016KPwEk2FkxYS8NCEJ_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":145720,\"id\":1891908407032773600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900103\",\"groupId\":\"group1743148900102\",\"selected\":false}],\"groupId\":\"group1743148900102\",\"id\":\"group1743148900102\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN019aLqPl2FkxYQGpGnA_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":141850,\"id\":1891908405325409300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900104\",\"groupId\":\"group1743148900103\",\"selected\":false}],\"groupId\":\"group1743148900103\",\"id\":\"group1743148900103\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN01yj4IIv2FkxYS8P4fT_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":181628,\"id\":1891908407033221000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900105\",\"groupId\":\"group1743148900104\",\"selected\":false}],\"groupId\":\"group1743148900104\",\"id\":\"group1743148900104\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/2217023748919/O1CN01XobDOi2FkxYU2W88G_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":265226,\"id\":1891908408778510300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900106\",\"groupId\":\"group1743148900105\",\"selected\":false}],\"groupId\":\"group1743148900105\",\"id\":\"group1743148900105\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/2217023748919/O1CN01i0nug62FkxYRvbLqg_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":177698,\"id\":1891908406844054800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900107\",\"groupId\":\"group1743148900106\",\"selected\":false}],\"groupId\":\"group1743148900106\",\"id\":\"group1743148900106\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01MuqA382FkxYQt5wJ1_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":234896,\"id\":1891908405890883000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900108\",\"groupId\":\"group1743148900107\",\"selected\":false}],\"groupId\":\"group1743148900107\",\"id\":\"group1743148900107\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN010AQKtO2FkxYSKRorx_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":175249,\"id\":1891908407211191600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900109\",\"groupId\":\"group1743148900108\",\"selected\":false}],\"groupId\":\"group1743148900108\",\"id\":\"group1743148900108\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/2217023748919/O1CN01H5N2kK2FkxYTYkrxO_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":266026,\"id\":1891908408338733000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900110\",\"groupId\":\"group1743148900109\",\"selected\":false}],\"groupId\":\"group1743148900109\",\"id\":\"group1743148900109\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/2217023748919/O1CN01BaPYMX2FkxYQGojbO_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1080\",\"size\":219633,\"id\":1891908405325281800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900111\",\"groupId\":\"group1743148900110\",\"selected\":false}],\"groupId\":\"group1743148900110\",\"id\":\"group1743148900110\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN010zEqt92FkxYSvv1KS_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":176162,\"id\":1891908407764875300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900112\",\"groupId\":\"group1743148900111\",\"selected\":false}],\"groupId\":\"group1743148900111\",\"id\":\"group1743148900111\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN01MMubLM2FkxYRvbYLi_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":146808,\"id\":1891908406844103000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900113\",\"groupId\":\"group1743148900112\",\"selected\":false}],\"groupId\":\"group1743148900112\",\"id\":\"group1743148900112\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN01uhCBAF2FkxYR0S3RK_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1080\",\"size\":108436,\"id\":1891908405999587800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900114\",\"groupId\":\"group1743148900113\",\"selected\":false}],\"groupId\":\"group1743148900113\",\"id\":\"group1743148900113\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/2217023748919/O1CN01t76ZUY2FkxYS8O8UA_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"800\",\"size\":63919,\"id\":1891908407032997600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900115\",\"groupId\":\"group1743148900114\",\"selected\":false}],\"groupId\":\"group1743148900114\",\"id\":\"group1743148900114\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01cZSPaB2FkxYQGnf3v_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":66109,\"id\":1891908405325026000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900116\",\"groupId\":\"group1743148900115\",\"selected\":false}],\"groupId\":\"group1743148900115\",\"id\":\"group1743148900115\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}",
+            "templateContent": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01JLOn2V25vomsPDHpH_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":85397,\"id\":1758908407471703800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399499\",\"groupId\":\"group1743177399498\",\"selected\":false}],\"groupId\":\"group1743177399498\",\"id\":\"group1743177399498\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01OMlUQQ25vomm3iQQw_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1024\",\"height\":\"1024\",\"size\":114063,\"id\":1758908401657248800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399500\",\"groupId\":\"group1743177399499\",\"selected\":false}],\"groupId\":\"group1743177399499\",\"id\":\"group1743177399499\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01M3M9FN25vomu7Qakr_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":69160,\"id\":1758908409041166600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399501\",\"groupId\":\"group1743177399500\",\"selected\":false}],\"groupId\":\"group1743177399500\",\"id\":\"group1743177399500\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN010uI0Yp25vomuWckNa_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":85397,\"id\":1758908409413471700},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399502\",\"groupId\":\"group1743177399501\",\"selected\":false}],\"groupId\":\"group1743177399501\",\"id\":\"group1743177399501\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01GO32yM25vomuWfd9O_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":131957,\"id\":1758908409414159000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399503\",\"groupId\":\"group1743177399502\",\"selected\":false}],\"groupId\":\"group1743177399502\",\"id\":\"group1743177399502\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01JASfsE25vomsnRYm2_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"790\",\"height\":\"790\",\"size\":101132,\"id\":1758908407829737700},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399504\",\"groupId\":\"group1743177399503\",\"selected\":false}],\"groupId\":\"group1743177399503\",\"id\":\"group1743177399503\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01xp6met25vomtdmJca_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":107419,\"id\":1758908408603053800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399505\",\"groupId\":\"group1743177399504\",\"selected\":false}],\"groupId\":\"group1743177399504\",\"id\":\"group1743177399504\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01UiQOSk25vomt0bilQ_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":77366,\"id\":1758908408024251600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399506\",\"groupId\":\"group1743177399505\",\"selected\":false}],\"groupId\":\"group1743177399505\",\"id\":\"group1743177399505\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01GVe1qv25vomsDWIIy_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":81694,\"id\":1758908407298918000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399507\",\"groupId\":\"group1743177399506\",\"selected\":false}],\"groupId\":\"group1743177399506\",\"id\":\"group1743177399506\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01BXcE6M25vomtdlRZS_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":128373,\"id\":1758908408602846000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399508\",\"groupId\":\"group1743177399507\",\"selected\":false}],\"groupId\":\"group1743177399507\",\"id\":\"group1743177399507\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01SgJITT25vomtdnvNK_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":65562,\"id\":1758908408603437300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743177399509\",\"groupId\":\"group1743177399508\",\"selected\":false}],\"groupId\":\"group1743177399508\",\"id\":\"group1743177399508\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}",
             "version": 0,
             "freeTry": 0,
             "needServerComposite": false,
@@ -1138,31 +355,33 @@
             "params": "params",
             "maxHeight": 100000,
             "articleId": 0,
-            "commitAdescDigest": "-1306546462_20953",
-            "smart": false,
             "sell": false,
+            "smart": false,
             "bsellerBack2OldVersion": false,
             "fliggyItem": false,
-            "newItem": false,
-            "changed": false,
-            "catId": 50013192,
+            "newItem": true,
+            "changed": true,
+            "catId": 50013080,
+            "bizSource": "sell",
+            "draftKey": "sell_695637589_12525_235315",
             "descDomain": "//g.alicdn.com",
             "descVersion": "1.1.53",
             "bseller": false,
             "editType": "lite"
         },
         "descPageRenderParam": {
-            "userId": 2217023748919,
-            "itemId": 902891563665,
+            "userId": 695637589,
+            "itemId": 0,
             "templateId": 0,
             "clientType": 1,
-            "catId": 50013192,
+            "catId": 50013080,
             "bizSource": "sell",
+            "draftKey": "sell_695637589_12525_235315",
             "descDomain": "//g.alicdn.com",
             "descVersion": "1.1.53",
             "smart": false,
             "bseller": false,
-            "newItem": false
+            "newItem": true
         },
         "descPageRenderModel": {
             "wholeConfigBO": {
@@ -1171,38 +390,13 @@
                 "splitHeight": 960,
                 "ratio": 2,
                 "canCoverFromTmall": false,
-                "userId": 2217023748919,
+                "userId": 695637589,
                 "liteCannotEdit": false,
                 "renderWhite": false
             },
             "descPageDO": {
-                "id": 77442984440919,
-                "gmtCreate": 1743148929000,
-                "gmtModified": 1743148929000,
-                "itemId": 902891563665,
-                "userId": 2217023748919,
                 "templateId": 0,
-                "editorVersion": "MixEdit",
-                "editRst": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN01M933Va2FkxYTYhz6j_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1080\",\"size\":177309,\"id\":1891908408338045700},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900092\",\"groupId\":\"group1743148900091\",\"selected\":false}],\"groupId\":\"group1743148900091\",\"id\":\"group1743148900091\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/2217023748919/O1CN01QpMdSj2FkxYSnXm4A_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"124\",\"size\":15227,\"id\":1891908407641124400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900093\",\"groupId\":\"group1743148900092\",\"selected\":false}],\"groupId\":\"group1743148900092\",\"id\":\"group1743148900092\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01tOuDKx2FkxYQGoCGN_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":178626,\"id\":1891908405325153500},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900094\",\"groupId\":\"group1743148900093\",\"selected\":false}],\"groupId\":\"group1743148900093\",\"id\":\"group1743148900093\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/2217023748919/O1CN01sGr3W72FkxYQGoX4K_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1047\",\"height\":\"1500\",\"size\":150674,\"id\":1891908405325233700},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900095\",\"groupId\":\"group1743148900094\",\"selected\":false}],\"groupId\":\"group1743148900094\",\"id\":\"group1743148900094\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN015c3bRM2FkxYSKP8QV_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":265226,\"id\":1891908407210551800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900096\",\"groupId\":\"group1743148900095\",\"selected\":false}],\"groupId\":\"group1743148900095\",\"id\":\"group1743148900095\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/2217023748919/O1CN01VDSTdP2FkxYTYkbHM_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":234896,\"id\":1891908408338669000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900097\",\"groupId\":\"group1743148900096\",\"selected\":false}],\"groupId\":\"group1743148900096\",\"id\":\"group1743148900096\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN01CoH1xm2FkxYT7dsea_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":266026,\"id\":1891908407938106400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900098\",\"groupId\":\"group1743148900097\",\"selected\":false}],\"groupId\":\"group1743148900097\",\"id\":\"group1743148900097\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/2217023748919/O1CN01okmhdT2FkxYQGoSvT_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":264934,\"id\":1891908405325217800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900099\",\"groupId\":\"group1743148900098\",\"selected\":false}],\"groupId\":\"group1743148900098\",\"id\":\"group1743148900098\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01vaxVEr2FkxYT7dseq_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":175249,\"id\":1891908407938106400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900100\",\"groupId\":\"group1743148900099\",\"selected\":false}],\"groupId\":\"group1743148900099\",\"id\":\"group1743148900099\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01ikiv9q2FkxYSiaimX_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1068\",\"height\":\"1500\",\"size\":143622,\"id\":1891908407567945200},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900101\",\"groupId\":\"group1743148900100\",\"selected\":false}],\"groupId\":\"group1743148900100\",\"id\":\"group1743148900100\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01LAM0ci2FkxYTYgqR5_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":234693,\"id\":1891908408337774000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900102\",\"groupId\":\"group1743148900101\",\"selected\":false}],\"groupId\":\"group1743148900101\",\"id\":\"group1743148900101\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN016KPwEk2FkxYS8NCEJ_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":145720,\"id\":1891908407032773600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900103\",\"groupId\":\"group1743148900102\",\"selected\":false}],\"groupId\":\"group1743148900102\",\"id\":\"group1743148900102\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN019aLqPl2FkxYQGpGnA_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":141850,\"id\":1891908405325409300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900104\",\"groupId\":\"group1743148900103\",\"selected\":false}],\"groupId\":\"group1743148900103\",\"id\":\"group1743148900103\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN01yj4IIv2FkxYS8P4fT_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":181628,\"id\":1891908407033221000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900105\",\"groupId\":\"group1743148900104\",\"selected\":false}],\"groupId\":\"group1743148900104\",\"id\":\"group1743148900104\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/2217023748919/O1CN01XobDOi2FkxYU2W88G_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":265226,\"id\":1891908408778510300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900106\",\"groupId\":\"group1743148900105\",\"selected\":false}],\"groupId\":\"group1743148900105\",\"id\":\"group1743148900105\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/2217023748919/O1CN01i0nug62FkxYRvbLqg_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":177698,\"id\":1891908406844054800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900107\",\"groupId\":\"group1743148900106\",\"selected\":false}],\"groupId\":\"group1743148900106\",\"id\":\"group1743148900106\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01MuqA382FkxYQt5wJ1_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":234896,\"id\":1891908405890883000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900108\",\"groupId\":\"group1743148900107\",\"selected\":false}],\"groupId\":\"group1743148900107\",\"id\":\"group1743148900107\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN010AQKtO2FkxYSKRorx_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":175249,\"id\":1891908407211191600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900109\",\"groupId\":\"group1743148900108\",\"selected\":false}],\"groupId\":\"group1743148900108\",\"id\":\"group1743148900108\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/2217023748919/O1CN01H5N2kK2FkxYTYkrxO_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1440\",\"size\":266026,\"id\":1891908408338733000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900110\",\"groupId\":\"group1743148900109\",\"selected\":false}],\"groupId\":\"group1743148900109\",\"id\":\"group1743148900109\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/2217023748919/O1CN01BaPYMX2FkxYQGojbO_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1080\",\"size\":219633,\"id\":1891908405325281800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900111\",\"groupId\":\"group1743148900110\",\"selected\":false}],\"groupId\":\"group1743148900110\",\"id\":\"group1743148900110\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN010zEqt92FkxYSvv1KS_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":176162,\"id\":1891908407764875300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900112\",\"groupId\":\"group1743148900111\",\"selected\":false}],\"groupId\":\"group1743148900111\",\"id\":\"group1743148900111\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN01MMubLM2FkxYRvbYLi_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"900\",\"size\":146808,\"id\":1891908406844103000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900113\",\"groupId\":\"group1743148900112\",\"selected\":false}],\"groupId\":\"group1743148900112\",\"id\":\"group1743148900112\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/2217023748919/O1CN01uhCBAF2FkxYR0S3RK_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1080\",\"height\":\"1080\",\"size\":108436,\"id\":1891908405999587800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900114\",\"groupId\":\"group1743148900113\",\"selected\":false}],\"groupId\":\"group1743148900113\",\"id\":\"group1743148900113\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/2217023748919/O1CN01t76ZUY2FkxYS8O8UA_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1200\",\"height\":\"800\",\"size\":63919,\"id\":1891908407032997600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900115\",\"groupId\":\"group1743148900114\",\"selected\":false}],\"groupId\":\"group1743148900114\",\"id\":\"group1743148900114\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/2217023748919/O1CN01cZSPaB2FkxYQGnf3v_!!2217023748919.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":66109,\"id\":1891908405325026000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743148900116\",\"groupId\":\"group1743148900115\",\"selected\":false}],\"groupId\":\"group1743148900115\",\"id\":\"group1743148900115\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}",
-                "lastSaveDate": 1743148929000,
-                "lastVersion": 0,
-                "clientType": 1,
-                "sourceAgent": 20,
-                "opt": 2,
-                "stsPublish": {
-                    "create": "20",
-                    "modified": "20",
-                    "wp": 0,
-                    "put": 0,
-                    "apoleShopRec": 0,
-                    "top": 0,
-                    "top2": 0,
-                    "sell": 1,
-                    "multi": 0,
-                    "sellQnApp": 0,
-                    "qnApp": 0,
-                    "other": 0
-                }
+                "editRst": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01JLOn2V25vomsPDHpH_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":85397,\"id\":1758908407471703800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233850\",\"groupId\":\"group1743155233849\",\"selected\":false}],\"groupId\":\"group1743155233849\",\"id\":\"group1743155233849\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01OMlUQQ25vomm3iQQw_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"1024\",\"height\":\"1024\",\"size\":114063,\"id\":1758908401657248800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233851\",\"groupId\":\"group1743155233850\",\"selected\":false}],\"groupId\":\"group1743155233850\",\"id\":\"group1743155233850\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01M3M9FN25vomu7Qakr_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":69160,\"id\":1758908409041166600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233852\",\"groupId\":\"group1743155233851\",\"selected\":false}],\"groupId\":\"group1743155233851\",\"id\":\"group1743155233851\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN010uI0Yp25vomuWckNa_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":85397,\"id\":1758908409413471700},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233853\",\"groupId\":\"group1743155233852\",\"selected\":false}],\"groupId\":\"group1743155233852\",\"id\":\"group1743155233852\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01GO32yM25vomuWfd9O_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":131957,\"id\":1758908409414159000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233854\",\"groupId\":\"group1743155233853\",\"selected\":false}],\"groupId\":\"group1743155233853\",\"id\":\"group1743155233853\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01JASfsE25vomsnRYm2_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"790\",\"height\":\"790\",\"size\":101132,\"id\":1758908407829737700},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233855\",\"groupId\":\"group1743155233854\",\"selected\":false}],\"groupId\":\"group1743155233854\",\"id\":\"group1743155233854\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01xp6met25vomtdmJca_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":107419,\"id\":1758908408603053800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233856\",\"groupId\":\"group1743155233855\",\"selected\":false}],\"groupId\":\"group1743155233855\",\"id\":\"group1743155233855\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01UiQOSk25vomt0bilQ_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":77366,\"id\":1758908408024251600},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233857\",\"groupId\":\"group1743155233856\",\"selected\":false}],\"groupId\":\"group1743155233856\",\"id\":\"group1743155233856\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01GVe1qv25vomsDWIIy_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":81694,\"id\":1758908407298918000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233858\",\"groupId\":\"group1743155233857\",\"selected\":false}],\"groupId\":\"group1743155233857\",\"id\":\"group1743155233857\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01BXcE6M25vomtdlRZS_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":128373,\"id\":1758908408602846000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233859\",\"groupId\":\"group1743155233858\",\"selected\":false}],\"groupId\":\"group1743155233858\",\"id\":\"group1743155233858\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01SgJITT25vomtdnvNK_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":65562,\"id\":1758908408603437300},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743155233860\",\"groupId\":\"group1743155233859\",\"selected\":false}],\"groupId\":\"group1743155233859\",\"id\":\"group1743155233859\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}"
             },
             "extendFields": "{}",
             "extendConfig": {
@@ -1211,7 +405,7 @@
                     "params": {
                         "isAdescription": 1,
                         "catId": 0,
-                        "itemId": 902891563665,
+                        "itemId": 0,
                         "clientType": 1,
                         "isV3": "true"
                     },
@@ -1268,11 +462,12 @@
             "url": "https://sell.xiangqing.taobao.com/new_user_panel.htm",
             "params": {
                 "isAdescription": "1",
-                "catId": "50013192",
-                "itemId": "902891563665",
+                "catId": "50013080",
+                "itemId": "903782189937",
                 "hideSourceModuleAdd": "true",
                 "clientType": "1",
-                "isV3": "true"
+                "isV3": "true",
+                "draftKey": "sell_695637589_12525_235315"
             }
         }
     },
@@ -1282,25 +477,17 @@
         "value": 1
     },
     "deliver-card": {},
-    "shippingArea": {
-        "type": "1",
-        "value": {
-            "text": "北京",
-            "value": "110100"
-        },
-        "warehouseType": "1"
-    },
     "tbExtractWay": {
+        "template": "65328930650",
         "value": [
             "2"
-        ],
-        "template": "65491931590"
+        ]
     },
     "regionLimitSale": {
         "value": "regionLimitSale_0"
     },
     "post-sale-service-card": {},
-    "sevenDayOptional": 1,
+    "sevenDaySupport": 1,
     "guaranteeService": [
         {
             "value": "IND-SEC-brokenComp",
@@ -1308,24 +495,36 @@
         }
     ],
     "startTime": {
-        "type": 2
+        "type": 2,
+        "shelfTime": null
     },
+    "ysbCheckTask": 0,
     "home-service-card": {},
     "aiFood-card": {},
     "product-card": {},
     "newDesc-card": {},
-    "foodPrdLicense": "SC10644512106525",
-    "foodFactoryName": "潮州市潮安区南伟食品厂",
-    "foodFactorySite": "潮州市潮安区庵埠镇宝陇村马洋路4巷5号",
+    "barcode": "0000000000000",
+    "foodNutrientTable": {
+        "measurement": {
+            "unit": "hundredGram"
+        }
+    },
+    "foodPrdLicense": "SC10432062101169",
+    "foodDesignCode": "",
+    "foodFactoryName": "海安梦淇食品厂",
+    "foodFactorySite": "江苏省南通市海安市李堡镇蒋庄村25组",
     "foodOrganic": {
         "value": 0
     },
     "isGreenFood": {
         "value": 0
     },
+    "foodMix": "",
     "foodFactoryContact": "",
+    "foodPlanStorage": "",
+    "foodPeriod": "365",
     "foodAdditive": "",
-    "foodProduceDate": "2025-01-01,2025-03-28",
+    "foodProduceDate": "2025-03-28,2025-03-28",
     "afterSaleVideoNew": {
         "afterSaleVideo_sub_1": {
             "name": "afterSaleVideo_sub_1",
@@ -1408,5 +607,31 @@
             "aspectRatio": "(3:4,1:1,9:16,16:9)"
         }
     },
-    "diagnoseViolationWarning": false
+    "deliveryTimeType": {
+        "value": "0"
+    },
+    "foodImages": [
+        {
+            "url": "",
+            "thumbUrl": ""
+        },
+        {
+            "url": "",
+            "thumbUrl": ""
+        },
+        {
+            "url": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01pGb12X25vomr5Jh3r_!!695637589.jpg",
+            "name": "main_671083029170_0",
+            "size": 85397,
+            "pix": "800x800",
+            "folderId": "0"
+        },
+        {
+            "url": "https://img.alicdn.com/imgextra/i2/695637589/O1CN01rR3TLI25vomsPCHQL_!!695637589.jpg",
+            "name": "main_671083029170_1",
+            "size": 79574,
+            "pix": "800x800",
+            "folderId": "0"
+        }
+    ]
 }

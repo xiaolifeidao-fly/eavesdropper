@@ -1,5 +1,6 @@
 
 import { DoorSkuDTO, SkuItem } from "@model/door/sku";
+import { SkuFileDetail } from "@model/sku/sku.file";
 import axios from "axios";
 import log from "electron-log";
 
@@ -9,6 +10,10 @@ abstract class FoodHandler {
 
     constructor(key : string){
         this.key = key;
+    }
+
+    isValidate(){
+        return true;
     }
 
     needFill(draftData : { [key : string] : any }): boolean {
@@ -52,7 +57,7 @@ abstract class FoodHandler {
 class FoodAdditiveHandler extends FoodHandler {
 
     againFill(catPro: { [key: string]: any; }, draftData: { [key: string]: any; }, skuItem: SkuItem[]): void {
-        draftData[this.key] = "见包装";
+        draftData[this.key] = "详情见包装";
     }
 
 }
@@ -62,6 +67,9 @@ class FoodAdditiveHandler extends FoodHandler {
  */
 class FoodPlanStorageHandler extends FoodHandler {
 
+    againFill(catPro: { [key: string]: any; }, draftData: { [key: string]: any; }, skuItem: SkuItem[]): void {
+        draftData[this.key] = "详情见包装";
+    }
 }
 
 /**
@@ -69,6 +77,13 @@ class FoodPlanStorageHandler extends FoodHandler {
  */
 class FoodPrdLicenseHandler extends FoodHandler {
 
+
+   againFill(catPro: { [key: string]: any; }, draftData: { [key: string]: any; }, skuItem: SkuItem[]): void {
+       if(draftData[this.key]){
+          return;
+       }
+       draftData[this.key] = randomFetchFootPrdLicense();
+   }
 
 }
 
@@ -85,6 +100,9 @@ class FoodDesignCodeHandler extends FoodHandler {
  */
 class FoodFactoryNameHandler extends FoodHandler {
 
+    isValidate(){
+        return false;
+    }
 }
 
 
@@ -93,8 +111,26 @@ class FoodFactoryNameHandler extends FoodHandler {
  * 食品生产商地址
  */
 class FoodFactorySiteHandler extends FoodHandler {
+    isValidate(){
+        return false;
+    }
+
 }
 
+class FoodFactoryContactHandler extends FoodHandler {
+
+    againFill(catPro: { [key: string]: any; }, draftData: { [key: string]: any; }, skuItem: SkuItem[]): void {
+        draftData[this.key] = "无";
+    }
+
+}
+
+class FoodMixHandler extends FoodHandler {
+
+    againFill(catPro: { [key: string]: any; }, draftData: { [key: string]: any; }, skuItem: SkuItem[]): void {
+        draftData[this.key] = "详情见包装";
+    }
+}
 
 /**
  * 保质期
@@ -154,7 +190,6 @@ class FoodPeriodHandler extends FoodHandler {
     }
 }
 
-
 /**
  * 生产日期
  */
@@ -174,19 +209,8 @@ class FoodProduceDateHandler extends FoodHandler {
     }
 
     againFill(catPro : { [key : string] : any }, draftData : { [key : string] : any }, skuItems : SkuItem[]): void {
-        // const foodPeriod = this.getFoodPeriod(skuItems);
-        // const foodProduceDate = this.getFoodProduceDate(skuItems);
-        // log.info("foodPeriod", foodPeriod);
-        // log.info("foodProduceDate", foodProduceDate);
-        // if(!foodPeriod || !foodProduceDate){
-        //     return;
-        // }
-        // const unit = this.getUnit(foodPeriod);
-        // log.info("unit", unit);
-        // const endDate = this.getEndDate(foodProduceDate, foodPeriod, unit);
-        // log.info("endDate", endDate);
-        // draftData[this.key] = `${foodProduceDate},${endDate}`;
-        // log.info("againFill result ", draftData[this.key]);
+        const date = new Date().toISOString().split("T")[0];
+        draftData[this.key] = `${date},${date}`;
     }
 
     // 根据startDate 和 时间间隔 计算出endDate, 时间单位:天/月
@@ -225,18 +249,27 @@ class FoodProduceDateHandler extends FoodHandler {
 
 
 
+
+
 const foodHandlers : FoodHandler[] = [
   new FoodAdditiveHandler("foodAdditive"),
   new FoodPlanStorageHandler("foodPlanStorage"),
   new FoodPrdLicenseHandler("foodPrdLicense"),
   new FoodDesignCodeHandler("foodDesignCode"),
-//   new FoodFactoryNameHandler("foodFactoryName"),
-//   new FoodFactorySiteHandler("foodFactorySite"),
+  new FoodFactoryNameHandler("foodFactoryName"),
+  new FoodFactorySiteHandler("foodFactorySite"),
   new FoodPeriodHandler("foodPeriod"),
-  new FoodProduceDateHandler("foodProduceDate")
+  new FoodProduceDateHandler("foodProduceDate"),
+  new FoodFactoryContactHandler("foodFactoryContact"),
+  new FoodMixHandler("foodMix"),
 ]
 
 
+const footPrdLicenses = ["SC10341147101351", "SC10432062101169"];
+
+function randomFetchFootPrdLicense(){
+    return footPrdLicenses[Math.floor(Math.random() * footPrdLicenses.length)];
+}
 
 
 export class FoodSupport { 
@@ -249,21 +282,64 @@ export class FoodSupport {
         this.fillMessage = fillMessage;
     }
 
-    async doFill(components : { [key : string] : any }, skuItems : SkuItem[], draftData : { [key : string] : any }, catId : string, startTraceId : string, requestHeaders : { [key : string] : any }){
+    async doFill(components : { [key : string] : any }, skuItems : SkuItem[], draftData : { [key : string] : any }, catId : string, startTraceId : string, requestHeaders : { [key : string] : any }, mainImages : SkuFileDetail[]){
         if(!this.isFood(components)){
             return true;
         }
         this.fill(components, skuItems, draftData);
         this.againCheckAndFill(components, skuItems, draftData);
         this.checkResult(components, draftData);
-        if(this.fillResult){
-            await this.fillFoodFactory(catId, startTraceId, requestHeaders, draftData);
-        }
+        await this.fillFoodFactory(catId, startTraceId, requestHeaders, draftData);
+        this.fillFootImages(components, draftData, mainImages);
         return this.fillResult;
     }
 
+    fillFootImages(components : { [key : string] : any }, draftData : { [key : string] : any }, mainImages : SkuFileDetail[]){
+        const foodImages = draftData["foodImages"];
+        log.info("foodImages ", foodImages);
+        log.info("mainImages ", mainImages);
+        if(!components.foodImages){
+            return;
+        }
+        if(foodImages){
+            return;
+        }
+        const frontImage = mainImages[0];
+        const backgroundImage = mainImages[1];
+        draftData["foodImages"] = [
+            {
+                "url": "",
+                "thumbUrl": ""
+            },
+            {
+                "url": "",
+                "thumbUrl": ""
+            },
+            {
+                "id": frontImage.fileId,
+                "url": frontImage.fileUrl,
+                "name": frontImage.fileName,
+                "size": frontImage.fileSize,
+                "pix": "800x800",
+                "folderId": "0"
+            },
+            {
+                "id": backgroundImage.fileId,
+                "url": backgroundImage.fileUrl,
+                "name": backgroundImage.fileName,
+                "size": backgroundImage.fileSize,
+                "pix": "800x800",
+                "folderId": "0"
+            }
+        ]
+    }
+
     async fillFoodFactory(catId : string, startTraceId : string, headers : { [key : string] : any }, draftData : { [key : string] : any }){
-        const foodPrdLicense = draftData["foodPrdLicense"];
+        let foodPrdLicense = draftData["foodPrdLicense"];
+        if(!foodPrdLicense){
+            foodPrdLicense = randomFetchFootPrdLicense();
+            draftData["foodPrdLicense"] = foodPrdLicense;
+        }
         const url = "https://item.upload.taobao.com/sell/v2/asyncOpt.htm";
         const data = {
             optType: "foodPrdLicenseType",
@@ -287,7 +363,7 @@ export class FoodSupport {
 
     fill(components : { [key : string] : any }, skuItems : SkuItem[], draftData : { [key : string] : any }){
         for(const handler of foodHandlers){
-            if(!handler.needFill(draftData)){
+            if(!handler.needFill(components)){
                 continue;
             }
             const matchResult = this.matchCat(handler.key, components, skuItems);
@@ -329,6 +405,9 @@ export class FoodSupport {
                 continue;
             }
             if(handler.isNotNull(draftData)){
+                continue;
+            }
+            if(!handler.isValidate()){
                 continue;
             }
             this.fillResult = false;

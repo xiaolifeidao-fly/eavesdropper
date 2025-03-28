@@ -134,14 +134,17 @@ export abstract class AbsPublishStep extends StepUnit{
             }
             const uiType = catProp.uiType;
             const value = skuItem.text;
+            const targetValue = value[0];
+            if(key == "p-227143751"){
+                newCatProp[key] = targetValue;
+                continue;
+            }
             if(uiType == "taoSirProp"){
-                const targetValue = value[0];
                 if(this.isNumber(targetValue)){
                     newCatProp[key] = parseInt(targetValue);
                 }else{
                     newCatProp[key] = value[0];
                 }
-                log.info("taoSirProp is ", newCatProp[key]);
                 continue;
             }
             if (key in newCatProp) {
@@ -167,6 +170,7 @@ export abstract class AbsPublishStep extends StepUnit{
         let brand = newCatProp['p-20000'];
         brand = await this.checkAndUpdateBrand(brand, skuItemDTO, requestHeader, catId, startTraceId);
         newCatProp['p-20000'] = brand;
+        log.info("newCatProp ",newCatProp)
         draftData.catProp = newCatProp;
     }
 
@@ -201,9 +205,10 @@ export abstract class AbsPublishStep extends StepUnit{
         if (!value || value.length == 0) {
             return undefined;
         }
+        const sourceLabel = skuItem.value;
         for (const catProp of catProps) {
-            const label = catProp.label;
-            if (label == skuItem.value) {
+            const targetLabel = catProp.label;
+            if (targetLabel == sourceLabel || targetLabel.includes(sourceLabel) || sourceLabel.includes(targetLabel)) {
                 return catProp;
             }
         }

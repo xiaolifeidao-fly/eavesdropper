@@ -15,6 +15,7 @@ import { FoodSupport } from "../fill.food";
 import { AiFillSupport } from "../ai.fill";
 import { isNeedCombine, isNeedSellPointCollection, SaleProBuilder } from "../sku.sale.build";
 import { getAddressByKeywords } from "@api/address/address";
+import { getAndSortImage } from "../image.support";
 
 async function doAction(page: Page, ...doActionParams: any[]) {
     await page.waitForTimeout(1000);
@@ -122,13 +123,15 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         await this.fillTiltle(skuItem, draftData);
         await this.fillCategoryList(skuItem, draftData, commonData, result.getHeaderData(), catId, startTraceId);
         await this.fillPropExt(commonData, skuItem, draftData);
-        await this.fillMainImage(imageFileList, draftData);
+        const mainImages = getAndSortImage(imageFileList, "main");
+        await this.fillMainImage(mainImages, draftData);
         await this.fillSellInfo(commonData, skuItem, draftData);
         await this.fillLogisticsMode(resourceId, skuItem, draftData, commonData);
         await this.fillShippingArea(commonData, skuItem, draftData);
         const aiFillSupport = new AiFillSupport(this.getParams("skuSource"));
         await aiFillSupport.checkCatPropAndFix(draftData, skuItem, commonData);
-        const imageDetailResult = this.fillImageDetail(draftData, imageFileList);
+        const detailImages = getAndSortImage(imageFileList, "detail");
+        const imageDetailResult = this.fillImageDetail(draftData, detailImages);
         if(!imageDetailResult){
             return {
                 draftData : undefined,
@@ -136,7 +139,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             };
         }
         const foodSupport = new FoodSupport();
-        const foodResult = await foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData, catId, startTraceId, result.getHeaderData());
+        const foodResult = await foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData, catId, startTraceId, result.getHeaderData(),mainImages);
         const updateResult = await this.updateDraftData(catId, newSkuDraftId, result.getHeaderData(), startTraceId, draftData);
         if(!updateResult){
             return {
@@ -228,8 +231,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         };
     }
 
-    fillImageDetail(draftData: { [key: string]: any }, imageFileList: SkuFileDetail[]) {
-        const detailImages = this.getAndSortImage(imageFileList, "detail");
+    fillImageDetail(draftData: { [key: string]: any }, detailImages: SkuFileDetail[]) {
         const groupImage: { [key: string]: any }[] = [];
         let groupId = new Date().getTime();
         for(const imageFile of detailImages){
@@ -372,8 +374,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
     }
     
 
-    async fillMainImage(imageFileList: SkuFileDetail[], draftData: { mainImagesGroup: { images: { url: string, pix: string }[] } }) {
-        const mainImages = this.getAndSortImage(imageFileList, "main");
+    async fillMainImage(mainImages: SkuFileDetail[], draftData: { mainImagesGroup: { images: { url: string, pix: string }[] } }) {
         const mainImageList: { url: string, pix: string }[] = [];
         for (const file of mainImages) {
             let url = file.fileUrl;
@@ -389,14 +390,6 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             images: mainImageList
         }
     }
-
-    getAndSortImage(imageFileList: SkuFileDetail[], type: string) {
-        // 获取主图 并排序
-        const mainImages = imageFileList.filter(file => file.fileName?.includes(type));
-        mainImages.sort((a, b) => (a.sortId ?? 0) - (b.sortId ?? 0));
-        return mainImages;
-    }
-
     
     async fillPropExt(commendItem: { [key: string]: any }, skuItem: DoorSkuDTO, draftData: { [key: string]: any }) {
         const fields = commendItem.data.models.__fields__;

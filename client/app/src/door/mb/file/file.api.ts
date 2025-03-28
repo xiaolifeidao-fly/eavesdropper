@@ -59,9 +59,12 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
         headerless = false;
     }
     const mbEngine = new MbEngine(resourceId, headerless);
-    const headerData = mbEngine.getHeader();
-    if(!validateTag && headerData){
-        return headerData;
+    if(headerless){
+        const headerData = mbEngine.getHeader();
+        //TODO cookie失效 要做处理
+        if(headerData){
+            return headerData;
+        }
     }
     let result;
     try{
@@ -83,6 +86,9 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
         }
         return result.getHeaderData();
     }finally{
+        if(result){
+            await mbEngine.saveContextState();
+        }
         await mbEngine.closePage();
     }
 }

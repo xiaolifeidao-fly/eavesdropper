@@ -148,6 +148,7 @@ export class PublishSkuStep extends AbsPublishStep {
 
     async submit(catId : string, startTraceId : string, updateDraftData : any, draftHeader : any, draftId : string){
         try{
+            log.info("submit updateDraftData is ", JSON.stringify(updateDraftData));
             const url = "https://item.upload.taobao.com/sell/v2/submit.htm";
             const data = {
                 "catId": catId,

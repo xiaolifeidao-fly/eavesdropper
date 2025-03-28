@@ -9,6 +9,7 @@ import { DoorSkuCatProp } from "@model/door/door";
 import { FoodSupport } from "../fill.food";
 import { AiFillSupport } from "../ai.fill";
 import { isNeedCombine, isNeedSellPointCollection, SaleProBuilder } from "../sku.sale.build";
+import { getAndSortImage } from "../image.support";
 
 
 
@@ -83,13 +84,15 @@ export class UpdateDraftStep extends AbsPublishStep {
                 return new StepResult(false, "获取请求头失败");
             }
             await this.fillCategoryList(skuItem, draftData, commonData, requestHeader, catId, startTraceId);
-            await this.fixRequiredData(draftData, skuItem, commonData);
             await this.againFillSaleInfo(commonData, skuItem, draftData);
             const foodSupport = new FoodSupport();
-            const foodResult = await foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData, catId, startTraceId, requestHeader);
+            const imageFileList = this.getParams("imageFileList");
+            const mainImageList = getAndSortImage(imageFileList, "main");
+            const foodResult = await foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData, catId, startTraceId, requestHeader,mainImageList);
             if(!foodResult){
                 return new StepResult(false, foodSupport.fillMessage);
             }
+            await this.fixRequiredData(draftData, skuItem, commonData);
             const validateResult = this.validateDraftData(draftData, skuItem, commonData);
             if(!validateResult.validateResult){
                 return new StepResult(false, validateResult.message);

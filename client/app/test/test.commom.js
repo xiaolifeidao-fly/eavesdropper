@@ -57,4 +57,18 @@ function test2(){
     console.log(num);
 }
 
-test2();
+// test2();
+
+const footPrdLicenses = ["SC10341147101351", "SC10432062101169"];
+function randomFetchFootPrdLicense(){
+    const index = Math.floor(Math.random() * footPrdLicenses.length);
+    console.log("index", index);
+    return footPrdLicenses[index];
+}
+function test3(){
+
+    const footPrdLicense = randomFetchFootPrdLicense();
+    console.log(footPrdLicense);
+}
+
+test3();
