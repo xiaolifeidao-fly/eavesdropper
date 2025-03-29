@@ -33,7 +33,7 @@ async function loginTaobao() {
   
   // 使用launchPersistentContext代替launch，增强隐身性
   const context = await chromium.launchPersistentContext(userDataDir, {
-    headless: false,
+    headless: true, // 修改为无头模式
     slowMo: 15 + Math.floor(Math.random() * 30), // 随机化慢动作
     viewport: { width: viewportWidth, height: viewportHeight },
     deviceScaleFactor: 1,
@@ -71,7 +71,15 @@ async function loginTaobao() {
       '--disable-device-orientation',
       // 禁用WebGL，防止硬件指纹
       '--disable-webgl',
-      '--disable-webgl2'
+      '--disable-webgl2',
+      // 无头模式下的额外参数
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      // 在无头模式中禁用GPU
+      '--disable-gpu',
+      // 模拟有头浏览器的参数
+      '--no-first-run',
+      '--no-zygote'
     ]
   });
 
@@ -125,13 +133,16 @@ async function loginTaobao() {
         // 阻止权限查询
         const originalPermissions = navigator.permissions;
         if (originalPermissions) {
-          // @ts-ignore
-          navigator.permissions.query = function(parameters) {
-            return Promise.resolve({
-              state: "prompt", // 始终返回prompt状态
-              onchange: null
-            });
-          };
+          // 完全绕过TypeScript类型检查来修改权限API
+          Object.defineProperty(navigator.permissions, 'query', {
+            // @ts-ignore - 必须忽略类型检查以实现反检测
+            value: function() {
+              return Promise.resolve({
+                state: "prompt",
+                onchange: null
+              });
+            }
+          });
         }
       };
       
@@ -300,6 +311,55 @@ async function loginTaobao() {
           }
           return originalQuery.apply(this, [...arguments] as unknown as [string]);
         };
+        
+        // 无头模式特殊修复 - 修复window.Notification
+        if (window.Notification === undefined) {
+          // @ts-ignore
+          window.Notification = {
+            permission: 'default',
+            requestPermission: function() {
+              return Promise.resolve('default');
+            }
+          };
+        }
+        
+        // 修复headless Chrome检测
+        const patchHeadlessDetect = () => {
+          // 模拟浏览器连接
+          // @ts-ignore
+          if (!navigator.connection) {
+            // @ts-ignore
+            navigator.connection = {
+              downlink: 10 + Math.random() * 5,
+              effectiveType: "4g",
+              onchange: null,
+              rtt: 50 + Math.random() * 30,
+              saveData: false
+            };
+          }
+          
+          // 修复无头WebDriver检测
+          Object.defineProperty(navigator, 'userAgent', {
+            get: function() {
+              return 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+            }
+          });
+          
+          // 模拟媒体设备
+          if (navigator.mediaDevices === undefined) {
+            // @ts-ignore
+            navigator.mediaDevices = {
+              enumerateDevices: function() {
+                return Promise.resolve([
+                  {kind: 'audioinput', deviceId: 'default', groupId: 'default', label: ''},
+                  {kind: 'videoinput', deviceId: 'default', groupId: 'default', label: ''}
+                ]);
+              }
+            };
+          }
+        };
+        
+        patchHeadlessDetect();
       };
       
       // 7. 阻止指纹收集
@@ -338,6 +398,105 @@ async function loginTaobao() {
             return audioContext;
           };
         }
+        
+        // 无头模式特殊处理 - 修复语音合成
+        if (window.speechSynthesis === undefined) {
+          // @ts-ignore
+          window.speechSynthesis = {
+            pending: false,
+            speaking: false,
+            paused: false,
+            onvoiceschanged: null,
+            getVoices: function() { return []; },
+            speak: function() {},
+            cancel: function() {},
+            pause: function() {},
+            resume: function() {}
+          };
+        }
+      };
+      
+      // 8. 无头浏览器专用反检测
+      const antiHeadlessDetection = () => {
+        // 模拟物理屏幕尺寸
+        Object.defineProperty(screen, 'availWidth', {
+          get: function() { return window.innerWidth; }
+        });
+        Object.defineProperty(screen, 'availHeight', {
+          get: function() { return window.innerHeight; }
+        });
+        Object.defineProperty(screen, 'width', {
+          get: function() { return window.innerWidth; }
+        });
+        Object.defineProperty(screen, 'height', {
+          get: function() { return window.innerHeight; }
+        });
+        
+        // 模拟WebGL
+        const overrideWebGL2 = () => {
+          if (window.WebGL2RenderingContext) {
+            const getParameterProto = WebGL2RenderingContext.prototype.getParameter;
+            // @ts-ignore
+            WebGL2RenderingContext.prototype.getParameter = function(parameter) {
+              if (parameter === 37445) {
+                return 'Intel Open Source Technology Center';
+              }
+              if (parameter === 37446) {
+                return 'Mesa DRI Intel(R) HD Graphics 630 (Kaby Lake GT2)';
+              }
+              return getParameterProto.apply(this, [...arguments] as unknown as [number]);
+            };
+          }
+        };
+        
+        try {
+          overrideWebGL2();
+        } catch (e) {}
+        
+        // 处理无头模式中navigator.plugins和mimeTypes
+        if (navigator.plugins.length === 0) {
+          Object.defineProperty(navigator, 'plugins', {
+            get: function() {
+              const ChromePDFPlugin = { name: 'Chrome PDF Plugin', filename: 'internal-pdf-viewer', description: 'Portable Document Format' };
+              const FakeMimeType = { type: 'application/pdf', suffixes: 'pdf', description: 'Portable Document Format' };
+              
+              // @ts-ignore
+              ChromePDFPlugin.__proto__ = MimeType.prototype;
+              const pluginArray = [ChromePDFPlugin];
+              
+              // 添加迭代功能
+              // @ts-ignore
+              pluginArray.item = function(index) { return this[index]; };
+              // @ts-ignore
+              pluginArray.namedItem = function(name) { return this[0].name === name ? this[0] : null; };
+              // @ts-ignore
+              pluginArray.refresh = function() {};
+              // @ts-ignore
+              pluginArray.length = 1;
+              
+              return pluginArray;
+            }
+          });
+        }
+        
+        if (navigator.mimeTypes.length === 0) {
+          Object.defineProperty(navigator, 'mimeTypes', {
+            get: function() {
+              const mimeTypes = [
+                { type: 'application/pdf', suffixes: 'pdf', description: 'Portable Document Format', enabledPlugin: {} }
+              ];
+              
+              // @ts-ignore
+              mimeTypes.item = function(index) { return this[index]; };
+              // @ts-ignore
+              mimeTypes.namedItem = function(name) { return this[0].type === name ? this[0] : null; };
+              // @ts-ignore
+              mimeTypes.length = 1;
+              
+              return mimeTypes;
+            }
+          });
+        }
       };
       
       // 执行所有伪装
@@ -349,6 +508,7 @@ async function loginTaobao() {
         overrideCanvas();
         hideAutomationFeatures();
         blockFingerprinting();
+        antiHeadlessDetection(); // 添加无头浏览器专用反检测
       } catch (err) {
         // 忽略错误继续执行
       }
@@ -433,7 +593,7 @@ async function loginTaobao() {
     });
     
     // 修改为本地文件URL，与validate.image.roc.js类似
-    const validateUrl = 'file:///Users/chai/code/eavesdropper/client/resource/validate_image.html?iframeUrl=aHR0cHM6Ly9zdHJlYW0tdXBsb2FkLnRhb2Jhby5jb206NDQzLy9hcGkvdXBsb2FkLmFwaS9fX19fX3RtZF9fX19fL3B1bmlzaD94NXNlY2RhdGE9eGQ4OTZkNzRiYjg4NTU4ZDZmOWI5MzYyZGU3ODcwNDlmYTA2Zjg1NTU1ODIxYmNhYTAxNzQzMjQzMjQ4YTE4NTUxNDQxMzhhMzcyNzU5NDAzYWJhYWMyZGo4NjI5NjEyNzBqY2FwcHV6emxlX19ieF9fc3RyZWFtLXVwbG9hZC50YW9iYW8uY29tJTNBNDQzJTJGYXBpJTJGdXBsb2FkLmFwaSZ4NXN0ZXA9MiZhY3Rpb249Y2FwdGNoYWNhcHB1enpsZSZwdXJlQ2FwdGNoYT0=';
+    const validateUrl = 'file:///Users/chai/code/eavesdropper/client/resource/validate_image.html?iframeUrl=aHR0cHM6Ly9zdHJlYW0tdXBsb2FkLnRhb2Jhby5jb206NDQzLy9hcGkvdXBsb2FkLmFwaS9fX19fX3RtZF9fX19fL3B1bmlzaD94NXNlY2RhdGE9eGRlZTVkYzE0YWYzZDFlZTNmNTk0MjlhZWNmOGIyZWI4NGZmNDMwMjdiMWRhZTE3ZDMxNzQzMjQ2NzIyYTE4NTUxNDQxMzhhMzcyNzU5NDAzYWJhYWMyZGo4NjI5NjEyNzBqY2FwcHV6emxlX19ieF9fc3RyZWFtLXVwbG9hZC50YW9iYW8uY29tJTNBNDQzJTJGYXBpJTJGdXBsb2FkLmFwaSZ4NXN0ZXA9MiZhY3Rpb249Y2FwdGNoYWNhcHB1enpsZSZwdXJlQ2FwdGNoYT0=';
     
     console.log('开始加载验证页面...');
     

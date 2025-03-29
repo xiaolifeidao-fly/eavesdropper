@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node src/taobao-login.ts",
     "start-slide": "ts-node src/taobao-slide.ts",
+    "start-slide-headless": "ts-node src/taobao-slide-headless.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

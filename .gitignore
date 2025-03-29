@@ -41,5 +41,5 @@ client/app/static/**/*
 **/*.out
 **/*.tar.gz
 
-**/chrome-data
+**/chrome-data*
 **/screenshots
