@@ -42,4 +42,6 @@ client/app/static/**/*
 **/*.tar.gz
 
 **/chrome-data*
+**/track-features
+**/tracks
 **/screenshots
