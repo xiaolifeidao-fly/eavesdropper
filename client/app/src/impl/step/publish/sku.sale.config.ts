@@ -321,6 +321,7 @@ export class RebuildSalePro{
         const saleSkus : SalesSku[] = doorSkuSaleInfo.salesSkus;
         const newSaleSkuMap :SalesSku[] = [];
         const skuMappers : SkuMapper[] = [];
+        log.info("skuPropMap is ", this.skuPropMap);
         for(const saleSku of saleSkus){
            const salePropPath = saleSku.salePropPath;
            const newSalePropPath = this.getNewSalePropPath(salePropPath, saleMappers);

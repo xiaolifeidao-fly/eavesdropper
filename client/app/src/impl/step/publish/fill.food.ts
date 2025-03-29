@@ -103,6 +103,10 @@ class FoodFactoryNameHandler extends FoodHandler {
     isValidate(){
         return false;
     }
+
+    againFill(catPro: { [key: string]: any; }, draftData: { [key: string]: any; }, skuItem: SkuItem[]): void {
+        draftData[this.key] = "详情见包装";
+    }
 }
 
 
@@ -113,6 +117,10 @@ class FoodFactoryNameHandler extends FoodHandler {
 class FoodFactorySiteHandler extends FoodHandler {
     isValidate(){
         return false;
+    }
+
+    againFill(catPro: { [key: string]: any; }, draftData: { [key: string]: any; }, skuItem: SkuItem[]): void {
+        draftData[this.key] = "详情见包装";
     }
 
 }
@@ -264,8 +272,7 @@ const foodHandlers : FoodHandler[] = [
   new FoodMixHandler("foodMix"),
 ]
 
-
-const footPrdLicenses = ["SC10341147101351", "SC10432062101169"];
+const footPrdLicenses = ["SC10341147101351", "SC10432062101169","SC11334160230808","SC10644512106525","SC10634160212611","SC10435058302205"];
 
 function randomFetchFootPrdLicense(){
     return footPrdLicenses[Math.floor(Math.random() * footPrdLicenses.length)];
@@ -289,7 +296,7 @@ export class FoodSupport {
         this.fill(components, skuItems, draftData);
         this.againCheckAndFill(components, skuItems, draftData);
         this.checkResult(components, draftData);
-        await this.fillFoodFactory(catId, startTraceId, requestHeaders, draftData);
+        await this.fillFoodFactory(components, catId, startTraceId, requestHeaders, draftData);
         this.fillFootImages(components, draftData, mainImages);
         return this.fillResult;
     }
@@ -332,21 +339,24 @@ export class FoodSupport {
         ]
     }
 
-    async fillFoodFactory(catId : string, startTraceId : string, headers : { [key : string] : any }, draftData : { [key : string] : any }){
+    async fillFoodFactory(components : { [key : string] : any }, catId : string, startTraceId : string, headers : { [key : string] : any }, draftData : { [key : string] : any }){
+        if(!components.foodPrdLicense){
+            return;
+        }
         let foodPrdLicense = draftData["foodPrdLicense"];
         if(!foodPrdLicense){
             foodPrdLicense = randomFetchFootPrdLicense();
-            draftData["foodPrdLicense"] = foodPrdLicense;
         }
         const result = await this.getFoodPrdLicense(catId, startTraceId, headers, foodPrdLicense, 1);
         if(!result){
             return;
         }
+        draftData["foodPrdLicense"] = result.foodPrdLicense;
         draftData["foodFactoryName"] = result.foodFactoryName;
         draftData["foodFactorySite"] = result.foodFactorySite;
     }
 
-    async getFoodPrdLicense(catId : string, startTraceId : string, headers : { [key : string] : any }, foodPrdLicense : string, retryCount : number): Promise<{foodFactoryName : string, foodFactorySite : string} | undefined>{
+    async getFoodPrdLicense(catId : string, startTraceId : string, headers : { [key : string] : any }, foodPrdLicense : string, retryCount : number): Promise<{foodPrdLicense : string, foodFactoryName : string, foodFactorySite : string} | undefined>{
         if(retryCount > 2){
             this.fillResult = false;
             this.appendMessage("填充食品生产商失败");
@@ -372,6 +382,7 @@ export class FoodSupport {
             }
             const formValues = result.models.formValues;
             return {
+                foodPrdLicense : foodPrdLicense,
                 foodFactoryName : formValues?.foodFactoryName,
                 foodFactorySite : formValues?.foodFactorySite
             }
