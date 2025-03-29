@@ -2,12 +2,22 @@ import path from 'path';
 import fs from 'fs'
 import { Browser, chromium, devices,firefox, BrowserContext, Page, Route ,Request, Response} from 'playwright';
 import { get, set } from '@utils/store/electron';
-import { app, screen } from 'electron';
+import { app, screen as electronScreen } from 'electron';
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from './monitor/monitor';
 import { DoorEntity } from './entity';
 import log from 'electron-log';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
 import { DoorRecord } from '@model/door/door';
+declare const window: any;
+declare const navigator: any;
+declare const document: any;
+declare const screen: any;
+declare const WebGLRenderingContext: any;
+declare const HTMLCanvasElement: any;
+declare const Element: any;
+declare const WebGL2RenderingContext: any;
+declare const MimeType: any;
+declare const performance: any;
 const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
@@ -56,7 +66,7 @@ export abstract class DoorEngine<T = any> {
             this.browserArgs = browserArgs;
         }
         try{
-            const primaryDisplay = screen.getPrimaryDisplay();
+            const primaryDisplay = electronScreen.getPrimaryDisplay();
             this.width = primaryDisplay.workAreaSize.width;
             this.height = primaryDisplay.workAreaSize.height;
         }catch(error){
@@ -102,6 +112,10 @@ export abstract class DoorEngine<T = any> {
             log.info("context is null");
             return undefined;
         }
+        
+        // 添加网络请求拦截
+        await this.setupNetworkInterception(this.context);
+        
         const page = await this.context.newPage();
         await page.setViewportSize({ width: this.width, height: this.height });
         if(url){
@@ -584,12 +598,19 @@ export abstract class DoorEngine<T = any> {
         if(platform){
             contextConfig.userAgent = platform.userAgent;
             contextConfig.extraHTTPHeaders = {
+                'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7',
                 'sec-ch-ua': getSecChUa(platform),
                 'sec-ch-ua-mobile': '?0', // 设置为移动设备
                 'sec-ch-ua-platform': `"${platform.userAgentData.platform}"`,
             };
         }
         const context = await this.browser?.newContext(contextConfig);
+        
+        // 添加反检测脚本
+        if (context) {
+            await this.addAntiDetectionScript(context);
+        }
+        
         contextMap.set(key, context);
         return context;
     }
@@ -631,18 +652,515 @@ export abstract class DoorEngine<T = any> {
         if(browserMap.has(key)){
             return browserMap.get(key);
         }
+        
+        // 随机化viewport尺寸，更真实
+        const viewportWidth = this.width || (1280 + Math.floor(Math.random() * 200));
+        const viewportHeight = this.height || (780 + Math.floor(Math.random() * 120));
+        
         const args = [
             ...this.browserArgs,
-            '--window-size=' + this.width + ',' + this.height
-        ]
+            `--window-size=${viewportWidth},${viewportHeight}`,
+            '--disable-blink-features=AutomationControlled',
+            '--disable-features=IsolateOrigins,site-per-process',
+            '--start-maximized',
+            '--disable-infobars',
+            '--disable-notifications',
+            '--disable-extensions',
+            '--allow-running-insecure-content',
+            '--disable-web-security',
+            '--lang=zh-CN',
+            '--disable-automation',
+            '--disable-remote-fonts',
+            '--disable-permissions-api',
+            '--disable-device-orientation'
+        ];
+        
+        if (this.headless) {
+            args.push(
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-gpu',
+                '--no-first-run',
+                '--no-zygote'
+            );
+        }
+        
         const browser = await chromium.launch({
             headless: this.headless,
-            slowMo : 100,
+            slowMo: 15 + Math.floor(Math.random() * 30), // 修改为更小的随机延迟
             executablePath: storeBrowserPath,
             args: args
         });
+        
         browserMap.set(key, browser);
         return browser;
+    }
+
+    // 添加网络请求拦截方法
+    async setupNetworkInterception(context: BrowserContext) {
+        await context.route('**/*', async route => {
+            const request = route.request();
+            const headers = await request.allHeaders();
+            
+            // 修改请求头，增加更多人类特征
+            const customHeaders = {
+                'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7',
+                'sec-ch-ua': '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"macOS"',
+                'sec-fetch-dest': 'empty',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-site': 'same-site'
+            };
+            
+            // 合并头部信息
+            const mergedHeaders = { ...headers, ...customHeaders };
+            
+            // 监听与验证相关的请求，记录详细日志
+            if (request.url().includes('captcha') || 
+                request.url().includes('verify') || 
+                request.url().includes('check') || 
+                request.url().includes('report') || 
+                request.url().includes('punish') || 
+                request.url().includes('_____tmd_____')) {
+                log.info(`发现验证相关请求: ${request.url()}`);
+                log.info(`请求方法: ${request.method()}`);
+                
+                try {
+                    const postData = request.postData();
+                    if (postData) {
+                        log.info(`请求数据: ${postData}`);
+                    }
+                } catch (e) {
+                    log.info(`无法获取请求数据: ${e}`);
+                }
+            }
+            
+            try {
+                // 继续请求，但使用修改后的头部
+                await route.continue({ headers: mergedHeaders });
+            } catch (e) {
+                // 如果修改失败，则以原始方式继续
+                await route.continue();
+            }
+        });
+    }
+
+    // 添加新方法：注入反检测脚本
+    async addAntiDetectionScript(context: BrowserContext) {
+        await context.addInitScript(() => {
+            // =================== 关键浏览器指纹伪装 ===================
+            
+            // 1. 覆盖navigator对象的关键属性
+            const overrideNavigator = () => {
+                // 覆盖webdriver属性
+                Object.defineProperty(navigator, 'webdriver', {
+                    get: () => false
+                });
+                
+                // 语言伪装
+                Object.defineProperty(navigator, 'languages', {
+                    get: function() {
+                        return ['zh-CN', 'zh', 'en-US', 'en'];
+                    }
+                });
+                
+                // 硬件并发伪装
+                Object.defineProperty(navigator, 'hardwareConcurrency', {
+                    get: function() {
+                        return 8; // 大多数普通用户的值
+                    }
+                });
+                
+                // deviceMemory
+                Object.defineProperty(navigator, 'deviceMemory', {
+                    get: function() {
+                        return 8; // 常见值
+                    }
+                });
+                
+                // 连接类型伪装
+                // @ts-ignore
+                if (navigator.connection) {
+                    // @ts-ignore
+                    Object.defineProperty(navigator.connection, 'rtt', {
+                        get: function() {
+                            return 50 + Math.floor(Math.random() * 40);
+                        }
+                    });
+                }
+                
+                // 阻止权限查询
+                const originalPermissions = navigator.permissions;
+                if (originalPermissions) {
+                    // 完全绕过TypeScript类型检查来修改权限API
+                    Object.defineProperty(navigator.permissions, 'query', {
+                        // @ts-ignore - 必须忽略类型检查以实现反检测
+                        value: function() {
+                            return Promise.resolve({
+                                state: "prompt",
+                                onchange: null
+                            });
+                        }
+                    });
+                }
+            };
+            
+            // 2. 覆盖WebGL指纹
+            const overrideWebGL = () => {
+                try {
+                    // 伪装WebGL
+                    const getParameterProto = WebGLRenderingContext.prototype.getParameter;
+                    // @ts-ignore
+                    WebGLRenderingContext.prototype.getParameter = function(parameter) {
+                        // 扰乱指纹值
+                        if (parameter === 37445) {
+                            return 'Intel Open Source Technology Center';
+                        }
+                        if (parameter === 37446) {
+                            return 'Mesa DRI Intel(R) HD Graphics 630 (Kaby Lake GT2)';
+                        }
+                        return getParameterProto.apply(this, [...arguments]);
+                    };
+                } catch (e) {}
+            };
+            
+            // 3. 覆盖Chrome特有属性
+            const overrideChrome = () => {
+                // @ts-ignore
+                window.chrome = {
+                    runtime: {},
+                    loadTimes: function() {
+                        return {
+                            firstPaintTime: 0,
+                            firstPaintAfterLoadTime: 0,
+                            navigationType: "Other",
+                            requestTime: Date.now() / 1000,
+                            startLoadTime: Date.now() / 1000,
+                            finishDocumentLoadTime: Date.now() / 1000,
+                            finishLoadTime: Date.now() / 1000,
+                            firstPaintChromeTime: Date.now() / 1000,
+                            wasAlternateProtocolAvailable: false,
+                            wasFetchedViaSpdy: false,
+                            wasNpnNegotiated: false,
+                            npnNegotiatedProtocol: "http/1.1",
+                            connectionInfo: "h2",
+                        };
+                    },
+                    app: {
+                        isInstalled: false,
+                        getDetails: function(){},
+                        getIsInstalled: function(){},
+                        installState: function(){
+                            return "disabled";
+                        },
+                        runningState: function(){
+                            return "cannot_run";
+                        }
+                    },
+                    csi: function() {
+                        return {
+                            startE: Date.now(),
+                            onloadT: Date.now(),
+                            pageT: Date.now(),
+                            tran: 15
+                        };
+                    }
+                };
+            };
+            
+            // 4. 伪装通知API
+            const overrideNotification = () => {
+                if (window.Notification) {
+                    Object.defineProperty(window.Notification, 'permission', {
+                        get: () => "default"
+                    });
+                }
+            };
+            
+            // 5. 伪造Canvas指纹
+            const overrideCanvas = () => {
+                try {
+                    const originalGetContext = HTMLCanvasElement.prototype.getContext;
+                    // @ts-ignore
+                    HTMLCanvasElement.prototype.getContext = function(contextType) {
+                        const contextId = arguments[0];
+                        const options = arguments.length > 1 ? arguments[1] : undefined;
+                        const context = originalGetContext.call(this, contextId, options);
+                        
+                        if (contextType === '2d' && context) {
+                            // @ts-ignore
+                            const originalFillText = context.fillText;
+                            // @ts-ignore
+                            context.fillText = function() {
+                                const args = Array.from(arguments);
+                                if (args.length > 0 && typeof args[0] === 'string') {
+                                    args[0] = args[0] + ' '; // 添加空格来改变文本
+                                }
+                                return originalFillText.apply(this, args);
+                            };
+                            
+                            // @ts-ignore
+                            const originalGetImageData = context.getImageData;
+                            // @ts-ignore
+                            context.getImageData = function() {
+                                const args = Array.from(arguments);
+                                const imageData = originalGetImageData.apply(this, args);
+                                if (imageData && imageData.data && imageData.data.length > 0) {
+                                    // 轻微修改像素数据，使其更难被追踪
+                                    for (let i = 0; i < 10; i++) {
+                                        const offset = Math.floor(Math.random() * imageData.data.length);
+                                        imageData.data[offset] = imageData.data[offset] ^ 1; // 改变一个位
+                                    }
+                                }
+                                return imageData;
+                            };
+                        }
+                        return context;
+                    };
+                } catch (e) {
+                    console.log('Canvas指纹修改失败，但继续执行', e);
+                }
+            };
+            
+            // 6. 隐藏自动化特征
+            const hideAutomationFeatures = () => {
+                // 隐藏Playwright特征
+                Object.defineProperty(window, 'outerWidth', {
+                    get: function() { return window.innerWidth; }
+                });
+                Object.defineProperty(window, 'outerHeight', {
+                    get: function() { return window.innerHeight; }
+                });
+                
+                // 阻止检测自动化的navigator特性
+                Object.defineProperty(navigator, 'plugins', {
+                    get: function() {
+                        // 常见插件
+                        const fakePlugins = [];
+                        const flash = { name: 'Shockwave Flash', description: 'Shockwave Flash 32.0 r0', filename: 'internal-flash.plugin', version: '32.0.0' };
+                        const pdf = { name: 'Chrome PDF Plugin', description: 'Portable Document Format', filename: 'internal-pdf.plugin', version: '1.0' };
+                        const pdfViewer = { name: 'Chrome PDF Viewer', description: '', filename: 'mhjfbmdgcfjbbpaeojofohoefgiehjai', version: '1.0' };
+                        
+                        // @ts-ignore
+                        fakePlugins.push(flash, pdf, pdfViewer);
+                        
+                        // 添加可迭代性
+                        // @ts-ignore
+                        fakePlugins.item = function(index) { return this[index]; };
+                        // @ts-ignore
+                        fakePlugins.namedItem = function(name) { 
+                            // @ts-ignore
+                            return this.find(p => p.name === name); 
+                        };
+                        // @ts-ignore
+                        fakePlugins.refresh = function() {};
+                        
+                        return fakePlugins;
+                    }
+                });
+                
+                // 伪造指纹特征
+                const originalQuery = Element.prototype.querySelectorAll;
+                // @ts-ignore
+                Element.prototype.querySelectorAll = function(selector) {
+                    if (selector && selector.includes(':target')) {
+                        // 扰乱指纹
+                        return document.createElement('div');
+                    }
+                    return originalQuery.apply(this, [...arguments]);
+                };
+                
+                // 无头模式特殊修复 - 修复window.Notification
+                if (window.Notification === undefined) {
+                    // @ts-ignore
+                    window.Notification = {
+                        permission: 'default',
+                        requestPermission: function() {
+                            return Promise.resolve('default');
+                        }
+                    };
+                }
+                
+                // 修复headless Chrome检测
+                // 模拟浏览器连接
+                // @ts-ignore
+                if (!navigator.connection) {
+                    // @ts-ignore
+                    navigator.connection = {
+                        downlink: 10 + Math.random() * 5,
+                        effectiveType: "4g",
+                        onchange: null,
+                        rtt: 50 + Math.random() * 30,
+                        saveData: false
+                    };
+                }
+                
+                // 修复无头WebDriver检测
+                Object.defineProperty(navigator, 'userAgent', {
+                    get: function() {
+                        return 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+                    }
+                });
+                
+                // 模拟媒体设备
+                if (navigator.mediaDevices === undefined) {
+                    // @ts-ignore
+                    navigator.mediaDevices = {
+                        enumerateDevices: function() {
+                            return Promise.resolve([
+                                {kind: 'audioinput', deviceId: 'default', groupId: 'default', label: ''},
+                                {kind: 'videoinput', deviceId: 'default', groupId: 'default', label: ''}
+                            ]);
+                        }
+                    };
+                }
+            };
+            
+            // 7. 阻止指纹收集
+            const blockFingerprinting = () => {
+                // 阻止FP收集常用的脚本
+                Object.defineProperty(performance, 'mark', {
+                    value: function() {
+                        // 记录性能但如果调用与fingerprint相关就扰乱
+                        const args = Array.from(arguments);
+                        if (args.length > 0 && typeof args[0] === 'string' && 
+                            (args[0].includes('finger') || args[0].includes('detect') || args[0].includes('bot'))) {
+                            return null;
+                        }
+                        return performance.mark.apply(this, args as unknown as [string, any?]);
+                    }
+                });
+                
+                // 干扰AudioContext指纹
+                if (window.AudioContext || (window as any).webkitAudioContext) {
+                    const OriginalAudioContext = window.AudioContext || (window as any).webkitAudioContext;
+                    // @ts-ignore
+                    window.AudioContext = (window as any).webkitAudioContext = function() {
+                        const audioContext = new OriginalAudioContext();
+                        const originalGetChannelData = audioContext.createAnalyser().getFloatFrequencyData;
+                        // @ts-ignore
+                        audioContext.createAnalyser().getFloatFrequencyData = function(array) {
+                            const result = originalGetChannelData.apply(this, [...arguments]);
+                            // 轻微改变音频数据
+                            if (array && array.length > 0) {
+                                for (let i = 0; i < array.length; i += 200) {
+                                    array[i] = array[i] + Math.random() * 0.01;
+                                }
+                            }
+                            return result;
+                        };
+                        return audioContext;
+                    };
+                }
+                
+                // 无头模式特殊处理 - 修复语音合成
+                if (window.speechSynthesis === undefined) {
+                    // @ts-ignore
+                    window.speechSynthesis = {
+                        pending: false,
+                        speaking: false,
+                        paused: false,
+                        onvoiceschanged: null,
+                        getVoices: function() { return []; },
+                        speak: function() {},
+                        cancel: function() {},
+                        pause: function() {},
+                        resume: function() {}
+                    };
+                }
+            };
+            
+            // 8. 无头浏览器专用反检测
+            const antiHeadlessDetection = () => {
+                // 模拟物理屏幕尺寸
+                Object.defineProperty(screen, 'availWidth', {
+                    get: function() { return window.innerWidth; }
+                });
+                Object.defineProperty(screen, 'availHeight', {
+                    get: function() { return window.innerHeight; }
+                });
+                Object.defineProperty(screen, 'width', {
+                    get: function() { return window.innerWidth; }
+                });
+                Object.defineProperty(screen, 'height', {
+                    get: function() { return window.innerHeight; }
+                });
+                
+                // 模拟WebGL2
+                if (window.WebGL2RenderingContext) {
+                    const getParameterProto = WebGL2RenderingContext.prototype.getParameter;
+                    // @ts-ignore
+                    WebGL2RenderingContext.prototype.getParameter = function(parameter) {
+                        if (parameter === 37445) {
+                            return 'Intel Open Source Technology Center';
+                        }
+                        if (parameter === 37446) {
+                            return 'Mesa DRI Intel(R) HD Graphics 630 (Kaby Lake GT2)';
+                        }
+                        return getParameterProto.apply(this, [...arguments]);
+                    };
+                }
+                
+                // 处理无头模式中navigator.plugins和mimeTypes
+                if (navigator.plugins.length === 0) {
+                    Object.defineProperty(navigator, 'plugins', {
+                        get: function() {
+                            const ChromePDFPlugin = { name: 'Chrome PDF Plugin', filename: 'internal-pdf-viewer', description: 'Portable Document Format' };
+                            const FakeMimeType = { type: 'application/pdf', suffixes: 'pdf', description: 'Portable Document Format' };
+                            
+                            // @ts-ignore
+                            ChromePDFPlugin.__proto__ = MimeType.prototype;
+                            const pluginArray = [ChromePDFPlugin];
+                            
+                            // @ts-ignore
+                            pluginArray.item = function(index) { return this[index]; };
+                            // @ts-ignore
+                            pluginArray.namedItem = function(name) { return this[0].name === name ? this[0] : null; };
+                            // @ts-ignore
+                            pluginArray.refresh = function() {};
+                            // @ts-ignore
+                            pluginArray.length = 1;
+                            
+                            return pluginArray;
+                        }
+                    });
+                }
+                
+                if (navigator.mimeTypes.length === 0) {
+                    Object.defineProperty(navigator, 'mimeTypes', {
+                        get: function() {
+                            const mimeTypes = [
+                                { type: 'application/pdf', suffixes: 'pdf', description: 'Portable Document Format', enabledPlugin: {} }
+                            ];
+                            
+                            // @ts-ignore
+                            mimeTypes.item = function(index) { return this[index]; };
+                            // @ts-ignore
+                            mimeTypes.namedItem = function(name) { return this[0].type === name ? this[0] : null; };
+                            // @ts-ignore
+                            mimeTypes.length = 1;
+                            
+                            return mimeTypes;
+                        }
+                    });
+                }
+            };
+            
+            // 执行所有伪装
+            try {
+                overrideNavigator();
+                overrideWebGL();
+                overrideChrome();
+                overrideNotification();
+                overrideCanvas();
+                hideAutomationFeatures();
+                blockFingerprinting();
+                antiHeadlessDetection(); // 添加无头浏览器专用反检测
+            } catch (err) {
+                // 忽略错误继续执行
+            }
+        });
     }
 
 }
