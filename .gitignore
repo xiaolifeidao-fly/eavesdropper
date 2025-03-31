@@ -45,3 +45,4 @@ client/app/static/**/*
 **/track-features
 **/tracks
 **/screenshots
+**/package-*

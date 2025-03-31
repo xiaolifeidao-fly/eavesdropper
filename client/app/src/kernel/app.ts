@@ -1,11 +1,11 @@
 // require('module-alias/register');
-import { app, BrowserWindow,protocol } from 'electron';
+import { app, BrowserWindow, protocol, Menu, MenuItem } from 'electron';
 const path = require('path');
 import * as dotenv from 'dotenv';
 dotenv.config({path: path.join(__dirname, '.env')}); // 加载 .env 文件中的环境变量
 import { mainWindow, setMainWindow } from './windows';
 
-import { checkForUpdates, setupAutoUpdater } from './update/update';
+import { checkForUpdates, setupAutoUpdater, enableUpdateInDev, testUpdateCheck } from './update/update';
 import log from 'electron-log';
 import { registerRpc } from './register/rpc';
 import { init } from './store';
@@ -69,17 +69,69 @@ function registerFileProtocol(){
   });
 }
 
+// 添加开发环境调试菜单
+function createDebugMenu(mainWindow: BrowserWindow) {
+  const menu = Menu.getApplicationMenu() || Menu.buildFromTemplate([]);
+  
+  const debugSubmenu = new MenuItem({
+    label: '调试',
+    submenu: [
+      {
+        label: '检查更新',
+        click: () => {
+          testUpdateCheck();
+        }
+      },
+      {
+        label: '模拟更新可用',
+        click: () => {
+          // 模拟发现更新的对话框
+          mainWindow.webContents.send('update-info', {
+            version: '1.2.0',
+            notes: '这是一个测试更新\n- 测试功能1\n- 测试功能2',
+            name: '测试版本',
+            forceUpdate: false,
+            updateType: 'normal'
+          });
+        }
+      },
+      { type: 'separator' },
+      {
+        label: '应用信息',
+        click: () => {
+          console.log('应用版本:', app.getVersion());
+          console.log('更新URL:', process.env.UPDATE_URL || 'http://101.43.28.195/updates/');
+          console.log('是否打包:', app.isPackaged);
+        }
+      }
+    ]
+  });
+  
+  menu.append(debugSubmenu);
+  Menu.setApplicationMenu(menu);
+}
+
 function checkUpdate(mainWindow: BrowserWindow){
   console.log("checkUpdate: ", mainWindow);
 
+  // 添加开发环境调试菜单
+  if (!app.isPackaged) {
+    createDebugMenu(mainWindow);
+    
+    // 在开发环境中启用更新
+    enableUpdateInDev();
+    
+    console.log("已在开发环境中启用更新检查");
+  }
+
   // 设置自动更新
-  // setupAutoUpdater(mainWindow);
+  setupAutoUpdater(mainWindow);
 
   // 每隔一段时间自动检查更新
-  // setInterval(async () => {
-  //   // 调用上方的函数
-  //   await checkForUpdates()
-  // }, 60 * 1000) // 60秒检查一次更新
+  setInterval(async () => {
+    // 调用上方的函数
+    await checkForUpdates()
+  }, 60 * 1000) // 60秒检查一次更新
 }
 
 
@@ -92,12 +144,12 @@ export const start = () => {
       await createDefaultWindow();
       if(mainWindow){
         // 设置自动更新
-        // setupAutoUpdater(mainWindow);
-        // // 每隔一段时间自动检查更新
-        // setInterval(async () => {
-        //   // 调用上方的函数
-        //   await checkForUpdates()
-        // }, 60 * 1000) // 60秒检查一次更新
+        setupAutoUpdater(mainWindow);
+        // 每隔一段时间自动检查更新
+        setInterval(async () => {
+          // 调用上方的函数
+          await checkForUpdates()
+        }, 60 * 1000) // 60秒检查一次更新
       }
     });
     // validateTest(1, {}, "https://www.ishumei.com/account/register.html?crmSource=%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81%E7%A0%81-banner", {

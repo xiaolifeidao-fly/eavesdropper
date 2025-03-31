@@ -1,11 +1,77 @@
 import { autoUpdater } from 'electron-updater'
 import { UpdateInfo } from 'builder-util-runtime'
 import log from 'electron-log'
-import { BrowserWindow, dialog, ipcMain } from 'electron'
+import { BrowserWindow, dialog, ipcMain, app } from 'electron'
 
 let updateFlag = false // 防止重复检查
 let isUpdateAvailable = false // 标志是否发现新版本
 let isDownloading = false // 标志是否正在下载
+let isDev = !app.isPackaged // 是否为开发环境
+
+// 在开发环境中启用更新检查
+export function enableUpdateInDev() {
+  // 绕过开发环境限制
+  Object.defineProperty(app, 'isPackaged', {
+    get() {
+      return true;
+    }
+  });
+  
+  // 启用详细日志
+  autoUpdater.logger = log;
+  // @ts-ignore - electron-log的类型定义可能与实际使用不匹配
+  autoUpdater.logger.transports.file.level = 'debug';
+  
+  console.info('已在开发环境中启用更新检查功能');
+  
+  // 强制设置更新URL（如果package.json中的配置失效）
+  autoUpdater.setFeedURL({
+    provider: 'generic',
+    url: 'http://101.43.28.195/updates/'
+  });
+
+  // 开发环境中拦截downloadUpdate调用，避免实际下载
+  // @ts-ignore - 我们知道这里类型不匹配，但这是开发环境下的模拟代码
+  const originalDownloadUpdate = autoUpdater.downloadUpdate;
+  // @ts-ignore - 忽略类型错误，因为这只是开发环境下的模拟
+  autoUpdater.downloadUpdate = function(...args) {
+    console.log('开发环境：拦截下载更新操作，不实际下载安装包');
+    if (isDev) {
+      // 模拟下载进度
+      simulateDownloadProgress(this);
+      return Promise.resolve([]);
+    }
+    return originalDownloadUpdate.apply(this, args);
+  };
+  
+  return autoUpdater;
+}
+
+// 模拟下载进度
+// @ts-ignore - 忽略updater参数类型，实际上它是AutoUpdater实例
+function simulateDownloadProgress(updater: any) {
+  let percent = 0;
+  const interval = setInterval(() => {
+    percent += 10;
+    if (percent <= 100) {
+      updater.emit('download-progress', { percent });
+      console.log(`模拟下载进度: ${percent}%`);
+    } else {
+      clearInterval(interval);
+      console.log('模拟下载完成');
+      updater.emit('update-downloaded', {
+        version: '1.2.0',
+        releaseNotes: '这是模拟的更新内容\n- 测试功能1\n- 测试功能2'
+      });
+    }
+  }, 500);
+}
+
+// 手动触发更新检查的函数（可通过调试菜单调用）
+export function testUpdateCheck() {
+  console.info('手动触发更新检查...');
+  checkForUpdates();
+}
 
 // 自动更新检查
 export async function checkForUpdates() {
@@ -102,6 +168,13 @@ export function setupAutoUpdater(win: BrowserWindow) {
 
   autoUpdater.on('error', (error: any) => {
     log.error('更新出错:', error);
+    
+    // 在开发环境中，当出现错误时提供更多信息
+    if (isDev) {
+      console.log('这是开发环境。更新错误可能是因为DMG/EXE文件格式不兼容。');
+      console.log('您可以通过"调试"菜单中的"模拟更新可用"来测试更新流程UI。');
+    }
+    
     updateFlag = false; // 解除更新锁
     isDownloading = false;
   });
@@ -129,8 +202,18 @@ function showUpdateDialog(win: BrowserWindow) {
     buttons: ['立即更新'],
   }).then(result => {
     if (result.response === 0) {
-      // 用户点击 "立即更新" 按钮，执行更新
-      autoUpdater.quitAndInstall();
+      if (isDev) {
+        console.log('开发环境：模拟退出并安装');
+        dialog.showMessageBox(win, {
+          type: 'info',
+          title: '开发环境',
+          message: '在开发环境中，不会真正执行安装。这里只是模拟流程。',
+          buttons: ['确定']
+        });
+      } else {
+        // 用户点击 "立即更新" 按钮，执行更新
+        autoUpdater.quitAndInstall();
+      }
     }
   });
 }
