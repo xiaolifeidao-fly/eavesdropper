@@ -176,6 +176,10 @@ export class UpdateDraftStep extends AbsPublishStep {
                     continue;
                 }
             }
+            if(dataSource.label.includes("净含量")){
+                draftCatProp[dataSource.name] = "20g";
+            }
+
             const catPropDataSource = dataSource.dataSource;
             if(!catPropDataSource){
                 log.info("catPropDataSource is null", dataSource.name);
