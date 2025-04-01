@@ -10,7 +10,7 @@ import { getSkuTaskPage as getSkuTaskPageApi, GetSkuTaskStatusLabelValue } from 
 import { getResourceSourceList } from '@api/resource/resource.api';
 import { transformArrayToObject } from '@utils/convert'
 import { SkuTaskStatus } from '@model/sku/skuTask'
-import { SkuTaskItemList } from './components'
+import { SkuTaskItemList, StatsTags } from './components'
 import { TaskApi } from '@eleapi/door/task/task';
 import SkuPushStepsForm from '../components/SkuPushSteps';
 
@@ -35,6 +35,7 @@ export default function SkuTaskManage() {
   const [statusMap, setStatusMap] = useState<Record<string, any>>();
   const [showItemList, setShowItemList] = useState<boolean>(false)
   const [showTaskId, setShowTaskId] = useState<number>(0)
+  const [currentRecord, setCurrentRecord] = useState<any>({})
 
   const [visible, setVisible] = useState(false);
 
@@ -54,9 +55,10 @@ export default function SkuTaskManage() {
   }, [])
 
   // 查看任务
-  const handleView = (taskId: number) => {
+  const handleView = (record: any) => {
     setShowItemList(true)
-    setShowTaskId(taskId)
+    setShowTaskId(record.id)
+    setCurrentRecord(record)
   }
 
   // 停止任务
@@ -130,24 +132,8 @@ export default function SkuTaskManage() {
       align: 'center',
       render: (_, record) => {
         return (
-          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-            <div style={{ textAlign: 'center' }}>
-              总计: <Tag color={'blue'} style={{ width: '40px', textAlign: 'center' }}>{record.count}</Tag>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              新成功: <Tag color={'green'} style={{ width: '40px', textAlign: 'center' }}>{record.successCount}</Tag>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              失败: <Tag color={'red'} style={{ width: '40px', textAlign: 'center' }}>{record.failedCount}</Tag>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              未执行: <Tag color={'orange'} style={{ width: '40px', textAlign: 'center' }}>{record.cancelCount}</Tag>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              已存在: <Tag color={'gold'} style={{ width: '40px', textAlign: 'center' }}>{record.existenceCount}</Tag>
-            </div>
-          </div>
-        );
+          <StatsTags record={record} />
+        )
       }
     },
     {
@@ -160,7 +146,7 @@ export default function SkuTaskManage() {
           <div style={{ display: 'flex', gap: '4px' }}> {/* 设置间距为 4px */}
             <Button
               type="link"
-              onClick={() => handleView(record.id)} // 查看操作
+              onClick={() => handleView(record)} // 查看操作
               style={{ display: 'inline-block', paddingRight: '4px' }} // 缩小右边距
             >
               查看
@@ -231,13 +217,19 @@ export default function SkuTaskManage() {
       {showItemList && showTaskId !== 0 && (
         <Modal
           open={showItemList}
-          title={`批次${showTaskId}任务明细`}
+          title={
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px' }}>
+              <span>批次{showTaskId}任务明细</span>
+              <StatsTags record={currentRecord} tagWidth={30} gap={4} />
+            </div>}
           width={1200}
           onCancel={() => {
             setShowItemList(false)
+            setCurrentRecord({})
           }}
           onOk={() => {
             setShowItemList(false)
+            setCurrentRecord({})
           }}
         >
           <SkuTaskItemList taskId={showTaskId}/>
