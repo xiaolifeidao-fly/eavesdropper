@@ -136,7 +136,9 @@ export abstract class AbsPublishStep extends StepUnit{
             const value = skuItem.text;
             const targetValue = value[0];
             if(uiType == "taoSirProp"){
-                if(key == "p-227143751" || key == "p-147956252"){
+                const label = catProp.label;
+                log.info("catProp label is ", label);
+                if(label.includes("净含量")){
                     this.fillNetWeight(catProps, newCatProp, targetValue);
                     continue;
                 }
@@ -176,7 +178,7 @@ export abstract class AbsPublishStep extends StepUnit{
 
     fillNetWeight(catProps : { [key: string]: any }[], newCatProp : { [key: string]: any }, value : any){
         for(const catProp of catProps){
-            if(catProp.name == 'p-227143751' || catProp.name == 'p-147956252'){
+            if(catProp.label.includes("净含量")){
                 newCatProp[catProp.name] = value;
             }
         }
