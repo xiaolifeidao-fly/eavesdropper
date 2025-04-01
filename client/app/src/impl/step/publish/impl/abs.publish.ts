@@ -135,11 +135,11 @@ export abstract class AbsPublishStep extends StepUnit{
             const uiType = catProp.uiType;
             const value = skuItem.text;
             const targetValue = value[0];
-            if(key == "p-227143751"){
-                newCatProp[key] = targetValue;
-                continue;
-            }
             if(uiType == "taoSirProp"){
+                if(key == "p-227143751" || key == "p-147956252"){
+                    this.fillNetWeight(catProps, newCatProp, targetValue);
+                    continue;
+                }
                 if(this.isNumber(targetValue)){
                     newCatProp[key] = parseInt(targetValue);
                 }else{
@@ -172,6 +172,14 @@ export abstract class AbsPublishStep extends StepUnit{
         newCatProp['p-20000'] = brand;
         log.info("newCatProp ",newCatProp)
         draftData.catProp = newCatProp;
+    }
+
+    fillNetWeight(catProps : { [key: string]: any }[], newCatProp : { [key: string]: any }, value : any){
+        for(const catProp of catProps){
+            if(catProp.name == 'p-227143751' || catProp.name == 'p-147956252'){
+                newCatProp[catProp.name] = value;
+            }
+        }
     }
 
     async checkAndUpdateBrand(brand: { [key: string]: any }, skuItemDTO: DoorSkuDTO, requestHeader : { [key: string]: any }, catId: string, startTraceId: string){

@@ -138,6 +138,7 @@ export class UpdateDraftStep extends AbsPublishStep {
             if(!('props' in component)){
                 continue;
             }
+            
             const props = component.props;
             if(!("required" in props)){
                 continue;
@@ -149,6 +150,38 @@ export class UpdateDraftStep extends AbsPublishStep {
             if(props.name in this.fixRequiredDataHandler){
                 this.fixRequiredDataHandler[props.name](props, draftData, this);
             }
+        }
+        await this.fillRequiredData(commonData, draftData);
+
+    }
+
+    async fillRequiredData(commonData : { [key : string] : any }, draftData : { [key : string] : any }){
+        const components = commonData.data.components;
+        const dataSources = components.catProp?.props?.dataSource;
+        if(!dataSources){
+            return;
+        }
+        const draftCatProp = draftData.catProp;
+        for(const dataSource of dataSources){
+            const required = dataSource.required;
+            if(!required){
+                continue;
+            }
+            const draftCatPropValue = draftCatProp[dataSource.name];
+            if(draftCatPropValue){
+                if(Array.isArray(draftCatPropValue) && draftCatPropValue.length > 0){
+                    continue;
+                }
+                if(String(draftCatPropValue).length > 0){
+                    continue;
+                }
+            }
+            const catPropDataSource = dataSource.dataSource;
+            if(!catPropDataSource){
+                log.info("catPropDataSource is null", dataSource.name);
+                continue;
+            }
+            draftCatProp[dataSource.name] = catPropDataSource[0];
         }
     }
 
