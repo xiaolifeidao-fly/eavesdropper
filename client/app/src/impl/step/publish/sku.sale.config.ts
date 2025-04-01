@@ -222,7 +222,7 @@ export class RebuildSalePro{
                 }
             }
         }
-        if(subItem.required){
+        if(subItem.required && !saleConfig.allowInput){
             const saleValue = saleConfig.buildSalesAttr(subItem);
             return new SaleMapper(saleValue, subItem, null, true, false);
         }
@@ -657,7 +657,7 @@ export class RebuildSalePro{
     
     allowMerge(allowAssignSaleMappers : SaleMapper[], unAssignSize : number, unAssignIndex : number) {
         if(allowAssignSaleMappers.length == 1 && unAssignSize == 1){
-            return false;
+            return true;
         }
         if(allowAssignSaleMappers.length == 1 && unAssignSize > 1){
             return true;
@@ -711,16 +711,16 @@ export class RebuildSalePro{
     }
     
     sortMergeSaleAttr(salesAttrs : SalesAttr[], saleMapper : SaleMapper) {
-        // if(saleMapper.hadAssign && saleMapper.saleAttr){
-        //     for(let i = 0; i < salesAttrs.length; i++){
-        //         if(salesAttrs[i].pid == saleMapper.saleAttr.pid){
-        //              const saleAttr = salesAttrs[i];
-        //              salesAttrs[i] = salesAttrs[0];
-        //              salesAttrs[0] = saleAttr;
-        //         }
-        //     }
-        //     return salesAttrs;
-        // }
+        if(saleMapper.hadAssign && saleMapper.saleAttr){
+            // for(let i = 0; i < salesAttrs.length; i++){
+            //     if(salesAttrs[i].pid == saleMapper.saleAttr.pid){
+            //          const saleAttr = salesAttrs[i];
+            //          salesAttrs[i] = salesAttrs[0];
+            //          salesAttrs[0] = saleAttr;
+            //     }
+            // }
+            salesAttrs.push(saleMapper.saleAttr);
+        }
     
         let maxDistinctImageNumIndex : number = -1;
         for(let i = 0; i < salesAttrs.length; i++){
@@ -794,7 +794,7 @@ export class RebuildSalePro{
         salesAttrs = this.sortMergeSaleAttr(salesAttrs, saleMapper);
         // Create a new merged values array
         let mergedValues: SalesAttrValue[] = [];
-        
+        log.info("salesAttrs is ", salesAttrs)
         if (salesAttrs.length > 0) {
             if (salesAttrs.length === 1) {
                 // If only one attribute, use its values directly
@@ -833,7 +833,6 @@ export class RebuildSalePro{
         // Start with the first attribute's values
         const firstSaleAttr = salesAttrs[0];
         let combinations: SalesAttrValue[] = [...firstSaleAttr.values.map(v => {
-            
             return v;
         })];
         const tempSaleSkuMapper : {[key : string]: any} = {};

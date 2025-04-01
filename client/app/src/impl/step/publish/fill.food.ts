@@ -22,10 +22,16 @@ abstract class FoodHandler {
 
     isNotNull(draftData : { [key : string] : any }){
         const value =  draftData[this.key];
-        if(value && value.length > 0){
-            return true;
+        if(!value){
+            return false;
         }
-        return false;
+        if(Array.isArray(value)){
+            return value.length > 0;
+        }
+        if(typeof value == "object"){
+            return Object.keys(value).length > 0;
+        }
+        return String(value).length > 0;
     }
 
     doFill(catPro : { [key : string] : any }, draftData : { [key : string] : any }, skuItem : SkuItem): void {
@@ -255,6 +261,57 @@ class FoodProduceDateHandler extends FoodHandler {
     }
 }
 
+class FoodNutrientTableHandler extends FoodHandler {
+
+    needFill(draftData : { [key : string] : any }): boolean {
+        const value = draftData[this.key];
+        if(!value){
+            return true;
+        }
+        if('fields' in value){
+            return Object.keys(value.fields).length == 0;
+        }
+        return true;
+    }
+
+    isNotNull(draftData : { [key : string] : any }){
+        const value = draftData[this.key];
+        if(!value){
+            return false;
+        }
+        if('fields' in value){
+            return Object.keys(value.fields).length > 0;
+        }
+        return false;
+    }
+
+    againFill(catPro: { [key: string]: any; }, draftData: { [key: string]: any; }, skuItem: SkuItem[]): void {
+        const fields = catPro.props?.dataSource?.fields;
+        if(!fields){
+            return;
+        }
+        const foodNutrientTable : { [key : string] : any } = {
+            "multiple": true,
+            "measurement": {
+                "unit": "hundredGram"
+            }
+        };
+        const measurement = catPro.props?.value?.measurement;
+        if(measurement){
+            foodNutrientTable["measurement"] = measurement;
+        }
+        const fieldsData : { [key : string] : any } = {};
+        for(const field of fields){
+            fieldsData[field.name] = {
+                "value": 2,
+                "percent": 2
+            };
+        }
+        foodNutrientTable["fields"] = fieldsData;
+        draftData[this.key] = foodNutrientTable;
+    }
+}
+
 
 
 
@@ -270,6 +327,7 @@ const foodHandlers : FoodHandler[] = [
   new FoodProduceDateHandler("foodProduceDate"),
   new FoodFactoryContactHandler("foodFactoryContact"),
   new FoodMixHandler("foodMix"),
+  new FoodNutrientTableHandler("foodNutrientTable"),
 ]
 
 const footPrdLicenses = ["SC10341147101351", "SC10432062101169","SC11334160230808","SC10644512106525","SC10634160212611","SC10435058302205"];
@@ -344,7 +402,7 @@ export class FoodSupport {
             return;
         }
         let foodPrdLicense = draftData["foodPrdLicense"];
-        if(!foodPrdLicense){
+        if(!foodPrdLicense || !this.isQualified(foodPrdLicense)){
             foodPrdLicense = randomFetchFootPrdLicense();
         }
         const result = await this.getFoodPrdLicense(catId, startTraceId, headers, foodPrdLicense, 1);
@@ -356,13 +414,20 @@ export class FoodSupport {
         draftData["foodFactorySite"] = result.foodFactorySite;
     }
 
+    //是否合格
+    isQualified(foodPrdLicense : string){
+        if(foodPrdLicense.startsWith("SC") || foodPrdLicense.startsWith("QS")){
+            return true;
+        }
+        return false;
+    }
+
     async getFoodPrdLicense(catId : string, startTraceId : string, headers : { [key : string] : any }, foodPrdLicense : string, retryCount : number): Promise<{foodPrdLicense : string, foodFactoryName : string, foodFactorySite : string} | undefined>{
         if(retryCount > 2){
             this.fillResult = false;
             this.appendMessage("填充食品生产商失败");
             return undefined;
         }
-        log.info(foodPrdLicense, " getFoodPrdLicense retryCount ", retryCount);
         const url = "https://item.upload.taobao.com/sell/v2/asyncOpt.htm";
         const data = {
             optType: "foodPrdLicenseType",
@@ -372,7 +437,6 @@ export class FoodSupport {
         };
         const response = await axios.post(url, data, {headers : headers});
         const result = response.data;
-        log.info(foodPrdLicense , " fillFoodFactory result ", result)
 
         if(result.models){
             const type = result.models.globalMessage?.type;
@@ -418,9 +482,6 @@ export class FoodSupport {
                 continue;
             }
             if(!handler.needFill(draftData)){
-                continue;
-            }
-            if(!catProp.props?.required){
                 continue;
             }
             handler.againFill(catProp, draftData, skuItems);

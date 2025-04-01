@@ -293,8 +293,8 @@ export abstract class DoorEngine<T = any> {
                 if(headerData && Object.keys(headerData).length > 0){
                     const key = this.getKey();
                     const isNeedStoreContext = responseMonitor.needStoreContext(key, headerData);
-                    this.setHeader(headerData);
                     if(isNeedStoreContext){
+                        this.setHeader(headerData);
                         responseMonitor.setStoreContext(key);
                         log.info("session reset save context state");
                         await this.saveContextState();

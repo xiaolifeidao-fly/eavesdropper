@@ -1,160 +1,1204 @@
-[
-    {
-        "hasImage": "true",
-        "comboProperty": "",
-        "label": "花型",
-        "packPro": "",
-        "pid": "8137",
-        "values": [
-            {
-                "text": "兰格熊先生【亲肤加厚水洗棉】",
-                "value": "26550996692",
-                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01zR5DF225vomin98zZ_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "碎花小熊【亲肤加厚水洗棉】",
-                "value": "26550999554",
-                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01fSylFy25vomiKyOBl_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "棋盘格【亲肤加厚水洗棉】",
-                "value": "26551169503",
-                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "藕粉菲菲兔【亲肤加厚水洗棉】",
-                "value": "26550994661",
-                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01zdhYwi25vomijtxql_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "幸运蓝鲸【亲肤加厚水洗棉】",
-                "value": "26551003323",
-                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01yvt2GU25vombxIr8y_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "爵士马格纹【亲肤加厚水洗棉】",
-                "value": "26551165381",
-                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN010imCSm25vomjcRXX9_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "花间兔子【亲肤加厚水洗棉】",
-                "value": "26551076023",
-                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01QT7rvp25vomiKz7wx_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "型男兰格【亲肤加厚水洗棉】",
-                "value": "26550993749",
-                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01dO8lK725vomgrTqal_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "小熊饼干【亲肤加厚水洗棉】",
-                "value": "26550989988",
-                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01b88fXA25vomjABvIs_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "Lucky熊【亲肤加厚水洗棉】",
-                "value": "26550998706",
-                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01q79V1725vomgEDYN2_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "kitty猫【亲肤加厚水洗棉】",
-                "value": "26551156195",
-                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN01GN6lSP25vomhwjeMo_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "多彩郁金香【亲肤加厚水洗棉】",
-                "value": "26551007208",
-                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01VbZ8Ds25vombxHeK9_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "萌宠卡皮巴拉【亲肤加厚水洗棉】",
-                "value": "26551002390",
-                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01wIDYWX25vomgrSRKA_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "碎花蝴蝶结【亲肤加厚水洗棉】",
-                "value": "26550999600",
-                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN018sIBXy25vomkVFgoo_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "橙意满满【亲肤加厚水洗棉】",
-                "value": "26551079667",
-                "image": "https://img.alicdn.com/imgextra/i1/695637589/O1CN01DoJNnD25vomkVIuOg_!!695637589.jpg",
-                "sortOrder": ""
-            },
-            {
-                "text": "snoopy【亲肤加厚水洗棉】",
-                "value": "26551114931",
-                "image": "https://img.alicdn.com/imgextra/i3/695637589/O1CN019jjDXJ25vomk6UJwh_!!695637589.jpg",
-                "sortOrder": ""
-            }
-        ],
-        "distinctImageNum": 16
+{
+    "frontDataLog": {
+        "identityId": "general-taobao-100",
+        "mainCategoryId": 50016422,
+        "fromSmart": false,
+        "fromStandardSpuPublish": false,
+        "fromSearch": false,
+        "fromSpuMatch": false,
+        "fromImageSearch": false,
+        "fromSuggestion": false,
+        "fromStandardCategory": false,
+        "fromSpuBasePublish": false,
+        "fromAIPublish": false,
+        "fromAICategory": false,
+        "fromAIImage": false,
+        "traceId": "2150434e17435193260991024e137f",
+        "gpfRenderTraceId": "2150434e17435193260991024e137f",
+        "trueItemId": 904816250108,
+        "isEdit": false,
+        "pageUniqueId": "pc",
+        "newPublish": true
     },
-    {
-        "hasImage": "true",
-        "comboProperty": "",
-        "label": "尺寸",
-        "packPro": "",
-        "pid": "1216",
-        "values": [
+    "auctionType": "b",
+    "sevenDayDefaultValue": 3,
+    "id": 904816250108,
+    "copyItemMode": 0,
+    "postCouponPromotionId": null,
+    "spuMatch": null,
+    "croRule": "{\"url\":\"asyncOpt.htm?optType=croRuleAsyncCheck&catId=50025696\",\"input\":[\"id\",\"userId\",\"catId\",\"title\",\"desc\",\"descForShenbiPc\",\"sku\",\"price\",\"catProp\",\"saleProp\",\"descType\",\"shopping_title\",\"skuPublishSuggest\"]}",
+    "itemWithScProductItem": null,
+    "multiDiscountPromotionId": null,
+    "batchInventoryTemplateId": null,
+    "guideMaterialEnable": 1,
+    "afterSaleVideo_videoId": null,
+    "sevenDayGray": -1,
+    "catSuggest": {
+        "empty": false
+    },
+    "fakeCreditSubmit": false,
+    "ifdWarningSubmit": false,
+    "riskWarningSubmit": false,
+    "feedbackSubmit_catErrorWarningSubmit": false,
+    "taobaoMarketTransform": null,
+    "taobaoMarketClean": null,
+    "snapshotId": null,
+    "showDraft": 1,
+    "newDescVersion": 1,
+    "descRepublicEnable": 1,
+    "skyLightRule": null,
+    "recommendInfo": "{\"fromAiPublish\":false,\"fromNewImagePublish\":false,\"hasStructTitle\":false}",
+    "dbDraftId": "1237512859",
+    "draftIdKey": "dbDraftId",
+    "firstStartTime": null,
+    "itemdiagnoseInfo": "{\"showNewVersion\":true}",
+    "diagnoseInvokeId": null,
+    "diagnoseSource": null,
+    "aliColorEnable": null,
+    "mediaCenterEnable": null,
+    "newMaterialEnable": null,
+    "foodSecuritySubmit": false,
+    "foodExtend": null,
+    "catId": 50025696,
+    "userId": 695637589,
+    "category": {
+        "categorySelect": {
+            "id": 50025696,
+            "name": "包装即食肠类",
+            "idpath": [
+                50016422,
+                50025689,
+                201792701,
+                50025696
+            ],
+            "path": [
+                "粮油调味/速食/干货/烘焙",
+                "火锅/肉类/米饭类速食",
+                "肉类速食",
+                "包装即食肠类"
+            ],
+            "brand": false,
+            "leaf": true,
+            "publish": true,
+            "submitId": 50025696,
+            "empty": false
+        }
+    },
+    "base-card": {},
+    "stuffStatus": {
+        "value": 5
+    },
+    "title": "起亮脆骨烤肠22克即食小香肠火腿肠肉枣热狗零食",
+    "catProp": {
+        "p-20000": {
+            "value": 109371028,
+            "text": "起亮食品"
+        },
+        "p-20000~1": "起亮脆骨烤肠",
+        "p-21299": {
+            "value": 27772,
+            "text": "中国大陆"
+        },
+        "p-21299-122450261": {
+            "value": 20213,
+            "text": "其他"
+        },
+        "p-6939376": {
+            "value": 136135,
+            "text": "袋装"
+        },
+        "p-227143751": "22g",
+        "p-26722862": {
+            "value": 554958499,
+            "text": "余庆灌粑"
+        }
+    },
+    "attrPropTable": [],
+    "assignUserAgreement": 1,
+    "globalStock": {
+        "value": "globalStock_0"
+    },
+    "sale-card": {},
+    "saleProp": {
+        "p-31560": [
             {
-                "text": "1.8m四件套【180*220cm被套】",
-                "value": "6853754972",
-                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
-                "sortOrder": ""
+                "value": -1,
+                "text": "奥尔良味 + 50包（200粒）好评回购多",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01cHNeOw25vomy5YEc7_!!695637589.jpg",
+                "pix": "800x800"
             },
             {
-                "text": "2.0m四件套【200*230cm被套】",
-                "value": "6853781242",
-                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
-                "sortOrder": ""
+                "value": -3,
+                "text": "奥尔良味 + 10包（40粒）尝鲜",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01cHNeOw25vomy5YEc7_!!695637589.jpg",
+                "pix": "800x800"
             },
             {
-                "text": "单被套【150*200cm】",
-                "value": "324873474",
-                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
-                "sortOrder": ""
+                "value": -5,
+                "text": "奥尔良味 + 20包（80粒）实惠",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01cHNeOw25vomy5YEc7_!!695637589.jpg",
+                "pix": "800x800"
             },
             {
-                "text": "单被套【200*230cm】",
-                "value": "136311478",
-                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
-                "sortOrder": ""
+                "value": -7,
+                "text": "奥尔良味 + 30包（120粒）活动特价",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01cHNeOw25vomy5YEc7_!!695637589.jpg",
+                "pix": "800x800"
             },
             {
-                "text": "1.5m四件套【150*200cm被套】",
-                "value": "6853771434",
-                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
-                "sortOrder": ""
+                "value": -9,
+                "text": "烧烤味 + 50包（200粒）好评回购多",
+                "img": "//img.alicdn.com/imgextra/i1/695637589/O1CN01WFBX5m25vomuM2eMm_!!695637589.jpg",
+                "pix": "800x800"
             },
             {
-                "text": "1.2m三件套【150*200cm被套】",
-                "value": "3007697106",
-                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
-                "sortOrder": ""
+                "value": -11,
+                "text": "烧烤味 + 10包（40粒）尝鲜",
+                "img": "//img.alicdn.com/imgextra/i1/695637589/O1CN01WFBX5m25vomuM2eMm_!!695637589.jpg",
+                "pix": "800x800"
             },
             {
-                "text": "单被套【180*220cm】",
-                "value": "136311252",
-                "image": "https://img.alicdn.com/imgextra/i4/695637589/O1CN01FyX6TC25vomkVHAEf_!!695637589.jpg",
-                "sortOrder": ""
+                "value": -13,
+                "text": "烧烤味 + 20包（80粒）实惠",
+                "img": "//img.alicdn.com/imgextra/i1/695637589/O1CN01WFBX5m25vomuM2eMm_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -15,
+                "text": "烧烤味 + 30包（120粒）活动特价",
+                "img": "//img.alicdn.com/imgextra/i1/695637589/O1CN01WFBX5m25vomuM2eMm_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -17,
+                "text": "原味 + 50包（200粒）好评回购多",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01q3OyPs25vomuM3iu5_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -19,
+                "text": "原味 + 10包（40粒）尝鲜",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01q3OyPs25vomuM3iu5_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -21,
+                "text": "原味 + 20包（80粒）实惠",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01q3OyPs25vomuM3iu5_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -23,
+                "text": "原味 + 30包（120粒）活动特价",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01q3OyPs25vomuM3iu5_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -25,
+                "text": "香辣味 + 50包（200粒）好评回购多",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN013hFTK125vomvxgJ43_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -27,
+                "text": "香辣味 + 10包（40粒）尝鲜",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN013hFTK125vomvxgJ43_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -29,
+                "text": "香辣味 + 20包（80粒）实惠",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN013hFTK125vomvxgJ43_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -31,
+                "text": "香辣味 + 30包（120粒）活动特价",
+                "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN013hFTK125vomvxgJ43_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -33,
+                "text": "多味混搭 + 50包（200粒）好评回购多",
+                "img": "//img.alicdn.com/imgextra/i4/695637589/O1CN01SqJ5hL25vomv41K02_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -35,
+                "text": "多味混搭 + 10包（40粒）尝鲜",
+                "img": "//img.alicdn.com/imgextra/i4/695637589/O1CN01SqJ5hL25vomv41K02_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -37,
+                "text": "多味混搭 + 20包（80粒）实惠",
+                "img": "//img.alicdn.com/imgextra/i4/695637589/O1CN01SqJ5hL25vomv41K02_!!695637589.jpg",
+                "pix": "800x800"
+            },
+            {
+                "value": -39,
+                "text": "多味混搭 + 30包（120粒）活动特价",
+                "img": "//img.alicdn.com/imgextra/i4/695637589/O1CN01SqJ5hL25vomv41K02_!!695637589.jpg",
+                "pix": "800x800"
             }
+        ]
+    },
+    "tmDeliveryTime": {
+        "type": "0",
+        "value": null,
+        "setBySku": false
+    },
+    "sku": [
+        {
+            "cspuId": 0,
+            "skuPrice": "34.82",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -1,
+                    "text": "奥尔良味 + 50包（200粒）好评回购多",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01cHNeOw25vomy5YEc7_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--1",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "8.74",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -3,
+                    "text": "奥尔良味 + 10包（40粒）尝鲜",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01cHNeOw25vomy5YEc7_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--3",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "15.52",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -5,
+                    "text": "奥尔良味 + 20包（80粒）实惠",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01cHNeOw25vomy5YEc7_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--5",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "22.54",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -7,
+                    "text": "奥尔良味 + 30包（120粒）活动特价",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01cHNeOw25vomy5YEc7_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--7",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "34.82",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -9,
+                    "text": "烧烤味 + 50包（200粒）好评回购多",
+                    "img": "//img.alicdn.com/imgextra/i1/695637589/O1CN01WFBX5m25vomuM2eMm_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--9",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "8.74",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -11,
+                    "text": "烧烤味 + 10包（40粒）尝鲜",
+                    "img": "//img.alicdn.com/imgextra/i1/695637589/O1CN01WFBX5m25vomuM2eMm_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--11",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "15.52",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -13,
+                    "text": "烧烤味 + 20包（80粒）实惠",
+                    "img": "//img.alicdn.com/imgextra/i1/695637589/O1CN01WFBX5m25vomuM2eMm_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--13",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "22.54",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -15,
+                    "text": "烧烤味 + 30包（120粒）活动特价",
+                    "img": "//img.alicdn.com/imgextra/i1/695637589/O1CN01WFBX5m25vomuM2eMm_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--15",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "34.82",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -17,
+                    "text": "原味 + 50包（200粒）好评回购多",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01q3OyPs25vomuM3iu5_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--17",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "8.74",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -19,
+                    "text": "原味 + 10包（40粒）尝鲜",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01q3OyPs25vomuM3iu5_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--19",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "15.52",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -21,
+                    "text": "原味 + 20包（80粒）实惠",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01q3OyPs25vomuM3iu5_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--21",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "22.54",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -23,
+                    "text": "原味 + 30包（120粒）活动特价",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN01q3OyPs25vomuM3iu5_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--23",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "34.82",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -25,
+                    "text": "香辣味 + 50包（200粒）好评回购多",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN013hFTK125vomvxgJ43_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--25",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "8.74",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -27,
+                    "text": "香辣味 + 10包（40粒）尝鲜",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN013hFTK125vomvxgJ43_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--27",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "15.52",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -29,
+                    "text": "香辣味 + 20包（80粒）实惠",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN013hFTK125vomvxgJ43_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--29",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "22.54",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -31,
+                    "text": "香辣味 + 30包（120粒）活动特价",
+                    "img": "//img.alicdn.com/imgextra/i2/695637589/O1CN013hFTK125vomvxgJ43_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--31",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "35.31",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -33,
+                    "text": "多味混搭 + 50包（200粒）好评回购多",
+                    "img": "//img.alicdn.com/imgextra/i4/695637589/O1CN01SqJ5hL25vomv41K02_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--33",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "8.85",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -35,
+                    "text": "多味混搭 + 10包（40粒）尝鲜",
+                    "img": "//img.alicdn.com/imgextra/i4/695637589/O1CN01SqJ5hL25vomv41K02_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--35",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "15.75",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -37,
+                    "text": "多味混搭 + 20包（80粒）实惠",
+                    "img": "//img.alicdn.com/imgextra/i4/695637589/O1CN01SqJ5hL25vomv41K02_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--37",
+            "errorInfo": {}
+        },
+        {
+            "cspuId": 0,
+            "skuPrice": "22.54",
+            "action": {
+                "selected": true
+            },
+            "skuId": null,
+            "skuStatus": 1,
+            "skuStock": 1000,
+            "skuQuality": {
+                "value": "mainSku",
+                "text": "单品",
+                "prefilled": true,
+                "prefilledText": {
+                    "bottom": "<span style='color:#ff6600'>请确认分类</span>"
+                }
+            },
+            "skuDetail": [],
+            "disabled": false,
+            "props": [
+                {
+                    "name": "p-31560",
+                    "value": -39,
+                    "text": "多味混搭 + 30包（120粒）活动特价",
+                    "img": "//img.alicdn.com/imgextra/i4/695637589/O1CN01SqJ5hL25vomv41K02_!!695637589.jpg",
+                    "pix": "800x800",
+                    "label": "口味"
+                }
+            ],
+            "salePropKey": "31560--39",
+            "errorInfo": {}
+        }
+    ],
+    "price": "8.74",
+    "quantity": "20000",
+    "multiDiscountPromotion": {
+        "type": 1,
+        "value": 9,
+        "enable": false
+    },
+    "sizeinfo-card": {},
+    "desc-card": {},
+    "mainImagesGroup": {
+        "images": [
+            {
+                "url": "//img.alicdn.com/imgextra/i2/695637589/O1CN01iRVIm525vomv41WSD_!!695637589.jpg",
+                "pix": "800x800",
+                "width": "800",
+                "height": "800"
+            },
+            {
+                "url": "//img.alicdn.com/imgextra/i4/695637589/O1CN01MZ2imp25vomuwo06W_!!695637589.jpg",
+                "pix": "800x800",
+                "width": "800",
+                "height": "800"
+            },
+            {
+                "url": "//img.alicdn.com/imgextra/i1/695637589/O1CN016YKLdC25vomwxrr9l_!!695637589.jpg",
+                "pix": "800x800",
+                "width": "800",
+                "height": "800"
+            },
+            {
+                "url": "//img.alicdn.com/imgextra/i2/695637589/O1CN01ZRvx0M25vomwrRvGt_!!695637589.jpg",
+                "pix": "800x800",
+                "width": "800",
+                "height": "800"
+            },
+            {
+                "url": "//img.alicdn.com/imgextra/i2/695637589/O1CN01hs2DOa25vomxAqBgW_!!695637589.jpg",
+                "pix": "800x800",
+                "width": "800",
+                "height": "800"
+            }
+        ]
+    },
+    "auctionVideos": [],
+    "descRepublicOfSell": {
+        "descPageCommitParam": {
+            "opt": 2,
+            "clientType": 1,
+            "userId": 695637589,
+            "itemId": 0,
+            "templateId": 0,
+            "templateContent": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01qMaF6a25vomxYGz1Y_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":201909,\"id\":1758908412186236200},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338042\",\"groupId\":\"group1743517338041\",\"selected\":false}],\"groupId\":\"group1743517338041\",\"id\":\"group1743517338041\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01Ex7KoV25vomwCEK73_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"948\",\"size\":114742,\"id\":1758908410944390000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338043\",\"groupId\":\"group1743517338042\",\"selected\":false}],\"groupId\":\"group1743517338042\",\"id\":\"group1743517338042\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01Bd1vnl25vomxAqOA6_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"750\",\"size\":105341,\"id\":1758908411840042000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338044\",\"groupId\":\"group1743517338043\",\"selected\":false}],\"groupId\":\"group1743517338043\",\"id\":\"group1743517338043\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01dhSSsf25vomwxqux7_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"445\",\"size\":56621,\"id\":1758908411648075800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338045\",\"groupId\":\"group1743517338044\",\"selected\":false}],\"groupId\":\"group1743517338044\",\"id\":\"group1743517338044\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01LFmfwr25vomwrTGRR_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"697\",\"size\":72339,\"id\":1758908411553780500},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338046\",\"groupId\":\"group1743517338045\",\"selected\":false}],\"groupId\":\"group1743517338045\",\"id\":\"group1743517338045\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01pPZwkf25vomxavKnt_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"547\",\"size\":44229,\"id\":1758908412225405400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338047\",\"groupId\":\"group1743517338046\",\"selected\":false}],\"groupId\":\"group1743517338046\",\"id\":\"group1743517338046\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01HkNYi625vomwDBogG_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"1207\",\"size\":148146,\"id\":1758908410958568700},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338048\",\"groupId\":\"group1743517338047\",\"selected\":false}],\"groupId\":\"group1743517338047\",\"id\":\"group1743517338047\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01IPRfXz25vomq2sidE_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":110606,\"id\":1758908405309457000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338049\",\"groupId\":\"group1743517338048\",\"selected\":false}],\"groupId\":\"group1743517338048\",\"id\":\"group1743517338048\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}",
+            "version": 0,
+            "freeTry": 0,
+            "needServerComposite": false,
+            "batchPut": false,
+            "detailHeight": 0,
+            "params": "params",
+            "maxHeight": 100000,
+            "articleId": 0,
+            "bsellerBack2OldVersion": false,
+            "sell": false,
+            "smart": false,
+            "newItem": true,
+            "fliggyItem": false,
+            "changed": true,
+            "catId": 50025696,
+            "bizSource": "sell",
+            "draftKey": "sell_695637589_12532_225522",
+            "descDomain": "//g.alicdn.com",
+            "descVersion": "1.1.53",
+            "bseller": false,
+            "editType": "lite"
+        },
+        "descPageRenderParam": {
+            "userId": 695637589,
+            "itemId": 0,
+            "templateId": 0,
+            "clientType": 1,
+            "catId": 50025696,
+            "bizSource": "sell",
+            "draftKey": "sell_695637589_12532_225522",
+            "descDomain": "//g.alicdn.com",
+            "descVersion": "1.1.53",
+            "smart": false,
+            "bseller": false,
+            "newItem": true
+        },
+        "descPageRenderModel": {
+            "wholeConfigBO": {
+                "width": 620,
+                "maxHeight": 100000,
+                "splitHeight": 960,
+                "ratio": 2,
+                "canCoverFromTmall": false,
+                "userId": 695637589,
+                "liteCannotEdit": false,
+                "renderWhite": false
+            },
+            "descPageDO": {
+                "templateId": 0,
+                "editRst": "{\"groups\":[{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01qMaF6a25vomxYGz1Y_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":201909,\"id\":1758908412186236200},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338042\",\"groupId\":\"group1743517338041\",\"selected\":false}],\"groupId\":\"group1743517338041\",\"id\":\"group1743517338041\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01Ex7KoV25vomwCEK73_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"948\",\"size\":114742,\"id\":1758908410944390000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338043\",\"groupId\":\"group1743517338042\",\"selected\":false}],\"groupId\":\"group1743517338042\",\"id\":\"group1743517338042\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i1/695637589/O1CN01Bd1vnl25vomxAqOA6_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"750\",\"size\":105341,\"id\":1758908411840042000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338044\",\"groupId\":\"group1743517338043\",\"selected\":false}],\"groupId\":\"group1743517338043\",\"id\":\"group1743517338043\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01dhSSsf25vomwxqux7_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"445\",\"size\":56621,\"id\":1758908411648075800},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338045\",\"groupId\":\"group1743517338044\",\"selected\":false}],\"groupId\":\"group1743517338044\",\"id\":\"group1743517338044\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01LFmfwr25vomwrTGRR_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"697\",\"size\":72339,\"id\":1758908411553780500},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338046\",\"groupId\":\"group1743517338045\",\"selected\":false}],\"groupId\":\"group1743517338045\",\"id\":\"group1743517338045\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i2/695637589/O1CN01pPZwkf25vomxavKnt_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"547\",\"size\":44229,\"id\":1758908412225405400},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338047\",\"groupId\":\"group1743517338046\",\"selected\":false}],\"groupId\":\"group1743517338046\",\"id\":\"group1743517338046\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i3/695637589/O1CN01HkNYi625vomwDBogG_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"750\",\"height\":\"1207\",\"size\":148146,\"id\":1758908410958568700},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338048\",\"groupId\":\"group1743517338047\",\"selected\":false}],\"groupId\":\"group1743517338047\",\"id\":\"group1743517338047\",\"bizName\":\"图文模块\"},{\"type\":\"group\",\"hide\":false,\"bizCode\":0,\"propertyPanelVisible\":true,\"level\":1,\"boxStyle\":{\"background-color\":\"#ffffff\",\"width\":620,\"height\":889},\"position\":\"middle\",\"groupName\":\"模块\",\"scenario\":\"wde\",\"components\":[{\"type\":\"component\",\"level\":2,\"sellerEditable\":true,\"boxStyle\":{\"rotate\":0,\"z-index\":0,\"top\":0,\"left\":0,\"width\":620,\"height\":889,\"background-image\":\"https://img.alicdn.com/imgextra/i4/695637589/O1CN01IPRfXz25vomq2sidE_!!695637589.jpg\"},\"componentName\":\"图片组件\",\"clipType\":\"rect\",\"imgStyle\":{\"top\":0,\"left\":0,\"width\":620,\"height\":889},\"picMeta\":{\"width\":\"800\",\"height\":\"800\",\"size\":110606,\"id\":1758908405309457000},\"isEdit\":false,\"componentType\":\"pic\",\"componentId\":\"component1743517338049\",\"groupId\":\"group1743517338048\",\"selected\":false}],\"groupId\":\"group1743517338048\",\"id\":\"group1743517338048\",\"bizName\":\"图文模块\"}],\"sellergroups\":[]}"
+            },
+            "extendFields": "{}",
+            "extendConfig": {
+                "wangpuEditorConfig": {
+                    "type": "iframe",
+                    "params": {
+                        "isAdescription": 1,
+                        "catId": 0,
+                        "itemId": 0,
+                        "clientType": 1,
+                        "isV3": "true"
+                    },
+                    "url": "https://sell.xiangqing.taobao.com/new_user_panel.htm"
+                },
+                "httpRequestUrlConfig": {
+                    "imageSelectUrl": "//market.m.taobao.com/app/crs-qn/sucai-selector-ng/index",
+                    "tokenUrl": "https://xiangqing.wangpu.taobao.com/GetToken.do",
+                    "mtopHost": "h5api.m.taobao.com",
+                    "mediaUploadUrl": [
+                        "stream.xiangqing.taobao.com",
+                        "stream-xiangqing.taobao.com"
+                    ],
+                    "httpHost": "sell.xiangqing.taobao.com",
+                    "url": "https://xiangqing.wangpu.taobao.com/template/ajax/commit_item_description.do"
+                },
+                "functionConfig": {
+                    "showPreview": true,
+                    "seniorEditDisabled": false,
+                    "showDistinguish": false,
+                    "backOldDiscardDraft": false,
+                    "showBackOldVersion": true,
+                    "showTemplate": true,
+                    "showFastAddText": true,
+                    "bSeller": false,
+                    "foreverDisableEdit": false,
+                    "showWangpuEditor": true
+                },
+                "imagePluginConfig": {
+                    "appkey": "tu",
+                    "url": "https://market.m.taobao.com/app/crs-qn/sucai-selector-ng/index"
+                },
+                "imageConfig": {
+                    "usePreDraw": true,
+                    "mustCutImage": false,
+                    "useCutThreshold": true,
+                    "cutImageConfig": {
+                        "cutWidthThreshold": 1500,
+                        "cutHeightThreshold": 2000,
+                        "cutMinWidth": 620,
+                        "cutMinHeight": 0
+                    }
+                },
+                "uploadConfig": {
+                    "localFile": false,
+                    "picUploadApi": "picUploadApi",
+                    "params": {
+                        "folderId": "folderId"
+                    }
+                }
+            }
+        },
+        "wangpuEditorConfig": {
+            "url": "https://sell.xiangqing.taobao.com/new_user_panel.htm",
+            "params": {
+                "isAdescription": "1",
+                "catId": "50025696",
+                "itemId": "904816250108",
+                "hideSourceModuleAdd": "true",
+                "clientType": "1",
+                "isV3": "true",
+                "draftKey": "sell_695637589_12532_225522"
+            }
+        }
+    },
+    "shopcat": [],
+    "payment-card": {},
+    "subStock": {
+        "value": 1
+    },
+    "deliver-card": {},
+    "tbExtractWay": {
+        "value": [
+            "2"
         ],
-        "distinctImageNum": 1
+        "template": "65406532670"
+    },
+    "regionLimitSale": {
+        "value": "regionLimitSale_0"
+    },
+    "post-sale-service-card": {},
+    "sevenDayOptional": 1,
+    "guaranteeService": [
+        {
+            "value": "IND-SEC-brokenComp",
+            "text": "破损包退"
+        }
+    ],
+    "startTime": {
+        "type": 2
+    },
+    "ysbCheckTask": 0,
+    "home-service-card": {},
+    "aiFood-card": {},
+    "product-card": {},
+    "newDesc-card": {},
+    "barcode": "0000000000000",
+    "foodNutrientTable": {
+        "measurement": {
+            "unit": "hundredGram"
+        }
+    },
+    "foodPrdLicense": "SC10421040000095",
+    "foodDesignCode": "SB/T10279",
+    "foodFactoryName": "辽宁嘉香食品有限公司",
+    "foodFactorySite": "抚顺市东洲区平山街道平山四街30号",
+    "foodOrganic": {
+        "value": 0
+    },
+    "isGreenFood": {
+        "value": 0
+    },
+    "foodMix": "详情见包装",
+    "foodFactoryContact": "无",
+    "foodPlanStorage": "详情见包装",
+    "foodPeriod": "180",
+    "foodAdditive": "详情见包装",
+    "foodProduceDate": "2025-04-01,2025-04-01",
+    "afterSaleVideoNew": {
+        "afterSaleVideo_sub_1": {
+            "name": "afterSaleVideo_sub_1",
+            "uiType": "videos",
+            "required": false,
+            "mediaType": "afterSaleVideo",
+            "appKey": "42",
+            "version": null,
+            "otherParams": {
+                "from": "pc_sell_afterbuyvideo",
+                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
+                "minDuration": "30",
+                "size": "1GB",
+                "maxDuration": "420"
+            },
+            "aspectRatio": "(3:4,1:1,9:16,16:9)"
+        },
+        "afterSaleVideo_sub_2": {
+            "name": "afterSaleVideo_sub_2",
+            "uiType": "videos",
+            "required": false,
+            "mediaType": "afterSaleVideo",
+            "appKey": "42",
+            "version": null,
+            "otherParams": {
+                "from": "pc_sell_afterbuyvideo",
+                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
+                "minDuration": "30",
+                "size": "1GB",
+                "maxDuration": "420"
+            },
+            "aspectRatio": "(3:4,1:1,9:16,16:9)"
+        },
+        "afterSaleVideo_sub_3": {
+            "name": "afterSaleVideo_sub_3",
+            "uiType": "videos",
+            "required": false,
+            "mediaType": "afterSaleVideo",
+            "appKey": "42",
+            "version": null,
+            "otherParams": {
+                "from": "pc_sell_afterbuyvideo",
+                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
+                "minDuration": "30",
+                "size": "1GB",
+                "maxDuration": "420"
+            },
+            "aspectRatio": "(3:4,1:1,9:16,16:9)"
+        },
+        "afterSaleVideo_sub_4": {
+            "name": "afterSaleVideo_sub_4",
+            "uiType": "videos",
+            "required": false,
+            "mediaType": "afterSaleVideo",
+            "appKey": "42",
+            "version": null,
+            "otherParams": {
+                "from": "pc_sell_afterbuyvideo",
+                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
+                "minDuration": "30",
+                "size": "1GB",
+                "maxDuration": "420"
+            },
+            "aspectRatio": "(3:4,1:1,9:16,16:9)"
+        },
+        "afterSaleVideo_sub_5": {
+            "name": "afterSaleVideo_sub_5",
+            "uiType": "videos",
+            "required": false,
+            "mediaType": "afterSaleVideo",
+            "appKey": "42",
+            "version": null,
+            "otherParams": {
+                "from": "pc_sell_afterbuyvideo",
+                "validAspectRatio": "(3:4,1:1,9:16,16:9)",
+                "minDuration": "30",
+                "size": "1GB",
+                "maxDuration": "420"
+            },
+            "aspectRatio": "(3:4,1:1,9:16,16:9)"
+        }
     }
-]
+}
