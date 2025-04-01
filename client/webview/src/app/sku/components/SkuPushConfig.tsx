@@ -1,20 +1,28 @@
 'use client'
-import React, { useState, MutableRefObject } from 'react';
+import React, { useState, MutableRefObject, useEffect } from 'react';
 import { Space } from 'antd';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import { ProFormSelect, ProCard, ProFormList, ProForm, ProFormDigit, ProFormGroup, ProFormMoney } from '@ant-design/pro-components';
 import { CloseCircleOutlined, SmileOutlined } from '@ant-design/icons';
+import { StoreApi } from '@eleapi/store/store';
 
 import { getShopList } from '@api/shop/shop.api';
-import { PriceRangeConfig } from "@model/sku/skuTask";
+import { PriceRangeConfig, SkuPublishConfig } from "@model/sku/skuTask";
+
 export interface SukPushConfigProp {
   setSourceAccount: (account: number) => void, // 资源账号
   priceRangeConfigFormRef: MutableRefObject<ProFormInstance | undefined>,
+  pushConfig: SkuPublishConfig
 }
 
 const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
-
+  const store = new StoreApi();
   const [account, setAccount] = useState<number>();
+
+  useEffect(() => {
+    console.log('props.pushConfig', props.pushConfig);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ProCard
@@ -32,6 +40,7 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
         onChange={(value: number) => {
           setAccount(value);
           props.setSourceAccount(value);
+          store.setItem(`sku_publish_source_account`, value);
         }}
         request={async () => {
           const shopList = await getShopList();
@@ -42,8 +51,13 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
               label: shop.name
             })
           }
-          if (sourceList.length !== 0) {
-            console.log(sourceList[0]);
+          // 获取上次选择的账号
+          const lastAccount = await store.getItem(`sku_publish_source_account`);
+          // 判断lastAccount是否在sourceList中
+          if (lastAccount && sourceList.find(item => item.value === lastAccount)) {
+            setAccount(lastAccount);
+            props.setSourceAccount(lastAccount);
+          } else if (sourceList.length !== 0) {
             setAccount(sourceList[0].value);
             props.setSourceAccount(sourceList[0].value);
           }
@@ -58,11 +72,11 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
         initialValues={
           {
             priceRangeList: [{
-              minPrice: 0.01,
-              maxPrice: 1000,
-              priceMultiplier: 1.15,
-              fixedAddition: 0,
-              roundTo: "fen"
+              minPrice: props.pushConfig.priceRate?.[0]?.minPrice,
+              maxPrice: props.pushConfig.priceRate?.[0]?.maxPrice,
+              priceMultiplier: props.pushConfig.priceRate?.[0]?.priceMultiplier,
+              fixedAddition: props.pushConfig.priceRate?.[0]?.fixedAddition,
+              roundTo: props.pushConfig.priceRate?.[0]?.roundTo
             }]
           }
         }

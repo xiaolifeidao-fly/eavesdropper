@@ -37,6 +37,8 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
 
   useEffect(() => {
     initSource();
+    initPriceRangeConfig();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const initSource = async () => {
@@ -51,6 +53,15 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
     setSourceList(sourceList);
   }
 
+  const initPriceRangeConfig = async () => {
+    const priceRangeConfig = await store.getItem(`sku_publish_config`);
+    if (priceRangeConfig) {
+      setPushConfig(priceRangeConfig);
+    } else {
+      setPushConfig(new SkuPublishConfig());
+    }
+  }
+
   const onCancel = () => {
     // if (taskId > 0) {
     //   store.removeItem(`task_${taskId}`);
@@ -62,7 +73,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
     setPushSkuFlag(false);
     setUrls([]);
     setOnPublishFinish(false);
-    setPushConfig(new SkuPublishConfig());
+    // setPushConfig(new SkuPublishConfig());
     setSourceAccount(0);
     props.onClose(); // 关闭弹窗
   }
@@ -185,12 +196,16 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
 
             pushConfig.priceRate = priceRangeList;
             setPushConfig(pushConfig);
+
+            // 保存配置
+            store.setItem(`sku_publish_config`, pushConfig);
             return true;
           }}
         >
           <SukPushConfig
             setSourceAccount={setSourceAccount}
             priceRangeConfigFormRef={priceRangeConfigFormRef}
+            pushConfig={pushConfig}
           />
         </StepsForm.StepForm>
 
