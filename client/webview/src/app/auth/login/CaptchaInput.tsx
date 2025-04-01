@@ -44,10 +44,12 @@ export default function CaptchaInput({ value = {}, onChange }: CaptchaInputProps
   }
 
   useEffect(() => {
-    if (imageData) {
-      setIsLoading(false); // 当有图片数据时，表示加载完成
-    }
-  }, [imageData]);
+    onClickImage()
+    // if (imageData) {
+    //   setIsLoading(false); // 当有图片数据时，表示加载完成
+    // }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 触发改变
   const triggerChange = useCallback((changedValue: { captchaId?: string; captchaValue?: string }) => {
