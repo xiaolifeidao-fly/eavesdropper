@@ -42,6 +42,8 @@ func GetSkuTaskStatusEnum(status string) *SkuTaskStatusEnum {
 		return SkuTaskStatusDone
 	case SkuTaskStatusFailed.Value:
 		return SkuTaskStatusFailed
+	case SkuTaskStatusStop.Value:
+		return SkuTaskStatusStop
 	}
 	return nil
 }
@@ -52,14 +54,19 @@ func GetSkuTaskStatusEnums() []*SkuTaskStatusEnum {
 
 type SkuTaskDTO struct {
 	dto.BaseDTO
-	UserID            uint64            `json:"userId"`
-	PublishResourceID uint64            `json:"publishResourceId"`
-	Status            string            `json:"status"`
-	Remark            string            `json:"remark"`
-	Count             int               `json:"count"`
-	PriceRate         string            `json:"priceRate"`
-	Source            string            `json:"source"`
-	Items             []*SkuTaskItemDTO `json:"items"`
+	UserID            uint64               `json:"userId"`
+	PublishResourceID uint64               `json:"publishResourceId"`
+	Status            string               `json:"status"`
+	Remark            string               `json:"remark"`
+	Count             int                  `json:"count"`
+	PriceRate         string               `json:"priceRate"`
+	Source            string               `json:"source"`
+	Items             []*SkuTaskItemDTO    `json:"items"`
+	SkuPublishConfig  *SkuPublishConfigDTO `json:"skuPublishConfig"`
+}
+
+type SkuPublishConfigDTO struct {
+	PriceRate []*PriceRangeConfigDTO `json:"priceRate"`
 }
 
 type AddSkuTaskDTO struct {

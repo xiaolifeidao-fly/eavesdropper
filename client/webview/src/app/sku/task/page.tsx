@@ -14,7 +14,7 @@ import { SkuTaskItemList, StatsTags } from './components'
 import { TaskApi } from '@eleapi/door/task/task';
 import SkuPushStepsForm from '../components/SkuPushSteps';
 
-const pollingTime = 5000
+const pollingTime = 20*1000
 type DataType = {
   id: number;
   sourceAccount: string;
@@ -71,7 +71,18 @@ export default function SkuTaskManage() {
 
   // 重新发布
   const handleRepublish = (taksId: number) => {
-    message.success(`重新发布: ${taksId}`)
+    const taskApi = new TaskApi()
+    taskApi.republishTask(taksId)
+    message.success(`重新发布任务`)
+    refreshPage(actionRef, false)
+  }
+
+  // 继续发布
+  const handleContinue = (taksId: number) => {
+    const taskApi = new TaskApi()
+    taskApi.continueTask(taksId)
+    message.success(`继续发布任务`)
+    refreshPage(actionRef, false)
   }
 
   const columns: ProColumns[] = [
@@ -160,10 +171,19 @@ export default function SkuTaskManage() {
                 重新发布
               </Button>
             )}
+            {record.status === SkuTaskStatus.RUNNING && (
+              <Button
+                type='link'
+                onClick={() => handleStop(record.id)} // 停止操作
+                style={{ color: '#f00', display: 'inline-block', paddingLeft: '4px' }} // 红色按钮
+              >
+                停止
+              </Button>
+            )}
             {(record.status === SkuTaskStatus.STOP && (
               <Button
                 type="link"
-                onClick={() => handleRepublish(record.id)} // 重新发布操作
+                onClick={() => handleContinue(record.id)} // 重新发布操作
                 style={{ color: '#52c41a', display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
               >
                 继续执行

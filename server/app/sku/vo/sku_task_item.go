@@ -25,6 +25,7 @@ type GetSkuTaskItemListResp struct {
 	Title            string          `json:"title"`
 	CreatedAt        base.Time       `json:"createdAt"`
 	NewSkuUrl        string          `json:"newSkuUrl"`
+	UpdatedAt        base.Time       `json:"updatedAt"`
 }
 
 type AddSkuTaskItemReq struct {
