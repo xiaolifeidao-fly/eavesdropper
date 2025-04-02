@@ -46,6 +46,11 @@ export class TaskApiImpl extends TaskApi {
           item.statusLableValue = new LabelValue(memoryStatus.label, memoryStatus.value, memoryStatus.color);
           return item;
        }
+
+       if (item.status === SkuTaskStatus.RUNNING && memoryStatus === undefined) {
+        item.status = SkuTaskStatus.STOP;
+        item.statusLableValue = new LabelValue('已停止', SkuTaskStatus.STOP, 'orange');
+       }
        return item;
     })
   }
@@ -97,7 +102,7 @@ export class TaskApiImpl extends TaskApi {
     try {
       for (; progress < items.length; progress++) {
         // 模拟延迟
-        await new Promise(resolve => setTimeout(resolve, 1*1000));
+        // await new Promise(resolve => setTimeout(resolve, 1*1000));
         // 判断任务是否手动停止
         if (await this.isTaskStop(task.id)) {
           isStop = true
