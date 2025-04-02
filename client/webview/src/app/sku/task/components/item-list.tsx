@@ -108,9 +108,9 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
     },
     {
       title: '时间',
-      dataIndex: 'createdAt',
+      dataIndex: 'updatedAt',
       align: 'center',
-      key: 'createdAt'
+      key: 'updatedAt'
     },
     {
       title: '操作',

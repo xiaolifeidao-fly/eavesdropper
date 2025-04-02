@@ -42,4 +42,14 @@ export class TaskApi extends ElectronApi {
   async onPublishSkuMessage(callback: (sku: SkuPublishResult | undefined, statistic: SkuPublishStatitic) => void) {
     return await this.onMessage('onPublishSkuMessage', callback)
   }
+
+  @InvokeType(Protocols.INVOKE)
+  async continueTask(taskId: number) {
+    return await this.invokeApi('continueTask', taskId)
+  }
+
+  @InvokeType(Protocols.INVOKE)
+  async republishTask(taskId: number) {
+    return await this.invokeApi('republishTask', taskId)
+  }
 }

@@ -100,6 +100,13 @@ func GetSkuTask(id uint64) (*dto.SkuTaskDTO, error) {
 	}
 
 	skuTaskDTO := database.ToDTO[dto.SkuTaskDTO](skuTask)
+	priceRateConfigs := make([]*dto.PriceRangeConfigDTO, 0)
+	if err = json.Unmarshal([]byte(skuTask.PriceRate), &priceRateConfigs); err != nil {
+		return nil, errors.New("价格区间配置转换失败")
+	}
+	skuTaskDTO.SkuPublishConfig = &dto.SkuPublishConfigDTO{
+		PriceRate: priceRateConfigs,
+	}
 	return skuTaskDTO, nil
 }
 
