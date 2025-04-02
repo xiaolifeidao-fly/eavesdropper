@@ -65,7 +65,7 @@ export async function getAddress(skuItem: DoorSkuDTO){
 }
 
 async function doAction(page: Page) {
-    const tbToken = page.locator("#form1 input[name='_tb_token_']");
+    const tbToken = page.locator("#csrfToken").first();
     if(tbToken){
         return await tbToken.getAttribute("value");
     }
@@ -94,9 +94,8 @@ async function postAddress(resourceId : number, tbToken: string, skuItem: DoorSk
     }
     const keywords = getKeywords(skuItem.doorSkuLogisticsInfo.deliveryFromAddr);
     const address = await getAddressByKeywords(keywords);
-    const defaultTemplateId = "64723339970";
     if(!address){
-        return defaultTemplateId;
+        return undefined;
     }
     const addressId = `${address.countryCode},${address.provinceCode},${address.cityCode}`;
     const body = {
@@ -129,7 +128,7 @@ async function postAddress(resourceId : number, tbToken: string, skuItem: DoorSk
         await saveAddress(resourceId, address.id, templateId)
         return templateId;
     }
-    return defaultTemplateId;
+    return undefined;
 }
 
 async function saveAddress(resourceId : number, addressId : number | undefined, templateId  : string){
@@ -146,20 +145,22 @@ async function saveAddressByPage(resourceId: number, skuItem: DoorSkuDTO) {
         const page = await engine.init();
         const monitor = new MbAddressQueryMonitor();
         if(page){
-           const tbToken = await engine.openNotWaitMonitor(page, "https://wuliu.taobao.com/user/logis_tools.htm?tabSource=carriageTemplate&fromType=fromPublishGpfTaobao&forceSellerPay=false", monitor, {}, doAction)
+           const tbToken = await engine.openNotWaitMonitor(page, "https://adpmanager.taobao.com/user/template_setting.htm?pageVersion=V2&toolAuth=cm-tool-manage", monitor, {}, doAction)
            if(!tbToken){
               log.warn("saveAddressByPage tbToken is null");
               return undefined;
            }
            const result = await monitor.waitForAction();
            if(!result || !result.code){
-              log.log("saveAddressByPage result is null");
+              log.info("saveAddressByPage result is null");
               return undefined;
            }
            const headerData = result.getHeaderData();
            const templateId = await postAddress(resourceId, tbToken, skuItem, headerData);
            return templateId;
         }
+    } catch (error) {
+        log.error("saveAddressByPage error is ", error);
     } finally {
         await engine.closePage();
     }

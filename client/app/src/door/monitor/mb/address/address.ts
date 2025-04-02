@@ -6,7 +6,7 @@ import { DoorEntity } from "@src/door/entity";
 export class MbAddressQueryMonitor extends MbMonitorResponse<{}> {
 
     getApiName(): string | string[] {
-        return "user/logis_tools.htm";
+        return "user/template_setting.htm";
     }
 
     getKey(): string {
