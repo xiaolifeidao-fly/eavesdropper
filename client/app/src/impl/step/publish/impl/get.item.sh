@@ -1,0 +1,18 @@
+curl 'https://item.upload.taobao.com/sell/v2/asyncOpt.htm?optType=skuCombineProductSearchOpt&catId=50016432&brandId=1771506388&market=taobao&itemId=905561505191&bizCode=food_industry' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: zh-CN,zh;q=0.9' \
+  -H 'content-type: application/x-www-form-urlencoded' \
+  -b 'x-gpf-submit-trace-id=213e004a17435022431318126e141e; x-gpf-render-trace-id=; thw=cn; t=fdc2899d3d3cdf3e8ba3d92aebb9abf8; wk_cookie2=15cd1e893ae78c00d2633b28548b0782; cookie2=2fda913ee32c996d5dbfde9e49a75be1; env_bak=FM%2BgnE2ezFOP1vHunqD8c4UenF%2FQGsoCCLPw077CTnfn; XSRF-TOKEN=4d373ed4-8e19-4c96-8b2d-8f7b45ea88e2; _tb_token_=5165568885e8e; xlly_s=1; _samesite_flag_=true; mt=ci=0_0; cna=PLJpIJcV4FMCAWVXrNoG4dov; 3PcFlag=1743431861629; sgcookie=E100up0GZMZiGW9wZz15qU2dw8C5hu8VfQ9QX9S%2BErXTPK3I3aVq6HbYEM9mYOeMUZJ%2BUEUwhyGgyKViD8WRUpaHU8op2%2FBbcIqyE2rLk811EaJqSK57QVtERce3aeuewtXJFvlgGB340TscIZMHsx5Jmg%3D%3D; wk_unb=VWZ7qbKwBSHT; unb=695637589; uc3=id2=VWZ7qbKwBSHT&nk2=2ivE6HZcVmeV3g%3D%3D&vt3=F8dD2EruJorgafVuITs%3D&lg2=VT5L2FSpMGV7TQ%3D%3D; csg=d7f09002; lgc=%5Cu5DE5%5Cu4F5C%5Cu80052011; cancelledSubSites=empty; cookie17=VWZ7qbKwBSHT; dnk=%5Cu5DE5%5Cu4F5C%5Cu80052011; skt=dca754f292fb6274; existShop=MTc0MzQzMTg3MQ%3D%3D; uc4=nk4=0%402BEF%2Fur2ofJiBo4N%2FoRyFBitMmkI&id4=0%40V8exEJquE4vDLBw5vSsxlxxw4oA%3D; publishItemObj=Ng%3D%3D; tracknick=%5Cu5DE5%5Cu4F5C%5Cu80052011; _cc_=UtASsssmYQo%3D; _l_g_=Ug%3D%3D; sg=199; _nk_=%5Cu5DE5%5Cu4F5C%5Cu80052011; cookie1=BqVu236ovVcExzB3sc%2FXZFaInb4jpSi22yVvayJVBsw%3D; uc1=existShop=true&cookie15=VFC%2FuZ9ayeYq2g%3D%3D&cookie16=VT5L2FSpJ7zBTQkiwxc%3D&cookie21=UtASsssme%2BBq&pas=0&cookie14=UoYaiG3qep4peQ%3D%3D; mtop_partitioned_detect=1; _m_h5_tk=4d205d37b125c8e2e4312d69ce7a5240_1743573700143; _m_h5_tk_enc=75205da4c2ca14082564e039c2b58f7e; tfstk=gPJmmxffNaaQnwgRwL6j9krkiUh-ht61bFeOWOQZaa7WDRnXDQ2wfU7xcVtNbOYyWm_vbqTMIa-6MOLO355PzeStcc_9ZlxBrFfscNQNSFKwM0HKpntfCORiJvHd6CP_uEqVuRoNUMSI2izhFiC1COuKy7eNGvX6R9IeFs-rqGIT7r8N_a5PbaSagO8Nz_SFvrWw7FWz4MIN7oWag8SPPGWN0O8NUTShziWNgF-rB9hV-dJJU4zoq32dAbvVmsbe0Z-vbLoPTSTcrd9HhixuB3bl2gplmsbFN8CdTpxe0psMCDPGSFO2kgTiK4XeOUvGTODgFtKHaEfkiV2lNQ-BQ_AS-WtBbHONZd4qDe8ysFSWNVVG-C-vOLC8b752OEdFZL30FwRyqhCkNcNAWBsw569tR-_2bH9B99D0RiAyxTjPK7PFI5y14cpz151VVgbp8wczvVQf_fooqWi1ggsAJ0mu1oCVVgbKq0VUKsS5DwC..' \
+  -H 'origin: https://item.upload.taobao.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://item.upload.taobao.com/sell/v2/draft.htm?dbDraftId=1236915732' \
+  -H 'sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36' \
+  -H 'x-requested-with: XMLHttpRequest' \
+  -H 'x-xsrf-token: 4d373ed4-8e19-4c96-8b2d-8f7b45ea88e2' \
+  --data-raw 'jsonBody=%7B%22keyword%22%3A%22%22%2C%22skuId%22%3Anull%2C%22selectSpuIds%22%3A%227599725172%22%2C%22pageNum%22%3A1%2C%22pageSize%22%3A30%7D&globalExtendInfo=%7B%22startTraceId%22%3A%22213e03fa17435654187346053e19d0%22%7D'
