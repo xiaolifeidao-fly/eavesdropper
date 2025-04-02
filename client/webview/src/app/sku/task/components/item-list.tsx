@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { Table, Tag, Button, message, Spin } from 'antd'
+import { Table, Tag, Button, message, Spin, Tooltip } from 'antd'
 import { ColumnsType } from 'antd/es/table';
 
 import { getSkuTaskItemByTaskId } from '@api/sku/sku-task-item'
@@ -84,10 +84,33 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
       }
     },
     {
-      title: '时间',
-      dataIndex: 'createdAt',
+      title: '失败原因',
+      dataIndex: 'remark',
       align: 'center',
-      key: 'createdAt'
+      key: 'remark',
+      render: (_, record) => {
+        const remark = record.remark || '--'
+        if (remark.length > 10) {
+          return (
+            <Tooltip title={remark}>
+              <Tag>
+                {remark.slice(0, 10)}...
+              </Tag>
+            </Tooltip>
+          )
+        }
+        return (
+          <Tag>
+            {remark}
+          </Tag>
+        )
+      }
+    },
+    {
+      title: '时间',
+      dataIndex: 'updatedAt',
+      align: 'center',
+      key: 'updatedAt'
     },
     {
       title: '操作',
@@ -95,7 +118,7 @@ const SkuTaskItemList = (props: SkuTaskItemListProp) => {
       key: 'operate',
       render: (_, record) => {
         return (
-          <div style={{ display: 'flex', gap: '4px' }}> {/* 设置间距为 4px */}
+          <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}> {/* 设置间距为 4px */}
             <Button
               type="link"
               style={{ display: 'inline-block', paddingRight: '4px' }} // 缩小右边距

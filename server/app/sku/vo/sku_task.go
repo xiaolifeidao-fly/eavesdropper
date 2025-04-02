@@ -45,6 +45,10 @@ func (r *UpdateSkuTaskReq) Validate() error {
 	return nil
 }
 
+type GetSkuTaskReq struct {
+	ID uint64 `uri:"id"`
+}
+
 type SkuTaskPageReq struct {
 	page.Query
 	vo.BaseVO

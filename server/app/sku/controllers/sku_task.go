@@ -24,6 +24,7 @@ func LoadSkuTaskRouter(router *gin.RouterGroup) {
 	{
 		r.Use(middleware.Authorization()).POST("", AddSkuTask)
 		r.Use(middleware.Authorization()).PUT("/:id", UpdateSkuTask)
+		r.Use(middleware.Authorization()).GET("/:id", GetSkuTask)
 		r.Use(middleware.Authorization()).GET("/steps/:resourceId/:groupCode/:stepKey", GetSkuTaskSteps)
 		r.Use(middleware.Authorization()).POST("/steps/:resourceId/:groupCode/:stepKey/init", InitSkuStep)
 		r.Use(middleware.Authorization()).POST("/steps/save", SaveSkuTaskStep)
@@ -121,6 +122,34 @@ func UpdateSkuTask(ctx *gin.Context) {
 		controller.Error(ctx, err.Error())
 		return
 	}
+	controller.OK(ctx, skuTaskDTO)
+}
+
+// GetSkuTask
+// @Description 获取任务
+func GetSkuTask(ctx *gin.Context) {
+	var err error
+	var req vo.GetSkuTaskReq
+	if err := controller.Bind(ctx, &req, nil, binding.JSON); err != nil {
+		logger.Infof("GetSkuTask Bind error: %v", err)
+		controller.Error(ctx, "参数错误")
+		return
+	}
+	skuTaskDTO, err := services.GetSkuTask(req.ID)
+	if err != nil {
+		logger.Errorf("GetSkuTask failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	skuTaskItemList, err := services.GetSkuTaskItemListByTaskID(req.ID)
+	if err != nil {
+		logger.Errorf("GetSkuTaskItemListByTaskID failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+	skuTaskDTO.Items = skuTaskItemList
+
 	controller.OK(ctx, skuTaskDTO)
 }
 

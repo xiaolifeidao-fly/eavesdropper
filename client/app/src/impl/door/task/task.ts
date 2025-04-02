@@ -3,9 +3,9 @@ import log from 'electron-log'
 import { TaskApi } from '@eleapi/door/task/task'
 import { InvokeType, Protocols } from '@eleapi/base'
 import { StoreApi } from '@eleapi/store/store'
-import { AddSkuTaskReq, SkuPublishConfig, SkuPublishStatitic, SkuTask, SkuTaskPageResp, SkuTaskStatus, UpdateSkuTaskReq } from '@model/sku/skuTask'
+import { AddSkuTaskReq, PriceRangeConfig, SkuPublishConfig, SkuPublishStatitic, SkuTask, SkuTaskPageResp, SkuTaskStatus, UpdateSkuTaskReq } from '@model/sku/skuTask'
 import { AddSkuTaskItemReq, SkuTaskItem, SkuTaskItemStatus } from '@model/sku/sku-task-item'
-import { addSkuTask, updateSkuTask } from '@api/sku/skuTask.api'
+import { addSkuTask, updateSkuTask, getSkuTask } from '@api/sku/skuTask.api'
 import { MbSkuApiImpl } from '../sku/sku'
 import { SkuStatus } from '@model/sku/sku'
 import { LabelValue } from '@model/base/base'
@@ -40,12 +40,8 @@ export class TaskApiImpl extends TaskApi {
   @InvokeType(Protocols.INVOKE)
   async rebuildTaskList(list: SkuTaskPageResp[]) {
     return list.map(item => {
-       const status = item.status;
-       if(status === 'running') {
-          const memoryStatus = this.getStatusFromMemory(item);
-          if(memoryStatus === undefined) {
-            return item;
-          }
+      let memoryStatus = this.getStatusFromMemory(item);
+       if(memoryStatus !== undefined) {
           item.status = memoryStatus.value;
           item.statusLableValue = new LabelValue(memoryStatus.label, memoryStatus.value, memoryStatus.color);
           return item;
@@ -74,15 +70,14 @@ export class TaskApiImpl extends TaskApi {
     req.items = taskItems
     const skuTask = await addSkuTask(req) // 保存任务
     skuTask.skuPublishConfig = publishConfig
-    this.asyncStartSkuTask(skuTask) // 异步执行任务
     this.updateTaskStatus(skuTask.id, SkuTaskStatus.RUNNING)
+    this.asyncStartSkuTask(skuTask) // 异步执行任务
     return skuTask
   }
 
   // 异步执行任务
-  async asyncStartSkuTask(task: SkuTask) {
+  async asyncStartSkuTask(task: SkuTask, progress: number = 0, isCallback: boolean = true) {
     // this.pushTask(task) // 将任务添加到内存中
-    let progress = 0
     let taskRemark = ''
     let taskItems: AddSkuTaskItemReq[] = []
 
@@ -91,20 +86,28 @@ export class TaskApiImpl extends TaskApi {
     const statistic = new SkuPublishStatitic(task.id, task.count, 0, 0, taskStatus)
 
     const items = task.items ?? []
+    // 对items通过id排序
+    items.sort((a: SkuTaskItem, b: SkuTaskItem) => {
+      if (!a.id || !b.id) return 0
+      return a.id - b.id
+    })
+
+    const store = new StoreApi()
     const skuApi = new MbSkuApiImpl()
-    let i = 0
     try {
-      for (; i < items.length; i++) {
+      for (; progress < items.length; progress++) {
         // 模拟延迟
-        // await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1*1000));
         // 判断任务是否手动停止
         if (await this.isTaskStop(task.id)) {
           isStop = true
           break
         }
 
+        // 记录当前任务执行的位置
+        await store.setItem(`task_${task.id}_progress`, progress)
         // 发布商品
-        const item = items[i]
+        const item = items[progress]
         const skuUrl = item.url ?? ''
         const itemReq = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.SUCCESS, task.source, taskRemark)
         itemReq.id = item.id
@@ -141,14 +144,15 @@ export class TaskApiImpl extends TaskApi {
         // this.updateTaskItem(task.id, item)
         taskStatus = progress == task.count - 1 ? SkuTaskStatus.DONE : taskStatus
         statistic.status = taskStatus
-        this.send('onPublishSkuMessage', skuResult, statistic) // 发送进度
+        if (isCallback) {
+          this.send('onPublishSkuMessage', skuResult, statistic) // 发送进度
+        }
 
-        if (progress % 200 == 0 || taskStatus === SkuTaskStatus.DONE) {
+        if (progress % 2 == 0 || taskStatus === SkuTaskStatus.DONE) {
           const req = new UpdateSkuTaskReq(taskStatus, taskRemark, taskItems)
           await updateSkuTask(task.id, req)
           taskItems = []
         }
-        progress++
       }
       log.info('asyncStartSkuTask done')
       this.updateTaskStatus(task.id, SkuTaskStatus.DONE);
@@ -158,9 +162,11 @@ export class TaskApiImpl extends TaskApi {
       statistic.remark = error.message
       this.updateTaskStatus(task.id, SkuTaskStatus.ERROR);
     } finally {
-      this.send('onPublishSkuMessage', undefined, statistic) // 发送进度
-      for (; i < items.length; i++) {
-        const item = items[i]
+      if (isCallback) {
+        this.send('onPublishSkuMessage', undefined, statistic) // 发送进度
+      }
+      for (; progress < items.length; progress++) {
+        const item = items[progress]
         const skuUrl = item.url ?? ''
         const taskItem = new AddSkuTaskItemReq(task.id, skuUrl, SkuTaskItemStatus.FAILED, task.source, '')
         taskItem.id = item.id
@@ -176,16 +182,19 @@ export class TaskApiImpl extends TaskApi {
         taskItems.push(taskItem)
       }
 
-      if (taskItems.length > 0) {
-        const req = new UpdateSkuTaskReq(SkuTaskStatus.DONE, taskRemark, taskItems)
-        await updateSkuTask(task.id, req)
+      let req: UpdateSkuTaskReq
+      if (isStop) {
+        req = new UpdateSkuTaskReq(SkuTaskStatus.STOP, taskRemark, taskItems)
+      } else {
+        req = new UpdateSkuTaskReq(SkuTaskStatus.DONE, taskRemark, taskItems)
       }
+      await updateSkuTask(task.id, req)
     }
   }
 
   @InvokeType(Protocols.INVOKE)
   async stop(taskId: number) {
-    taskMap.delete(taskId);
+    taskMap.set(taskId, SkuTaskStatus.STOP);
   }
 
   async isTaskStop(taskId: number) {
@@ -196,4 +205,24 @@ export class TaskApiImpl extends TaskApi {
     return false;
   }
 
+  @InvokeType(Protocols.INVOKE)
+  async continueTask(taskId: number) {
+    const skuTask = await getSkuTask(taskId);
+
+    // 获取任务执行的位置
+    const store = new StoreApi()
+    let progress = await store.getItem(`task_${taskId}_progress`)
+    if (progress === undefined) {
+      progress = 0
+    }
+    this.updateTaskStatus(taskId, SkuTaskStatus.RUNNING)
+    this.asyncStartSkuTask(skuTask, progress, false);
+  }
+
+  @InvokeType(Protocols.INVOKE)
+  async republishTask(taskId: number) {
+    const skuTask = await getSkuTask(taskId);
+    this.updateTaskStatus(taskId, SkuTaskStatus.RUNNING)
+    this.asyncStartSkuTask(skuTask, 0, false);
+  }
 }

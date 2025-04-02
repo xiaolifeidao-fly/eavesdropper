@@ -23,6 +23,12 @@ export const updateSkuTask = async (taskId: number, req: UpdateSkuTaskReq) => {
   return plainToClass(SkuTask, result)
 }
 
+// 获取任务
+export const getSkuTask = async (taskId: number) => {
+  const result = await instance.get(`/sku/task/${taskId}`)
+  return plainToClass(SkuTask, result)
+}
+
 // 获取任务步骤
 export const getSkuTaskSteps = async (stepKey: string, resourceId: number, groupCode: string) => {
   return await getDataList(SkuTaskStep, `/sku/task/steps/${resourceId}/${groupCode}/${stepKey}`)
