@@ -95,10 +95,12 @@ export class UpdateDraftStep extends AbsPublishStep {
             await this.fixRequiredData(draftData, skuItem, commonData);
             const validateResult = this.validateDraftData(draftData, skuItem, commonData);
             if(!validateResult.validateResult){
+                await this.releaseDraftData(draftId, resourceId);
                 return new StepResult(false, validateResult.message);
             }
             const updateResult = await this.updateDraftData(catId, draftId, requestHeader, startTraceId, draftData);
             if(!updateResult){
+                await this.releaseDraftData(draftId, resourceId);
                 return new StepResult(false, "更新草稿失败");
             }
             this.setParams("updateDraftData", draftData);
@@ -106,13 +108,13 @@ export class UpdateDraftStep extends AbsPublishStep {
             
             return new StepResult(true, "更新草稿成功");
         } catch (error) {
+            await this.releaseDraftData(draftId, resourceId);
             log.error("UpdateDraftStep error", error);
             return new StepResult(false, "更新草稿失败");
         }finally{
             await engine.closePage();
             const page = this.getParams("page");
             if(page){
-                console.log("cache page is not null");
                 await page.close();
             }
         }
@@ -154,6 +156,10 @@ export class UpdateDraftStep extends AbsPublishStep {
         await this.fillRequiredData(commonData, draftData);
 
     }
+
+    public isRollBack(): boolean {
+        return true;
+    }  
 
     async fillRequiredData(commonData : { [key : string] : any }, draftData : { [key : string] : any }){
         const components = commonData.data.components;

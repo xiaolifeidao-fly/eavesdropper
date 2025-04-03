@@ -82,6 +82,7 @@ var (
 	STEP_DONE    = "DONE"
 	STEP_ERROR   = "ERROR"
 	STEP_INIT    = "INIT"
+	STEP_ROLLBACK = "ROLLBACK"
 )
 
 type SkuTaskStepDTO struct {

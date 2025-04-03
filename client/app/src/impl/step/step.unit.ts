@@ -1,5 +1,5 @@
 import { saveSkuTaskStep } from "@api/sku/skuTask.api";
-import { SkuTaskStep, STEP_DONE, STEP_ERROR, STEP_PENDING } from "@model/sku/skuTask";
+import { SkuTaskStep, STEP_DONE, STEP_ERROR, STEP_PENDING, STEP_ROLLBACK } from "@model/sku/skuTask";
 import { get, set } from "@utils/store/electron";
 import log from "electron-log";
 import { StepContext } from "./step.context";
@@ -36,6 +36,7 @@ export class StepResult {
     public validateParams : { [key: string]: any } | undefined
     public sourceUrl : string | undefined
     public needNextSkip : boolean
+    public stepIndex : number = 0
     constructor(result : boolean, message : string, responseData : StepResponse[] = [], header : { [key: string]: any } | undefined = undefined, validateUrl : string | undefined = undefined, validateParams : { [key: string]: any } | undefined = undefined, sourceUrl : string | undefined = undefined, needNextSkip : boolean = false){
         this.result = result
         this.message = message
@@ -45,6 +46,10 @@ export class StepResult {
         this.validateParams = validateParams
         this.sourceUrl = sourceUrl
         this.needNextSkip = needNextSkip
+    }
+
+    getStepIndex() : number{
+        return this.stepIndex;
     }
 
     setNeedNextSkip(needNextSkip : boolean){
@@ -60,15 +65,30 @@ export abstract class StepUnit {
     private context : StepContext;
     private validateTag : boolean = false;
     private skip : boolean;
+    private stepIndex : number;
     
-    constructor(step : SkuTaskStep, context : StepContext){
+    constructor(step : SkuTaskStep, context : StepContext, stepIndex : number){
         this.step = step;
         this.context = context;
         this.skip = false;
+        this.stepIndex = stepIndex;
+    }
+
+    public getStepIndex() : number{
+        return this.stepIndex;
+    }
+
+    public async doRollBack(){
+        this.step.status = STEP_ROLLBACK;
+        await saveSkuTaskStep(this.step);
     }
 
     public isSkip() : boolean{
         return this.skip;
+    }
+    
+    public isRollBack() : boolean{
+        return false;
     }
 
     setSkip(isSkip : boolean){
