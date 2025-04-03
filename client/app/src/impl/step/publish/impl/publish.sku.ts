@@ -148,11 +148,13 @@ export class PublishSkuStep extends AbsPublishStep {
 
     async submit(catId : string, startTraceId : string, updateDraftData : any, draftHeader : any, draftId : string){
         try{
+            updateDraftData['fakeCreditSubmit'] = true;
             log.info("submit updateDraftData is ", JSON.stringify(updateDraftData));
             const url = "https://item.upload.taobao.com/sell/v2/submit.htm";
             const data = {
                 "catId": catId,
                 "jsonBody": JSON.stringify(updateDraftData),
+                "copyItemMode": 0,
                 "globalExtendInfo": JSON.stringify({ "startTraceId": startTraceId })
             };
             const res = await axios.post(url, data, {

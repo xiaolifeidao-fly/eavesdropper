@@ -52,7 +52,7 @@ export async function createWindow(windowId : string, url : string) {
   windowInstance.loadURL(url); // 假设NestJS服务运行在本地3000端口
 
   // 打开开发者工具
-  // windowInstance.webContents.openDevTools();
+  windowInstance.webContents.openDevTools();
   //@ts-ignore
   windowInstance.webContents.windowId = windowId;
   return windowInstance;
@@ -127,6 +127,12 @@ function checkUpdate(mainWindow: BrowserWindow){
   // 设置自动更新
   setupAutoUpdater(mainWindow);
 
+  // 立即检查一次更新
+  console.log("应用启动: 立即检查更新...");
+  setTimeout(() => {
+    checkForUpdates();
+  }, 200); // 延迟2秒，确保窗口已完全加载
+  
   // 每隔一段时间自动检查更新
   setInterval(async () => {
     // 调用上方的函数
@@ -142,15 +148,22 @@ export const start = () => {
       registerFileProtocol();
 
       await createDefaultWindow();
-      if(mainWindow){
-        // 设置自动更新
-        setupAutoUpdater(mainWindow);
-        // 每隔一段时间自动检查更新
-        setInterval(async () => {
-          // 调用上方的函数
-          await checkForUpdates()
-        }, 60 * 1000) // 60秒检查一次更新
-      }
+      // if(mainWindow){
+      //   // 设置自动更新
+      //   setupAutoUpdater(mainWindow);
+        
+      //   // 立即检查一次更新
+      //   console.log("主窗口创建完成: 立即检查更新...");
+      //   setTimeout(() => {
+      //     checkForUpdates();
+      //   }, 2000); // 延迟2秒，确保窗口已完全加载
+        
+      //   // 每隔一段时间自动检查更新
+      //   setInterval(async () => {
+      //     // 调用上方的函数
+      //     await checkForUpdates()
+      //   }, 60 * 1000) // 60秒检查一次更新
+      // }
     });
     // validateTest(1, {}, "https://www.ishumei.com/account/register.html?crmSource=%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81%E7%A0%81-banner", {
     //   dialogSize : {

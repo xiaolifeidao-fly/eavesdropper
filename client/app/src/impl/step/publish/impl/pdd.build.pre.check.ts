@@ -61,7 +61,7 @@ export class SkuPddBuildPreCheckStep extends AbsPublishStep{
             let url = this.getPublishUrl(category, skuDraftId, tbItemId);
             log.info("check publish url is ", url);
             await page.goto(url);
-            let commonData = await this.getCommonData(page);
+            let commonData = await this.getJsonData(page);
             const result = this.check(commonData);
             log.info("check result is ", result);
             if(!result.result){
@@ -74,6 +74,20 @@ export class SkuPddBuildPreCheckStep extends AbsPublishStep{
             log.error(error);
             return new StepResult(false, "前置校验失败") ;
         }
+    }
+
+    
+    async getJsonData(page: Page) {
+        // 获取window对象中 json 数据 
+        const commonData = await page.evaluate(() => {
+            return {
+                // @ts-ignore
+                data: window.Json,
+                // @ts-ignore
+                userAgent: navigator.userAgent
+            };
+        });
+        return commonData;
     }
 
 

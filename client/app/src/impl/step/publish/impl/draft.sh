@@ -1,0 +1,14 @@
+curl 'https://item.upload.taobao.com/sell/draftList.json?catId=150704&globalExtendInfo=%7B%22startTraceId%22%3A%22213e024817435864309252578e156b%22%7D' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: zh-CN,zh;q=0.9' \
+  -b 'thw=cn; t=fdc2899d3d3cdf3e8ba3d92aebb9abf8; wk_cookie2=15cd1e893ae78c00d2633b28548b0782; cookie2=2fda913ee32c996d5dbfde9e49a75be1; env_bak=FM%2BgnE2ezFOP1vHunqD8c4UenF%2FQGsoCCLPw077CTnfn; XSRF-TOKEN=4d373ed4-8e19-4c96-8b2d-8f7b45ea88e2; _tb_token_=5165568885e8e; xlly_s=1; _samesite_flag_=true; mt=ci=0_0; cna=PLJpIJcV4FMCAWVXrNoG4dov; 3PcFlag=1743431861629; sgcookie=E100up0GZMZiGW9wZz15qU2dw8C5hu8VfQ9QX9S%2BErXTPK3I3aVq6HbYEM9mYOeMUZJ%2BUEUwhyGgyKViD8WRUpaHU8op2%2FBbcIqyE2rLk811EaJqSK57QVtERce3aeuewtXJFvlgGB340TscIZMHsx5Jmg%3D%3D; wk_unb=VWZ7qbKwBSHT; unb=695637589; uc3=id2=VWZ7qbKwBSHT&nk2=2ivE6HZcVmeV3g%3D%3D&vt3=F8dD2EruJorgafVuITs%3D&lg2=VT5L2FSpMGV7TQ%3D%3D; csg=d7f09002; lgc=%5Cu5DE5%5Cu4F5C%5Cu80052011; cancelledSubSites=empty; cookie17=VWZ7qbKwBSHT; dnk=%5Cu5DE5%5Cu4F5C%5Cu80052011; skt=dca754f292fb6274; existShop=MTc0MzQzMTg3MQ%3D%3D; uc4=nk4=0%402BEF%2Fur2ofJiBo4N%2FoRyFBitMmkI&id4=0%40V8exEJquE4vDLBw5vSsxlxxw4oA%3D; publishItemObj=Ng%3D%3D; tracknick=%5Cu5DE5%5Cu4F5C%5Cu80052011; _cc_=UtASsssmYQo%3D; _l_g_=Ug%3D%3D; sg=199; _nk_=%5Cu5DE5%5Cu4F5C%5Cu80052011; cookie1=BqVu236ovVcExzB3sc%2FXZFaInb4jpSi22yVvayJVBsw%3D; uc1=existShop=true&cookie15=VFC%2FuZ9ayeYq2g%3D%3D&cookie16=VT5L2FSpJ7zBTQkiwxc%3D&cookie21=UtASsssme%2BBq&pas=0&cookie14=UoYaiG3qep4peQ%3D%3D; mtop_partitioned_detect=1; _m_h5_tk=c0523cd4ebd60817de624de52d88f841_1743594714273; _m_h5_tk_enc=8e525e3142fb062dfe03c5774e9fc1eb; tfstk=gGOoAxX5hiZ1fjiAHI1SBP4jnHMvP_1BTHFdv6IE3iSfe46p2WbFmnXU9Y1RK6xVDQIJy_5H8esbwLBdJXjHXixKPHKpmM-ej935pLKHiF-k9335vnYe-hxhd4sdYMxp8L3x6fLWP61eKcht68XIHTOlYkCFNsyoud7I6fLWz61EXch9wLbSttsFTTWzuoSf867FUHSV3N7T46-eYqYVcw5FYHWroESjNOHPjBRvgmr4olx3U8RcrTjg9iV3t2QlEG8PmZ_XgD6lbUS0Tcij1kSVSIoQ2MODuQSp0jFltE7HmOpoj7xHzdtC73l04avySFBDOcPhlK-5HwAI7JjhKQ1cmhcaOZ9yqIWHM2GMk_bM-Opx8RjvLEOcnQDTRZOJ8Q6O_fZPvKLMtwAIAjxM8F9FnBql4Fy4Q62UOZupiJwCUZ_cXhSi3PKd767ooq2sRT7fyG3moJaRUZ_cXq00Q5XPlaIO.' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://item.upload.taobao.com/sell/v2/publish.htm?spm=a21dvs.23580594.0.0.11732c1bm4hcp4&dbDraftId=1208438535' \
+  -H 'sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36' \
+  -H 'x-requested-with: XMLHttpRequest'

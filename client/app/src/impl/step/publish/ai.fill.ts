@@ -48,7 +48,6 @@ export class AiFillSupport {
                 if(checkResult){
                     continue;
                 }
-                log.info("draftCatPropValue is  ", catProp);
                 fixCatProp[propKey] = this.buildNewDataSource(catProp.label, dataSource);
                 continue;
             }
@@ -109,7 +108,6 @@ export class AiFillSupport {
                 "properties" : properties
             }
         }
-        log.info("fixInputByAI requestAiParams is", requestAiParams);
         const aiResult : any[] = await getDoorCatPropsByAI(requestAiParams);
         if(aiResult && aiResult.length > 0){
             const doorCatProps : DoorSkuCatProp[] = [];

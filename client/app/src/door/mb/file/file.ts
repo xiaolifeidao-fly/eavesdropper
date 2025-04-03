@@ -100,11 +100,11 @@ return async function doHandler(page, params, preResult){
 export async function getUnUploadFile(source : string, resourceId : number, paths: string[]){
     const unUploadFiles = [];
     for(let path of paths){
-        const fileKey = getFileKey(path);
-        const doorFileRecord = await getDoorFileRecordByKey(source, resourceId, fileKey);
-        if(doorFileRecord){
-            continue;
-        }
+        // const fileKey = getFileKey(path);
+        // const doorFileRecord = await getDoorFileRecordByKey(source, resourceId, fileKey);
+        // if(doorFileRecord){
+        //     continue;
+        // }
         unUploadFiles.push(path);
     }
     return unUploadFiles;
@@ -321,7 +321,7 @@ async function validateFile(page : Page){
                         let endX = startX + slideContent.data.px_distance; // 目标位置的 X 坐标
                         const endY = sliderBox.y + sliderBox.height / 2 + 0.123132;;
                         // await slideSlider(page, {x : startX, y : startY}, {x : endX, y : startY});
-                        // log.info("humanLikeDrag startX ====", startX, "startY ====", startY);
+                        log.info("humanLikeDrag startX ====", startX, "startY ====", startY);
                         await humanLikeDrag(page, startX, startY, endX, endY);
                         // await moveCaptchaVerifyImgSlide(page, startX, startY, endX, sliderBox.width);
                     }
