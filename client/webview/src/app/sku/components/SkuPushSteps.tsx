@@ -58,7 +58,9 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
     if (priceRangeConfig) {
       setPushConfig(priceRangeConfig);
     } else {
-      setPushConfig(new SkuPublishConfig());
+      const defaultPriceRangeConfig = new SkuPublishConfig();
+      defaultPriceRangeConfig.priceRate = [new PriceRangeConfig(0.01, 100, 1.1, 0, 'yuan')];
+      setPushConfig(defaultPriceRangeConfig);
     }
   }
 
