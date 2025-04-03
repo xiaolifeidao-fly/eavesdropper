@@ -124,7 +124,8 @@ export class MbLoginApiImpl extends MbLoginApi {
                 if(!validateResult){
                     return new DoorEntity<{}>(false, "验证码验证失败");
                 }
-                return new DoorEntity<{}>(false, "请先验证图形验证码");
+                await engine.saveContextState();
+                return new DoorEntity<{}>(false, "验证图形验证码成功,请再次登录");
             }
             log.info("inputLoginInfo result is ", result);
             if(result.getCode()){
