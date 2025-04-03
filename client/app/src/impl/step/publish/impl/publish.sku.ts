@@ -63,6 +63,10 @@ async function publishSkuByPage(page: Page, ...doActionParams: any[]){
 
 export class PublishSkuStep extends AbsPublishStep {
 
+    override isRollBack() : boolean{
+        return true;
+    }
+
     async publishByPage(){
         const draftId = this.getParams("draftId");
         const resourceId = this.getParams("resourceId");
@@ -102,11 +106,6 @@ export class PublishSkuStep extends AbsPublishStep {
                 return new StepResult(false, message);
             }
             if(type == "success"){
-                const deleteResult = await this.deleteDraft(draftId);
-                if (!deleteResult) {
-                    log.info("deleteDraft failed ", deleteResult);
-                    return new StepResult(false, "删除草稿失败");
-                }
                 const successUrl = responseData.models?.globalMessage?.successUrl;
                 if(successUrl){
                     const primaryIdMatch = successUrl.match(/primaryId=(\d+)/);
@@ -116,9 +115,7 @@ export class PublishSkuStep extends AbsPublishStep {
                         this.setParams("newSkuId", primaryId);
                     }
                 }
-                const itemId = this.getParams("itemId");
                 await this.saveSkuCategory(this.getParams("skuItem"));
-                await expireSkuDraft(resourceId, itemId);
                 return new StepResult(true, "发布商品成功");
             }
             return new StepResult(false, "发布商品失败");
@@ -130,20 +127,27 @@ export class PublishSkuStep extends AbsPublishStep {
         }
     }
 
+   
+
     async doStep(): Promise<StepResult> {
-        const catId = this.getParams("catId");
-        const startTraceId = this.getParams("startTraceId");
-        const updateDraftData = this.getParams("updateDraftData");
-        const draftHeader = this.getParams("draftHeader");
+        const resourceId = this.getParams("resourceId");
         const draftId = this.getParams("draftId");
-        const stepResult = await this.submit(catId, startTraceId, updateDraftData, draftHeader, draftId);
-        const itemId = this.getParams("itemId");
-        if(stepResult.result){
-            await this.saveSkuCategory(this.getParams("skuItem"));
-            const resourceId = this.getParams("resourceId");
-            await expireSkuDraft(resourceId, itemId);
+        try{
+            const catId = this.getParams("catId");
+            const startTraceId = this.getParams("startTraceId");
+            const updateDraftData = this.getParams("updateDraftData");
+            const draftHeader = this.getParams("draftHeader");
+            const stepResult = await this.submit(catId, startTraceId, updateDraftData, draftHeader, draftId);
+            if(stepResult.result){
+                await this.saveSkuCategory(this.getParams("skuItem"));
+            }
+            return stepResult;
+        } catch (e) {
+            log.error("publishSkuStep error", e);
+            return new StepResult(false, "发布商品失败");
+        }finally{
+            await this.releaseDraftData(draftId, resourceId);
         }
-        return stepResult;
     }
 
     async submit(catId : string, startTraceId : string, updateDraftData : any, draftHeader : any, draftId : string){
@@ -216,27 +220,7 @@ export class PublishSkuStep extends AbsPublishStep {
         }
     }
 
-    async deleteDraft(draftId: string) {
-        const catId = this.getParams("catId");
-        const startTraceId = this.getParams("startTraceId");
-        const url = "https://item.upload.taobao.com/sell/draftOp/delete.json?catId=" + catId + "&dbDraftId=" + draftId;
-        const data = {
-            "globalExtendInfo": JSON.stringify({ "startTraceId": startTraceId })
-        };
-    
-        const res = await axios.post(url, data, {
-            headers: this.getHeader()
-        })
-        if (!res.data || (typeof (res.data) == 'string' && res.data == '')) {
-            log.info("delete draft res is empty", res.data);
-            return false;
-        }
-        if (!res.data.success) {
-            log.info("delete draft res is not success ", res.data);
-            return false;
-        }
-        return true;
-    }
+   
     
 }
 

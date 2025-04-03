@@ -28,7 +28,7 @@ export class SkuPublishFileUploadStep extends StepUnit{
             return new StepResult(false, "上传图片失败");
         }
         this.setParams("skuItem", skuItem);
-        return new StepResult(false, "上传成功", [
+        return new StepResult(true, "上传成功", [
             new StepResponse("imageFileList", imageFileList)
         ]);
     }

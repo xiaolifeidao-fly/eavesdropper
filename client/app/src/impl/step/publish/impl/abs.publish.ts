@@ -5,7 +5,7 @@ import { Page } from "playwright";
 import { DoorSkuDTO, SkuItem } from "@model/door/sku";
 import { DoorEntity } from "@src/door/entity";
 import { PriceRangeConfig } from "@model/sku/skuTask";
-import { getSkuDraft } from "@api/sku/sku.draft";
+import { expireSkuDraft, getSkuDraft } from "@api/sku/sku.draft";
 
 export async function elementIsExist(page: Page, selector: string){
     return page.evaluate((selectorKey) => {
@@ -69,6 +69,37 @@ export async function confirmProtocol(page: Page) {
 }
 
 export abstract class AbsPublishStep extends StepUnit{
+
+    async deleteDraft(draftId: string) {
+        const catId = this.getParams("catId");
+        const startTraceId = this.getParams("startTraceId");
+        const url = "https://item.upload.taobao.com/sell/draftOp/delete.json?catId=" + catId + "&dbDraftId=" + draftId;
+        const data = {
+            "globalExtendInfo": JSON.stringify({ "startTraceId": startTraceId })
+        };
+    
+        const res = await axios.post(url, data, {
+            headers: this.getHeader()
+        })
+        if (!res.data || (typeof (res.data) == 'string' && res.data == '')) {
+            log.info("delete draft res is empty", res.data);
+            return false;
+        }
+        if (!res.data.success) {
+            log.info("delete draft res is not success ", res.data);
+            return false;
+        }
+        return true;
+    }
+    
+    async releaseDraftData(draftId: string, resourceId: number) {
+        const deleteResult = await this.deleteDraft(draftId);
+        if(!deleteResult){
+            return;
+        }
+        const itemId = this.getParams("itemId");
+        await expireSkuDraft(resourceId, itemId);
+    }
 
     public async updateDraftData(catId: string, draftId: string, header: { [key: string]: any }, startTraceId: string, draftData: {}) {
         try{

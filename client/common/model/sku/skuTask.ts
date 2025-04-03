@@ -176,4 +176,5 @@ export class SkuTaskPageResp {
 export const STEP_INIT = "INIT"
 export const STEP_PENDING = "PENDING"
 export const STEP_DONE = "DONE"
+export const STEP_ROLLBACK = "ROLLBACK"
 export const STEP_ERROR = "ERROR"

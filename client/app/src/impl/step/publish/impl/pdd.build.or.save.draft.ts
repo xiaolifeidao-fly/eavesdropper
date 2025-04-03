@@ -13,6 +13,9 @@ import { buildDefaultCombineContent, isNeedCombine, isNeedSellPointCollection, S
 
 export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
 
+    override isRollBack() : boolean{
+        return true;
+    }
 
     override async fillSellInfo(commonData: { data: any }, skuItem: DoorSkuDTO, draftData: { price: string, quantity: string, sku: { [key: string]: any }[], saleProp: { [key: string]: { [key: string]: any }[] } }) {
         const priceRate = this.getParams("priceRate");

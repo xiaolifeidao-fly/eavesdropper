@@ -51,8 +51,13 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             if (!result) {
                 return new StepResult(false, "添加草稿失败") ;
             }
+            skuDraftId = this.getSkuDraftIdFromData(skuDraftId, result);
+
             const draftData = await this.buildDraftData(imageFileList, resourceId, skuDraftId, skuItem, result, page);
             if(!draftData.draftData){
+                if(skuDraftId){
+                    await this.releaseDraftData(skuDraftId, resourceId);
+                }
                 return new StepResult(false, draftData.message) ;
             }
             return new StepResult(true, "添加草稿成功", [
@@ -74,15 +79,14 @@ export class SkuBuildDraftStep extends AbsPublishStep{
     }
     
     async buildDraftData(imageFileList: SkuFileDetail[], resourceId: number, skuDraftId: string | undefined, skuItem: DoorSkuDTO, result: DoorEntity<any>, page: Page) {
-        const newSkuDraftId = this.getSkuDraftIdFromData(skuDraftId, result);
-        if (!newSkuDraftId) {
-            log.error("newSkuDraftId not found ", newSkuDraftId);
+        if (!skuDraftId) {
+            log.error("newSkuDraftId not found ", skuDraftId);
             return {
                 draftData : undefined,
                 message : "newSkuDraftId not found"
             };
         }
-        await this.activeDraft(resourceId, skuItem.baseInfo.itemId, newSkuDraftId);
+        await this.activeDraft(resourceId, skuItem.baseInfo.itemId, skuDraftId);
         await page.waitForLoadState('load');
         let commonData = await this.getCommonData(page);
         if (!commonData) {
@@ -140,7 +144,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         }
         const foodSupport = new FoodSupport();
         const foodResult = await foodSupport.doFill(commonData.data.components, skuItem.baseInfo.skuItems, draftData, catId, startTraceId, result.getHeaderData(),mainImages);
-        const updateResult = await this.updateDraftData(catId, newSkuDraftId, result.getHeaderData(), startTraceId, draftData);
+        const updateResult = await this.updateDraftData(catId, skuDraftId, result.getHeaderData(), startTraceId, draftData);
         if(!updateResult){
             return {
                 draftData : undefined,
@@ -156,7 +160,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         return {
             draftData : {
                 catId: catId,
-                draftId: newSkuDraftId,
+                draftId: skuDraftId,
                 startTraceId: startTraceId,
                 draftData: draftData,
                 itemId: skuItem.baseInfo.itemId,
@@ -201,6 +205,10 @@ export class SkuBuildDraftStep extends AbsPublishStep{
     }
 
     async mergeTbSku(skuItem : DoorSkuDTO, draftData : { [key: string]: any }, commonData : { [key: string]: any }){
+        return true;
+    }
+
+    public isRollBack(): boolean {
         return true;
     }
 

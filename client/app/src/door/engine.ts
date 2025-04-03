@@ -114,7 +114,7 @@ export abstract class DoorEngine<T = any> {
         }
         
         // 添加网络请求拦截
-        await this.setupNetworkInterception(this.context);
+        // await this.setupNetworkInterception(this.context);
         
         const page = await this.context.newPage();
         await page.setViewportSize({ width: this.width, height: this.height });

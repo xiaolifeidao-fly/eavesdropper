@@ -53,9 +53,10 @@ export abstract class StepHandler {
         await this.init();
         const stepCodes = this.stepConfig.getStepCodes();
         const steps = []
-        for (const stepCode of stepCodes) {
+        for (let i = 0; i < stepCodes.length; i++) {
+            const stepCode = stepCodes[i];
             const step = new SkuTaskStep(undefined, this.key, this.resourceId, stepCode, undefined, STEP_INIT, this.getGroupCode())
-            const stepUnit = this.stepConfig.buildStepUnit(step, this.context);
+            const stepUnit = this.stepConfig.buildStepUnit(step, this.context, i);
             await stepUnit.init(true);
             steps.push(stepUnit);
         }
@@ -74,6 +75,29 @@ export abstract class StepHandler {
 
     public async doStep(withParams : { [key: string]: any }) : Promise<StepResult | undefined> {
         const stepUnits = await this.getStepUnits();
+        const result = await this.do(stepUnits, withParams);
+        if(!result){
+            return undefined;
+        }
+        if(result.result){
+            return result;
+        }
+        await this.doRollBack(stepUnits, result);
+        return result;
+    }
+
+    public async doRollBack(stepUnits : StepUnit[], stepResult : StepResult){
+        for(const stepUnit of stepUnits){
+            const stepIndex = stepUnit.getStepIndex();
+            if(stepUnit.isRollBack()){
+                if(stepIndex <= stepResult.getStepIndex()){
+                    await stepUnit.doRollBack();
+                }
+            }
+        }
+    }
+
+    public async do(stepUnits : StepUnit[], withParams : { [key: string]: any }){
         let result : StepResult | undefined = undefined;
         for (let i = 0; i < stepUnits.length; i++) {
             const stepUnit = stepUnits[i];
@@ -81,8 +105,10 @@ export abstract class StepHandler {
                 stepUnit.setWithParams(withParams);
             }
             const stepResult = await stepUnit.do(result?.needNextSkip || false);
+            stepResult.stepIndex = i;
             if(!stepResult.result){
                 const validateResult = await this.validateAndRetry(stepUnit, stepResult);
+                validateResult.stepIndex = i;
                 if(!validateResult.result){
                     return validateResult;
                 }
@@ -121,8 +147,9 @@ export abstract class StepHandler {
             return await this.buildSteps();
         }
         const stepUnits = []
-        for (const step of steps) {
-            const stepUnit = this.stepConfig.buildStepUnit(step, this.context);
+        for (let i = 0; i < steps.length; i++) {
+            const step = steps[i];
+            const stepUnit = this.stepConfig.buildStepUnit(step, this.context, i);
             stepUnits.push(stepUnit)
         }
         return this.rebuildSteps(stepUnits)
