@@ -8,6 +8,7 @@ import (
 	resourceControllers "server/app/resource/controllers"
 	shopControllers "server/app/shop/controllers"
 	skuControllers "server/app/sku/controllers"
+	versionControllers "server/app/version/controllers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,5 +27,6 @@ func GetAppRouters() []func(g *gin.RouterGroup) {
 	AppRouters = append(AppRouters, addressControllers.LoadAddressRouter)   // 添加address路由
 	AppRouters = append(AppRouters, categoryControllers.LoadCategoryRouter) // 添加address路由
 	AppRouters = append(AppRouters, skuControllers.LoadSkuTaskItemRouter)   // 添加sku-task-item路由
+	AppRouters = append(AppRouters, versionControllers.LoadVersionRouter)   // 添加version路由
 	return AppRouters
 }
