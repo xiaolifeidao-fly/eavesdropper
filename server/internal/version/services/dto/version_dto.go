@@ -12,10 +12,10 @@ const (
 
 type VersionDto struct {
 	dto.BaseDTO
-	AppId       string `json:"app_id"`
+	AppId       string `json:"appId"`
 	Version     string `json:"version"`
-	BuildNum    int    `json:"build_num"`
-	ChangeLog   string `json:"change_log"`
-	DownloadUrl string `json:"download_url"`
+	BuildNum    int    `json:"buildNum"`
+	ChangeLog   string `json:"changeLog"`
+	DownloadUrl string `json:"downloadUrl"`
 	Status      string `json:"status"`
 }
