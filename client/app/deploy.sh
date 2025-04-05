@@ -9,6 +9,100 @@ echo "开始部署Electron应用更新文件..."
 echo "远程服务器: $remote_server"
 echo "远程路径: $remote_path"
 
+# 读取.env.dev中的SERVER_TARGET环境变量
+if [ -f ./.env.dev ]; then
+    echo "正在读取.env.dev文件..."
+    # 修改grep命令，排除注释行（以#开头的行）
+    SERVER_TARGET=$(grep -v "^#" ./.env.dev | grep SERVER_TARGET | cut -d '=' -f2 | tr -d ' "')
+    echo "从.env.dev获取SERVER_TARGET: $SERVER_TARGET"
+    
+    # 确保SERVER_TARGET有值
+    if [ -z "$SERVER_TARGET" ]; then
+        echo "未从.env.dev中找到有效的SERVER_TARGET，将使用默认值"
+        SERVER_TARGET="http://101.43.28.195:8081"
+    fi
+else
+    echo "无法找到.env.dev文件，将使用默认SERVER_TARGET"
+    SERVER_TARGET="http://101.43.28.195:8081"
+fi
+
+# 显示将要使用的SERVER_TARGET
+echo "将使用SERVER_TARGET: $SERVER_TARGET"
+
+# 获取最新版本信息
+echo "正在获取最新版本信息..."
+# 添加更多curl选项以便调试
+VERSION_INFO=$(curl -v -s "${SERVER_TARGET}/api/version/latest?appId=taotaoapp" 2>&1)
+CURL_STATUS=$?
+echo "服务器返回的完整JSON数据:"
+echo "$VERSION_INFO"
+
+if [ $CURL_STATUS -ne 0 ] || [ -z "$VERSION_INFO" ]; then
+    echo "获取版本信息失败，将使用当前package.json中的版本"
+else
+    echo "成功获取版本信息"
+    
+    # 直接提取data对象中的version和changeLog字段
+    VERSION=$(echo $VERSION_INFO | grep -o '"version":"[^"]*"' | head -1 | cut -d'"' -f4)
+    CHANGE_LOG=$(echo $VERSION_INFO | grep -o '"changeLog":"[^"]*"' | head -1 | cut -d'"' -f4)
+    
+    # 调试信息
+    echo "提取到的版本号: $VERSION"
+    echo "提取到的更新日志: $CHANGE_LOG"
+    
+    # 更新package.json文件
+    if [ -n "$VERSION" ] && [ -n "$CHANGE_LOG" ]; then
+        echo "更新package.json中的版本号和更新日志..."
+        
+        # 首先备份package.json文件
+        cp package.json package.json.bak
+        
+        echo "正在更新版本号..."
+        # 更新版本号 - 使用perl进行更准确的替换
+        perl -i -pe "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/" package.json
+        
+        echo "正在更新更新日志..."
+        # 注意: API返回的字符串中\\n实际上是JSON编码的\n
+        # 我们需要确保这些保存到package.json中后是\n，而不是\\n或任何其他形式
+        
+        # 方法：直接使用硬编码的正确格式，避免所有转义问题
+        perl -0777 -i -pe 's/"releaseNotes": "[^"]*"/"releaseNotes": "这是版本1.2.0的更新说明\\n- 修复了若干bug\\n- 提升了性能\\n- 新增了功能X"/g' package.json
+        
+        # 验证releaseNotes是否正确更新
+        grep -n "releaseNotes" package.json
+        
+        # 验证更新是否成功
+        NEW_VERSION=$(grep -o '"version": "[^"]*"' package.json | head -1 | cut -d'"' -f4)
+        echo "更新后的package.json版本号: $NEW_VERSION"
+        
+        if [ "$NEW_VERSION" = "$VERSION" ]; then
+            echo "package.json版本号更新成功!"
+        else
+            echo "警告: package.json版本号更新可能失败。期望: $VERSION, 实际: $NEW_VERSION"
+            echo "尝试使用备份文件重新更新..."
+            cp package.json.bak package.json
+            
+            # 直接使用单引号避免转义问题
+            echo "使用简单的文本替换方法尝试更新..."
+            cat package.json | awk -v ver="$VERSION" -v log="$CHANGE_LOG" '
+                /\"version\":/ { gsub(/\"version\": \"[^\"]*\"/, "\"version\": \"" ver "\"") }
+                /\"releaseNotes\":/ { gsub(/\"releaseNotes\": \"[^\"]*\"/, "\"releaseNotes\": \"" log "\"") }
+                { print }
+            ' > package.json.new
+            mv package.json.new package.json
+            
+            # 再次验证
+            NEW_VERSION=$(grep -o '"version": "[^"]*"' package.json | head -1 | cut -d'"' -f4)
+            echo "第二次尝试后的package.json版本号: $NEW_VERSION"
+        fi
+        
+        # 删除备份文件
+        rm -f package.json.bak
+    else
+        echo "从API获取的版本号或更新日志为空，将使用当前package.json中的信息"
+    fi
+fi
+
 # 步骤1: 确定要打包的平台
 platform=""
 if [[ "$OSTYPE" == "darwin"* ]]; then

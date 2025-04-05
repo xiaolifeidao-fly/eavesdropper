@@ -56,7 +56,7 @@
       }
     ],
     "releaseInfo": {
-      "releaseNotes": "这是版本1.1.0的更新说明\n- 修复了若干bug\n- 提升了性能\n- 新增了功能X"
+      "releaseNotes": "这是版本1.2.0的更新说明\n- 修复了若干bug\n- 提升了性能\n- 新增了功能X"
     },
     "nsis": {
       "oneClick": false,
