@@ -134,10 +134,10 @@ function checkUpdate(mainWindow: BrowserWindow){
   }, 200); // 延迟2秒，确保窗口已完全加载
   
   // 每隔一段时间自动检查更新
-  setInterval(async () => {
-    // 调用上方的函数
-    await checkForUpdates()
-  }, 60 * 1000) // 60秒检查一次更新
+  // setInterval(async () => {
+  //   // 调用上方的函数
+  //   await checkForUpdates()
+  // }, 60 * 1000) // 60秒检查一次更新
 }
 
 
