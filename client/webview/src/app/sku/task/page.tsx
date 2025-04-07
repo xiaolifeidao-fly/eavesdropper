@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react';
-import { Tag, Button, message, Modal } from 'antd';
+import { Tag, Button, message, Modal, Popconfirm } from 'antd';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
 import styles from './index.module.less';
@@ -163,31 +163,37 @@ export default function SkuTaskManage() {
               查看
             </Button>
             {(record.status === SkuTaskStatus.DONE || record.status === SkuTaskStatus.ERROR || record.status === SkuTaskStatus.PENDING) && (
-              <Button
-                type="link"
-                onClick={() => handleRepublish(record.id)} // 重新发布操作
-                style={{ color: '#ffa500', display: 'inline-block', paddingLeft: '4px' }} // 橘黄色
-              >
-                重新发布
-              </Button>
+              <Popconfirm title="确定重新发布任务吗？" onConfirm={() => handleRepublish(record.id)}>
+                <Button
+                  type='link'
+                  // onClick={() => handleRepublish(record.id)} // 重新发布操作
+                  style={{ color: '#ffa500', display: 'inline-block', paddingLeft: '4px' }} // 橘黄色
+                >
+                  重新发布
+                </Button>
+              </Popconfirm>
             )}
             {record.status === SkuTaskStatus.RUNNING && (
-              <Button
-                type='link'
-                onClick={() => handleStop(record.id)} // 停止操作
-                style={{ color: '#f00', display: 'inline-block', paddingLeft: '4px' }} // 红色按钮
-              >
+              <Popconfirm title="确定停止任务吗？" onConfirm={() => handleStop(record.id)}>
+                <Button
+                  type='link'
+                  // onClick={() => handleStop(record.id)} // 停止操作
+                  style={{ color: '#f00', display: 'inline-block', paddingLeft: '4px' }} // 红色按钮
+                >
                 停止
-              </Button>
+                </Button>
+              </Popconfirm>
             )}
             {(record.status === SkuTaskStatus.STOP && (
-              <Button
-                type="link"
-                onClick={() => handleContinue(record.id)} // 重新发布操作
-                style={{ color: '#52c41a', display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
-              >
-                继续执行
-              </Button>
+              <Popconfirm title="确定继续执行任务吗？" onConfirm={() => handleContinue(record.id)}>
+                <Button
+                  type="link"
+                  // onClick={() => handleContinue(record.id)} // 重新发布操作
+                  style={{ color: '#52c41a', display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
+                >
+                  继续执行
+                </Button>
+              </Popconfirm>
             ))}
           </div>
         )
