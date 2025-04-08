@@ -13,6 +13,7 @@ import { SkuTaskStatus } from '@model/sku/skuTask'
 import { SkuTaskItemList, StatsTags } from './components'
 import { TaskApi } from '@eleapi/door/task/task';
 import SkuPushStepsForm from '../components/SkuPushSteps';
+import { SkuTaskOperationType } from '@model/sku/skuTask';
 
 const pollingTime = 20*1000
 type DataType = {
@@ -38,6 +39,8 @@ export default function SkuTaskManage() {
   const [currentRecord, setCurrentRecord] = useState<any>({})
 
   const [visible, setVisible] = useState(false);
+  const [taskId, setTaskId] = useState<number | undefined>(undefined);
+  const [operationType, setOperationType] = useState<string>(SkuTaskOperationType.PUSH);
 
   const { refreshPage } = useRefreshPage();
 
@@ -69,20 +72,25 @@ export default function SkuTaskManage() {
     refreshPage(actionRef, false)
   }
 
+  // 发布商品
+  const handlePublish = () => {
+    setTaskId(undefined)
+    setVisible(true)
+    setOperationType(SkuTaskOperationType.PUSH)
+  }
+
   // 重新发布
   const handleRepublish = (taksId: number) => {
-    const taskApi = new TaskApi()
-    taskApi.republishTask(taksId)
-    message.success(`重新发布任务`)
-    refreshPage(actionRef, false)
+    setTaskId(taksId)
+    setVisible(true)
+    setOperationType(SkuTaskOperationType.REPUBLISH)
   }
 
   // 继续发布
   const handleContinue = (taksId: number) => {
-    const taskApi = new TaskApi()
-    taskApi.continueTask(taksId)
-    message.success(`继续发布任务`)
-    refreshPage(actionRef, false)
+    setTaskId(taksId)
+    setVisible(true)
+    setOperationType(SkuTaskOperationType.CONTINUE)
   }
 
   const columns: ProColumns[] = [
@@ -212,9 +220,7 @@ export default function SkuTaskManage() {
             actionRef={actionRef}
             options={false}
             toolBarRender={() => [
-              <Button key="export" onClick={() => {
-                setVisible(true);
-              }}>
+              <Button key="export" onClick={handlePublish}>
                 发布商品
               </Button>,
             ]}
@@ -261,10 +267,18 @@ export default function SkuTaskManage() {
           <SkuTaskItemList taskId={showTaskId}/>
         </Modal>
       )}
-       {/* 发布商品 */}
-       <SkuPushStepsForm visible={visible} setVisible={setVisible} onClose={() => {
-            refreshPage(actionRef, false);
-          }} />
+      {/* 发布商品 */}
+      <SkuPushStepsForm
+        visible={visible}
+        setVisible={setVisible}
+        taskId={taskId}
+        setTaskId={setTaskId}
+        operationType={operationType}
+        setOperationType={setOperationType}
+        onClose={() => {
+          refreshPage(actionRef, false)
+        }}
+      />
     </Layout>
   );
 }

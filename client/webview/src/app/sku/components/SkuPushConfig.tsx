@@ -19,11 +19,6 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
   const store = new StoreApi();
   const [account, setAccount] = useState<number>();
 
-  useEffect(() => {
-    console.log('props.pushConfig', props.pushConfig);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <ProCard
       bordered
