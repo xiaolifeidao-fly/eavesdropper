@@ -47,7 +47,8 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "static/logo/logo.jpg"
+      "icon": "static/logo/logo.jpg",
+      "requestedExecutionLevel": "requireAdministrator"
     },
     "publish": [
       {
@@ -64,7 +65,7 @@
       "perMachine": true,
       "createDesktopShortcut": true,
       "uninstallDisplayName": "${productName}",
-      "deleteAppDataOnUninstall": true
+      "deleteAppDataOnUninstall": false
     }
   },
   "_moduleAliases": {
