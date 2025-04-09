@@ -35,7 +35,7 @@ client/images/**/*
 
 nohup.outout
 
-client/app/static/**/*
+client/app/static/Chrome-bin/*
 
 **/config.ini
 **/*.out

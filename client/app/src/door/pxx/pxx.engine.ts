@@ -475,25 +475,6 @@ export class PxxEngine<T> extends DoorEngine<T> {
         return undefined;
     }
 
-    public getSessionDir(){
-        const sessionFileName = Date.now().toString() + ".json";
-        const name = this.constructor.name;
-        const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource','session',this.getNamespace(), this.resourceId.toString());
-        if(!fs.existsSync(sessionDirPath)){
-            fs.mkdirSync(sessionDirPath, { recursive: true });
-        }
-        const sessionDir = path.join(sessionDirPath, sessionFileName);
-        return sessionDir;
-    }
-
-    getUserDataDir(){
-        const userDataDir = path.join(path.dirname(app.getAppPath()),'resource','userDataDir',this.getNamespace(), this.resourceId.toString());
-        if(!fs.existsSync(userDataDir)){
-            fs.mkdirSync(userDataDir, { recursive: true });
-        }
-        return userDataDir;
-    }
-
     getNamespace(): string {
         return "pxx";
     }
