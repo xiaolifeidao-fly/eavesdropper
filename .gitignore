@@ -46,3 +46,5 @@ client/app/static/**/*
 **/tracks
 **/screenshots
 **/package-*
+
+client/app/temp_upload

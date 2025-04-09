@@ -99,9 +99,9 @@ function createDebugMenu(mainWindow: BrowserWindow) {
       {
         label: '应用信息',
         click: () => {
-          console.log('应用版本:', app.getVersion());
-          console.log('更新URL:', process.env.UPDATE_URL || 'http://101.43.28.195/updates/');
-          console.log('是否打包:', app.isPackaged);
+          log.info('应用版本:', app.getVersion());
+          log.info('更新URL:', process.env.UPDATE_URL || 'http://101.43.28.195/updates/');
+          log.info('是否打包:', app.isPackaged);
         }
       }
     ]
@@ -112,7 +112,7 @@ function createDebugMenu(mainWindow: BrowserWindow) {
 }
 
 function checkUpdate(mainWindow: BrowserWindow){
-  console.log("checkUpdate: ", mainWindow);
+  log.info("checkUpdate: ", mainWindow);
 
   // 添加开发环境调试菜单
   if (!app.isPackaged) {
@@ -121,14 +121,14 @@ function checkUpdate(mainWindow: BrowserWindow){
     // 在开发环境中启用更新
     enableUpdateInDev();
     
-    console.log("已在开发环境中启用更新检查");
+    log.info("已在开发环境中启用更新检查");
   }
 
   // 设置自动更新
   setupAutoUpdater(mainWindow);
 
   // 立即检查一次更新
-  console.log("应用启动: 立即检查更新...");
+  log.info("应用启动: 立即检查更新...");
   setTimeout(() => {
     checkForUpdates();
   }, 200); // 延迟2秒，确保窗口已完全加载

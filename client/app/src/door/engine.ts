@@ -24,11 +24,11 @@ const contextMap = new Map<string, BrowserContext>();
 
 export abstract class DoorEngine<T = any> {
 
-    private chromePath: string | undefined;
+    protected chromePath: string | undefined;
 
-    browser: Browser | undefined;
+    protected browser: Browser | undefined;
 
-    context: BrowserContext | undefined;
+    protected context: BrowserContext | undefined;
 
     public resourceId : number;
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 远程服务器信息
-remote_server="$eavesdropper_app_remote_server"
+remote_server="root@$eavesdropper_app_remote_server"
 remote_password="$eavesdropper_app_remote_password"
 remote_path="/usr/local/nginx/html/updates"
 
@@ -136,9 +136,9 @@ package_and_upload() {
     # 执行构建和打包
     echo "打包 $platform 版本..."
     if [ "$platform" == "mac" ]; then
-        sh package_mac.sh
+        npm run package:mac
     elif [ "$platform" == "win" ]; then
-        sh package_win.sh
+        npm run package:win
     else
         echo "不支持的平台: $platform"
         return 1
