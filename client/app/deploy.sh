@@ -62,16 +62,23 @@ else
         perl -i -pe "s/\"version\": \"[^\"]*\"/\"version\": \"$VERSION\"/" package.json
         
         echo "正在更新更新日志..."
-        # 注意: API返回的字符串中\\n实际上是JSON编码的\n
-        # 我们需要确保这些保存到package.json中后是\n，而不是\\n或任何其他形式
+        # 使用JavaScript处理换行符和引号转义，更可靠
+        ESCAPED_CHANGELOG=$(node -e "
+          const log = \`$CHANGE_LOG\`;
+          const escaped = log.replace(/\"/g, '\\\\\"').replace(/\n/g, '\\\\\\\\n');
+          console.log(escaped);
+        ")
         
-        # 方法：直接使用硬编码的正确格式，避免所有转义问题
-        perl -0777 -i -pe 's/"releaseNotes": "[^"]*"/"releaseNotes": "这是版本1.2.0的更新说明\\n- 修复了若干bug\\n- 提升了性能\\n- 新增了功能X"/g' package.json
+        echo "转义后的更新日志: $ESCAPED_CHANGELOG"
+        
+        # 使用处理后的CHANGE_LOG更新releaseNotes - 使用sed直接修改releaseNotes字段
+        # 确保只更新build.releaseInfo.releaseNotes字段，而不是添加新字段
+        sed -i'.bak' -e "s|\"releaseNotes\": \"[^\"]*\"|\"releaseNotes\": \"$ESCAPED_CHANGELOG\"|" package.json
         
         # 验证releaseNotes是否正确更新
         grep -n "releaseNotes" package.json
         
-        # 验证更新是否成功
+        # 验证版本号更新是否成功
         NEW_VERSION=$(grep -o '"version": "[^"]*"' package.json | head -1 | cut -d'"' -f4)
         echo "更新后的package.json版本号: $NEW_VERSION"
         
@@ -82,14 +89,8 @@ else
             echo "尝试使用备份文件重新更新..."
             cp package.json.bak package.json
             
-            # 直接使用单引号避免转义问题
-            echo "使用简单的文本替换方法尝试更新..."
-            cat package.json | awk -v ver="$VERSION" -v log="$CHANGE_LOG" '
-                /\"version\":/ { gsub(/\"version\": \"[^\"]*\"/, "\"version\": \"" ver "\"") }
-                /\"releaseNotes\":/ { gsub(/\"releaseNotes\": \"[^\"]*\"/, "\"releaseNotes\": \"" log "\"") }
-                { print }
-            ' > package.json.new
-            mv package.json.new package.json
+            # 直接使用sed再次尝试更新版本号
+            sed -i'.bak' -e "s|\"version\": \"[^\"]*\"|\"version\": \"$VERSION\"|" package.json
             
             # 再次验证
             NEW_VERSION=$(grep -o '"version": "[^"]*"' package.json | head -1 | cut -d'"' -f4)
