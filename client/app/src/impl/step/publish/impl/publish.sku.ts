@@ -150,6 +150,26 @@ export class PublishSkuStep extends AbsPublishStep {
         }
     }
 
+    getErrorMessage(responseData : any){
+        let errorMessage = responseData.models?.formError?.tbExtractWay?.itemMessage?.template?.message;
+        if(errorMessage && errorMessage.length > 0){
+            return errorMessage[0]?.msg;
+        }
+        errorMessage = responseData.models?.globalMessage?.message;
+        if(errorMessage && errorMessage.length > 0){
+            return errorMessage[0]?.msg;
+        }
+        errorMessage = responseData.models?.formError?.tbExtractWay?.message;
+        if(errorMessage && errorMessage.length > 0){
+            return errorMessage[0]?.msg;
+        }
+        errorMessage = responseData.models?.formError?.price?.message;
+        if(errorMessage && errorMessage.length > 0){
+            return errorMessage[0]?.msg;
+        }
+        return JSON.stringify(responseData);
+    }
+
     async submit(catId : string, startTraceId : string, updateDraftData : any, draftHeader : any, draftId : string){
         try{
             updateDraftData['fakeCreditSubmit'] = true;
@@ -173,12 +193,8 @@ export class PublishSkuStep extends AbsPublishStep {
             }
             if(type == "error"){
                 log.info("publish is error by ", JSON.stringify(responseData));
-                const message = responseData.models?.formError?.tbExtractWay?.itemMessage?.template?.message;
-                if(message && message.length > 0){
-                    const msg = message[0].msg;
-                    return new StepResult(false, msg);
-                }
-                return new StepResult(false, "发布商品失败");
+                const errorMessage = this.getErrorMessage(responseData);
+                return new StepResult(false, errorMessage);
             }
             if(type == "warning"){
                 const message = responseData.models?.warning?.diagnoseViolationWarning?.tipsContent

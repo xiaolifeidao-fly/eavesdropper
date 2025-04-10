@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "cp -r static/html/validate_image.html ../resource/ && webpack --config webpack.config.js --mode development && electron .",
+    "dev": "cp -ri static/html ../resource/html && webpack --config webpack.config.js --mode development && electron .",
     "build": "webpack --config webpack.config.js --mode production",
     "start": "electron .",
     "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",

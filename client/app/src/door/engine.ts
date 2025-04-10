@@ -520,7 +520,6 @@ export abstract class DoorEngine<T = any> {
         const userDataPath = app.getPath('userData');
 
         const sessionDirPath = path.join(userDataPath,'resource','session',this.getNamespace(), this.resourceId.toString());
-        log.info("sessionDirPath is ", sessionDirPath);
         if(!fs.existsSync(sessionDirPath)){
             fs.mkdirSync(sessionDirPath, { recursive: true });
         }
