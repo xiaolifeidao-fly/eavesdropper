@@ -4,7 +4,7 @@ import { Progress, Table, message, Tag, Button, Popover } from 'antd';
 import type { TableColumnsType } from 'antd';
 
 import { SkuPublishResult } from "@model/sku/sku";
-import { SkuPublishStatitic, SkuPublishConfig } from "@model/sku/skuTask";
+import { SkuPublishStatitic, SkuPublishConfig, SkuTaskOperationType } from "@model/sku/skuTask";
 import { SkuStatus } from "@model/sku/sku";
 import { SkuTask, SkuTaskStatus } from "@model/sku/skuTask";
 import { TaskApi } from '@eleapi/door/task/task';
@@ -29,6 +29,7 @@ export interface SkuUrl {
 }
 
 interface SkuPushProgressProps {
+  operationType: string;
   publishStatus: boolean;
   publishResourceId: number;
   publishConfig: SkuPublishConfig;
@@ -36,6 +37,7 @@ interface SkuPushProgressProps {
   urls: SkuUrl[];
   onPublishFinish: (finish: boolean) => void;
   setTaskId: (taskId: number) => void;
+  taskId?: number;
 }
 
 interface OnPublishSkuMessageParam {
@@ -55,8 +57,6 @@ const ProgressTitle: React.FC<{ skuPushStatus: SkuTaskStatus | undefined }> = ({
   return <p style={{ margin: '5px 0' }}>{title}</p>
 }
 
-const taskApi = new TaskApi();
-
 const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
 
   const [data, setData] = useState<SkuPushInfo[]>([]);
@@ -64,6 +64,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
   const [successCount, setSuccessCount] = useState(0);
   const [errorCount, setErrorCount] = useState(0);
   const [skuPushStatus, setPushStatus] = useState<SkuTaskStatus|undefined>(undefined)
+  const [urlsCount, setUrlsCount] = useState(0);
 
   const columns: TableColumnsType<SkuPushInfo> = [
     {
@@ -162,45 +163,62 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
   };
 
   useEffect(() => {
-    if (!props.publishStatus || props.urls.length === 0) {
-      console.log(props.publishStatus, props.urls.length);
+    if (props.operationType === SkuTaskOperationType.PUSH && (!props.publishStatus || props.urls.length === 0)) {
       return;
     }
-
-    console.log(props.publishResourceId, props.publishConfig);
 
     const callback = (sku : SkuPublishResult | undefined, statistic : SkuPublishStatitic) => {
       onPublishSkuMessage({sku, statistic})
     } 
 
+    const taskApi = new TaskApi();
+
     // 监听商品发布消息
     taskApi.onPublishSkuMessage(callback).then(() => {
 
-      const urls = props.urls.map(item => item.url);
+      console.log('props.operationType: ', props.operationType)
 
       // 监听任务完成之后批量发布商品
-      taskApi.startTask(props.publishResourceId, props.publishConfig, props.skuSource, urls).then((task?: SkuTask) => {
-        console.log("batchPublishSkus task: ", task);
-        if (task) {
-          props.setTaskId(task.id as number);
-        }
-      });
+      if (props.operationType === SkuTaskOperationType.PUSH) {
+        const urls = props.urls.map(item => item.url);
+        setUrlsCount(urls.length);
+        taskApi.startTask(props.publishResourceId, props.publishConfig, props.skuSource, urls).then((task?: SkuTask) => {
+          if (task) {
+            props.setTaskId(task.id as number);
+          }
+        });
+      } else if (props.operationType === SkuTaskOperationType.REPUBLISH) {
+        taskApi.republishTask(props.taskId as number).then((task?: SkuTask) => {
+          if (task) {
+            props.setTaskId(task.id as number);
+            setUrlsCount(task.count);
+          }
+        });
+      } else if (props.operationType === SkuTaskOperationType.CONTINUE) {
+        taskApi.continueTask(props.taskId as number).then((task?: SkuTask) => {
+          if (task) {
+            props.setTaskId(task.id as number);
+            setUrlsCount(task.count);
+          }
+        });
+      }
+
     }).catch(error => {
       console.error("onPublishSkuMessage error: ", error);
       message.error("商品发布失败");
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.publishStatus]);
+  }, [props.publishStatus, props.operationType]);
 
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ProgressTitle skuPushStatus={skuPushStatus} />
         <p style={{ margin: '5px 0' }}>
-          已处理:{pushCount}/{props.urls.length}{successCount > 0 && <>,成功数:{successCount}</>}{errorCount > 0 && <>,失败数:{errorCount}</>}
+          已处理:{pushCount}/{urlsCount}{successCount > 0 && <>,成功数:{successCount}</>}{errorCount > 0 && <>,失败数:{errorCount}</>}
         </p>
-        <Progress percent={parseFloat((pushCount / props.urls.length * 100).toFixed(2))} />
+        <Progress percent={parseFloat((pushCount / urlsCount * 100).toFixed(2))} />
         <div style={{ height: 250, overflow: 'auto' }}>
           <Table<SkuPushInfo>
             rowKey="key"

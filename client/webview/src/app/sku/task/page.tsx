@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react';
-import { Tag, Button, message, Modal } from 'antd';
+import { Tag, Button, message, Modal, Popconfirm } from 'antd';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
 import styles from './index.module.less';
@@ -13,19 +13,9 @@ import { SkuTaskStatus } from '@model/sku/skuTask'
 import { SkuTaskItemList, StatsTags } from './components'
 import { TaskApi } from '@eleapi/door/task/task';
 import SkuPushStepsForm from '../components/SkuPushSteps';
+import { SkuTaskOperationType } from '@model/sku/skuTask';
 
 const pollingTime = 20*1000
-type DataType = {
-  id: number;
-  sourceAccount: string;
-  shopName: string;
-  skuName: string;
-  publishTime: string;
-  publishStatus: number;
-  url: string;
-  publishUrl: string;
-}
-
 
 export default function SkuTaskManage() {
 
@@ -38,6 +28,8 @@ export default function SkuTaskManage() {
   const [currentRecord, setCurrentRecord] = useState<any>({})
 
   const [visible, setVisible] = useState(false);
+  const [taskId, setTaskId] = useState<number | undefined>(undefined);
+  const [operationType, setOperationType] = useState<string>(SkuTaskOperationType.PUSH);
 
   const { refreshPage } = useRefreshPage();
 
@@ -69,20 +61,25 @@ export default function SkuTaskManage() {
     refreshPage(actionRef, false)
   }
 
+  // 发布商品
+  const handlePublish = () => {
+    setTaskId(undefined)
+    setVisible(true)
+    setOperationType(SkuTaskOperationType.PUSH)
+  }
+
   // 重新发布
   const handleRepublish = (taksId: number) => {
-    const taskApi = new TaskApi()
-    taskApi.republishTask(taksId)
-    message.success(`重新发布任务`)
-    refreshPage(actionRef, false)
+    setTaskId(taksId)
+    setVisible(true)
+    setOperationType(SkuTaskOperationType.REPUBLISH)
   }
 
   // 继续发布
   const handleContinue = (taksId: number) => {
-    const taskApi = new TaskApi()
-    taskApi.continueTask(taksId)
-    message.success(`继续发布任务`)
-    refreshPage(actionRef, false)
+    setTaskId(taksId)
+    setVisible(true)
+    setOperationType(SkuTaskOperationType.CONTINUE)
   }
 
   const columns: ProColumns[] = [
@@ -163,31 +160,37 @@ export default function SkuTaskManage() {
               查看
             </Button>
             {(record.status === SkuTaskStatus.DONE || record.status === SkuTaskStatus.ERROR || record.status === SkuTaskStatus.PENDING) && (
-              <Button
-                type="link"
-                onClick={() => handleRepublish(record.id)} // 重新发布操作
-                style={{ color: '#ffa500', display: 'inline-block', paddingLeft: '4px' }} // 橘黄色
-              >
-                重新发布
-              </Button>
+              <Popconfirm title="确定重新发布任务吗？" onConfirm={() => handleRepublish(record.id)}>
+                <Button
+                  type='link'
+                  // onClick={() => handleRepublish(record.id)} // 重新发布操作
+                  style={{ color: '#ffa500', display: 'inline-block', paddingLeft: '4px' }} // 橘黄色
+                >
+                  重新发布
+                </Button>
+              </Popconfirm>
             )}
             {record.status === SkuTaskStatus.RUNNING && (
-              <Button
-                type='link'
-                onClick={() => handleStop(record.id)} // 停止操作
-                style={{ color: '#f00', display: 'inline-block', paddingLeft: '4px' }} // 红色按钮
-              >
+              <Popconfirm title="确定停止任务吗？" onConfirm={() => handleStop(record.id)}>
+                <Button
+                  type='link'
+                  // onClick={() => handleStop(record.id)} // 停止操作
+                  style={{ color: '#f00', display: 'inline-block', paddingLeft: '4px' }} // 红色按钮
+                >
                 停止
-              </Button>
+                </Button>
+              </Popconfirm>
             )}
             {(record.status === SkuTaskStatus.STOP && (
-              <Button
-                type="link"
-                onClick={() => handleContinue(record.id)} // 重新发布操作
-                style={{ color: '#52c41a', display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
-              >
-                继续执行
-              </Button>
+              <Popconfirm title="确定继续执行任务吗？" onConfirm={() => handleContinue(record.id)}>
+                <Button
+                  type="link"
+                  // onClick={() => handleContinue(record.id)} // 重新发布操作
+                  style={{ color: '#52c41a', display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
+                >
+                  继续执行
+                </Button>
+              </Popconfirm>
             ))}
           </div>
         )
@@ -206,9 +209,7 @@ export default function SkuTaskManage() {
             actionRef={actionRef}
             options={false}
             toolBarRender={() => [
-              <Button key="export" onClick={() => {
-                setVisible(true);
-              }}>
+              <Button key="export" onClick={handlePublish}>
                 发布商品
               </Button>,
             ]}
@@ -246,19 +247,29 @@ export default function SkuTaskManage() {
           onCancel={() => {
             setShowItemList(false)
             setCurrentRecord({})
+            setCurrentRecord({})
           }}
           onOk={() => {
             setShowItemList(false)
+            setCurrentRecord({})
             setCurrentRecord({})
           }}
         >
           <SkuTaskItemList taskId={showTaskId}/>
         </Modal>
       )}
-       {/* 发布商品 */}
-       <SkuPushStepsForm visible={visible} setVisible={setVisible} onClose={() => {
-            refreshPage(actionRef, false);
-          }} />
+      {/* 发布商品 */}
+      <SkuPushStepsForm
+        visible={visible}
+        setVisible={setVisible}
+        taskId={taskId}
+        setTaskId={setTaskId}
+        operationType={operationType}
+        setOperationType={setOperationType}
+        onClose={() => {
+          refreshPage(actionRef, false)
+        }}
+      />
     </Layout>
   );
 }

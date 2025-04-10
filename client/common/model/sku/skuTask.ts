@@ -9,6 +9,12 @@ export enum SkuTaskStatus {
   STOP = 'stop'
 }
 
+export enum SkuTaskOperationType {
+  PUSH = 'push',
+  REPUBLISH = 'republish',
+  CONTINUE = 'continue'
+}
+
 export class SkuTask {
   constructor(
     public id: number,

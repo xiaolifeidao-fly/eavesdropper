@@ -24,11 +24,11 @@ const contextMap = new Map<string, BrowserContext>();
 
 export abstract class DoorEngine<T = any> {
 
-    protected chromePath: string | undefined;
+    private chromePath: string | undefined;
 
-    protected browser: Browser | undefined;
+    browser: Browser | undefined;
 
-    protected context: BrowserContext | undefined;
+    context: BrowserContext | undefined;
 
     public resourceId : number;
 
@@ -157,7 +157,6 @@ export abstract class DoorEngine<T = any> {
             return contextMap.get(key) as BrowserContext;
         }
         const userDataDir = this.getUserDataDir();
-        log.info("userDataDir is ", userDataDir);
         const platform = await getPlatform();
         const context = await chromium.launchPersistentContext(userDataDir,{
             headless: this.headless,
@@ -517,9 +516,7 @@ export abstract class DoorEngine<T = any> {
     public getSessionDir(){
         const sessionFileName = Date.now().toString() + ".json";
         const name = this.constructor.name;
-        const userDataPath = app.getPath('userData');
-
-        const sessionDirPath = path.join(userDataPath,'resource','session',this.getNamespace(), this.resourceId.toString());
+        const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource','session',this.getNamespace(), this.resourceId.toString());
         if(!fs.existsSync(sessionDirPath)){
             fs.mkdirSync(sessionDirPath, { recursive: true });
         }
@@ -528,9 +525,7 @@ export abstract class DoorEngine<T = any> {
     }
 
     getUserDataDir(){
-        const userDataPath = app.getPath('userData');
-        const userDataDir = path.join(userDataPath,'resource','userDataDir',this.getNamespace(), this.resourceId.toString());
-        log.info("userDataDir is ", userDataDir);
+        const userDataDir = path.join(path.dirname(app.getAppPath()),'resource','userDataDir',this.getNamespace(), this.resourceId.toString());
         if(!fs.existsSync(userDataDir)){
             fs.mkdirSync(userDataDir, { recursive: true });
         }
