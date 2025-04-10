@@ -14,14 +14,6 @@
     "react",
     "react-component"
   ],
-  "homepage": "http://next-admin.com",
-  "bugs": {
-    "url": "https://github.com/MrXujiang/next-admin/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/MrXujiang/next-admin"
-  },
   "license": "MIT",
   "scripts": {
     "dev": "next dev -p 8899",

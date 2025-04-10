@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config({path: path.join(__dirname, '.env')}); // 加载 .env 文件中的环境变量
 import { mainWindow, setMainWindow } from './windows';
 
-import { checkForUpdates, setupAutoUpdater, enableUpdateInDev, testUpdateCheck } from './update/update';
+import { checkForUpdates, setupAutoUpdater, enableUpdateInDev } from './update/update';
 import log from 'electron-log';
 import { registerRpc } from './register/rpc';
 import { init } from './store';
@@ -71,44 +71,44 @@ function registerFileProtocol(){
 
 // 添加开发环境调试菜单
 function createDebugMenu(mainWindow: BrowserWindow) {
-  const menu = Menu.getApplicationMenu() || Menu.buildFromTemplate([]);
+  // const menu = Menu.getApplicationMenu() || Menu.buildFromTemplate([]);
   
-  const debugSubmenu = new MenuItem({
-    label: '调试',
-    submenu: [
-      {
-        label: '检查更新',
-        click: () => {
-          testUpdateCheck();
-        }
-      },
-      {
-        label: '模拟更新可用',
-        click: () => {
-          // 模拟发现更新的对话框
-          mainWindow.webContents.send('update-info', {
-            version: '1.2.0',
-            notes: '这是一个测试更新\n- 测试功能1\n- 测试功能2',
-            name: '测试版本',
-            forceUpdate: false,
-            updateType: 'normal'
-          });
-        }
-      },
-      { type: 'separator' },
-      {
-        label: '应用信息',
-        click: () => {
-          log.info('应用版本:', app.getVersion());
-          log.info('更新URL:', process.env.UPDATE_URL || 'http://101.43.28.195/updates/');
-          log.info('是否打包:', app.isPackaged);
-        }
-      }
-    ]
-  });
+  // const debugSubmenu = new MenuItem({
+  //   label: '调试',
+  //   submenu: [
+  //     {
+  //       label: '检查更新',
+  //       click: () => {
+  //         testUpdateCheck();
+  //       }
+  //     },
+  //     {
+  //       label: '模拟更新可用',
+  //       click: () => {
+  //         // 模拟发现更新的对话框
+  //         mainWindow.webContents.send('update-info', {
+  //           version: '1.2.0',
+  //           notes: '这是一个测试更新\n- 测试功能1\n- 测试功能2',
+  //           name: '测试版本',
+  //           forceUpdate: false,
+  //           updateType: 'normal'
+  //         });
+  //       }
+  //     },
+  //     { type: 'separator' },
+  //     {
+  //       label: '应用信息',
+  //       click: () => {
+  //         log.info('应用版本:', app.getVersion());
+  //         log.info('更新URL:', process.env.UPDATE_URL || 'http://101.43.28.195/updates/');
+  //         log.info('是否打包:', app.isPackaged);
+  //       }
+  //     }
+  //   ]
+  // });
   
-  menu.append(debugSubmenu);
-  Menu.setApplicationMenu(menu);
+  // menu.append(debugSubmenu);
+  // Menu.setApplicationMenu(menu);
 }
 
 function checkUpdate(mainWindow: BrowserWindow){
@@ -116,7 +116,7 @@ function checkUpdate(mainWindow: BrowserWindow){
 
   // 添加开发环境调试菜单
   if (!app.isPackaged) {
-    createDebugMenu(mainWindow);
+    // createDebugMenu(mainWindow);
     
     // 在开发环境中启用更新
     enableUpdateInDev();

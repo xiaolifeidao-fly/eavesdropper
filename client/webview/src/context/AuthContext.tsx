@@ -37,6 +37,9 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const router = useRouter();
 
   useEffect(() => {
+    if(window.location.pathname.includes("installer")){
+      return;
+    }
     getItem(REQUEST_HEADER_TOKEN).then((value: string) => {
       if (value) {
         setLoginToken(value);

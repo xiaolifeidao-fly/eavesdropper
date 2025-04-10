@@ -7,6 +7,7 @@ import { MbUserApi } from "@eleapi/door/user/user";
 import { StoreApi } from "@eleapi/store/store";
 import { MonitorPxxSkuApi } from "@eleapi/door/sku/pxx.sku";
 import { TaskApi } from "@eleapi/door/task/task";
+import { InstallerApi } from "@eleapi/installer.api";
 const register : { new(...args: any[]): ElectronApi }[] = []
 
 export function registerApi(){
@@ -18,5 +19,6 @@ export function registerApi(){
     register.push(MbFileApi);
     register.push(MonitorPxxSkuApi);
     register.push(TaskApi);
+    register.push(InstallerApi);
     return register;
 }

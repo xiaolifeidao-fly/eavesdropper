@@ -7,6 +7,7 @@ import { MbUserApiImpl } from "./door/user/user";
 import { MbFileApiImpl } from "./door/file/mb.file";
 import { MonitorPddSku } from "@src/impl/door/pxx/pxx.sku";
 import { TaskApiImpl } from "@src/impl/door/task/task";
+import { InstallerImpl } from "@src/impl/installer/installer.impl";
 const register : { new(...args: any[]): ElectronApi }[] = [
 ]
 
@@ -19,6 +20,7 @@ export function registerApi(){
     register.push(MbFileApiImpl);
     register.push(MonitorPddSku);
     register.push(TaskApiImpl);
+    register.push(InstallerImpl);
     return register;
 }
 

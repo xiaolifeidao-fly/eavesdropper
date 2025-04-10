@@ -67,14 +67,14 @@ export let mainWindow: BrowserWindow | null = null;
 
 const targetWindows : any = {};
 
-export let aiWindow: BrowserWindow | null = null;
+export let updateWindow: BrowserWindow | null = null;
 
 export const setMainWindow = (window: BrowserWindow)=>{
     mainWindow = window;
 }
 
-export const setAiWindow = (window: BrowserWindow)=>{
-    aiWindow = window;
+export const setUpdateWindow = (window: BrowserWindow)=>{
+    updateWindow = window;
 }
 
 export function getTargetWinodw(windowId: string): TargetWindow{

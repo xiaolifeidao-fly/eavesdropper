@@ -48,7 +48,7 @@ abstract class ElectronApi {
   }
   
   getNamespace(): any {
-    return "";
+    return undefined;
   }
 
   getEvent(){
@@ -67,10 +67,14 @@ abstract class ElectronApi {
   }
 
   send(key : string, ...args: any): void{
+    const channel = this.buildKey(key);
+    this.sendMessage(channel, ...args)
+  }
+
+  buildKey(key : string){
     let namespace = this.getNamespace();
     let rendererApiName = namespace + "_" + this.getApiName();
-    const channel = `${rendererApiName}.${key}`;
-    this.sendMessage(channel, ...args)
+    return `${rendererApiName}.${key}`;
   }
 
   sendMessage(channel: string, ...args: any): void{
@@ -120,7 +124,7 @@ abstract class ElectronApi {
     }
     return {};
   }
-    
+
 }
 
 export {
