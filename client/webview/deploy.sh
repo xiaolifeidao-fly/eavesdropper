@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 远程服务器信息
-remote_server="$eavesdropper_client_webview_remote_server"
+remote_server="root@$eavesdropper_client_webview_remote_server"
 remote_password="$eavesdropper_client_webview_password"
 remote_path="/data/program/application/eavesdropper/client/webview"
 

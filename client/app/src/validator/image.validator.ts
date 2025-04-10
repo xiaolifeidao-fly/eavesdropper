@@ -519,7 +519,7 @@ async function getSlideContent(imageInfo : string) {
       const engine = new MbEngine(validateItem.resourceId, autoFlag);
       try{
           const page = await engine.init();
-          const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource',"validate_image.html");
+          const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource',"html","validate_image.html");
           const validateUrl = validateItem.validateUrl;
           if(page){
             log.info(`开始验证，自动模式: ${autoFlag}, 最大重试次数: ${retryCount}`);
