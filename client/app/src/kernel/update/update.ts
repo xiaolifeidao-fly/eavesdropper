@@ -2,6 +2,8 @@ import { autoUpdater } from 'electron-updater'
 import { UpdateInfo } from 'builder-util-runtime'
 import log from 'electron-log'
 import { BrowserWindow, dialog, ipcMain, app } from 'electron'
+import * as fs from 'fs'
+import * as path from 'path'
 
 let updateFlag = false // 防止重复检查
 let isUpdateAvailable = false // 标志是否发现新版本
@@ -93,8 +95,39 @@ export async function checkForUpdates() {
   }
 }
 
+// 检查并创建更新目录
+function ensureUpdateDirectory() {
+  const updateDir = path.join(app.getPath('userData'), 'updater');
+  if (!fs.existsSync(updateDir)) {
+    fs.mkdirSync(updateDir, { recursive: true });
+  }
+  return updateDir;
+}
 
 export function setupAutoUpdater(win: BrowserWindow) {
+  // 确保更新目录存在
+  ensureUpdateDirectory();
+  
+  // 设置更新配置
+  autoUpdater.autoInstallOnAppQuit = true;
+  autoUpdater.autoDownload = false; // 不自动下载，等待用户确认
+  autoUpdater.allowPrerelease = true;
+  
+  // 设置管理员权限
+  autoUpdater.requestHeaders = {
+    'User-Agent': 'Electron'
+  };
+  
+  // 设置更新目录权限
+  if (process.platform === 'win32') {
+    autoUpdater.setFeedURL({
+      provider: 'generic',
+      url: process.env.UPDATE_URL || 'http://101.43.28.195/updates/',
+      channel: 'latest',
+      useMultipleRangeRequest: false
+    });
+  }
+
   // 监听更新事件
   autoUpdater.on('checking-for-update', () => {
     console.info('正在检查更新...');
@@ -122,7 +155,8 @@ export function setupAutoUpdater(win: BrowserWindow) {
     const updateInfo = info as any;
     const forceUpdate = updateInfo.forceUpdate === true;
     const updateType = updateInfo.updateType || 'normal';
-    
+
+
     // 向前端发送更新信息
     win.webContents.send('update-info', {
       version: newVersion,
@@ -163,7 +197,7 @@ export function setupAutoUpdater(win: BrowserWindow) {
   });
 
   autoUpdater.on('update-not-available', () => {
-    console.info('当前已经是最新版本.');
+    log.info('当前已经是最新版本.');
   });
 
   autoUpdater.on('error', (error: any) => {
@@ -171,8 +205,8 @@ export function setupAutoUpdater(win: BrowserWindow) {
     
     // 在开发环境中，当出现错误时提供更多信息
     if (isDev) {
-      console.log('这是开发环境。更新错误可能是因为DMG/EXE文件格式不兼容。');
-      console.log('您可以通过"调试"菜单中的"模拟更新可用"来测试更新流程UI。');
+      log.info('这是开发环境。更新错误可能是因为DMG/EXE文件格式不兼容。');
+      log.info('您可以通过"调试"菜单中的"模拟更新可用"来测试更新流程UI。');
     }
     
     updateFlag = false; // 解除更新锁
@@ -181,12 +215,16 @@ export function setupAutoUpdater(win: BrowserWindow) {
 
   autoUpdater.on('download-progress', (progressObj: any) => {
     const percent = Math.round(progressObj.percent);
-    console.info(`下载进度: ${percent}%`);
+    log.info(`下载进度: ${percent}%`);
+    // 更新任务栏进度条
+    win.setProgressBar(percent / 100);
     win.webContents.send('update-log', `下载进度: ${percent}%`);
   });
 
   autoUpdater.on('update-downloaded', () => {
-    console.info('下载完成，准备安装...');
+    log.info('下载完成，准备安装...');
+    // 完成后移除任务栏进度条
+    win.setProgressBar(-1);
     // 提示用户安装更新
     showUpdateDialog(win);
   });
@@ -197,9 +235,9 @@ export function setupAutoUpdater(win: BrowserWindow) {
 function showUpdateDialog(win: BrowserWindow) {
   dialog.showMessageBox(win, {
     type: 'info',
-    title: '更新可用',
-    message: '发现新版本，需要立即更新！',
-    buttons: ['立即更新'],
+    title: '安装新版本',
+    message: '新版本现在完毕',
+    buttons: ['立即安装'],
   }).then(result => {
     if (result.response === 0) {
       if (isDev) {

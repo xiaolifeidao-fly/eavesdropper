@@ -1,6 +1,6 @@
 {
   "name": "eavesdropper",
-  "version": "1.2.0",
+  "version": "1.2.12",
   "description": "",
   "main": "dist/main.js",
   "scripts": {
@@ -38,16 +38,17 @@
     "directories": {
       "output": "package"
     },
-    "productName": "eavesdropper",
+    "productName": "鲲鹏上传-淘宝版",
     "npmRebuild": true,
     "mac": {
       "target": "dmg",
-      "icon": "build/icon.icns",
+      "icon": "static/logo/logo.jpg",
       "category": "com.eavesdropper.category.type"
     },
     "win": {
       "target": "nsis",
-      "icon": "build/icon.ico"
+      "icon": "static/logo/logo.jpg",
+      "requestedExecutionLevel": "requireAdministrator"
     },
     "publish": [
       {
@@ -56,13 +57,15 @@
       }
     ],
     "releaseInfo": {
-      "releaseNotes": "这是版本1.1.0的更新说明\n- 修复了若干bug\n- 提升了性能\n- 新增了功能X"
+      "releaseNotes": "这是版本1.2.0的更新说明\n- 修复了若干bug\n- 提升了性能\n- 新增了功能X"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "perMachine": true,
-      "deleteAppDataOnUninstall": true
+      "createDesktopShortcut": true,
+      "uninstallDisplayName": "${productName}",
+      "deleteAppDataOnUninstall": false
     }
   },
   "_moduleAliases": {

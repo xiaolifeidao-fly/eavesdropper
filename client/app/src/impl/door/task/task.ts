@@ -7,6 +7,7 @@ import { AddSkuTaskReq, PriceRangeConfig, SkuPublishConfig, SkuPublishStatitic, 
 import { SkuPublishResult } from '@model/sku/sku'
 import { AddSkuTaskItemReq, SkuTaskItem, SkuTaskItemStatus } from '@model/sku/sku-task-item'
 import { addSkuTask, updateSkuTask, getSkuTask } from '@api/sku/skuTask.api'
+import { addSkuTask, updateSkuTask, getSkuTask } from '@api/sku/skuTask.api'
 import { MbSkuApiImpl } from '../sku/sku'
 import { SkuStatus } from '@model/sku/sku'
 import { LabelValue } from '@model/base/base'
@@ -125,6 +126,8 @@ export class TaskApiImpl extends TaskApi {
           break
         }
 
+        // 记录当前任务执行的位置
+        await store.setItem(`task_${task.id}_progress`, progress)
         // 发布商品
         const item = items[progress]
         const skuUrl = item.url ?? ''

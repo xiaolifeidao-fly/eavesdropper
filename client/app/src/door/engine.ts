@@ -24,11 +24,11 @@ const contextMap = new Map<string, BrowserContext>();
 
 export abstract class DoorEngine<T = any> {
 
-    private chromePath: string | undefined;
+    protected chromePath: string | undefined;
 
-    browser: Browser | undefined;
+    protected browser: Browser | undefined;
 
-    context: BrowserContext | undefined;
+    protected context: BrowserContext | undefined;
 
     public resourceId : number;
 
@@ -112,6 +112,9 @@ export abstract class DoorEngine<T = any> {
             return undefined;
         }
         
+        // 添加网络请求拦截
+        // await this.setupNetworkInterception(this.context);
+        
         const page = await this.context.newPage();
         await page.setViewportSize({ width: this.width, height: this.height });
         if(url){
@@ -166,14 +169,7 @@ export abstract class DoorEngine<T = any> {
         
         // 获取用户数据目录
         const userDataDir = this.getUserDataDir();
-        log.info("Using persistent user data directory:", userDataDir);
-        
-        // 确保目录存在
-        if(!fs.existsSync(userDataDir)){
-            fs.mkdirSync(userDataDir, { recursive: true });
-        }
-        
-        // 获取平台信息
+        log.info("userDataDir is ", userDataDir);
         const platform = await getPlatform();
         
         // 随机化视口尺寸，更真实
@@ -1046,7 +1042,10 @@ export abstract class DoorEngine<T = any> {
     public getSessionDir(){
         const sessionFileName = Date.now().toString() + ".json";
         const name = this.constructor.name;
-        const sessionDirPath = path.join(path.dirname(app.getAppPath()),'resource','session',this.getNamespace(), this.resourceId.toString());
+        const userDataPath = app.getPath('userData');
+
+        const sessionDirPath = path.join(userDataPath,'resource','session',this.getNamespace(), this.resourceId.toString());
+        log.info("sessionDirPath is ", sessionDirPath);
         if(!fs.existsSync(sessionDirPath)){
             fs.mkdirSync(sessionDirPath, { recursive: true });
         }
@@ -1055,7 +1054,9 @@ export abstract class DoorEngine<T = any> {
     }
 
     getUserDataDir(){
-        const userDataDir = path.join(path.dirname(app.getAppPath()),'resource','userDataDir',this.getNamespace(), this.resourceId.toString());
+        const userDataPath = app.getPath('userData');
+        const userDataDir = path.join(userDataPath,'resource','userDataDir',this.getNamespace(), this.resourceId.toString());
+        log.info("userDataDir is ", userDataDir);
         if(!fs.existsSync(userDataDir)){
             fs.mkdirSync(userDataDir, { recursive: true });
         }
@@ -1733,22 +1734,6 @@ export abstract class DoorEngine<T = any> {
                 // 忽略错误继续执行
             }
         });
-    }
-
-    // 重写关闭页面方法，确保不会意外关闭整个上下文
-    public async closePage() {
-        if (this.page) {
-            try {
-                // 在关闭页面前保存状态
-                await this.saveContextState();
-                
-                await this.page.close();
-                this.page = undefined;
-                log.info("页面已关闭，但上下文保持活跃状态");
-            } catch (error) {
-                log.error("关闭页面时出错:", error);
-            }
-        }
     }
 
 }
