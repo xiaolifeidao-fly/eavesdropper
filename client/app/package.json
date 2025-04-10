@@ -1,6 +1,6 @@
 {
   "name": "eavesdropper",
-  "version": "1.2.12",
+  "version": "1.2.14",
   "description": "",
   "main": "dist/main.js",
   "scripts": {
@@ -57,7 +57,7 @@
       }
     ],
     "releaseInfo": {
-      "releaseNotes": "这是版本1.2.0的更新说明\n- 修复了若干bug\n- 提升了性能\n- 新增了功能X"
+      "releaseNotes": "修复卸载后-账号重复登录的问题"
     },
     "nsis": {
       "oneClick": false,
