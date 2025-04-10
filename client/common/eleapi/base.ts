@@ -89,7 +89,7 @@ abstract class ElectronApi {
               apiName = this.getNamespace() + "_" + apiName;
           }
           //@ts-ignore
-          console.log(window[this.getApiName()])
+          // console.log(window[this.getApiName()])
           //@ts-ignore
           return await window[this.getApiName()][functionName](...args);
       }

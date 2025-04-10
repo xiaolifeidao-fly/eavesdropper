@@ -11,9 +11,13 @@ import type { SkuUrl } from './SkuPushProgress';
 import { getResourceSourceList as getResourceSourceListApi } from '@api/resource/resource.api';
 import SukPushConfig from './SkuPushConfig';
 import { StoreApi } from '@eleapi/store/store';
-import { SkuPublishConfig, PriceRangeConfig } from "@model/sku/skuTask";
+import { SkuPublishConfig, PriceRangeConfig, SkuTaskOperationType } from "@model/sku/skuTask";
 
 interface PushSkuStepsFormProps {
+  taskId?: number;
+  setTaskId: (taskId: number) => void;
+  operationType: string;
+  setOperationType: (operationType: string) => void;
   visible: boolean;
   setVisible: (visible: boolean) => void;
   onClose: () => void;
@@ -31,15 +35,23 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
   const [urls, setUrls] = useState<SkuUrl[]>([]);
   const [onPublishFinish, setOnPublishFinish] = useState(false);
-  const [taskId, setTaskId] = useState<number>(0);
+  // const [taskId, setTaskId] = useState<number>(0);
+  // const [operationType, setOperationType] = useState<string>(SkuTaskOperationType.PUSH);
 
   const store = new StoreApi();
 
   useEffect(() => {
-    initSource();
-    initPriceRangeConfig();
+    console.log('props.taskId: ', props.taskId, 'props.operationType: ', props.operationType)
+    // 如果任务id存在，则设置任务id, 可能通过重新发布任务和继续执行任务进来
+    if (props.taskId && props.operationType) {
+      // setOperationType(props.operationType);
+      setCurrent(2); // 设置当前步骤为第二步
+    } else {
+      initSource();
+      initPriceRangeConfig();
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [props.operationType])
 
   const initSource = async () => {
     const resourceSourceList = await getResourceSourceListApi();
@@ -69,7 +81,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
     //   store.removeItem(`task_${taskId}`);
     // }
     props.setVisible(false);
-    setTaskId(0);
+    props.setTaskId(0);
     setCurrent(0);
     setUploadUrlList([]);
     setPushSkuFlag(false);
@@ -223,13 +235,15 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           }}
         >
           <SkuPushProgress
+            operationType={props.operationType}
             publishStatus={pushSkuFlag}
             publishResourceId={sourceAccount}
             publishConfig={pushConfig}
             skuSource={skuSource}
             urls={urls}
             onPublishFinish={setOnPublishFinish}
-            setTaskId={setTaskId}
+            setTaskId={props.setTaskId}
+            taskId={props.taskId}
           />
         </StepsForm.StepForm>
       </StepsForm>

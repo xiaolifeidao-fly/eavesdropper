@@ -141,6 +141,7 @@ export class UpdateDraftStep extends AbsPublishStep {
                 continue;
             }
             
+            
             const props = component.props;
             if(!("required" in props)){
                 continue;
