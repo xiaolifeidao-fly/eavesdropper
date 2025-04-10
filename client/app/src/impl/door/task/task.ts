@@ -7,7 +7,6 @@ import { AddSkuTaskReq, PriceRangeConfig, SkuPublishConfig, SkuPublishStatitic, 
 import { SkuPublishResult } from '@model/sku/sku'
 import { AddSkuTaskItemReq, SkuTaskItem, SkuTaskItemStatus } from '@model/sku/sku-task-item'
 import { addSkuTask, updateSkuTask, getSkuTask } from '@api/sku/skuTask.api'
-import { addSkuTask, updateSkuTask, getSkuTask } from '@api/sku/skuTask.api'
 import { MbSkuApiImpl } from '../sku/sku'
 import { SkuStatus } from '@model/sku/sku'
 import { LabelValue } from '@model/base/base'
