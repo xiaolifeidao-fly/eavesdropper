@@ -99,7 +99,7 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
         >
-          <span className={"logo"} style={getThemeBg(curTheme)}>淘宝客</span>
+          <span className={"logo"} style={getThemeBg(curTheme)}>鲲鹏上传-淘宝版</span>
           <Menu
             theme={curTheme ? "dark" : "light"}
             mode="inline"

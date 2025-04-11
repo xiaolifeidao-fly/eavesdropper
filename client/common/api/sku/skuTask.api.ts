@@ -30,8 +30,8 @@ export const getSkuTask = async (taskId: number) => {
 }
 
 // 获取任务步骤
-export const getSkuTaskSteps = async (stepKey: string, resourceId: number, groupCode: string) => {
-  return await getDataList(SkuTaskStep, `/sku/task/steps/${resourceId}/${groupCode}/${stepKey}`)
+export const getSkuTaskSteps = async (taskId: number, stepKey: string, resourceId: number, groupCode: string) => {
+  return await getDataList(SkuTaskStep, `/sku/task/steps/${resourceId}/${groupCode}/${taskId}/${stepKey}`)
 }
 
 // 保存任务步骤
@@ -39,8 +39,8 @@ export const saveSkuTaskStep = async (req: SkuTaskStep) => {
   return instance.post('/sku/task/steps/save', req)
 }
 
-export const initSkuStep = async (stepKey: string, resourceId: number, groupCode: string) => {
-  return instance.post(`/sku/task/steps/${resourceId}/${groupCode}/${stepKey}/init`, {})
+export const initSkuStep = async (taskId: number, stepKey: string, resourceId: number, groupCode: string) => {
+  return instance.post(`/sku/task/steps/${resourceId}/${groupCode}/${taskId}/${stepKey}/init`, {})
 }
 
 // 分页获取商品任务

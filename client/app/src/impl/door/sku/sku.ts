@@ -64,8 +64,8 @@ export class MbSkuApiImpl extends MbSkuApi {
         return skuResult;
     }
 
-    async uploadSkuImages(source : string, publishResourceId : number, skuItem : DoorSkuDTO, validateTag : boolean){
-        const { newMainImages, newDetailImages,skuImages } = await this.downloadSkuImages(source, skuItem);
+    async uploadSkuImages(imagePath : string, source : string, publishResourceId : number, skuItem : DoorSkuDTO, validateTag : boolean){
+        const { newMainImages, newDetailImages,skuImages } = await this.downloadSkuImages(imagePath, source, skuItem);
         const skuFileNames: { [key: string]: FileInfo } = {};
         for (let index = 0; index < newMainImages.length; index++){
             const mainImage = newMainImages[index];
@@ -100,12 +100,11 @@ export class MbSkuApiImpl extends MbSkuApi {
         return await uploadByFileApi(publishResourceId, skuItemId, skuFileNames, validateTag);
     }
 
-    async getImage(source : string, skuItem : DoorSkuDTO, mainImages : string[], detailImages : string[]) {
+    async getImage(imagePath : string, source : string, skuItem : DoorSkuDTO, mainImages : string[], detailImages : string[]) {
         try {
             const newMainImages = [];
             const newDetailImages = [];
             const itemId = skuItem.baseInfo.itemId;
-            const imagePath = path.join(path.dirname(app.getAppPath()),'images',itemId.toString());
             log.info("imagePath is ", imagePath);
             if(!fs.existsSync(imagePath)){
                 fs.mkdirSync(imagePath, { recursive: true });
@@ -212,7 +211,7 @@ export class MbSkuApiImpl extends MbSkuApi {
     }
 
 
-    async downloadSkuImages(source : string, skuItem : DoorSkuDTO){
+    async downloadSkuImages(imagePath : string, source : string, skuItem : DoorSkuDTO){
         const mainImages = skuItem.baseInfo.mainImages;
         const infos = skuItem.doorSkuImageInfo.doorSkuImageInfos;
         const detailImages = [];
@@ -223,20 +222,10 @@ export class MbSkuApiImpl extends MbSkuApi {
                 detailImages.push(content);
             }
         }
-        return this.getImage(source, skuItem, mainImages, detailImages);
+        return this.getImage(imagePath, source, skuItem, mainImages, detailImages);
     }
 
 
-    async uploadImages(source: string, publishResourceId : number, skuItem : DoorSkuDTO, validateTag : boolean = false){
-        const uplodaData = await this.uploadSkuImages(source, publishResourceId, skuItem, validateTag); // skuId TODO
-        if (!uplodaData){
-            return [];
-        }
-        if(uplodaData.validateData && uplodaData.validateData.validateUrl && uplodaData.header){
-            return [];
-        }
-        return uplodaData.skuFiles;
-    }
 
     @InvokeType(Protocols.INVOKE)
     async publishSku(publishResourceId : number, skuSource: string, skuUrl : string, taskId : number, publishConfig?: SkuPublishConfig) : Promise<SkuPublishResult>{
@@ -277,7 +266,7 @@ export class MbSkuApiImpl extends MbSkuApi {
             }else{
                 publishHandler = new PddSkuPublishHandler(skuItemId, publishResourceId);
             }
-            const result = await publishHandler.doStep(withParams);
+            const result = await publishHandler.doStep(taskId, withParams);
             if(!result || !result.result){
                 skuPublishResult.status = SkuStatus.ERROR;
                 skuPublishResult.remark = result?.message || "发布商品失败";

@@ -51,17 +51,17 @@ type SkuTaskStepRepository struct {
 	database.Repository[*models.SkuTaskStep]
 }
 
-func (s *SkuTaskStepRepository) FindByKeyAndResourceIdAndCode(key string, resourceId uint64, code string) (*models.SkuTaskStep, error) {
-	sql := "SELECT * FROM sku_task_step WHERE step_key = ? AND resource_id = ? AND code = ?"
-	return s.GetOne(sql, key, resourceId, code)
+func (s *SkuTaskStepRepository) FindByKeyAndResourceIdAndCode(taskId uint64, key string, resourceId uint64, code string) (*models.SkuTaskStep, error) {
+	sql := "SELECT * FROM sku_task_step WHERE task_id = ? AND step_key = ? AND resource_id = ? AND code = ?"
+	return s.GetOne(sql, taskId, key, resourceId, code)
 }
 
-func (s *SkuTaskStepRepository) FindByKeyAndResourceIdAndGroupCode(key string, resourceId uint64, groupCode string) ([]*models.SkuTaskStep, error) {
-	sql := "SELECT * FROM sku_task_step WHERE step_key = ? AND resource_id = ? AND group_code = ?"
-	return s.GetList(sql, key, resourceId, groupCode)
+func (s *SkuTaskStepRepository) FindByKeyAndResourceIdAndGroupCode(taskId uint64, key string, resourceId uint64, groupCode string) ([]*models.SkuTaskStep, error) {
+	sql := "SELECT * FROM sku_task_step WHERE task_id = ? AND step_key = ? AND resource_id = ? AND group_code = ?"
+	return s.GetList(sql, taskId, key, resourceId, groupCode)
 }
 
-func (s *SkuTaskStepRepository) DeleteByKeyAndResourceIdAndGroupCode(key string, resourceId uint64, groupCode string) error {
-	sql := "DELETE FROM sku_task_step WHERE step_key = ? AND resource_id = ? AND group_code = ?"
-	return s.Execute(sql, key, resourceId, groupCode)
+func (s *SkuTaskStepRepository) DeleteByKeyAndResourceIdAndGroupCode(taskId uint64, key string, resourceId uint64, groupCode string) error {
+	sql := "DELETE FROM sku_task_step WHERE task_id = ? AND step_key = ? AND resource_id = ? AND group_code = ?"
+	return s.Execute(sql, taskId, key, resourceId, groupCode)
 }

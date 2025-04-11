@@ -5,6 +5,7 @@ import { StepResult, StepUnit } from "./step.unit";
 import { StepContext } from "./step.context";
 import { validate } from "@src/validator/image.validator";
 import log from "electron-log";
+import fs from "fs";
 export abstract class StepHandler {
 
     private stepConfig: StepConfig;
@@ -49,14 +50,14 @@ export abstract class StepHandler {
     
     abstract getGroupCode(): string;
 
-    async buildSteps(): Promise<StepUnit[]>{
-        await this.init();
+    async buildSteps(taskId : number): Promise<StepUnit[]>{
+        await this.init(taskId);
         const stepCodes = this.stepConfig.getStepCodes();
         const steps = []
         for (let i = 0; i < stepCodes.length; i++) {
             const stepCode = stepCodes[i];
             const step = new SkuTaskStep(undefined, this.key, this.resourceId, stepCode, undefined, STEP_INIT, this.getGroupCode())
-            const stepUnit = this.stepConfig.buildStepUnit(step, this.context, i);
+            const stepUnit = this.stepConfig.buildStepUnit(taskId, step, this.context, i);
             await stepUnit.init(true);
             steps.push(stepUnit);
         }
@@ -67,14 +68,14 @@ export abstract class StepHandler {
         return `step_params_${key}`;
     }
 
-    async init(){
-        await initSkuStep(this.key, this.resourceId, this.getGroupCode())
+    async init(taskId : number){
+        await initSkuStep(taskId, this.key, this.resourceId, this.getGroupCode())
     }
 
     abstract buildStepConfig(): StepConfig;
 
-    public async doStep(withParams : { [key: string]: any }) : Promise<StepResult | undefined> {
-        const stepUnits = await this.getStepUnits();
+    public async doStep(taskId : number, withParams : { [key: string]: any }) : Promise<StepResult | undefined> {
+        const stepUnits = await this.getStepUnits(taskId);
         const result = await this.do(stepUnits, withParams);
         if(!result){
             return undefined;
@@ -134,31 +135,33 @@ export abstract class StepHandler {
     }
     
     release(){
+        const imagePath = this.getParams("imagePath");
+        if(imagePath && fs.existsSync(imagePath)){
+            fs.rmdirSync(imagePath, { recursive: true });
+        }
         this.context.release();
     }
 
-    async saveStep(step: SkuTaskStep) {
-        await saveSkuTaskStep(step)
-    }
-
-    async getStepUnits() : Promise<StepUnit[]> {
-        const steps = await getSkuTaskSteps(this.key, this.resourceId, this.getGroupCode());
+    async getStepUnits(taskId : number) : Promise<StepUnit[]> {
+        log.info("getStepUnits taskId is ", taskId);
+        const steps = await getSkuTaskSteps(taskId, this.key, this.resourceId, this.getGroupCode());
+        log.info("getStepUnits steps is ", steps);
         if (!steps || steps.length === 0) {
-            return await this.buildSteps();
+            return await this.buildSteps(taskId);
         }
         const stepUnits = []
         for (let i = 0; i < steps.length; i++) {
             const step = steps[i];
-            const stepUnit = this.stepConfig.buildStepUnit(step, this.context, i);
+            const stepUnit = this.stepConfig.buildStepUnit(taskId, step, this.context, i);
             stepUnits.push(stepUnit)
         }
-        return this.rebuildSteps(stepUnits)
+        return this.rebuildSteps(taskId, stepUnits)
     }
 
-    async rebuildSteps(stepUnits : StepUnit[]) : Promise<StepUnit[]>{
+    async rebuildSteps(taskId : number, stepUnits : StepUnit[]) : Promise<StepUnit[]>{
         const stepCodes = this.stepConfig.getStepCodes();
         if(stepCodes.length != stepUnits.length){
-            return await this.buildSteps();
+            return await this.buildSteps(taskId);
         }
         const dbStepCodeMap : { [key: string]: string } = {};
         for(const step of stepUnits){
@@ -167,7 +170,7 @@ export abstract class StepHandler {
         for (let i = 0; i < stepCodes.length; i++) {
             const stepCode = stepCodes[i];
             if(!dbStepCodeMap[stepCode]){
-                return await this.buildSteps();
+                return await this.buildSteps(taskId);
             }
         }
         return stepUnits;

@@ -17,8 +17,8 @@ export async function generateMetadata({
 
   return {
     // metadataBase: new URL('http://localhost:3000'),
-    title: '淘宝客',
-    description: '淘宝客',
+    title: '鲲鹏上传-淘宝版',
+    description: '鲲鹏上传-淘宝版',
   };
 }
 
