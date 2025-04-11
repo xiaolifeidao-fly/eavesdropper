@@ -22,6 +22,23 @@ const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
 
+
+async function getRealChromePath(){
+    const platform = process.platform;
+    // 判断是否是打包环境
+    if(platform != "darwin"){
+        const isPackaged = app.isPackaged;
+        if (isPackaged) {
+            // 打包后的路径 (在 resources/app.asar 或 resources/app 目录下)
+            const chromeBinPath = path.join(path.dirname(app.getAppPath()),'Chrome-bin','chrome.exe');
+            if(fs.existsSync(chromeBinPath)){
+                return chromeBinPath;
+            }
+        }
+    }
+    return undefined;
+}
+
 export abstract class DoorEngine<T = any> {
 
     protected chromePath: string | undefined;
@@ -621,23 +638,9 @@ export abstract class DoorEngine<T = any> {
     }
 
     async getRealChromePath(){
-        // if(this.chromePath && this.chromePath != ""){
-        //     return this.chromePath;
-        // }
-        // return get("browserPath");
-        const platform = process.platform;
-        // 判断是否是打包环境
-        if(platform != "darwin"){
-            const isPackaged = app.isPackaged;
-            if (isPackaged) {
-                // 打包后的路径 (在 resources/app.asar 或 resources/app 目录下)
-                const chromeBinPath = path.join(path.dirname(app.getAppPath()),'Chrome-bin','chrome.exe');
-                if(fs.existsSync(chromeBinPath)){
-                    return chromeBinPath;
-                }
-                // 如果不在 asar 中，则使用：
-                // return path.join(process.resourcesPath, 'app', 'Chrome-bin');
-            }
+        const storeBrowserPath = await getRealChromePath();
+        if(storeBrowserPath){
+            return storeBrowserPath;
         }
         return this.chromePath;
     }
@@ -1186,8 +1189,11 @@ export async function initPlatform(){
         if(platform){
             return platform;
         }
+        let storeBrowserPath = await getRealChromePath();
+
         browser = await chromium.launch({
             headless: false,
+            executablePath: storeBrowserPath,
             args: [
             '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
             '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
