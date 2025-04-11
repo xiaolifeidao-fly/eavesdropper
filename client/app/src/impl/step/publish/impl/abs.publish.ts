@@ -49,19 +49,34 @@ function handlerPeriod(dataSource: { [key: string]: any }[], catValue: string){
     return undefined;
 }
 
+async function getFrame(page: Page) {
+    const frame = await page.mainFrame();
+    for (const child of frame.childFrames()) {
+        const url = await child.url();
+        if(url.includes("xstore.insights.1688.com/index.html?at_iframe")){
+            log.info("get from confirmProtocolFrame ");
+            return child;
+        }
+    }
+    log.info("get from mainFrame ");
+    return page.mainFrame();
+}
 
 
 export async function confirmProtocol(page: Page) {
     try {
         const elementSelector = ".next-dialog-btn";
-        await page.waitForTimeout(1000);
-        const protocolButtonElement = await elementIsExist(page, elementSelector);
-        if(!protocolButtonElement){
-            log.info("protocolButton not found");
+        await page.waitForTimeout(3000);
+        const frame = await getFrame(page);
+        const resetBtn = frame.locator(elementSelector);
+        if (!await resetBtn.isVisible({ timeout: 3000 })) {
+            log.info("confirmProtocol not found");
             return;
         }
+        log.info("protocolButton found ");
         const protocolButton = await page.locator(elementSelector);
         await protocolButton.first().click();
+        log.info("protocolButton found click");
     } catch (e) {
         log.error("confirmProtocol error", e);
     }

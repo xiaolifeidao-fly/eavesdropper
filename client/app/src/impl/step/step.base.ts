@@ -145,7 +145,6 @@ export abstract class StepHandler {
     async getStepUnits(taskId : number) : Promise<StepUnit[]> {
         log.info("getStepUnits taskId is ", taskId);
         const steps = await getSkuTaskSteps(taskId, this.key, this.resourceId, this.getGroupCode());
-        log.info("getStepUnits steps is ", steps);
         if (!steps || steps.length === 0) {
             return await this.buildSteps(taskId);
         }

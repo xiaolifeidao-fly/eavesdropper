@@ -5,6 +5,7 @@ import log from "electron-log";
 import { saveDoorFileRecord } from "@api/door/file.api";
 import { DoorFileRecord } from "@model/door/door";
 import { getStringHash } from "@utils/crypto.util";
+import path from "path";
 export class FileData {
     fileId: string;
     folderId: string;
@@ -24,17 +25,12 @@ export class FileData {
 }
 
 
-export function getFileKey(filePath: string){
-    const lastIndex = filePath.lastIndexOf("/");
-    let fileKey = filePath;
-    if(lastIndex != -1){
-        fileKey = fileKey.substring(lastIndex + 1);
+export function getFileKey(fileName: string){
+    let indexOf = fileName.indexOf(".");
+    if(indexOf >= 0){
+        fileName = fileName.substring(0, indexOf);
     }
-    const suffixIndex = fileKey.indexOf(".");
-    if(suffixIndex != -1){
-        fileKey = fileKey.substring(0, suffixIndex);
-    }
-    return getStringHash(fileKey);
+    return getStringHash(fileName);
 }
 
 export class FileInfo { 
