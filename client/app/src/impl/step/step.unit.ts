@@ -5,10 +5,10 @@ import log from "electron-log";
 import { StepContext } from "./step.context";
 
 export class StepResponse {
-    
     private key : string;
     private value : any;
     private store : boolean;
+
 
     constructor(key : string, value : any, store : boolean = true ){
         this.key = key;
@@ -58,7 +58,7 @@ export class StepResult {
 }
 
 export abstract class StepUnit {
-
+    private taskId : number;
     public step: SkuTaskStep;
     private withParams : { [key: string]: any } | undefined;
     private header : { [key: string]: any } | undefined;
@@ -67,7 +67,8 @@ export abstract class StepUnit {
     private skip : boolean;
     private stepIndex : number;
     
-    constructor(step : SkuTaskStep, context : StepContext, stepIndex : number){
+    constructor(taskId : number, step : SkuTaskStep, context : StepContext, stepIndex : number){
+        this.taskId = taskId;
         this.step = step;
         this.context = context;
         this.skip = false;
@@ -97,6 +98,9 @@ export abstract class StepUnit {
 
     public async init(saveFlag : boolean = true){
         if(saveFlag){
+            if(!this.step.taskId){
+                this.step.taskId = this.taskId;
+            }
             await saveSkuTaskStep(this.step);
         }
     }
@@ -231,6 +235,9 @@ export abstract class StepUnit {
             log.error(`step ${this.step.code} failed`, error)
             return new StepResult(false, this.step.message);
         }finally{
+            if(!this.step.taskId){
+                this.step.taskId = this.taskId;
+            }
             await saveSkuTaskStep(this.step);
         }
     }   

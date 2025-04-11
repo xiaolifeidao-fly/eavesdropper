@@ -47,8 +47,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "static/logo/logo.jpg",
-      "requestedExecutionLevel": "requireAdministrator"
+      "icon": "static/logo/logo.jpg"
     },
     "publish": [
       {

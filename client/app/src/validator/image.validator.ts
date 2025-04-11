@@ -247,7 +247,8 @@ async function validateByPuzzleCaptcha(page : Page, frame : Frame, retryCount : 
   const element = frame.locator("#puzzle-captcha-question-img").first(); // 选择要截图的元素
   if (element) {
       const qrCodeFileName = uuidv4() + ".jpeg";
-      const qrCodeFilePath = path.join(path.dirname(app.getAppPath()),'resource','temp', qrCodeFileName);
+      const userDataPath = app.getPath('userData');
+      const qrCodeFilePath = path.join(userDataPath,'resource','temp', qrCodeFileName);
       const buffer = await element.screenshot({ path: qrCodeFilePath}); // 保存截图
       const imageSharp = sharp(buffer);
       const boundingBox = await element.boundingBox();

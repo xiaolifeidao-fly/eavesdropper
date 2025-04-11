@@ -27,6 +27,7 @@ type SkuTaskItemStatusCount struct {
 type SkuTaskStep struct {
 	database.BaseEntity
 	StepKey      string `json:"step_key"`
+	TaskId       uint64 `json:"task_id"`
 	Status       string `json:"status"`
 	Code         string `json:"code"`
 	GroupCode    string `json:"group_code"`

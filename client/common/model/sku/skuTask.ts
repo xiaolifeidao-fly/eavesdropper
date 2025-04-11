@@ -115,7 +115,8 @@ export class SkuTaskStep {
     public status: string|undefined,
     public groupCode: string,
     public validateUrl: string | undefined = undefined,
-    public needNextSkip: boolean = false
+    public needNextSkip: boolean = false,
+    public taskId: number = 0
   ) {
     this.id = id
     this.stepKey = stepKey
@@ -126,6 +127,7 @@ export class SkuTaskStep {
     this.groupCode = groupCode
     this.validateUrl = validateUrl
     this.needNextSkip = needNextSkip
+    this.taskId = taskId
   }
 }
 

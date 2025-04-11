@@ -65,6 +65,7 @@ export class TaskApiImpl extends TaskApi {
 
   @InvokeType(Protocols.INVOKE)
   async startTask(publishResourceId: number, publishConfig: SkuPublishConfig, skuSource: string, skuUrls: string[]): Promise<SkuTask> {
+    log.info('startTask', publishResourceId, publishConfig, skuSource, skuUrls)
     const count = skuUrls.length
     let taskItems: AddSkuTaskItemReq[] = []
     for (let i = 0; i < skuUrls.length; i++) {

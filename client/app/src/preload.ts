@@ -47,7 +47,10 @@ async function registerRenderApi(cls: { new(...args: any[]): ElectronApi }){
   const registerInstance = new cls();
   const apiName = registerInstance.getApiName();
   const namespace = registerInstance.getNamespace();
-  let rendererApiName = namespace + "_" + apiName;
+  let rendererApiName = apiName;
+  if(namespace){
+    rendererApiName = namespace + "_" + apiName;
+  }
   const exposedConfig = exposeApi(rendererApiName, cls)
   contextBridge.exposeInMainWorld(apiName, (exposedConfig as ExposedApi));
 }
