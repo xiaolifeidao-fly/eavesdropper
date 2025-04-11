@@ -209,7 +209,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.publishStatus, props.operationType]);
+  }, [props.taskId, props.operationType]);
 
   return (
     <>
