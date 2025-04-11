@@ -1,10 +1,10 @@
 {
   "name": "eavesdropper",
-  "version": "1.2.14",
+  "version": "1.2.15",
   "description": "",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "cp -ri static/html ../resource/html && webpack --config webpack.config.js --mode development && electron .",
+    "dev": "cp -rf static/html ../resource/ && webpack --config webpack.config.js --mode development && electron .",
     "build": "webpack --config webpack.config.js --mode production",
     "start": "electron .",
     "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
@@ -57,7 +57,7 @@
       }
     ],
     "releaseInfo": {
-      "releaseNotes": "修复卸载后-账号重复登录的问题"
+      "releaseNotes": "1.发布异常错误信息展示 \n 2.继续执行重新发布,弹出进度框"
     },
     "nsis": {
       "oneClick": false,
