@@ -82,6 +82,7 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
             };
         }
         if(!headerless){
+            log.info("upload image setHeaderData is ", result.getHeaderData());
             mbEngine.setHeader(result.getHeaderData());
         }
         return result.getHeaderData();
@@ -207,10 +208,6 @@ async function uploadFileCallBack(doorFileRecord: DoorFileRecord, sortId : numbe
 export async function saveDoorFileRecordByResult(source : string, fileType : string, resourceId : number, data : FileData){
     const fileId = data.fileId;
     let fileName = data.fileName;
-    let indexOf = fileName.indexOf(".");
-    if(indexOf >= 0){
-        fileName = fileName.substring(0, indexOf);
-    }
     const url = data.url;
     const fileKey = getFileKey(fileName);
     const pix = data.pix;

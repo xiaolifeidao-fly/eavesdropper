@@ -581,7 +581,7 @@ function checkValidate(){
             log.info(`验证模式: ${autoFlag ? '自动' : '手动'}`);
             
             // 先尝试自动验证
-            let result = await validateImage(validateItem, autoFlag, 3);
+            let result = await validateImage(validateItem, autoFlag, 2);
             
             // 如果自动验证失败且原本设置为自动，降级为手动
             if(!isValidateSuccess(result) && autoFlag){

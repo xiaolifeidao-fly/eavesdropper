@@ -99,13 +99,15 @@ return async function doHandler(page, params, preResult){
 
 export async function getUnUploadFile(source : string, resourceId : number, paths: string[]){
     const unUploadFiles = [];
-    for(let path of paths){
-        const fileKey = getFileKey(path);
+    for(let filePath of paths){
+        let fileName = path.basename(filePath);
+        const fileKey = getFileKey(fileName);
         const doorFileRecord = await getDoorFileRecordByKey(source, resourceId, fileKey);
         if(doorFileRecord){
             continue;
         }
-        unUploadFiles.push(path);
+        log.info("getUnUploadFile doorFileRecord is null by ", fileKey);
+        unUploadFiles.push(filePath);
     }
     return unUploadFiles;
 }
