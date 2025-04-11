@@ -72,12 +72,14 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
       dataIndex: 'name',
       key: 'name',
       align: 'center',
+      width: 200,
     },
     {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
       align: 'center',
+      width: 50,
       render: (_, record) => {
         switch (record.status) {
           case SkuPushStatus.SUCCESS:
@@ -99,6 +101,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
       dataIndex: 'operation',
       key: 'operation',
       align: 'center',
+      width: 100,
       render: (_, record) => {
         return <>
           <Button type="link" onClick={() => { window.open(record.url, '_blank'); }}>
