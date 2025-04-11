@@ -144,41 +144,33 @@ function checkUpdate(mainWindow: BrowserWindow){
 export const start = () => {
   
     app.on('ready', async ()=> {
-      registerRpc();
-      registerFileProtocol();
+      try {
+        registerRpc();
+        registerFileProtocol();
 
-      await createDefaultWindow();
-      // if(mainWindow){
-      //   // 设置自动更新
-      //   setupAutoUpdater(mainWindow);
-        
-      //   // 立即检查一次更新
-      //   console.log("主窗口创建完成: 立即检查更新...");
-      //   setTimeout(() => {
-      //     checkForUpdates();
-      //   }, 2000); // 延迟2秒，确保窗口已完全加载
-        
-      //   // 每隔一段时间自动检查更新
-      //   setInterval(async () => {
-      //     // 调用上方的函数
-      //     await checkForUpdates()
-      //   }, 60 * 1000) // 60秒检查一次更新
-      // }
-    });
-    // validateTest(1, {}, "https://www.ishumei.com/account/register.html?crmSource=%E6%99%BA%E8%83%BD%E9%AA%8C%E8%AF%81%E7%A0%81-banner", {
-    //   dialogSize : {
-    //       "width" : 800,
-    //       "height" : 800
-    //   }
-    // });
-    app.on('window-all-closed', () => {
-      if (process.platform !== 'darwin') {
-        app.quit();
+        await createDefaultWindow();
+      } catch (e) {
+        log.error("ready createDefaultWindow error", e);
       }
     });
+
+    app.on('window-all-closed', () => {
+      try {
+        if (process.platform !== 'darwin') {
+          app.quit();
+        }
+      } catch (e) {
+        log.error("window-all-closed error", e);
+      }
+    });
+    
     app.on('activate', async () => {
-      if (mainWindow === null) {
-        await createDefaultWindow();
+      try {
+        if (mainWindow === null) {
+          await createDefaultWindow();
+        }
+      } catch (e) {
+        log.error("activate createDefaultWindow error", e);
       }
     });
 }
