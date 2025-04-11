@@ -163,10 +163,16 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
   };
 
   useEffect(() => {
-    if (props.operationType === SkuTaskOperationType.PUSH && (!props.publishStatus || props.urls.length === 0)) {
+    if (!props.publishStatus) {
       return;
     }
 
+    if (props.operationType === SkuTaskOperationType.PUSH && (!props.publishStatus || props.urls.length === 0)) {
+      console.log('props.operationType: ', props.operationType, 'props.publishStatus: ', props.publishStatus, 'props.urls.length: ', props.urls.length)
+      return;
+    }
+
+    console.log('loading SkuPushProgress...')
     const callback = (sku : SkuPublishResult | undefined, statistic : SkuPublishStatitic) => {
       onPublishSkuMessage({sku, statistic})
     } 
@@ -175,9 +181,6 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
 
     // 监听商品发布消息
     taskApi.onPublishSkuMessage(callback).then(() => {
-
-      console.log('props.operationType: ', props.operationType)
-
       // 监听任务完成之后批量发布商品
       if (props.operationType === SkuTaskOperationType.PUSH) {
         const urls = props.urls.map(item => item.url);
@@ -209,7 +212,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.taskId, props.operationType]);
+  }, [props.publishStatus]);
 
   return (
     <>

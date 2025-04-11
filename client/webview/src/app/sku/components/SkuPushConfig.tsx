@@ -12,7 +12,8 @@ import { PriceRangeConfig, SkuPublishConfig } from "@model/sku/skuTask";
 export interface SukPushConfigProp {
   setSourceAccount: (account: number) => void, // 资源账号
   priceRangeConfigFormRef: MutableRefObject<ProFormInstance | undefined>,
-  pushConfig: SkuPublishConfig
+  pushConfig: SkuPublishConfig,
+  setPushConfig: (pushConfig: SkuPublishConfig) => void
 }
 
 const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
@@ -20,9 +21,30 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
   const [account, setAccount] = useState<number>();
 
   useEffect(() => {
-    console.log('props.pushConfig', props.pushConfig);
+    console.log('loading SkuPushConfig...')
+    initPriceRangeConfig();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const initPriceRangeConfig = async () => {
+    let priceRangeConfig = await store.getItem(`sku_publish_config`);
+    if (!priceRangeConfig) {
+      priceRangeConfig = new SkuPublishConfig();
+      priceRangeConfig.priceRate = [new PriceRangeConfig(0.01, 100, 1.1, 0, 'yuan')];
+      await store.setItem(`sku_publish_config`, priceRangeConfig);
+    }
+
+    props.setPushConfig(priceRangeConfig);
+    props.priceRangeConfigFormRef.current?.setFieldsValue({
+      priceRangeList: [{
+        minPrice: priceRangeConfig.priceRate?.[0]?.minPrice,
+        maxPrice: priceRangeConfig.priceRate?.[0]?.maxPrice,
+        priceMultiplier: priceRangeConfig.priceRate?.[0]?.priceMultiplier,
+        fixedAddition: priceRangeConfig.priceRate?.[0]?.fixedAddition,
+        roundTo: priceRangeConfig.priceRate?.[0]?.roundTo
+      }]
+    });
+  }
 
   return (
     <ProCard

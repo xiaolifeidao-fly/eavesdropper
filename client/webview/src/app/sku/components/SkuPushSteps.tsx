@@ -35,17 +35,16 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
   const [urls, setUrls] = useState<SkuUrl[]>([]);
   const [onPublishFinish, setOnPublishFinish] = useState(false);
-  // const [taskId, setTaskId] = useState<number>(0);
-  // const [operationType, setOperationType] = useState<string>(SkuTaskOperationType.PUSH);
 
   const store = new StoreApi();
 
   useEffect(() => {
-    console.log('props.taskId: ', props.taskId, 'props.operationType: ', props.operationType)
+    console.log('loading SkuPushStepsForm...')
     // 如果任务id存在，则设置任务id, 可能通过重新发布任务和继续执行任务进来
     if (props.taskId && props.operationType) {
       // setOperationType(props.operationType);
       setCurrent(2); // 设置当前步骤为第二步
+      setPushSkuFlag(true);
     } else {
       initSource();
       initPriceRangeConfig();
@@ -220,6 +219,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
             setSourceAccount={setSourceAccount}
             priceRangeConfigFormRef={priceRangeConfigFormRef}
             pushConfig={pushConfig}
+            setPushConfig={setPushConfig}
           />
         </StepsForm.StepForm>
 
