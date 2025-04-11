@@ -29,7 +29,7 @@ export default function SkuTaskManage() {
 
   const [visible, setVisible] = useState(false);
   const [taskId, setTaskId] = useState<number | undefined>(undefined);
-  const [operationType, setOperationType] = useState<string>(SkuTaskOperationType.PUSH);
+  const [operationType, setOperationType] = useState<string>("");
 
   const { refreshPage } = useRefreshPage();
 
@@ -259,17 +259,19 @@ export default function SkuTaskManage() {
         </Modal>
       )}
       {/* 发布商品 */}
-      <SkuPushStepsForm
-        visible={visible}
-        setVisible={setVisible}
-        taskId={taskId}
-        setTaskId={setTaskId}
-        operationType={operationType}
-        setOperationType={setOperationType}
-        onClose={() => {
-          refreshPage(actionRef, false)
-        }}
-      />
+      {visible && (
+        <SkuPushStepsForm
+          visible={visible}
+          setVisible={setVisible}
+          taskId={taskId}
+          setTaskId={setTaskId}
+          operationType={operationType}
+          setOperationType={setOperationType}
+          onClose={() => {
+            refreshPage(actionRef, false)
+          }}
+        />
+      )}
     </Layout>
   );
 }
