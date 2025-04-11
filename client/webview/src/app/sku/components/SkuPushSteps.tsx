@@ -51,7 +51,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
       initPriceRangeConfig();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.operationType])
+  }, [props.taskId, props.operationType])
 
   const initSource = async () => {
     const resourceSourceList = await getResourceSourceListApi();
