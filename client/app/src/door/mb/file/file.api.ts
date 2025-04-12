@@ -189,7 +189,12 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
         if(!fileName){
             continue;
         }
-        const fileInfo = skuFileNames[fileName];
+        const indexOf = fileName.indexOf(".");
+        let fileNameKey = fileName;
+        if(indexOf >= 0){
+            fileNameKey = fileName.substring(0, indexOf);
+        }
+        const fileInfo = skuFileNames[fileNameKey];
         await uploadFileCallBack(doorFileRecord, fileInfo.sortId, skuItemId);
     }
     return undefined;
@@ -210,6 +215,10 @@ export async function saveDoorFileRecordByResult(source : string, fileType : str
     let fileName = data.fileName;
     const url = data.url;
     const fileKey = getFileKey(fileName);
+    const indexOf = fileName.indexOf(".");
+    if(indexOf >= 0){
+        fileName = fileName.substring(0, indexOf);
+    }
     const pix = data.pix;
     const doorFileRecord = new DoorFileRecord(undefined, source, fileId, resourceId, fileType, fileName, url, Number(data.size), data.folderId, fileKey, pix);
     return await saveDoorFileRecord(doorFileRecord);
