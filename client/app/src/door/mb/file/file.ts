@@ -106,7 +106,6 @@ export async function getUnUploadFile(source : string, resourceId : number, path
         if(doorFileRecord){
             continue;
         }
-        log.info("getUnUploadFile doorFileRecord is null by ", fileKey);
         unUploadFiles.push(filePath);
     }
     return unUploadFiles;
