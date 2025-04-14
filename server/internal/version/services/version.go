@@ -19,6 +19,7 @@ func GetLatestVersion(appId string) (*dto.VersionDto, error) {
 	if version == nil {
 		return nil, errors.New("找不到版本信息")
 	}
+
 	return database.ToDTO[dto.VersionDto](version), nil
 }
 
