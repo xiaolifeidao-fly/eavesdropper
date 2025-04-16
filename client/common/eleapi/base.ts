@@ -73,7 +73,10 @@ abstract class ElectronApi {
 
   buildKey(key : string){
     let namespace = this.getNamespace();
-    let rendererApiName = namespace + "_" + this.getApiName();
+    let rendererApiName = this.getApiName();
+    if(namespace){
+      rendererApiName = namespace + "_" + rendererApiName;
+    }
     return `${rendererApiName}.${key}`;
   }
 
@@ -110,7 +113,7 @@ abstract class ElectronApi {
     const env = this.getEnvironment();
     if(env == 'Electron'){
         let apiName = this.getApiName();
-        if(this.getNamespace()){
+        if(this.getNamespace() != undefined){
             apiName = this.getNamespace() + "_" + apiName;
         }
         if(topic){

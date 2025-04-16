@@ -25,8 +25,8 @@ func LoadSkuTaskRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).POST("", AddSkuTask)
 		r.Use(middleware.Authorization()).PUT("/:id", UpdateSkuTask)
 		r.Use(middleware.Authorization()).GET("/:id", GetSkuTask)
-		r.Use(middleware.Authorization()).GET("/steps/:resourceId/:groupCode/:stepKey", GetSkuTaskSteps)
-		r.Use(middleware.Authorization()).POST("/steps/:resourceId/:groupCode/:stepKey/init", InitSkuStep)
+		r.Use(middleware.Authorization()).GET("/steps/:resourceId/:groupCode/:taskId/:stepKey", GetSkuTaskSteps)
+		r.Use(middleware.Authorization()).POST("/steps/:resourceId/:groupCode/:taskId/:stepKey/init", InitSkuStep)
 		r.Use(middleware.Authorization()).POST("/steps/save", SaveSkuTaskStep)
 		r.Use(middleware.Authorization()).GET("/page", PageSkuTask)
 		r.Use(middleware.Authorization()).GET("/status/enums", GetSkuTaskStatusLabelValue)
@@ -41,19 +41,29 @@ func InitSkuStep(ctx *gin.Context) {
 		return
 	}
 	groupCode := ctx.Param("groupCode")
-	services.DeleteSkuTaskStepByKeyAndResourceIdAndGroupCode(stepKey, resourceId, groupCode)
+	taskId, err := strconv.ParseUint(ctx.Param("taskId"), 10, 64)
+	if err != nil {
+		controller.Error(ctx, "taskId 参数错误")
+		return
+	}
+	services.DeleteSkuTaskStepByKeyAndResourceIdAndGroupCode(taskId, stepKey, resourceId, groupCode)
 	controller.OK(ctx, "初始化成功")
 }
 
 func GetSkuTaskSteps(ctx *gin.Context) {
 	stepKey := ctx.Param("stepKey")
+	taskId, err := strconv.ParseUint(ctx.Param("taskId"), 10, 64)
+	if err != nil {
+		controller.Error(ctx, "taskId 参数错误")
+		return
+	}
 	resourceId, err := strconv.ParseUint(ctx.Param("resourceId"), 10, 64)
 	if err != nil {
 		controller.Error(ctx, "resourceId 参数错误")
 		return
 	}
 	groupCode := ctx.Param("groupCode")
-	steps, err := services.FindSkuTaskStepByKeyAndResourceIdAndGroupCode(stepKey, resourceId, groupCode)
+	steps, err := services.FindSkuTaskStepByKeyAndResourceIdAndGroupCode(taskId, stepKey, resourceId, groupCode)
 	if err != nil {
 		controller.Error(ctx, err.Error())
 		return

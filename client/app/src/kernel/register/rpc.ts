@@ -16,7 +16,10 @@ import log from "electron-log";
             if(metadata == Protocols.INVOKE){
                 const namespace = registerInstance.getNamespace();
                 const apiName = registerInstance.getApiName();
-                let rendererApiName = namespace + "_" + apiName;
+                let rendererApiName = apiName;
+                if(namespace){
+                    rendererApiName = namespace + "_" + apiName;
+                }
                 log.info("metadata impl", metadata, `${rendererApiName}.${methodName}`);
                 ipcMain.handle(`${rendererApiName}.${methodName}`, async (event, ...args) => {
                     const instance = new cls();

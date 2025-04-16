@@ -3,6 +3,9 @@ import { StepResponse, StepResult, StepUnit } from "../../step.unit";
 import { uploadFile } from "@src/door/mb/file/file";
 import { FileInfo, MbFileUploadMonitor } from "@src/door/monitor/mb/file/file";
 import log from "electron-log";
+import { app } from "electron";
+import path from "path";
+import fs from "fs";
 
 export class SkuPublishFileUploadStep extends StepUnit{
 
@@ -13,7 +16,13 @@ export class SkuPublishFileUploadStep extends StepUnit{
         const skuItem = this.getParams("skuItem");
         const validateTag = this.getValidateTag();
         const skuSource = this.getParams("skuSource");
-        const uploadResult = await skuApi.uploadSkuImages(skuSource, resourceId, skuItem, validateTag); // skuId TODO
+        const userDataPath = app.getPath('userData');
+        const skuItemId = this.getParams("skuItemId");
+        const imagePath = path.join(userDataPath,'images',skuItemId.toString());
+        if(!fs.existsSync(imagePath)){
+            fs.mkdirSync(imagePath, { recursive: true });
+        }
+        const uploadResult = await skuApi.uploadSkuImages(imagePath, skuSource, resourceId, skuItem, validateTag); // skuId TODO
         const imageFileList = uploadResult.skuFiles;
         const validateUrl = uploadResult.validateData?.validateUrl;
         const validateParams = uploadResult.validateData?.validateParams;
@@ -28,6 +37,7 @@ export class SkuPublishFileUploadStep extends StepUnit{
             return new StepResult(false, "上传图片失败");
         }
         this.setParams("skuItem", skuItem);
+        this.setParams("imagePath", imagePath);
         return new StepResult(true, "上传成功", [
             new StepResponse("imageFileList", imageFileList)
         ]);

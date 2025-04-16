@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <html lang="en">
       <body>
-        <Error statusCode={404} displayName="淘宝客" title="淘宝客: your page is not found" />
+        <Error statusCode={404} displayName="鲲鹏上传-淘宝版" title="鲲鹏上传-淘宝版: your page is not found" />
       </body>
     </html>
   );
