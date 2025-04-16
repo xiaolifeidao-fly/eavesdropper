@@ -137,6 +137,9 @@ package_and_upload() {
     if [ "$platform" == "mac" ]; then
         npm run package:mac
     elif [ "$platform" == "win" ]; then
+        # 安装Windows平台特定的Sharp模块
+        echo "安装Windows平台特定的Sharp模块..."
+        npm install --os=win32 --cpu=x64 sharp
         npm run package:win
     else
         echo "不支持的平台: $platform"
