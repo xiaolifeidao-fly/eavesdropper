@@ -75,7 +75,7 @@ const GatherTool = (props: GatherToolProps) => {
       await monitor.monitorSku()
 
       // 监听PXX采集商品消息
-      monitor.onGatherSkuMessage((doorSkuDTO: DoorSkuDTO) => {
+      monitor.onGatherSkuMessage((doorSkuDTO: DoorSkuDTO | null) => {
         gatherDoorSkuHandler(PDD, doorSkuDTO)
       })
     } catch (error: any) {
@@ -83,7 +83,11 @@ const GatherTool = (props: GatherToolProps) => {
     }
   }
 
-  const gatherDoorSkuHandler = (source: string, doorSkuDTO: DoorSkuDTO) => {
+  const gatherDoorSkuHandler = (source: string, doorSkuDTO: DoorSkuDTO | null) => {
+    if(!doorSkuDTO){
+      setSkuViewInfo(null);
+      return;
+    }
     // 将pxx当前查看的商品展示到当前展示商品信息列表
     const skuViewInfo: SkuViewInfoI = {
       source: source,
@@ -93,8 +97,18 @@ const GatherTool = (props: GatherToolProps) => {
       skuSales: doorSkuDTO.doorSkuSaleInfo.saleNum,
       favorite: false
     }
-
     setSkuViewInfo(skuViewInfo)
+
+    // 增加查看数量
+    setGaterInfo((prev: GatherInfo | null) => {
+      if(!prev){
+        return null;
+      }
+      return {
+        ...prev,
+        viewTotal: prev.viewTotal + 1
+      }
+    })
   }
 
   const createDataSource = () => {

@@ -80,6 +80,9 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                 } else {
                     log.info("row data not found");
                 }
+            } else {
+                // 没有在页面中找到商品信息
+                this.send('onGatherSkuMessage', null);
             }
         });
         monitorConfig[resourceId] = true;
