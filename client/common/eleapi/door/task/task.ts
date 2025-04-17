@@ -40,6 +40,7 @@ export class TaskApi extends ElectronApi {
 
   @InvokeType(Protocols.TRRIGER)
   async onPublishSkuMessage(callback: (sku: SkuPublishResult | undefined, statistic: SkuPublishStatitic) => void) {
+    console.log("onPublishSkuMessage")
     return await this.onMessage('onPublishSkuMessage', callback)
   }
 
