@@ -9,145 +9,42 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            padding: 8px;
+            padding: 20px;
             background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
         }
 
         .container {
-            width: 300px;
             background: white;
-            padding: 12px 12px 8px;
+            padding: 20px;
             border-radius: 4px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
         }
 
         .info-section {
-            margin-bottom: 10px;
-            padding: 8px;
+            margin-bottom: 20px;
+            padding: 15px;
             background-color: #fafafa;
             border-radius: 4px;
             border: 1px solid #f0f0f0;
-            font-size: 13px;
         }
 
         .info-section div {
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .info-section .label {
-            font-weight: 500;
-            color: #666;
-        }
-
-        .view-count {
-            display: inline-block;
-            background-color: #1890ff;
-            color: white;
-            font-weight: bold;
-            padding: 1px 6px;
-            border-radius: 10px;
-            font-size: 12px;
-        }
-
-        .batch-number {
-            text-align: center;
             margin-bottom: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            color: #1890ff;
-            padding-bottom: 6px;
-            border-bottom: 1px dashed #e8e8e8;
-        }
-
-        /* 当前浏览商品区域样式 */
-        .current-product {
-            margin-bottom: 10px;
-            padding: 8px;
-            background-color: #e6f7ff;
-            border-radius: 4px;
-            border: 1px solid #91d5ff;
-            font-size: 13px;
-        }
-
-        .current-product-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        .current-product-title {
-            color: #1890ff;
-            font-size: 14px;
-            margin-bottom: 4px;
-            word-break: break-all;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .current-product-price {
-            color: #f5222d;
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .current-product-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 6px;
-        }
-
-        .favorite-btn {
-            background-color: #ff4d4f;
-            color: white;
-            border: none;
-            padding: 3px 6px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-        }
-
-        .favorite-btn.favorited {
-            background-color: #722ed1;
-        }
-
-        .favorite-btn svg {
-            margin-right: 3px;
-        }
-
-        .view-btn {
-            background-color: #1890ff;
-            color: white;
-            border: none;
-            padding: 3px 6px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
         }
 
         .action-bar {
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 8px;
+            justify-content: space-between;
+            margin-bottom: 16px;
         }
 
         .export-btn {
             background-color: #1890ff;
             color: white;
             border: none;
-            padding: 4px 10px;
+            padding: 8px 16px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 13px;
         }
 
         .export-btn:disabled {
@@ -155,58 +52,18 @@
             cursor: not-allowed;
         }
 
-        /* Tab样式 */
-        .tabs {
-            margin-bottom: 8px;
-            border-bottom: 1px solid #f0f0f0;
-            display: flex;
-        }
-
-        .tab {
-            padding: 6px 12px;
-            cursor: pointer;
-            font-size: 14px;
-            position: relative;
-            user-select: none;
-        }
-
-        .tab.active {
-            color: #1890ff;
-            font-weight: 500;
-        }
-
-        .tab.active:after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: #1890ff;
-        }
-
-        .tab-count {
-            margin-left: 3px;
-            font-size: 12px;
-            background-color: #f5f5f5;
-            padding: 0 5px;
-            border-radius: 10px;
-            color: rgba(0, 0, 0, 0.65);
-        }
-
         .scrollable-container {
-            height: 310px;
+            height: 500px;
             overflow: auto;
             border: 1px solid #f0f0f0;
             border-radius: 4px;
         }
 
         .product-item {
-            padding: 6px 8px;
+            padding: 12px 16px;
             border-bottom: 1px solid #f0f0f0;
             display: flex;
-            align-items: flex-start;
-            font-size: 13px;
+            align-items: center;
         }
 
         .product-item:hover {
@@ -215,85 +72,36 @@
 
         .product-content {
             flex: 1;
-            margin-left: 6px;
-            overflow: hidden;
+            margin-left: 16px;
         }
 
         .product-title {
             font-weight: 500;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
             cursor: pointer;
             color: #1890ff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .product-description {
             color: rgba(0, 0, 0, 0.45);
-            font-size: 12px;
+            font-size: 14px;
             display: none;
-            margin-top: 4px;
-            padding: 4px;
+            margin-top: 8px;
+            padding: 8px;
             background-color: #f9f9f9;
             border-radius: 4px;
-            word-break: break-all;
-            max-height: 80px;
-            overflow-y: auto;
-            line-height: 1.3;
-        }
-
-        .product-price {
-            color: #f5222d;
-            font-weight: bold;
-            font-size: 12px;
-            margin-top: 2px;
-        }
-
-        .product-sales {
-            font-size: 12px;
-            color: #666;
-            margin-top: 1px;
         }
 
         .product-actions {
-            margin-left: 6px;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            margin-left: 16px;
         }
 
         .product-actions a {
             color: #1890ff;
-            font-size: 12px;
-        }
-
-        .item-favorite-btn {
-            color: #ff4d4f;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .item-favorite-btn.favorited svg {
-            fill: #ff4d4f;
-        }
-
-        .item-favorite-btn svg {
-            width: 14px;
-            height: 14px;
-            fill: #d9d9d9;
         }
 
         .checkbox {
-            margin-right: 4px;
-            display: flex;
-            align-items: center;
-            height: 20px;
+            margin-right: 8px;
         }
     </style>
 </head>
@@ -301,51 +109,20 @@
 <body>
     <div class="container">
         <div class="info-section">
-            <div class="batch-number">批次号：PXX-20250416-001</div>
             <div>
-                <span class="label">采集批次：</span><span>pxx手机采集</span>
-            </div>
-            <div>
-                <span class="label">采集来源：</span><span>pxx</span>
+                采集标题：<span>pxx手机采集</span>
             </div>
             <div>
-                <span class="label">采集时间：</span><span>2025-04-16 10:00</span>
+                采集来源：<span>pxx</span>
             </div>
             <div>
-                <span class="label">本次采集数量：</span><span id="gatherCount">100</span>
-            </div>
-            <div>
-                <span class="label">已查看数量：</span><span class="view-count" id="viewCount">0</span>
-            </div>
-        </div>
-
-        <!-- 当前查看的商品信息展示区域 -->
-        <div class="current-product">
-            <div class="current-product-header">
-                <span>当前查看的商品</span>
-            </div>
-            <div class="current-product-title" id="currentProductTitle">华为 Mate 60 Pro 旗舰手机 12+512GB 砚黑色</div>
-            <div class="current-product-price">¥6999.00</div>
-            <div>销量: <span>5280</span></div>
-            <div class="current-product-actions">
-                <button class="favorite-btn" id="favoriteBtn">
-                    <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor" aria-hidden="true">
-                        <path d="M923 283.6a260.04 260.04 0 00-56.9-82.8 264.4 264.4 0 00-84-55.5A265.34 265.34 0 00679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 00-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9z"></path>
-                    </svg>
-                    收藏
-                </button>
-                <button class="view-btn" id="viewBtn">查看详情</button>
+                采集时间：<span>2025-04-16 10:00:00</span>
             </div>
         </div>
 
         <div class="action-bar">
+            <div></div>
             <button id="exportBtn" class="export-btn" disabled>导出选中商品</button>
-        </div>
-
-        <!-- Tab切换 -->
-        <div class="tabs">
-            <div class="tab active" data-tab="all">全部<span class="tab-count" id="allCount">0</span></div>
-            <div class="tab" data-tab="favorite">收藏<span class="tab-count" id="favoriteCount">0</span></div>
         </div>
 
         <div class="scrollable-container" id="scrollableDiv">
@@ -360,229 +137,65 @@
                 dataSource.push({
                     id: i,
                     title: '商品 ' + (i + 1) + ' 的详细描述信息，这里展示了商品的完整描述内容。',
-                    shortTitle: '商品 ' + (i + 1),
-                    price: (Math.random() * 1000 + 100).toFixed(2),
-                    sales: Math.floor(Math.random() * 10000),
-                    favorite: false
+                    shortTitle: '商品 ' + (i + 1)
                 });
             }
 
             const scrollableDiv = document.getElementById('scrollableDiv');
             const exportBtn = document.getElementById('exportBtn');
-            const gatherCount = document.getElementById('gatherCount');
-            const favoriteBtn = document.getElementById('favoriteBtn');
-            const viewBtn = document.getElementById('viewBtn');
-            const currentProductTitle = document.getElementById('currentProductTitle');
-            const allCountEl = document.getElementById('allCount');
-            const favoriteCountEl = document.getElementById('favoriteCount');
-            const viewCountEl = document.getElementById('viewCount');
-            const tabs = document.querySelectorAll('.tab');
-            
             const selectedRowKeys = [];
-            let currentProduct = null;
-            let currentTab = 'all';
-            let favoriteProducts = [];
-            const viewedProducts = new Set(); // 记录已查看的商品ID
-
-            // 更新采集数量和Tab计数
-            function updateCounts() {
-                gatherCount.textContent = dataSource.length;
-                allCountEl.textContent = dataSource.length;
-                favoriteProducts = dataSource.filter(item => item.favorite);
-                favoriteCountEl.textContent = favoriteProducts.length;
-            }
 
             // 渲染产品列表
-            function renderProductList(products) {
-                scrollableDiv.innerHTML = '';
-                
-                if (products.length === 0) {
-                    const emptyTip = document.createElement('div');
-                    emptyTip.style.padding = '20px';
-                    emptyTip.style.textAlign = 'center';
-                    emptyTip.style.color = '#999';
-                    emptyTip.textContent = currentTab === 'all' ? '暂无商品' : '暂无收藏商品';
-                    scrollableDiv.appendChild(emptyTip);
-                    return;
-                }
-                
-                products.forEach(item => {
-                    const productItem = document.createElement('div');
-                    productItem.className = 'product-item';
-                    productItem.dataset.id = item.id;
+            dataSource.forEach(item => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                productItem.dataset.id = item.id;
 
-                    productItem.innerHTML = `
-                        <div class="checkbox">
-                            <input type="checkbox" id="product-${item.id}" ${selectedRowKeys.includes(item.id) ? 'checked' : ''}>
-                        </div>
-                        <div class="product-content">
-                            <div class="product-title">${item.shortTitle}</div>
-                            <div class="product-price" ${!selectedRowKeys.includes(item.id) ? 'style="display:none;"' : ''}>¥${item.price}</div>
-                            <div class="product-sales" ${!selectedRowKeys.includes(item.id) ? 'style="display:none;"' : ''}>销量: ${item.sales}</div>
-                            <div class="product-description" style="${selectedRowKeys.includes(item.id) ? 'display:block;' : ''}">${item.title}</div>
-                        </div>
-                        <div class="product-actions">
-                            <button class="item-favorite-btn ${item.favorite ? 'favorited' : ''}" data-id="${item.id}">
-                                <svg viewBox="64 64 896 896" aria-hidden="true">
-                                    <path d="M923 283.6a260.04 260.04 0 00-56.9-82.8 264.4 264.4 0 00-84-55.5A265.34 265.34 0 00679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 00-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9z"></path>
-                                </svg>
-                            </button>
-                            <a href="javascript:void(0);" class="copy-link">复制</a>
-                        </div>
-                    `;
+                productItem.innerHTML = `
+                    <div class="checkbox">
+                        <input type="checkbox" id="product-${item.id}">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-title">${item.shortTitle}</div>
+                        <div class="product-description">${item.title}</div>
+                    </div>
+                    <div class="product-actions">
+                        <a href="javascript:void(0);" class="copy-link">复制链接</a>
+                    </div>
+                `;
 
-                    scrollableDiv.appendChild(productItem);
+                scrollableDiv.appendChild(productItem);
 
-                    // 添加复选框事件
-                    const checkbox = productItem.querySelector('input[type="checkbox"]');
-                    const description = productItem.querySelector('.product-description');
-                    const productPrice = productItem.querySelector('.product-price');
-                    const productSales = productItem.querySelector('.product-sales');
-                    
-                    checkbox.addEventListener('change', function () {
-                        if (this.checked) {
-                            if (!selectedRowKeys.includes(item.id)) {
-                                selectedRowKeys.push(item.id);
-                            }
-                            // 展开描述和显示价格、销量
-                            description.style.display = 'block';
-                            productPrice.style.display = 'block';
-                            productSales.style.display = 'block';
-                        } else {
-                            const index = selectedRowKeys.indexOf(item.id);
-                            if (index > -1) {
-                                selectedRowKeys.splice(index, 1);
-                            }
-                            // 折叠描述和隐藏价格、销量
-                            description.style.display = 'none';
-                            productPrice.style.display = 'none';
-                            productSales.style.display = 'none';
-                        }
-                        exportBtn.disabled = selectedRowKeys.length === 0;
-                    });
-
-                    // 添加复制链接事件
-                    const copyLink = productItem.querySelector('.copy-link');
-                    copyLink.addEventListener('click', function () {
-                        alert('已复制商品链接: ' + item.shortTitle);
-                    });
-
-                    // 添加点击标题显示描述事件
-                    const title = productItem.querySelector('.product-title');
-                    title.addEventListener('click', function () {
-                        if (description.style.display === 'block') {
-                            description.style.display = 'none';
-                            productPrice.style.display = 'none';
-                            productSales.style.display = 'none';
-                        } else {
-                            description.style.display = 'block';
-                            productPrice.style.display = 'block';
-                            productSales.style.display = 'block';
-                        }
-                        
-                        // 设置当前浏览商品
-                        updateCurrentProduct(item);
-                    });
-
-                    // 添加收藏按钮事件
-                    const itemFavoriteBtn = productItem.querySelector('.item-favorite-btn');
-                    itemFavoriteBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const itemId = parseInt(this.dataset.id);
-                        const targetItem = dataSource.find(i => i.id === itemId);
-                        if (targetItem) {
-                            targetItem.favorite = !targetItem.favorite;
-                            
-                            // 更新按钮状态
-                            if (targetItem.favorite) {
-                                this.classList.add('favorited');
-                            } else {
-                                this.classList.remove('favorited');
-                            }
-                            
-                            // 更新当前浏览的商品状态
-                            if (currentProduct && currentProduct.id === targetItem.id) {
-                                updateCurrentProduct(targetItem);
-                            }
-                            
-                            updateCounts();
-                            
-                            // 如果在收藏标签页并且取消收藏，需要重新渲染列表
-                            if (currentTab === 'favorite' && !targetItem.favorite) {
-                                renderProductList(favoriteProducts);
-                            }
-                        }
-                    });
-                });
-            }
-
-            // 更新当前浏览商品信息
-            function updateCurrentProduct(product) {
-                currentProduct = product;
-                currentProductTitle.textContent = product.title;
-                document.querySelector('.current-product-price').textContent = `¥${product.price}`;
-                document.querySelector('.current-product div:nth-child(4) span').textContent = product.sales;
-                
-                // 更新收藏按钮状态
-                if (product.favorite) {
-                    favoriteBtn.classList.add('favorited');
-                    favoriteBtn.textContent = '已收藏';
-                } else {
-                    favoriteBtn.classList.remove('favorited');
-                    favoriteBtn.innerHTML = `
-                        <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor" aria-hidden="true">
-                            <path d="M923 283.6a260.04 260.04 0 00-56.9-82.8 264.4 264.4 0 00-84-55.5A265.34 265.34 0 00679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 00-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9z"></path>
-                        </svg>
-                        收藏
-                    `;
-                }
-
-                // 更新已查看商品计数
-                if (!viewedProducts.has(product.id)) {
-                    viewedProducts.add(product.id);
-                    viewCountEl.textContent = viewedProducts.size;
-                }
-            }
-
-            // Tab切换事件
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabType = this.dataset.tab;
-                    if (tabType === currentTab) return;
-                    
-                    // 更新Tab样式
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    currentTab = tabType;
-                    
-                    // 更新列表
-                    if (currentTab === 'all') {
-                        renderProductList(dataSource);
+                // 添加复选框事件
+                const checkbox = productItem.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', function () {
+                    if (this.checked) {
+                        selectedRowKeys.push(item.id);
                     } else {
-                        renderProductList(favoriteProducts);
+                        const index = selectedRowKeys.indexOf(item.id);
+                        if (index > -1) {
+                            selectedRowKeys.splice(index, 1);
+                        }
+                    }
+                    exportBtn.disabled = selectedRowKeys.length === 0;
+                });
+
+                // 添加复制链接事件
+                const copyLink = productItem.querySelector('.copy-link');
+                copyLink.addEventListener('click', function () {
+                    alert('已复制商品链接: ' + item.shortTitle);
+                });
+
+                // 添加点击标题显示描述事件
+                const title = productItem.querySelector('.product-title');
+                const description = productItem.querySelector('.product-description');
+                title.addEventListener('click', function () {
+                    if (description.style.display === 'block') {
+                        description.style.display = 'none';
+                    } else {
+                        description.style.display = 'block';
                     }
                 });
-            });
-
-            // 收藏按钮点击事件
-            favoriteBtn.addEventListener('click', function() {
-                if (currentProduct) {
-                    currentProduct.favorite = !currentProduct.favorite;
-                    updateCurrentProduct(currentProduct);
-                    updateCounts();
-                    
-                    // 如果在收藏tab中取消收藏，需要更新列表
-                    if (currentTab === 'favorite') {
-                        renderProductList(favoriteProducts);
-                    }
-                }
-            });
-
-            // 查看详情按钮点击事件
-            viewBtn.addEventListener('click', function() {
-                if (currentProduct) {
-                    alert(`查看商品详情: ${currentProduct.shortTitle}`);
-                }
             });
 
             // 导出按钮事件
@@ -595,13 +208,6 @@
                     // 这里可以添加实际的导出逻辑
                 }
             });
-
-            // 初始化
-            updateCounts();
-            renderProductList(dataSource);
-            if (dataSource.length > 0) {
-                updateCurrentProduct(dataSource[0]);
-            }
         });
     </script>
 </body>
