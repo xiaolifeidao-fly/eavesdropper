@@ -30,10 +30,10 @@ const ModalCreate = (props: ModalCreateProps) => {
       wrapperCol={{ span: 20 }} // 内容宽度
       onFinish={onFinish}>
       <Form.Item
-        label='采集标题'
-        name='title'
-        rules={[{ required: true, message: '请输入采集标题' }]}>
-        <Input placeholder='请输入采集标题' />
+        label='采集批次'
+        name='name'
+        rules={[{ required: true, message: '请输入采集批次' }]}>
+        <Input placeholder='请输入采集批次' />
       </Form.Item>
       <Form.Item
         label='采集来源'

@@ -20,29 +20,36 @@ export default function GatherManage() {
 
   const columns: ProColumns<any>[] = [
     {
-      title: '标题',
-      dataIndex: 'title',
+      title: '批次号',
+      dataIndex: 'batchNo',
       search: false,
-      key: 'title',
+      key: 'batchNo',
       align: 'center'
     },
     {
-      title: '来源',
+      title: '采集批次',
+      dataIndex: 'name',
+      search: false,
+      key: 'name',
+      align: 'center'
+    },
+    {
+      title: '采集来源',
       dataIndex: 'source',
       search: false,
       key: 'source',
       align: 'center'
     },
     {
-      title: '采集数',
-      dataIndex: 'gatherCount',
+      title: '采集统计',
+      dataIndex: 'statistics',
       search: false,
-      key: 'gatherCount',
+      key: 'statistics',
       align: 'center',
       render: (_, record) => {
-        const { total, successTotal } = record
-        const totalText = total >= 0 ? `总数: ${total}` : ''
-        const successText = successTotal >= 0 ? ` 成功: ${successTotal}` : ''
+        const { total, favoriteTotal } = record
+        const totalText = total >= 0 ? `采集总数: ${total}` : ''
+        const successText = favoriteTotal >= 0 ? ` 收藏数: ${favoriteTotal}` : ''
         return (
           <span>
             {totalText}
@@ -93,7 +100,7 @@ export default function GatherManage() {
               type='link'
               onClick={() => handleExport(record)} // 导出操作
               style={{ display: 'inline-block', paddingLeft: '4px' }}>
-              导出链接
+              导出收藏链接
             </Button>
           </div>
         )
@@ -108,10 +115,11 @@ export default function GatherManage() {
       data: [
         {
           id: 1,
-          title: '采集标题',
+          batchNo: 'pxx-20250417-001',
+          name: 'pxx手机采集',
           source: 'pdd',
           total: 20,
-          successTotal: 10,
+          favoriteTotal: 1,
           createdAt: '2025-04-16 12:00:00'
         }
       ],
