@@ -91,10 +91,10 @@ export default function GatherManage() {
           <div style={{ display: 'flex', gap: '4px' }}>
             <Button
               type='link'
-              onClick={() => handleView(record)} // 查看操作
+              onClick={() => openModal('gatherTool', record)} // 查看操作
               style={{ display: 'inline-block', paddingRight: '4px' }} // 缩小右边距
             >
-              查看详情
+              开始采集
             </Button>
             <Button
               type='link'
@@ -118,8 +118,9 @@ export default function GatherManage() {
           batchNo: 'pxx-20250417-001',
           name: 'pxx手机采集',
           source: 'pdd',
-          total: 20,
-          favoriteTotal: 1,
+          gatherTotal: 0,
+          favoriteTotal: 0,
+          viewTotal: 0,
           createdAt: '2025-04-16 12:00:00'
         }
       ],
@@ -186,8 +187,7 @@ export default function GatherManage() {
               type: modalType,
               data: modalData,
               hideModal: hideModal,
-              onSuccess: onSuccess,
-              openModal: openModal
+              onSuccess: onSuccess
             }}
           />
         </div>

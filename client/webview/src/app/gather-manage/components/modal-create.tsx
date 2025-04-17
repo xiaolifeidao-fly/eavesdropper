@@ -4,23 +4,22 @@ import { Form, Input, Button, Space, Select } from 'antd'
 interface ModalCreateProps {
   hideModal: () => void
   onSuccess?: () => void
-  openModal?: (type: string, data?: any) => void
 }
 
 interface FromInfo {
-  title: string
+  name: string
+  source: string
 }
 
 const ModalCreate = (props: ModalCreateProps) => {
   const [form] = Form.useForm<FromInfo>()
-  const { hideModal, onSuccess, openModal } = props
+  const { hideModal, onSuccess } = props
 
   // 提交表单
   const onFinish = (values: FromInfo) => {
     console.log(values)
     onSuccess && onSuccess()
     hideModal()
-    openModal && openModal('gatherTool')
   }
 
   return (
