@@ -2,7 +2,7 @@ import { MbEngine } from "@src/door/mb/mb.engine";
 import { StepResponse, StepResult, StepUnit } from "../../step.unit";
 import { AbsPublishStep, confirmProtocol } from "./abs.publish";
 import { activeSkuDraft, getSkuDraft } from "@api/sku/sku.draft";
-import { MbSkuPublishDraffMonitor } from "@src/door/monitor/mb/sku/md.sku.info.monitor";
+import { MbSkuPublishDraffMonitor, OpenPublishPageMonitor } from "@src/door/monitor/mb/sku/md.sku.info.monitor";
 import { Page } from "playwright-core";
 import log from "electron-log"
 import { SkuFileDetail } from "@model/sku/sku.file";
@@ -60,7 +60,15 @@ export class SkuPddBuildPreCheckStep extends AbsPublishStep{
             let skuDraftId = await this.getSkuDraftIdFromDB(resourceId, itemId);
             let url = this.getPublishUrl(category, skuDraftId, tbItemId);
             log.info("check publish url is ", url);
-            await page.goto(url);
+            const openResult = await mbEngine.openWaitMonitor(page, url, new OpenPublishPageMonitor(), {});
+            if(!openResult || !openResult.getCode()){
+                if(openResult?.getValidateUrl()){
+                    return new StepResult(false, "前置校验出现验证码", [
+                        new StepResponse("validateUrl", openResult.validateUrl)
+                    ], openResult.getHeaderData(), openResult.validateUrl, openResult.getValidateParams());            
+                }
+                return new StepResult(true, "前置校验失败");
+            }
             let commonData = await this.getJsonData(page);
             const result = this.check(commonData);
             log.info("check result is ", result);
@@ -73,6 +81,8 @@ export class SkuPddBuildPreCheckStep extends AbsPublishStep{
         } catch (error) {
             log.error(error);
             return new StepResult(false, "前置校验失败") ;
+        }finally{
+            await mbEngine.closePage();
         }
     }
 

@@ -106,6 +106,63 @@ export class MbPublishSearchMonitor extends MbMonitorResponse<{}>{
     
 }
 
+export class OpenPublishPageMonitor extends MbMonitorResponse<{}>{
+
+    getKey(): string {
+        return "openPublishPage";
+    }
+
+    getApiName(): string[] {
+        return ["sell/v2/publish.htm"];
+    }
+
+    public needHeaderData(): boolean {
+        return true;
+    }
+
+    public needRequestBody(): boolean {
+        return true;
+    }
+
+    public needUrl(): boolean {
+        return true;
+    }
+
+    public async getResponseData(response: Response): Promise<DoorEntity<{}>>{
+        const contentType = response.headers()['content-type'];
+        if(contentType.includes('application/json')){
+            const result =  await response.json();
+            const ret = result.ret;
+            if(Array.isArray(ret)){
+                const retCode = ret[0];
+                if(retCode == 'FAIL_SYS_USER_VALIDATE'){
+                    log.error("getResponseData error ", result);
+                    const data = result.data as { [key: string]: any };
+                    const doorEntity = new DoorEntity<{}>(false, data as {});
+                    doorEntity.validateUrl = result.data?.url;
+                    const validateParams : { [key: string]: any } =  {};
+                    if('dialogSize' in data){
+                        validateParams.dialogSize = data.dialogSize;
+                    }
+                    if('attributes' in data){
+                        validateParams.attributes = data.attributes;
+                    }
+                    doorEntity.setValidateParams(validateParams);
+                    return doorEntity;
+                }
+            }
+            return new DoorEntity<{}>(true, result as {});
+        }
+        if (contentType && contentType.includes('text/html')) {
+            const text = await response.text();
+            return new DoorEntity<{}>(false, text as {});
+        }
+        const body = await response.body();
+        return new DoorEntity<{}>(false, body as {});
+    }
+    
+}
+
 
 export class MbSkuPublishDraffMonitor extends MbMonitorResponse<{}>{
 

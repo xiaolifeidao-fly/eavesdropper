@@ -140,6 +140,10 @@ function encodeBase64(str : string) {
     return btoa(str);
 }
 
+const userValidateMap : {[key:string]:boolean} = {};  
+
+
+
 async function getFrame(page: Page) {
     const frame = await page.mainFrame();
     const childFrames = await frame.childFrames();
@@ -570,7 +574,6 @@ function checkValidate(){
         if(validateItem){
             const url = validateItem.validateUrl; 
             log.info(`接收到验证请求: ${url.substring(0, 100)}...`);
-            
             let autoFlag = true;
             if(url.includes("mtop.relationrecommend.wirelessrecommend.recommend") ||
                url.includes("api/upload.api/_____tmd_____/punish")){
@@ -580,16 +583,21 @@ function checkValidate(){
             
             log.info(`验证模式: ${autoFlag ? '自动' : '手动'}`);
             
-            // 先尝试自动验证
-            let result = await validateImage(validateItem, autoFlag, 2);
+            if(userValidateMap[validateItem.resourceId]){
+              log.info("强制手动验证");
+              autoFlag = false;
+            }
+            let result = await validateImage(validateItem, autoFlag, 4);
             
             // 如果自动验证失败且原本设置为自动，降级为手动
             if(!isValidateSuccess(result) && autoFlag){
-                log.info("自动验证失败，降级为手动验证模式");
-                result = await validateImage(validateItem, false, 1);
+                log.info("自动验证失败，下次尝试降级为手动验证模式");
+                // result = await validateImage(validateItem, false, 1);
+                userValidateMap[validateItem.resourceId] = true;
             }
             
             if(result && isValidateSuccess(result)){
+                delete userValidateMap[validateItem.resourceId];
                 log.info("验证最终成功，返回成功结果");
                 validateItem.resolve(result.getHeaderData(), true);
             }else{
