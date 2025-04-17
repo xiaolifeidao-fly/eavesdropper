@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import type { Key } from 'react'
-import { Tag, Space, Progress } from 'antd'
+import { message } from 'antd'
 
 import { ProList } from '@ant-design/pro-components'
 import GaterToolInfo, { GatherInfo } from './gater-tool-info'
-
+import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
+import SkuViewInfo, { SkuViewInfoI } from './gather-tool-sku-view-info'
+import { DoorSkuDTO } from '@model/door/sku'
+import { PDD } from '@enums/source'
 interface GatherToolProps {
   hideModal: () => void
   onSuccess?: () => void
   data?: any
-}
-
-interface SkuViewInfo {
-  skuId: string | number
-  skuName: string
-  skuPrice: number
-  skuSales: number
-  favorite: boolean
 }
 
 interface ProductItem {
@@ -28,116 +23,6 @@ interface ProductItem {
   favorite: boolean
 }
 
-const SkuViewInfo = ({ skuViewInfo, onFavorite }: { skuViewInfo: SkuViewInfo | null; onFavorite: () => void }) => {
-  if (!skuViewInfo) {
-    return null
-  }
-  const { skuId, skuName, skuPrice, skuSales, favorite } = skuViewInfo || {}
-
-  // 查看详情
-  const onViewDetail = () => {
-    alert(`查看商品详情: ${skuName}`)
-  }
-
-  return (
-    <div
-      className='current-product'
-      style={{
-        marginBottom: 10,
-        padding: 8,
-        backgroundColor: '#e6f7ff',
-        borderRadius: 4,
-        border: '1px solid #91d5ff',
-        fontSize: 13
-      }}>
-      <div
-        className='current-product-header'
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 6,
-          fontWeight: 500
-        }}>
-        <span>当前查看的商品</span>
-      </div>
-      <div
-        className='current-product-title'
-        style={{
-          color: '#1890ff',
-          fontSize: 14,
-          marginBottom: 4,
-          wordBreak: 'break-all',
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden'
-        }}>
-        {skuName}
-      </div>
-      <div
-        className='current-product-price'
-        style={{
-          color: '#f5222d',
-          fontWeight: 'bold',
-          marginBottom: 4
-        }}>
-        ¥{skuPrice.toFixed(2)}
-      </div>
-      <div>
-        销量: <span>{skuSales}</span>
-      </div>
-      <div
-        className='current-product-actions'
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginTop: 6
-        }}>
-        <button
-          className={`favorite-btn ${favorite ? 'favorited' : ''}`}
-          onClick={onFavorite}
-          style={{
-            backgroundColor: favorite ? '#722ed1' : '#ff4d4f',
-            color: 'white',
-            border: 'none',
-            padding: '3px 6px',
-            borderRadius: 4,
-            cursor: 'pointer',
-            fontSize: 12,
-            display: 'flex',
-            alignItems: 'center'
-          }}>
-          <svg
-            viewBox='64 64 896 896'
-            width='14'
-            height='14'
-            fill='currentColor'
-            aria-hidden='true'
-            style={{ marginRight: 3 }}>
-            <path d='M923 283.6a260.04 260.04 0 00-56.9-82.8 264.4 264.4 0 00-84-55.5A265.34 265.34 0 00679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 00-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9z'></path>
-          </svg>
-          {favorite ? '已收藏' : '收藏'}
-        </button>
-        <button
-          className='view-btn'
-          onClick={onViewDetail}
-          style={{
-            backgroundColor: '#1890ff',
-            color: 'white',
-            border: 'none',
-            padding: '3px 6px',
-            borderRadius: 4,
-            cursor: 'pointer',
-            fontSize: 12
-          }}>
-          查看详情
-        </button>
-      </div>
-    </div>
-  )
-}
-
 const GatherTool = (props: GatherToolProps) => {
   const { hideModal, onSuccess, data } = props
   const [containerHeight, setContainerHeight] = useState(0)
@@ -146,7 +31,7 @@ const GatherTool = (props: GatherToolProps) => {
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([])
   const [viewedProducts, setViewedProducts] = useState<Set<number>>(new Set())
   const [gaterInfo, setGaterInfo] = useState<GatherInfo | null>(null)
-  const [skuViewInfo, setSkuViewInfo] = useState<SkuViewInfo | null>(null)
+  const [skuViewInfo, setSkuViewInfo] = useState<SkuViewInfoI | null>(null)
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([])
   const rowSelection = {
     selectedRowKeys,
@@ -170,6 +55,9 @@ const GatherTool = (props: GatherToolProps) => {
     initGatherInfo()
     // createDataSource()
 
+    // openPxx
+    openPxx()
+
     // 清理事件监听
     return () => {
       window.removeEventListener('resize', handleResize)
@@ -178,6 +66,35 @@ const GatherTool = (props: GatherToolProps) => {
 
   const initGatherInfo = () => {
     setGaterInfo(data)
+  }
+
+  // 打开PXX
+  const openPxx = async () => {
+    try {
+      const monitor = new MonitorPxxSkuApi()
+      await monitor.monitorSku()
+
+      // 监听PXX采集商品消息
+      monitor.onGatherSkuMessage((doorSkuDTO: DoorSkuDTO) => {
+        gatherDoorSkuHandler(PDD, doorSkuDTO)
+      })
+    } catch (error: any) {
+      message.error('打开PXX失败', error)
+    }
+  }
+
+  const gatherDoorSkuHandler = (source: string, doorSkuDTO: DoorSkuDTO) => {
+    // 将pxx当前查看的商品展示到当前展示商品信息列表
+    const skuViewInfo: SkuViewInfoI = {
+      source: source,
+      skuId: doorSkuDTO.baseInfo.itemId,
+      skuName: doorSkuDTO.baseInfo.title,
+      skuPrice: doorSkuDTO.doorSkuSaleInfo.price,
+      skuSales: doorSkuDTO.doorSkuSaleInfo.saleNum,
+      favorite: false
+    }
+
+    setSkuViewInfo(skuViewInfo)
   }
 
   const createDataSource = () => {
@@ -218,27 +135,13 @@ const GatherTool = (props: GatherToolProps) => {
     }
   }
 
-  // 更新当前浏览商品
-  const updateCurrentProduct = (product: ProductItem) => {
-    setSkuViewInfo({
-      skuId: product.id,
-      skuName: product.title,
-      skuPrice: product.price,
-      skuSales: product.sales,
-      favorite: product.favorite
-    })
-
-    // 更新已查看商品
-    updateViewedProducts(product.id)
-  }
-
   // 切换收藏状态
   const toggleFavorite = () => {
     // 更新当前商品的收藏状态
     if (!skuViewInfo) {
       return
     }
-    setSkuViewInfo((prev: SkuViewInfo | null) => {
+    setSkuViewInfo((prev: SkuViewInfoI | null) => {
       if (!prev) {
         return null
       }
@@ -249,13 +152,13 @@ const GatherTool = (props: GatherToolProps) => {
     })
 
     // 更新数据源中的商品收藏状态
-    const updatedDataSource = dataSource.map((item) => {
-      if (item.id === skuViewInfo.skuId) {
-        return { ...item, favorite: !skuViewInfo.favorite }
-      }
-      return item
-    })
-    setDataSource(updatedDataSource)
+    // const updatedDataSource = dataSource.map((item) => {
+    //   if (item.id === skuViewInfo.skuId) {
+    //     return { ...item, favorite: !skuViewInfo.favorite }
+    //   }
+    //   return item
+    // })
+    // setDataSource(updatedDataSource)
   }
 
   // 导出选中商品
@@ -269,17 +172,6 @@ const GatherTool = (props: GatherToolProps) => {
   // 展开行时记录为已查看
   const handleExpandedRowsChange = (keys: readonly Key[]) => {
     setExpandedRowKeys(keys)
-
-    // 找出新展开的行，并标记为已查看
-    if (keys.length > expandedRowKeys.length) {
-      const newExpandedKey = keys.find((key) => !expandedRowKeys.includes(key))
-      if (newExpandedKey !== undefined) {
-        const product = dataSource.find((item) => item.id === newExpandedKey)
-        if (product) {
-          updateCurrentProduct(product)
-        }
-      }
-    }
   }
 
   const calculateScrollableHeight = () => {
@@ -386,8 +278,7 @@ const GatherTool = (props: GatherToolProps) => {
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis'
-                  }}
-                  onClick={() => updateCurrentProduct(record)}>
+                  }}>
                   {record.shortTitle}
                 </div>
               )
@@ -461,17 +352,17 @@ const GatherTool = (props: GatherToolProps) => {
                         setDataSource(updatedDataSource)
 
                         // 如果是当前查看的商品，同步更新
-                        if (record.id === skuViewInfo?.skuId) {
-                          setSkuViewInfo((prev: SkuViewInfo | null) => {
-                            if (!prev) {
-                              return null
-                            }
-                            return {
-                              ...prev,
-                              favorite: !record.favorite
-                            }
-                          })
-                        }
+                        // if (record.id === skuViewInfo?.skuId) {
+                        //   setSkuViewInfo((prev: SkuViewInfo | null) => {
+                        //     if (!prev) {
+                        //       return null
+                        //     }
+                        //     return {
+                        //       ...prev,
+                        //       favorite: !record.favorite
+                        //     }
+                        //   })
+                        // }
                       }}
                       style={{
                         color: '#ff4d4f',

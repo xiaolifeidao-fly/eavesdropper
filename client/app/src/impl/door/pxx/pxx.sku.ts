@@ -5,8 +5,9 @@ import { MonitorPxxSkuApi } from "@eleapi/door/sku/pxx.sku";
 import { InvokeType, Protocols } from "@eleapi/base";
 import { BrowserContext } from "playwright-core";
 import { getUrlParameter } from "@utils/url.util";
-import { getDoorRecord, saveDoorRecord } from "@api/door/door.api";
+import { getDoorRecord, saveDoorRecord, parseSku } from "@api/door/door.api";
 import { DoorRecord } from "@model/door/door";
+import { PDD } from "@enums/source";
 
 
 const monitor = new PxxLoginMonitor();
@@ -69,6 +70,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                     let rawData = match[0];
                     rawData = rawData.substring(rawData.indexOf("{"), rawData.length);
                     this.saveByJson(rawData, requestUrl, monitorKey, goodsId, type);
+                    this.sendGatherSkuMessage(goodsId, rawData);
                 } else {
                     log.info("row data not found");
                 }
@@ -96,6 +98,24 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         } catch(error){
             log.error("save by json error ", error);
         }
+    }
+
+    sendGatherSkuMessage(itemKey : string, rawData : string){
+        const jsonData = JSON.parse(rawData);
+        const initDataObj = jsonData?.store?.initDataObj;
+        if(!initDataObj){
+            log.warn(`${itemKey} initDataObj not found`);
+            return;
+        }
+
+        // 解析商品信息
+        parseSku(PDD, initDataObj).then(doorSkuDTO => {
+            if(!doorSkuDTO){
+                log.warn(`${itemKey} doorSkuDTO not found`);
+                return;
+            }
+            this.send('onGatherSkuMessage', doorSkuDTO);
+        });
     }
 
 }

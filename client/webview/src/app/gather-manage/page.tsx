@@ -153,7 +153,7 @@ export default function GatherManage() {
         key='add'
         type='primary'
         onClick={() => openModal('create')}>
-        开始采集
+        创建采集批次
       </Button>
     ]
   }
