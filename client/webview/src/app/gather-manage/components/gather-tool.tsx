@@ -170,7 +170,6 @@ const GatherTool = (props: GatherToolProps) => {
     initGatherInfo()
     // createDataSource()
 
-
     // 清理事件监听
     return () => {
       window.removeEventListener('resize', handleResize)
@@ -305,7 +304,10 @@ const GatherTool = (props: GatherToolProps) => {
       }}>
       <div style={{ position: 'absolute', top: 12, right: 12 }}>
         <button
-          onClick={hideModal}
+          onClick={() => {
+            onSuccess && onSuccess()
+            hideModal()
+          }}
           style={{
             background: 'none',
             border: 'none',
