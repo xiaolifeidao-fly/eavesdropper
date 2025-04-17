@@ -3,7 +3,7 @@ import type { Key } from 'react'
 import { message } from 'antd'
 
 import { ProList } from '@ant-design/pro-components'
-import GaterToolInfo, { GatherInfo } from './gater-tool-info'
+import GaterToolInfo, { GatherInfo } from './gather-tool-info'
 import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
 import SkuViewInfo, { SkuViewInfoI } from './gather-tool-sku-view-info'
 import { DoorSkuDTO } from '@model/door/sku'
