@@ -43,30 +43,10 @@
             color: #666;
         }
 
-        .view-count {
-            display: inline-block;
-            background-color: #1890ff;
-            color: white;
-            font-weight: bold;
-            padding: 1px 6px;
-            border-radius: 10px;
-            font-size: 12px;
-        }
-
-        .batch-number {
-            text-align: center;
-            margin-bottom: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            color: #1890ff;
-            padding-bottom: 6px;
-            border-bottom: 1px dashed #e8e8e8;
-        }
-
         /* 当前浏览商品区域样式 */
         .current-product {
-            margin-bottom: 10px;
-            padding: 8px;
+            margin-bottom: 15px;
+            padding: 10px;
             background-color: #e6f7ff;
             border-radius: 4px;
             border: 1px solid #91d5ff;
@@ -77,14 +57,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-weight: 500;
         }
 
         .current-product-title {
             color: #1890ff;
             font-size: 14px;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
             word-break: break-all;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -95,20 +75,20 @@
         .current-product-price {
             color: #f5222d;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .current-product-actions {
             display: flex;
             justify-content: space-between;
-            margin-top: 6px;
+            margin-top: 8px;
         }
 
         .favorite-btn {
             background-color: #ff4d4f;
             color: white;
             border: none;
-            padding: 3px 6px;
+            padding: 4px 8px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
@@ -121,14 +101,14 @@
         }
 
         .favorite-btn svg {
-            margin-right: 3px;
+            margin-right: 4px;
         }
 
         .view-btn {
             background-color: #1890ff;
             color: white;
             border: none;
-            padding: 3px 6px;
+            padding: 4px 8px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
@@ -157,13 +137,13 @@
 
         /* Tab样式 */
         .tabs {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             border-bottom: 1px solid #f0f0f0;
             display: flex;
         }
 
         .tab {
-            padding: 6px 12px;
+            padding: 8px 16px;
             cursor: pointer;
             font-size: 14px;
             position: relative;
@@ -186,16 +166,16 @@
         }
 
         .tab-count {
-            margin-left: 3px;
+            margin-left: 4px;
             font-size: 12px;
             background-color: #f5f5f5;
-            padding: 0 5px;
+            padding: 0 6px;
             border-radius: 10px;
             color: rgba(0, 0, 0, 0.65);
         }
 
         .scrollable-container {
-            height: 310px;
+            height: 300px;
             overflow: auto;
             border: 1px solid #f0f0f0;
             border-radius: 4px;
@@ -261,7 +241,7 @@
             white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
 
         .product-actions a {
@@ -338,6 +318,25 @@
             </div>
         </div>
 
+        <!-- 当前浏览商品信息展示区域 -->
+        <div class="current-product">
+            <div class="current-product-header">
+                <span>当前浏览商品</span>
+            </div>
+            <div class="current-product-title" id="currentProductTitle">华为 Mate 60 Pro 旗舰手机 12+512GB 砚黑色</div>
+            <div class="current-product-price">¥6999.00</div>
+            <div>销量: <span>5280</span></div>
+            <div class="current-product-actions">
+                <button class="favorite-btn" id="favoriteBtn">
+                    <svg viewBox="64 64 896 896" width="14" height="14" fill="currentColor" aria-hidden="true">
+                        <path d="M923 283.6a260.04 260.04 0 00-56.9-82.8 264.4 264.4 0 00-84-55.5A265.34 265.34 0 00679.7 125c-49.3 0-97.4 13.5-139.2 39-10 6.1-19.5 12.8-28.5 20.1-9-7.3-18.5-14-28.5-20.1-41.8-25.5-89.9-39-139.2-39-35.5 0-69.9 6.8-102.4 20.3-31.4 13-59.7 31.7-84 55.5a258.44 258.44 0 00-56.9 82.8c-13.9 32.3-21 66.6-21 101.9 0 33.3 6.8 68 20.3 103.3 11.3 29.5 27.5 60.1 48.2 91 32.8 48.9 77.9 99.9 133.9 151.6 92.8 85.7 184.7 144.9 188.6 147.3l23.7 15.2c10.5 6.7 24 6.7 34.5 0l23.7-15.2c3.9-2.5 95.7-61.6 188.6-147.3 56-51.7 101.1-102.7 133.9-151.6 20.7-30.9 37-61.5 48.2-91 13.5-35.3 20.3-70 20.3-103.3.1-35.3-7-69.6-20.9-101.9z"></path>
+                    </svg>
+                    收藏
+                </button>
+                <button class="view-btn" id="viewBtn">查看详情</button>
+            </div>
+        </div>
+
         <div class="action-bar">
             <button id="exportBtn" class="export-btn" disabled>导出选中商品</button>
         </div>
@@ -375,14 +374,12 @@
             const currentProductTitle = document.getElementById('currentProductTitle');
             const allCountEl = document.getElementById('allCount');
             const favoriteCountEl = document.getElementById('favoriteCount');
-            const viewCountEl = document.getElementById('viewCount');
             const tabs = document.querySelectorAll('.tab');
             
             const selectedRowKeys = [];
             let currentProduct = null;
             let currentTab = 'all';
             let favoriteProducts = [];
-            const viewedProducts = new Set(); // 记录已查看的商品ID
 
             // 更新采集数量和Tab计数
             function updateCounts() {
@@ -391,9 +388,6 @@
                 favoriteProducts = dataSource.filter(item => item.favorite);
                 favoriteCountEl.textContent = favoriteProducts.length;
             }
-
-            // 更新采集数量
-            gatherCount.textContent = dataSource.length;
 
             // 渲染产品列表
             function renderProductList(products) {
@@ -420,9 +414,7 @@
                         </div>
                         <div class="product-content">
                             <div class="product-title">${item.shortTitle}</div>
-                            <div class="product-price" ${!selectedRowKeys.includes(item.id) ? 'style="display:none;"' : ''}>¥${item.price}</div>
-                            <div class="product-sales" ${!selectedRowKeys.includes(item.id) ? 'style="display:none;"' : ''}>销量: ${item.sales}</div>
-                            <div class="product-description" style="${selectedRowKeys.includes(item.id) ? 'display:block;' : ''}">${item.title}</div>
+                            <div class="product-description">${item.title}</div>
                         </div>
                         <div class="product-actions">
                             <button class="item-favorite-btn ${item.favorite ? 'favorited' : ''}" data-id="${item.id}">
@@ -438,28 +430,16 @@
 
                     // 添加复选框事件
                     const checkbox = productItem.querySelector('input[type="checkbox"]');
-                    const description = productItem.querySelector('.product-description');
-                    const productPrice = productItem.querySelector('.product-price');
-                    const productSales = productItem.querySelector('.product-sales');
-                    
                     checkbox.addEventListener('change', function () {
                         if (this.checked) {
                             if (!selectedRowKeys.includes(item.id)) {
                                 selectedRowKeys.push(item.id);
                             }
-                            // 展开描述和显示价格、销量
-                            description.style.display = 'block';
-                            productPrice.style.display = 'block';
-                            productSales.style.display = 'block';
                         } else {
                             const index = selectedRowKeys.indexOf(item.id);
                             if (index > -1) {
                                 selectedRowKeys.splice(index, 1);
                             }
-                            // 折叠描述和隐藏价格、销量
-                            description.style.display = 'none';
-                            productPrice.style.display = 'none';
-                            productSales.style.display = 'none';
                         }
                         exportBtn.disabled = selectedRowKeys.length === 0;
                     });
@@ -472,15 +452,12 @@
 
                     // 添加点击标题显示描述事件
                     const title = productItem.querySelector('.product-title');
+                    const description = productItem.querySelector('.product-description');
                     title.addEventListener('click', function () {
                         if (description.style.display === 'block') {
                             description.style.display = 'none';
-                            productPrice.style.display = 'none';
-                            productSales.style.display = 'none';
                         } else {
                             description.style.display = 'block';
-                            productPrice.style.display = 'block';
-                            productSales.style.display = 'block';
                         }
                         
                         // 设置当前浏览商品
@@ -538,12 +515,6 @@
                         </svg>
                         收藏
                     `;
-                }
-
-                // 更新已查看商品计数
-                if (!viewedProducts.has(product.id)) {
-                    viewedProducts.add(product.id);
-                    viewCountEl.textContent = viewedProducts.size;
                 }
             }
 
