@@ -392,6 +392,9 @@
                 favoriteCountEl.textContent = favoriteProducts.length;
             }
 
+            // 更新采集数量
+            gatherCount.textContent = dataSource.length;
+
             // 渲染产品列表
             function renderProductList(products) {
                 scrollableDiv.innerHTML = '';

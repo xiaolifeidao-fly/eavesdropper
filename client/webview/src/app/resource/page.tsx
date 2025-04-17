@@ -17,6 +17,7 @@ import { ResourcePageReq, ResourcePageResp, BindResourceReq } from '@model/resou
 import { LabelValue } from '@model/base/base';
 import { MbLoginApi } from '@eleapi/door/login/mb.login';
 import { MbUserApi } from '@eleapi/door/user/user';
+import { PxxLoginApi } from '@eleapi/door/login/pxx.login';
 
 
 type DataType = {
@@ -243,6 +244,11 @@ export default function ResourceManage() {
      setOperatorResourceId(record.id);
   }
 
+  const openPxxLoginPage = async (record: DataType) => {
+    const pxxLoginApi = new PxxLoginApi();
+    await pxxLoginApi.login(record.id);
+  }
+
   const login = async () => {
       try {
         if(!username || !password){
@@ -331,12 +337,19 @@ export default function ResourceManage() {
       width: 150,
       render: (_, record) => {
         const buttons = [];
-        if(record.source.value == 'taobao'){
           buttons.push(
             <Button key="bind" type="link" style={{ paddingRight: 0 }} onClick={async () => {
-              await openLoginPage(record);
-            }}>重绑定</Button>,
+              if(record.source.value == 'taobao'){
+                await openLoginPage(record);
+                return;
+              }
+              if(record.source.value == 'pdd'){
+                await openPxxLoginPage(record);
+                return;
+              }
+            }}>登录</Button>,
           )
+        if(record.source.value == 'taobao'){
           buttons.push(
             <Button key="openUserInfo" type="link" style={{ paddingRight: 0 }} onClick={async () => {
               const userApi = new MbUserApi();

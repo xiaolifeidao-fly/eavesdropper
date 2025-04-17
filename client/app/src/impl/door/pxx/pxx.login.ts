@@ -9,6 +9,8 @@ import { getDoorRecord, saveDoorRecord } from "@api/door/door.api";
 import { DoorRecord } from "@model/door/door";
 import { PxxLoginApi } from "@eleapi/door/login/pxx.login";
 
+import { bindResource } from "@api/resource/resource.api";
+import { BindResourceReq } from "@model/resource/resource";
 
 const monitor = new PxxLoginMonitor();
 
@@ -40,7 +42,7 @@ export class MonitorPxxLogin extends PxxLoginApi {
             log.info("open wait monitor");
             const result = await engine.openWaitMonitor(page, url, monitor, {});
             if(result){
-                this.saveSku(resourceId, context, monitor.getType());
+                this.saveLoginInfo(resourceId, context, monitor.getType());
             }
             return result;
         } catch(error){
@@ -49,7 +51,7 @@ export class MonitorPxxLogin extends PxxLoginApi {
     }
 
 
-    saveSku(resourceId : number, context : BrowserContext|undefined, type : string){
+    saveLoginInfo(resourceId : number, context : BrowserContext|undefined, type : string){
         if(!context || monitorConfig[resourceId]){
             return;
         }
@@ -61,7 +63,7 @@ export class MonitorPxxLogin extends PxxLoginApi {
             if(requestUrl.includes("personal_profile.html")){
                 const rawData = await this.getRawData(response);
                 if(rawData){
-                    this.saveByJson(rawData, requestUrl, monitorKey, "PxxLogin", type);
+                    this.saveByJson(resourceId, rawData, requestUrl, monitorKey, "PxxLogin", type);
                 } else {
                     log.info("row data not found");
                 }
@@ -83,7 +85,7 @@ export class MonitorPxxLogin extends PxxLoginApi {
         }
     }
 
-    saveByJson(rawData : string, url : string, doorKey : string, itemKey : string, type : string){
+    async saveByJson(resourceId : number, rawData : string, url : string, doorKey : string, itemKey : string, type : string){
         try{
             const jsonData = JSON.parse(rawData);
             const initDataObj = jsonData?.store?.initDataObj;
@@ -91,14 +93,10 @@ export class MonitorPxxLogin extends PxxLoginApi {
                 log.warn(itemKey, " initDataObj not found");
                 return;
             }
-            const status = initDataObj?.goods?.status;
-            log.info(itemKey, " status is ", status);
-            if(!status || status != 1){
-                return;
-            }
-            const doorRecord = new DoorRecord(undefined, doorKey, url, itemKey, type, JSON.stringify(initDataObj));
-            saveDoorRecord(doorRecord);
-            log.info("save door record success ", itemKey);
+            // const bindResourceReq = new BindResourceReq("", "", 0);
+            // await bindResource(resourceId, bindResourceReq);
+    
+            log.info("bind resource success ", itemKey);
         } catch(error){
             log.error("save by json error ", error);
         }
