@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            padding: 10px;
+            padding: 8px;
             background-color: #f5f5f5;
             display: flex;
             justify-content: center;
@@ -18,14 +18,14 @@
         .container {
             width: 300px;
             background: white;
-            padding: 15px;
+            padding: 12px 12px 8px;
             border-radius: 4px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
         }
 
         .info-section {
-            margin-bottom: 15px;
-            padding: 10px;
+            margin-bottom: 10px;
+            padding: 8px;
             background-color: #fafafa;
             border-radius: 4px;
             border: 1px solid #f0f0f0;
@@ -33,7 +33,7 @@
         }
 
         .info-section div {
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             display: flex;
             justify-content: space-between;
         }
@@ -43,10 +43,30 @@
             color: #666;
         }
 
+        .view-count {
+            display: inline-block;
+            background-color: #1890ff;
+            color: white;
+            font-weight: bold;
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .batch-number {
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1890ff;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed #e8e8e8;
+        }
+
         /* 当前浏览商品区域样式 */
         .current-product {
-            margin-bottom: 15px;
-            padding: 10px;
+            margin-bottom: 10px;
+            padding: 8px;
             background-color: #e6f7ff;
             border-radius: 4px;
             border: 1px solid #91d5ff;
@@ -57,14 +77,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 500;
         }
 
         .current-product-title {
             color: #1890ff;
             font-size: 14px;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             word-break: break-all;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -75,20 +95,20 @@
         .current-product-price {
             color: #f5222d;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .current-product-actions {
             display: flex;
             justify-content: space-between;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .favorite-btn {
             background-color: #ff4d4f;
             color: white;
             border: none;
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
@@ -101,14 +121,14 @@
         }
 
         .favorite-btn svg {
-            margin-right: 4px;
+            margin-right: 3px;
         }
 
         .view-btn {
             background-color: #1890ff;
             color: white;
             border: none;
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
@@ -117,14 +137,14 @@
         .action-bar {
             display: flex;
             justify-content: flex-end;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .export-btn {
             background-color: #1890ff;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 4px 10px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 13px;
@@ -137,13 +157,13 @@
 
         /* Tab样式 */
         .tabs {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             border-bottom: 1px solid #f0f0f0;
             display: flex;
         }
 
         .tab {
-            padding: 8px 16px;
+            padding: 6px 12px;
             cursor: pointer;
             font-size: 14px;
             position: relative;
@@ -166,23 +186,23 @@
         }
 
         .tab-count {
-            margin-left: 4px;
+            margin-left: 3px;
             font-size: 12px;
             background-color: #f5f5f5;
-            padding: 0 6px;
+            padding: 0 5px;
             border-radius: 10px;
             color: rgba(0, 0, 0, 0.65);
         }
 
         .scrollable-container {
-            height: 300px;
+            height: 310px;
             overflow: auto;
             border: 1px solid #f0f0f0;
             border-radius: 4px;
         }
 
         .product-item {
-            padding: 8px 10px;
+            padding: 6px 8px;
             border-bottom: 1px solid #f0f0f0;
             display: flex;
             align-items: flex-start;
@@ -195,13 +215,13 @@
 
         .product-content {
             flex: 1;
-            margin-left: 8px;
+            margin-left: 6px;
             overflow: hidden;
         }
 
         .product-title {
             font-weight: 500;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             cursor: pointer;
             color: #1890ff;
             white-space: nowrap;
@@ -213,19 +233,35 @@
             color: rgba(0, 0, 0, 0.45);
             font-size: 12px;
             display: none;
-            margin-top: 5px;
-            padding: 5px;
+            margin-top: 4px;
+            padding: 4px;
             background-color: #f9f9f9;
             border-radius: 4px;
             word-break: break-all;
+            max-height: 80px;
+            overflow-y: auto;
+            line-height: 1.3;
+        }
+
+        .product-price {
+            color: #f5222d;
+            font-weight: bold;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .product-sales {
+            font-size: 12px;
+            color: #666;
+            margin-top: 1px;
         }
 
         .product-actions {
-            margin-left: 8px;
+            margin-left: 6px;
             white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .product-actions a {
@@ -254,7 +290,7 @@
         }
 
         .checkbox {
-            margin-right: 5px;
+            margin-right: 4px;
             display: flex;
             align-items: center;
             height: 20px;
@@ -265,8 +301,9 @@
 <body>
     <div class="container">
         <div class="info-section">
+            <div class="batch-number">批次号：PXX-20250416-001</div>
             <div>
-                <span class="label">采集标题：</span><span>pxx手机采集</span>
+                <span class="label">采集批次：</span><span>pxx手机采集</span>
             </div>
             <div>
                 <span class="label">采集来源：</span><span>pxx</span>
@@ -277,12 +314,15 @@
             <div>
                 <span class="label">本次采集数量：</span><span id="gatherCount">100</span>
             </div>
+            <div>
+                <span class="label">已查看数量：</span><span class="view-count" id="viewCount">0</span>
+            </div>
         </div>
 
-        <!-- 当前浏览商品信息展示区域 -->
+        <!-- 当前查看的商品信息展示区域 -->
         <div class="current-product">
             <div class="current-product-header">
-                <span>当前浏览商品</span>
+                <span>当前查看的商品</span>
             </div>
             <div class="current-product-title" id="currentProductTitle">华为 Mate 60 Pro 旗舰手机 12+512GB 砚黑色</div>
             <div class="current-product-price">¥6999.00</div>
@@ -335,12 +375,14 @@
             const currentProductTitle = document.getElementById('currentProductTitle');
             const allCountEl = document.getElementById('allCount');
             const favoriteCountEl = document.getElementById('favoriteCount');
+            const viewCountEl = document.getElementById('viewCount');
             const tabs = document.querySelectorAll('.tab');
             
             const selectedRowKeys = [];
             let currentProduct = null;
             let currentTab = 'all';
             let favoriteProducts = [];
+            const viewedProducts = new Set(); // 记录已查看的商品ID
 
             // 更新采集数量和Tab计数
             function updateCounts() {
@@ -375,7 +417,9 @@
                         </div>
                         <div class="product-content">
                             <div class="product-title">${item.shortTitle}</div>
-                            <div class="product-description">${item.title}</div>
+                            <div class="product-price" ${!selectedRowKeys.includes(item.id) ? 'style="display:none;"' : ''}>¥${item.price}</div>
+                            <div class="product-sales" ${!selectedRowKeys.includes(item.id) ? 'style="display:none;"' : ''}>销量: ${item.sales}</div>
+                            <div class="product-description" style="${selectedRowKeys.includes(item.id) ? 'display:block;' : ''}">${item.title}</div>
                         </div>
                         <div class="product-actions">
                             <button class="item-favorite-btn ${item.favorite ? 'favorited' : ''}" data-id="${item.id}">
@@ -391,16 +435,28 @@
 
                     // 添加复选框事件
                     const checkbox = productItem.querySelector('input[type="checkbox"]');
+                    const description = productItem.querySelector('.product-description');
+                    const productPrice = productItem.querySelector('.product-price');
+                    const productSales = productItem.querySelector('.product-sales');
+                    
                     checkbox.addEventListener('change', function () {
                         if (this.checked) {
                             if (!selectedRowKeys.includes(item.id)) {
                                 selectedRowKeys.push(item.id);
                             }
+                            // 展开描述和显示价格、销量
+                            description.style.display = 'block';
+                            productPrice.style.display = 'block';
+                            productSales.style.display = 'block';
                         } else {
                             const index = selectedRowKeys.indexOf(item.id);
                             if (index > -1) {
                                 selectedRowKeys.splice(index, 1);
                             }
+                            // 折叠描述和隐藏价格、销量
+                            description.style.display = 'none';
+                            productPrice.style.display = 'none';
+                            productSales.style.display = 'none';
                         }
                         exportBtn.disabled = selectedRowKeys.length === 0;
                     });
@@ -413,12 +469,15 @@
 
                     // 添加点击标题显示描述事件
                     const title = productItem.querySelector('.product-title');
-                    const description = productItem.querySelector('.product-description');
                     title.addEventListener('click', function () {
                         if (description.style.display === 'block') {
                             description.style.display = 'none';
+                            productPrice.style.display = 'none';
+                            productSales.style.display = 'none';
                         } else {
                             description.style.display = 'block';
+                            productPrice.style.display = 'block';
+                            productSales.style.display = 'block';
                         }
                         
                         // 设置当前浏览商品
@@ -476,6 +535,12 @@
                         </svg>
                         收藏
                     `;
+                }
+
+                // 更新已查看商品计数
+                if (!viewedProducts.has(product.id)) {
+                    viewedProducts.add(product.id);
+                    viewCountEl.textContent = viewedProducts.size;
                 }
             }
 
