@@ -199,6 +199,7 @@ const SkuViewInfo = ({ skuViewInfo, onFavorite, onViewDetail }: { skuViewInfo: S
 
 const GatherTool = (props: GatherToolProps) => {
   const { hideModal, onSuccess } = props
+  const [containerHeight, setContainerHeight] = useState(0)
 
   const [dataSource, setDataSource] = useState<ProductItem[]>([])
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([])
@@ -221,7 +222,21 @@ const GatherTool = (props: GatherToolProps) => {
   })
 
   useEffect(() => {
+    // 计算容器高度
+    setContainerHeight(window.innerHeight * 0.85)
+    
+    // 监听窗口大小变化
+    const handleResize = () => {
+      setContainerHeight(window.innerHeight * 0.85)
+    }
+    
+    window.addEventListener('resize', handleResize)
     createDataSource()
+    
+    // 清理事件监听
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
   const createDataSource = () => {
@@ -337,8 +352,45 @@ const GatherTool = (props: GatherToolProps) => {
     }
   }
 
+  const calculateScrollableHeight = () => {
+    // 减去其他组件的高度来计算可滚动区域的高度
+    // 基本信息区域 + 当前商品区域 + 操作栏 + 边距等
+    const otherComponentsHeight = 250 // 估算其他组件的总高度
+    return containerHeight - otherComponentsHeight
+  }
+
   return (
-    <div>
+    <div style={{
+      height: `${containerHeight}px`,
+      width: '100%',
+      background: 'white',
+      padding: '12px 12px 8px',
+      overflow: 'hidden'
+    }}>
+      <div style={{ position: 'absolute', top: 12, right: 12 }}>
+        <button 
+          onClick={hideModal}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: 16,
+            color: '#999',
+            padding: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 24,
+            height: 24,
+            borderRadius: '50%'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f0f0f0'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+        >
+          ✕
+        </button>
+      </div>
+      
       <GaterToolInfo gaterInfo={gaterInfo} />
       <SkuViewInfo
         skuViewInfo={skuViewInfo}
@@ -374,7 +426,7 @@ const GatherTool = (props: GatherToolProps) => {
       <div
         id='scrollableDiv'
         style={{
-          height: 500,
+          height: `${calculateScrollableHeight()}px`,
           overflow: 'auto'
         }}>
         <ProList

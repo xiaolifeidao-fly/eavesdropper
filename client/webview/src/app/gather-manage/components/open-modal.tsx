@@ -10,8 +10,18 @@ const TARGET = {
   },
   gatherTool: {
     title: '采集工具',
-    width: 400,
-    target: GatherTool
+    width: 300,
+    target: GatherTool,
+    style: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      margin: 0,
+      padding: 0,
+      height: '100vh',
+      overflow: 'hidden'
+    },
+    className: 'gather-tool-modal'
   }
 }
 
