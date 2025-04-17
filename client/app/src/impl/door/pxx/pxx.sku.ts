@@ -3,11 +3,14 @@ import { PxxEngine } from "@src/door/pxx/pxx.engine";
 import log from "electron-log";
 import { MonitorPxxSkuApi } from "@eleapi/door/sku/pxx.sku";
 import { InvokeType, Protocols } from "@eleapi/base";
-import { BrowserContext } from "playwright-core";
+import { BrowserContext, Page } from "playwright-core";
 import { getUrlParameter } from "@utils/url.util";
 import { getDoorRecord, saveDoorRecord, parseSku } from "@api/door/door.api";
 import { DoorRecord } from "@model/door/door";
 import { PDD } from "@enums/source";
+import * as path from 'path';
+import { app } from 'electron';
+import fs from 'fs'
 
 
 const monitor = new PxxLoginMonitor();
@@ -16,6 +19,8 @@ const monitorConfig : {[key : number] : any} = {};
 
 
 export class MonitorPddSku extends MonitorPxxSkuApi {
+    
+    private currentPage: Page | null = null;
     
     @InvokeType(Protocols.INVOKE)
     async monitorSku(){
@@ -28,6 +33,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             if(!page){ 
                 return;
             }
+            this.currentPage = page;
             const context = engine.getContext();
             monitor.setMonitorTimeout(60000);
             let loginResult = false;
@@ -70,7 +76,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                     let rawData = match[0];
                     rawData = rawData.substring(rawData.indexOf("{"), rawData.length);
                     this.saveByJson(rawData, requestUrl, monitorKey, goodsId, type);
-                    this.sendGatherSkuMessage(goodsId, rawData);
+                    this.sendGatherSkuMessage(context, goodsId, rawData);
                 } else {
                     log.info("row data not found");
                 }
@@ -100,13 +106,16 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         }
     }
 
-    sendGatherSkuMessage(itemKey : string, rawData : string){
+    async sendGatherSkuMessage(context : BrowserContext, itemKey : string, rawData : string){
         const jsonData = JSON.parse(rawData);
         const initDataObj = jsonData?.store?.initDataObj;
         if(!initDataObj){
             log.warn(`${itemKey} initDataObj not found`);
             return;
         }
+
+        // 保存页面的静态HTML
+        await this.saveCurrentPageHtml(context, itemKey);
 
         // 解析商品信息
         parseSku(PDD, initDataObj).then(doorSkuDTO => {
@@ -118,4 +127,34 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         });
     }
 
+    private async saveCurrentPageHtml(context: BrowserContext, itemKey: string): Promise<void> {
+        try {
+            if (!this.currentPage) {
+                log.warn(`Cannot save HTML: no current page available for item ${itemKey}`);
+                return;
+            }
+            
+            // 获取页面的HTML内容
+            const htmlContent = await this.currentPage.content();
+            
+            // 生成文件名
+            const fileName = `pdd_${itemKey}.html`;
+            const userDataPath = app.getPath('userData');
+            
+            // 构建文件保存路径
+            const saveDir = path.join(userDataPath, 'resource', 'gather', 'pdd');
+            if(!fs.existsSync(saveDir)){
+                fs.mkdirSync(saveDir, { recursive: true });
+            }
+            const filePath = path.join(saveDir, fileName);
+            // 写入文件
+            log.info("save html to ", filePath);
+            fs.writeFileSync(filePath, htmlContent);
+            
+            log.info(`Successfully saved HTML for item ${itemKey} to ${filePath}`);
+        } catch (error) {
+            log.error(`Error saving HTML for item ${itemKey}:`, error);
+        }
+    }
+    
 }
