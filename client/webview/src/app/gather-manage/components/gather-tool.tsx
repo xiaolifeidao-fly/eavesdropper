@@ -222,12 +222,12 @@ const GatherTool = (props: GatherToolProps) => {
   })
 
   useEffect(() => {
-    // 计算容器高度
-    setContainerHeight(window.innerHeight * 0.85)
+    // 计算容器高度为整个视口高度
+    setContainerHeight(window.innerHeight)
     
     // 监听窗口大小变化
     const handleResize = () => {
-      setContainerHeight(window.innerHeight * 0.85)
+      setContainerHeight(window.innerHeight)
     }
     
     window.addEventListener('resize', handleResize)
@@ -355,8 +355,12 @@ const GatherTool = (props: GatherToolProps) => {
   const calculateScrollableHeight = () => {
     // 减去其他组件的高度来计算可滚动区域的高度
     // 基本信息区域 + 当前商品区域 + 操作栏 + 边距等
-    const otherComponentsHeight = 250 // 估算其他组件的总高度
-    return containerHeight - otherComponentsHeight
+    const infoSectionHeight = 180; // 基本信息区域高度
+    const currentProductHeight = 150; // 当前查看商品区域高度
+    const actionBarHeight = 40; // 操作栏高度
+    const paddingAndMargins = 45; // 边距和其他空间
+    
+    return containerHeight - (infoSectionHeight + currentProductHeight + actionBarHeight + paddingAndMargins);
   }
 
   return (
