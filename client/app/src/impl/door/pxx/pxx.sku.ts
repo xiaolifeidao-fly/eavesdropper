@@ -76,7 +76,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                     let rawData = match[0];
                     rawData = rawData.substring(rawData.indexOf("{"), rawData.length);
                     this.saveByJson(rawData, requestUrl, monitorKey, goodsId, type);
-                    this.sendGatherSkuMessage(context, goodsId, rawData);
+                    this.sendGatherSkuMessage(goodsId, rawData);
                 } else {
                     log.info("row data not found");
                 }
@@ -106,7 +106,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         }
     }
 
-    async sendGatherSkuMessage(context : BrowserContext, itemKey : string, rawData : string){
+    async sendGatherSkuMessage(itemKey : string, rawData : string){
         const jsonData = JSON.parse(rawData);
         const initDataObj = jsonData?.store?.initDataObj;
         if(!initDataObj){
@@ -115,7 +115,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         }
 
         // 保存页面的静态HTML
-        await this.saveCurrentPageHtml(context, itemKey);
+        await this.saveCurrentPageHtml(itemKey);
 
         // 解析商品信息
         parseSku(PDD, initDataObj).then(doorSkuDTO => {
@@ -127,14 +127,14 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         });
     }
 
-    private async saveCurrentPageHtml(context: BrowserContext, itemKey: string): Promise<void> {
+    private async saveCurrentPageHtml(itemKey: string): Promise<void> {
         try {
             if (!this.currentPage) {
                 log.warn(`Cannot save HTML: no current page available for item ${itemKey}`);
                 return;
             }
             
-            // 获取页面的HTML内容
+            // 方法1: 使用content()方法获取HTML
             const htmlContent = await this.currentPage.content();
             
             // 生成文件名
@@ -147,9 +147,13 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                 fs.mkdirSync(saveDir, { recursive: true });
             }
             const filePath = path.join(saveDir, fileName);
+            
             // 写入文件
             log.info("save html to ", filePath);
             fs.writeFileSync(filePath, htmlContent);
+            
+            // 同时截取屏幕截图作为备份
+            await this.captureScreenshot(itemKey);
             
             log.info(`Successfully saved HTML for item ${itemKey} to ${filePath}`);
         } catch (error) {
@@ -157,4 +161,26 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         }
     }
     
+    /**
+     * 获取页面截图并保存
+     */
+    private async captureScreenshot(itemKey: string): Promise<void> {
+        try {
+            if (!this.currentPage) {
+                return;
+            }
+            
+            const userDataPath = app.getPath('userData');
+            const screenshotDir = path.join(userDataPath, 'resource', 'gather', 'screenshots');
+            if(!fs.existsSync(screenshotDir)){
+                fs.mkdirSync(screenshotDir, { recursive: true });
+            }
+            
+            const screenshotPath = path.join(screenshotDir, `pdd_${itemKey}.png`);
+            await this.currentPage.screenshot({ path: screenshotPath, fullPage: true });
+            log.info(`Captured screenshot for item ${itemKey}`);
+        } catch (error) {
+            log.error(`Error capturing screenshot for item ${itemKey}:`, error);
+        }
+    }
 }
