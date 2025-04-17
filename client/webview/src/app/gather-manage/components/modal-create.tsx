@@ -47,7 +47,7 @@ const ModalCreate = (props: ModalCreateProps) => {
           placeholder='请选择采集来源'
         />
       </Form.Item>
-      <Form.Item style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <Form.Item style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 0 }}>
         <Space>
           <Button
             type='default'
