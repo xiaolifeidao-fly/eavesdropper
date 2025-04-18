@@ -5,7 +5,7 @@ import { useUserStore } from '@/store/user'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: import.meta.env.VITE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 30000 // request timeout
 })
@@ -16,7 +16,7 @@ service.interceptors.request.use(
     // do something before request is sent
     const userStore = useUserStore()
     console.log('请求拦截器,token:' + userStore.token)
-    console.log(process.env)
+    console.log(import.meta.env)
     if (userStore.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key

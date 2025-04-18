@@ -16,7 +16,7 @@ import router from './router'
 
 import svgIcon from './icons' // icon
 import './permission' // permission control
-import './utils/error-log' // error log
+import { setupErrorHandler } from './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
@@ -28,7 +28,7 @@ import * as filters from './filters' // global filters
  * Currently MockJs will be used in the production environment,
  * please remove it before going online ! ! !
  */
-if (process.env.NODE_ENV === 'production') {
+if (import.meta.env.MODE === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
@@ -37,6 +37,9 @@ const app = createApp(App)
 
 // 注册svg图标
 app.use(svgIcon)
+
+// 设置错误处理器
+setupErrorHandler(app)
 
 // 注册所有图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

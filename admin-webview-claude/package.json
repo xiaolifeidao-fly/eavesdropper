@@ -83,7 +83,7 @@
   "devDependencies": {
     "@babel/core": "^7.23.5",
     "@babel/register": "^7.22.15",
-    "@vitejs/plugin-vue": "^4.5.1",
+    "@vitejs/plugin-vue": "^4.5.0",
     "@vue/eslint-config-standard": "^8.0.1",
     "@vue/test-utils": "^2.4.3",
     "autoprefixer": "^10.4.16",
@@ -99,10 +99,11 @@
     "mockjs": "^1.1.0",
     "plop": "^4.0.0",
     "postcss": "^8.4.32",
+    "rollup": "^3.29.4",
     "sass": "^1.69.5",
     "serve-static": "^1.15.0",
     "unplugin-vue-define-options": "^3.0.0-beta.8",
-    "vite": "^5.0.5",
+    "vite": "^4.5.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vitest": "^0.34.6"
   },
