@@ -48,3 +48,9 @@ client/app/static/Chrome-bin/*
 **/package-*
 
 client/app/temp_upload
+
+**/src/main/resources/application.properties
+**/src/main/resources/log4j2.xml
+**/src/main/resources/logback.xml
+target/
+bin/

@@ -1,0 +1,1 @@
+mvn clean package -pl com.kakrolot:kakrolot-web -am -DskipTests

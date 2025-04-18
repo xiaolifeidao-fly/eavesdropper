@@ -1,0 +1,1 @@
+mvn clean package -pl com.kakrolot:order-gateway -am -DskipTests
