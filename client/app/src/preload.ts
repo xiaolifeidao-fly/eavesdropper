@@ -13,10 +13,7 @@ type ExposedApi = {
     : never;
 };
 
-
-function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
-  const exposedConfig = {} as ExposedApi;
-  const prototype = cls.prototype; // 通过类获取原型
+function exposeByPrototype(apiName: string, prototype : any, exposedConfig : ExposedApi){
   Object.getOwnPropertyNames(prototype)
     .filter((key) => key !== 'constructor') // 排除构造函数
     .forEach((methodName) => {
@@ -27,6 +24,12 @@ function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
         // 使用 ipcRenderer.invoke 封装方法
         if(metadata == undefined || metadata == Protocols.INVOKE){
             (exposedConfig as any)[methodName] = (...args: any) => {
+              if(methodName == "removeOnMessage"){
+                const removeKey = `${args[0]}.${args[1]}`;
+                ipcRenderer.removeAllListeners(removeKey);
+                return;
+
+              }
               return ipcRenderer.invoke(`${apiName}.${methodName}`, ...args);
             };
         }else{
@@ -39,6 +42,16 @@ function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
         }
       }
     });
+}
+
+function exposeApi(apiName: string, cls: { new(...args: any[]): ElectronApi }) {
+  const exposedConfig = {} as ExposedApi;
+  const prototype = cls.prototype; // 通过类获取原型
+  const parentPrototype = Object.getPrototypeOf(prototype); // 获取父类的原型
+
+  exposeByPrototype(apiName, prototype, exposedConfig);
+
+  exposeByPrototype(apiName, parentPrototype, exposedConfig);
 
   return exposedConfig;
 }

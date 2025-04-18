@@ -10,8 +10,6 @@ import { addSkuTask, updateSkuTask, getSkuTask } from '@api/sku/skuTask.api'
 import { MbSkuApiImpl } from '../sku/sku'
 import { SkuStatus } from '@model/sku/sku'
 import { LabelValue } from '@model/base/base'
-
-
 const taskStatusMap : { [key: string]: { label: string, value: string, color: string } } = {
     'pending': { label: '待执行', value: 'pending', color: 'gray' },
     'running': { label: '执行中', value: 'running', color: 'blue' },
@@ -19,7 +17,6 @@ const taskStatusMap : { [key: string]: { label: string, value: string, color: st
     'failed': { label: '失败', value: 'failed', color: 'red' },
     'stop': { label: '已停止', value: 'stop', color: 'orange' },
 }
-
 
 // 任务Map
 const taskMap = new Map<number, String>()
@@ -233,6 +230,8 @@ export class TaskApiImpl extends TaskApi {
     }
     return false;
   }
+
+
 
   @InvokeType(Protocols.INVOKE)
   async continueTask(taskId: number) {
