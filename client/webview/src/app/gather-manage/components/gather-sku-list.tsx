@@ -112,21 +112,31 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
           rowSelection={rowSelection}
           metas={{
             title: {
-              render: (_, record: SkuViewInfoI) => (
-                <div
-                  className='product-title'
-                  style={{
-                    fontWeight: 500,
-                    marginBottom: 2,
-                    cursor: 'pointer',
-                    color: '#1890ff',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  }}>
-                  {record.skuName}
-                </div>
-              )
+              render: (_, record: SkuViewInfoI) => {
+                // 商品名称最大显示长度
+                const MAX_TITLE_LENGTH = 15;
+                const displayName = record.skuName.length > MAX_TITLE_LENGTH 
+                  ? `${record.skuName.substring(0, MAX_TITLE_LENGTH)}...` 
+                  : record.skuName;
+                
+                return (
+                  <div
+                    className='product-title'
+                    style={{
+                      fontWeight: 500,
+                      marginBottom: 2,
+                      cursor: 'pointer',
+                      color: '#1890ff',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}
+                    title={record.skuName} // 添加完整标题作为tooltip
+                  >
+                    {displayName}
+                  </div>
+                )
+              }
             },
             description: {
               render: (_, record: SkuViewInfoI) => {
