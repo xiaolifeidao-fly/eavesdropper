@@ -270,7 +270,7 @@ export default {
     },
     exportWithdrawSummary() {
       this.exportLoading = true
-      var exportUrl = process.env.VUE_APP_API + '/point/withdrawSummary/export' +
+      var exportUrl = import.meta.env.VITE_APP_API + '/point/withdrawSummary/export' +
         '?channel=' + this.listQuery.channel + '&startTime=' + this.timeRange[0] + '&endTime=' + this.timeRange[1]
       window.open(exportUrl)
       setTimeout(() => {
@@ -281,7 +281,7 @@ export default {
       this.closeDeletePop(index)
       row.exportLoading = true
       var exportDate = row.date + ' 00:00:00'
-      var exportUrl = process.env.VUE_APP_API + '/point/withdrawSummary/export' +
+      var exportUrl = import.meta.env.VITE_APP_API + '/point/withdrawSummary/export' +
         '?channel=' + this.listQuery.channel + '&startTime=' + exportDate + '&endTime=' + exportDate
       window.open(exportUrl)
       setTimeout(() => {

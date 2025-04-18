@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const baseUrl = process.env.VUE_APP_API
+const baseUrl = import.meta.env.VITE_APP_API
 
 // 当前登录用户能看到的任务类目列表
 export function getCurrentTaskCategoryList() {

@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const baseUrl = process.env.VUE_APP_API
+const baseUrl = import.meta.env.VITE_APP_API
 
 export function getShopList() {
   return request({

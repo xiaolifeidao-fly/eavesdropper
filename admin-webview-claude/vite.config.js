@@ -10,6 +10,13 @@ export default defineConfig({
       script: {
         defineModel: true,
         propsDestructure: true
+      },
+      template: {
+        compilerOptions: {
+          compatConfig: {
+            MODE: 2
+          }
+        }
       }
     }),
     createSvgIconsPlugin({

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 import requestOuter from '@/utils/requestOuter'
 
-const baseUrl = process.env.VUE_APP_API
+const baseUrl = import.meta.env.VITE_APP_API
 
 export function queryXhsApi(url) {
   return requestOuter({
