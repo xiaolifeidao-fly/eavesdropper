@@ -1,0 +1,1 @@
+mvn clean package -f ../pom.xml -pl com.kakrolot:order-handler -am -DskipTests
