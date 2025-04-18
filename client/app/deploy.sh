@@ -260,7 +260,7 @@ package_and_upload() {
         cp "$file" "$temp_safe_file"
         
         # 上传文件，使用没有空格的文件名
-        echo "执行命令: scp $temp_safe_file $remote_server:$remote_path/$safe_filename"
+        # echo "执行命令: scp $temp_safe_file $remote_server:$remote_path/$safe_filename"
         # sshpass -p "$remote_password" scp $SSH_OPTS "$temp_safe_file" "$remote_server:$remote_path/$safe_filename"
         qiniuyun_upload $temp_safe_file $remote_path/$safe_filename
         
@@ -298,7 +298,7 @@ qiniuyun_upload() {
 
     # 上传文件
     echo "正在上传文件 $local_file 到七牛云空间 $bucket_name..."
-    qshell fput $bucket_name $remote_file $local_file
+    qshell fput $bucket_name $remote_file $local_file --overwrite
 
     # 检查上传结果
     if [ $? -eq 0 ]; then
