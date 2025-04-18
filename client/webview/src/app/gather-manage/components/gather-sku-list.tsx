@@ -14,6 +14,7 @@ interface GatherSkuListProps {
   updateExportButtonState: () => void
   updateViewedProducts: (skuId: string) => void
   containerHeight: number
+  onItemFavoriteChange?: (skuId: string, favorite: boolean) => void
 }
 
 /**
@@ -29,6 +30,7 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
   updateExportButtonState,
   updateViewedProducts,
   containerHeight,
+  onItemFavoriteChange,
 }) => {
 
   // 计算滚动区域高度
@@ -55,6 +57,25 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
     onChange: (keys: Key[]) => {
       setSelectedRowKeys(keys)
       updateExportButtonState()
+    }
+  }
+
+  // 更新商品收藏状态
+  const handleFavoriteChange = (record: SkuViewInfoI) => {
+    // 更新列表数据
+    const updatedDataSource = dataSource.map((item) => {
+      if (item.skuId === record.skuId) {
+        return { ...item, favorite: !item.favorite }
+      }
+      return item
+    })
+    
+    // 更新列表数据
+    setGatherViewSkuList(updatedDataSource)
+    
+    // 通知父组件收藏状态变化，父组件可能需要更新当前查看商品的状态
+    if (onItemFavoriteChange) {
+      onItemFavoriteChange(record.skuId, !record.favorite)
     }
   }
 
@@ -166,14 +187,7 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
                     <button
                       className={`item-favorite-btn ${record.favorite ? 'favorited' : ''}`}
                       onClick={() => {
-                        // 更新商品收藏状态
-                        const updatedDataSource = dataSource.map((item) => {
-                          if (item.skuId === record.skuId) {
-                            return { ...item, favorite: !item.favorite }
-                          }
-                          return item
-                        })
-                        setGatherViewSkuList(updatedDataSource)
+                        handleFavoriteChange(record)
                       }}
                       style={{
                         color: '#ff4d4f',

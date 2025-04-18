@@ -137,6 +137,8 @@ const GatherTool = (props: GatherToolProps) => {
     if (!skuViewInfo) {
       return
     }
+    
+    // 更新当前查看商品的收藏状态
     setSkuViewInfo((prev: SkuViewInfoI | null) => {
       if (!prev) {
         return null
@@ -145,6 +147,19 @@ const GatherTool = (props: GatherToolProps) => {
         ...prev,
         favorite: !prev.favorite
       }
+    })
+    
+    // 同步更新商品列表中的收藏状态
+    setGatherViewSkuList((prevList) => {
+      return prevList.map((item) => {
+        if (item.skuId === skuViewInfo.skuId) {
+          return {
+            ...item,
+            favorite: !item.favorite
+          }
+        }
+        return item
+      })
     })
   }
 
@@ -173,6 +188,17 @@ const GatherTool = (props: GatherToolProps) => {
       return getFavoriteSkuList()
     }
     return gatherViewSkuList
+  }
+
+  // 商品收藏状态变化回调
+  const handleItemFavoriteChange = (skuId: string, favorite: boolean) => {
+    // 如果当前查看的商品就是被收藏/取消收藏的商品，更新当前查看商品的状态
+    if (skuViewInfo && skuViewInfo.skuId === skuId) {
+      setSkuViewInfo({
+        ...skuViewInfo,
+        favorite: favorite
+      })
+    }
   }
 
   const items = [
@@ -275,6 +301,7 @@ const GatherTool = (props: GatherToolProps) => {
         updateExportButtonState={updateExportButtonState}
         updateViewedProducts={updateViewedProducts}
         containerHeight={containerHeight}
+        onItemFavoriteChange={handleItemFavoriteChange}
       />
     </div>
   )
