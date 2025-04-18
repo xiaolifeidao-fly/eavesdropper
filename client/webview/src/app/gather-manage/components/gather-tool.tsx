@@ -14,22 +14,13 @@ interface GatherToolProps {
   data?: any
 }
 
-interface ProductItem {
-  id: number
-  title: string
-  shortTitle: string
-  price: number
-  sales: number
-  favorite: boolean
-}
-
 const GatherTool = (props: GatherToolProps) => {
   const { hideModal, onSuccess, data } = props
   const [containerHeight, setContainerHeight] = useState(0)
 
-  const [dataSource, setDataSource] = useState<ProductItem[]>([])
+  const [gatherViewSkuList, setGatherViewSkuList] = useState<SkuViewInfoI[]>([])
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([])
-  const [viewedProducts, setViewedProducts] = useState<Set<number>>(new Set())
+  const [viewedProducts, setViewedProducts] = useState<Set<string>>(new Set())
   const [gaterInfo, setGaterInfo] = useState<GatherInfo | null>(null)
   const [skuViewInfo, setSkuViewInfo] = useState<SkuViewInfoI | null>(null)
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([])
@@ -55,13 +46,14 @@ const GatherTool = (props: GatherToolProps) => {
     initGatherInfo()
     // createDataSource()
 
-    // openPxx
+    // 打开PXX
     openPxx()
 
     // 清理事件监听
     return () => {
       window.removeEventListener('resize', handleResize)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const initGatherInfo = () => {
@@ -83,10 +75,11 @@ const GatherTool = (props: GatherToolProps) => {
     }
   }
 
+  // 采集商品消息处理
   const gatherDoorSkuHandler = (source: string, doorSkuDTO: DoorSkuDTO | null) => {
-    if(!doorSkuDTO){
-      setSkuViewInfo(null);
-      return;
+    if (!doorSkuDTO) {
+      setSkuViewInfo(null)
+      return
     }
     // 将pxx当前查看的商品展示到当前展示商品信息列表
     const skuViewInfo: SkuViewInfoI = {
@@ -99,31 +92,31 @@ const GatherTool = (props: GatherToolProps) => {
     }
     setSkuViewInfo(skuViewInfo)
 
-    // 增加查看数量
+    // 判断是否已存在
+    console.log('gatherViewSkuList', gatherViewSkuList)
+    const isExist = gatherViewSkuList.some((item) => item.skuId === skuViewInfo.skuId)
+    if (!isExist) {
+      updateGatherViewSkuList(skuViewInfo)
+      addGatherViewSkuListViewTotal()
+    }
+  }
+
+  // 更新采集商品列表
+  const updateGatherViewSkuList = (skuViewInfo: SkuViewInfoI) => {
+    setGatherViewSkuList((prev: SkuViewInfoI[]) => [skuViewInfo, ...prev])
+  }
+
+  // 修改采集批次查看数量
+  const addGatherViewSkuListViewTotal = (num: number = 1) => {
     setGaterInfo((prev: GatherInfo | null) => {
-      if(!prev){
-        return null;
+      if (!prev) {
+        return null
       }
       return {
         ...prev,
-        viewTotal: prev.viewTotal + 1
+        viewTotal: prev.viewTotal + num
       }
     })
-  }
-
-  const createDataSource = () => {
-    const newDataSource: ProductItem[] = []
-    for (let i = 0; i < 100; i++) {
-      newDataSource.push({
-        id: i,
-        title: `商品 ${i + 1} 的详细描述信息，这里展示了商品的完整描述内容。`,
-        shortTitle: `商品 ${i + 1}`,
-        price: parseFloat((Math.random() * 1000 + 100).toFixed(2)),
-        sales: Math.floor(Math.random() * 10000),
-        favorite: false
-      })
-    }
-    setDataSource(newDataSource)
   }
 
   // 更新导出按钮状态
@@ -135,10 +128,10 @@ const GatherTool = (props: GatherToolProps) => {
   }
 
   // 更新已查看商品
-  const updateViewedProducts = (id: number) => {
-    if (!viewedProducts.has(id)) {
+  const updateViewedProducts = (skuId: string) => {
+    if (!viewedProducts.has(skuId)) {
       const newViewedProducts = new Set(viewedProducts)
-      newViewedProducts.add(id)
+      newViewedProducts.add(skuId)
       setViewedProducts(newViewedProducts)
 
       // 更新已查看数量
@@ -178,8 +171,8 @@ const GatherTool = (props: GatherToolProps) => {
   // 导出选中商品
   const handleExport = () => {
     if (selectedRowKeys.length > 0) {
-      const selectedItems = dataSource.filter((item) => selectedRowKeys.includes(item.id)).map((item) => item.shortTitle)
-      alert('将导出以下商品:\n' + selectedItems.join('\n'))
+      // const selectedItems = dataSource.filter((item) => selectedRowKeys.includes(item.id)).map((item) => item.shortTitle)
+      alert('导出商品')
     }
   }
 
@@ -277,11 +270,11 @@ const GatherTool = (props: GatherToolProps) => {
             expandedRowKeys,
             onExpandedRowsChange: handleExpandedRowsChange
           }}
-          dataSource={dataSource}
+          dataSource={gatherViewSkuList}
           rowSelection={rowSelection}
           metas={{
             title: {
-              render: (_, record: ProductItem) => (
+              render: (_, record: SkuViewInfoI) => (
                 <div
                   className='product-title'
                   style={{
@@ -293,12 +286,12 @@ const GatherTool = (props: GatherToolProps) => {
                     overflow: 'hidden',
                     textOverflow: 'ellipsis'
                   }}>
-                  {record.shortTitle}
+                  {record.skuName}
                 </div>
               )
             },
             description: {
-              render: (_, record: ProductItem) => {
+              render: (_, record: SkuViewInfoI) => {
                 return (
                   <>
                     <div
@@ -308,9 +301,9 @@ const GatherTool = (props: GatherToolProps) => {
                         fontWeight: 'bold',
                         fontSize: 12,
                         marginTop: 2,
-                        display: expandedRowKeys.includes(record.id) ? 'block' : 'none'
+                        display: expandedRowKeys.includes(record.skuId) ? 'block' : 'none'
                       }}>
-                      ¥{record.price.toFixed(2)}
+                      ¥{record.skuPrice}
                     </div>
                     <div
                       className='product-sales'
@@ -318,16 +311,16 @@ const GatherTool = (props: GatherToolProps) => {
                         fontSize: 12,
                         color: '#666',
                         marginTop: 1,
-                        display: expandedRowKeys.includes(record.id) ? 'block' : 'none'
+                        display: expandedRowKeys.includes(record.skuId) ? 'block' : 'none'
                       }}>
-                      销量: {record.sales}
+                      销量: {record.skuSales}
                     </div>
                     <div
                       className='product-description'
                       style={{
                         color: 'rgba(0, 0, 0, 0.45)',
                         fontSize: 12,
-                        display: expandedRowKeys.includes(record.id) ? 'block' : 'none',
+                        display: expandedRowKeys.includes(record.skuId) ? 'block' : 'none',
                         marginTop: 4,
                         padding: 4,
                         backgroundColor: '#f9f9f9',
@@ -337,14 +330,14 @@ const GatherTool = (props: GatherToolProps) => {
                         overflowY: 'auto',
                         lineHeight: 1.3
                       }}>
-                      {record.title}
+                      {record.skuName}
                     </div>
                   </>
                 )
               }
             },
             actions: {
-              render: (_, record: ProductItem) => {
+              render: (_, record: SkuViewInfoI) => {
                 return (
                   <div
                     className='product-actions'
@@ -357,13 +350,13 @@ const GatherTool = (props: GatherToolProps) => {
                       className={`item-favorite-btn ${record.favorite ? 'favorited' : ''}`}
                       onClick={() => {
                         // 更新商品收藏状态
-                        const updatedDataSource = dataSource.map((item) => {
-                          if (item.id === record.id) {
+                        const updatedDataSource = gatherViewSkuList.map((item) => {
+                          if (item.skuId === record.skuId) {
                             return { ...item, favorite: !item.favorite }
                           }
                           return item
                         })
-                        setDataSource(updatedDataSource)
+                        setGatherViewSkuList(updatedDataSource)
 
                         // 如果是当前查看的商品，同步更新
                         // if (record.id === skuViewInfo?.skuId) {
@@ -406,8 +399,8 @@ const GatherTool = (props: GatherToolProps) => {
                         fontSize: 12
                       }}
                       onClick={() => {
-                        updateViewedProducts(record.id)
-                        alert(`已复制商品链接: ${record.shortTitle}`)
+                        updateViewedProducts(record.skuId)
+                        alert(`已复制商品链接: ${record.skuName}`)
                       }}>
                       复制
                     </a>
