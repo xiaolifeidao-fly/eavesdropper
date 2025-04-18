@@ -3,6 +3,7 @@ import type { Key } from 'react'
 import { ProList } from '@ant-design/pro-components'
 import { Empty } from 'antd'
 import { SkuViewInfoI } from './gather-tool-sku-view-info'
+import './gather-sku-list.less' // 引入自定义样式
 
 interface GatherSkuListProps {
   dataSource: SkuViewInfoI[]
@@ -30,9 +31,8 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
   updateExportButtonState,
   updateViewedProducts,
   containerHeight,
-  onItemFavoriteChange,
+  onItemFavoriteChange
 }) => {
-
   // 计算滚动区域高度
   const calculateScrollableHeight = () => {
     // 减去其他组件的高度来计算可滚动区域的高度
@@ -69,10 +69,10 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
       }
       return item
     })
-    
+
     // 更新列表数据
     setGatherViewSkuList(updatedDataSource)
-    
+
     // 通知父组件收藏状态变化，父组件可能需要更新当前查看商品的状态
     if (onItemFavoriteChange) {
       onItemFavoriteChange(record.skuId, !record.favorite)
@@ -84,11 +84,7 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
     return (
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
-        description={
-          <span style={{ color: '#999', fontSize: 14 }}>
-            没有符合条件的商品
-          </span>
-        }
+        description={<span style={{ color: '#999', fontSize: 14 }}>没有符合条件的商品</span>}
         style={{ marginTop: 50 }}
       />
     )
@@ -101,9 +97,23 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
         height: `${calculateScrollableHeight()}px`,
         overflow: 'auto'
       }}>
+      {/* 内联样式修复actions的左边距问题 */}
+      <style>
+        {`
+          .ant-list-item-action {
+            margin-inline-start: 12px !important;
+            margin-left: 12px !important;
+            padding-left: 0 !important;
+          }
+          .ant-list-item-meta-content {
+            max-width: calc(100% - 48px) !important;
+          }
+        `}
+      </style>
       {dataSource.length > 0 ? (
         <ProList
           rowKey='skuId'
+          className='compact-list-actions'
           expandable={{
             expandedRowKeys,
             onExpandedRowsChange: handleExpandedRowsChange
@@ -114,11 +124,9 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
             title: {
               render: (_, record: SkuViewInfoI) => {
                 // 商品名称最大显示长度
-                const MAX_TITLE_LENGTH = 15;
-                const displayName = record.skuName.length > MAX_TITLE_LENGTH 
-                  ? `${record.skuName.substring(0, MAX_TITLE_LENGTH)}...` 
-                  : record.skuName;
-                
+                const MAX_TITLE_LENGTH = 10
+                const displayName = record.skuName.length > MAX_TITLE_LENGTH ? `${record.skuName.substring(0, MAX_TITLE_LENGTH)}...` : record.skuName
+
                 return (
                   <div
                     className='product-title'
@@ -143,27 +151,6 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
                 return (
                   <>
                     <div
-                      className='product-price'
-                      style={{
-                        color: '#f5222d',
-                        fontWeight: 'bold',
-                        fontSize: 12,
-                        marginTop: 2,
-                        display: expandedRowKeys.includes(record.skuId) ? 'block' : 'none'
-                      }}>
-                      ¥{record.skuPrice}
-                    </div>
-                    <div
-                      className='product-sales'
-                      style={{
-                        fontSize: 12,
-                        color: '#666',
-                        marginTop: 1,
-                        display: expandedRowKeys.includes(record.skuId) ? 'block' : 'none'
-                      }}>
-                      销量: {record.skuSales}
-                    </div>
-                    <div
                       className='product-description'
                       style={{
                         color: 'rgba(0, 0, 0, 0.45)',
@@ -180,6 +167,56 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
                       }}>
                       {record.skuName}
                     </div>
+                    <div
+                      style={{
+                        display: expandedRowKeys.includes(record.skuId) ? 'flex' : 'none',
+                        alignItems: 'center'
+                      }}>
+                      <div
+                        className='product-price'
+                        style={{
+                          color: '#f5222d',
+                          fontWeight: 'bold',
+                          fontSize: 12,
+                          marginTop: 2,
+                          marginRight: 8
+                        }}>
+                        ¥{record.skuPrice}
+                      </div>
+                      <div
+                        className='product-sales'
+                        style={{
+                          fontSize: 12,
+                          color: '#666',
+                          marginTop: 1
+                        }}>
+                        销量: {record.skuSales}
+                      </div>
+                    </div>
+
+                    {/* 非展开状态下的价格和销量，放在同一行 */}
+                    <div
+                      style={{
+                        display: expandedRowKeys.includes(record.skuId) ? 'none' : 'flex',
+                        alignItems: 'center'
+                      }}>
+                      <div
+                        style={{
+                          color: '#f5222d',
+                          fontWeight: 'bold',
+                          fontSize: 12,
+                          marginRight: 8
+                        }}>
+                        ¥{record.skuPrice}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: '#666'
+                        }}>
+                        销量: {record.skuSales}
+                      </div>
+                    </div>
                   </>
                 )
               }
@@ -192,13 +229,13 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 4
+                      gap: 4,
+                      paddingLeft: 0,
+                      marginLeft: 0
                     }}>
                     <button
                       className={`item-favorite-btn ${record.favorite ? 'favorited' : ''}`}
-                      onClick={() => {
-                        handleFavoriteChange(record)
-                      }}
+                      onClick={() => handleFavoriteChange(record)}
                       style={{
                         color: '#ff4d4f',
                         background: 'none',
@@ -238,7 +275,9 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
             }
           }}
         />
-      ) : renderEmpty()}
+      ) : (
+        renderEmpty()
+      )}
     </div>
   )
 }
