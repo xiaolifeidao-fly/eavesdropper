@@ -1,5 +1,8 @@
-import React from 'react'
-import { Form, Input, Button, Space, Select } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Form, Input, Button, Space, Select, message } from 'antd'
+
+import { addGatherBatch } from '@api/gather/gather-batch.api'
+import { getResourceSourceList } from '@api/resource/resource.api';
 
 interface ModalCreateProps {
   hideModal: () => void
@@ -15,9 +18,30 @@ const ModalCreate = (props: ModalCreateProps) => {
   const [form] = Form.useForm<FromInfo>()
   const { hideModal, onSuccess } = props
 
+  const [sourceList, setSourceList] = useState<any[]>([])
+
+  useEffect(() => {
+    getResourceSourceList().then(resp => {
+      const sourceList = resp.map((item: any) => ({
+        label: item.label,
+        value: item.value
+      }))
+      setSourceList(sourceList)
+    })
+  }, [])
+
   // 提交表单
-  const onFinish = (values: FromInfo) => {
-    console.log(values)
+  const onFinish = async(values: FromInfo) => {
+    const result = await addGatherBatch({
+      name: values.name,
+      source: values.source
+    })
+
+    if (!result) {
+      message.error('采集失败')
+      return
+    }
+
     onSuccess && onSuccess()
     hideModal()
   }
@@ -39,10 +63,7 @@ const ModalCreate = (props: ModalCreateProps) => {
         name='source'
         rules={[{ required: true, message: '请选择采集来源' }]}>
         <Select
-          options={[
-            { label: '采集来源1', value: '1' },
-            { label: '采集来源2', value: '2' }
-          ]}
+          options={sourceList}
           placeholder='请选择采集来源'
         />
       </Form.Item>
@@ -56,7 +77,7 @@ const ModalCreate = (props: ModalCreateProps) => {
           <Button
             type='primary'
             htmlType='submit'>
-            开始采集
+            保存
           </Button>
         </Space>
       </Form.Item>

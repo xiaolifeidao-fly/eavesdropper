@@ -1,0 +1,52 @@
+package services
+
+import (
+	"errors"
+	"strconv"
+	"strings"
+	"sync"
+	"time"
+
+	"server/common/middleware/database"
+	"server/common/middleware/logger"
+	"server/internal/gather/models"
+	"server/internal/gather/repositories"
+	"server/internal/gather/services/dto"
+)
+
+func AddGatherBatch(addDto *dto.GatherBatchDTO) (*dto.GatherBatchDTO, error) {
+	var err error
+	gatherRepository := repositories.GatherBatchRepository
+
+	gatherBatch := database.ToPO[models.GatherBatch](addDto)
+	if _, err = gatherRepository.Create(gatherBatch); err != nil {
+		logger.Errorf("AddGatherBatch failed, with error is %v", err)
+		return nil, errors.New("操作数据库错误")
+	}
+
+	addDto = database.ToDTO[dto.GatherBatchDTO](gatherBatch)
+	return addDto, nil
+}
+
+var lock = sync.Mutex{}
+
+func GetGatherBatchNo(userId uint64, source string) (string, error) {
+	var err error
+	gatherRepository := repositories.GatherBatchRepository
+
+	lock.Lock()
+	count, err := gatherRepository.GetTodayGatherBatchNoCount(userId, source)
+	if err != nil {
+		logger.Errorf("GetGatherBatchNo failed, with error is %v", err)
+		return "", errors.New("数据库错误")
+	}
+	defer lock.Unlock()
+
+	// count 部分补齐3位
+	countStr := strconv.FormatInt(count+1, 10)
+	if len(countStr) < 3 {
+		countStr = strings.Repeat("0", 3-len(countStr)) + countStr
+	}
+
+	return source + "-" + time.Now().Format("20060102") + "-" + countStr, nil
+}
