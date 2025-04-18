@@ -8,7 +8,7 @@ sh init.sh
 ### 服务初始化配置
 
 ```
-1.服务脚本会上传到/data/program/app/kakrolot/order-gateway下 (start.sh, stop.sh)
+1.服务脚本会上传到/data/program/app/kakrolot/order-gateway下的 (start.sh, stop.sh)
 2.服务应用包会上传到/data/program/app/kakrolot/order-gateway/cluster1目录下(有几个节点，就会建立几个cluster)
 3.登录服务器,进入到该目录后,将start.sh stop.sh copy到具体的节点中 
 4.stop.sh 脚本是根据文件目录杀掉进程的，请根据具体服务的路径进行修正
