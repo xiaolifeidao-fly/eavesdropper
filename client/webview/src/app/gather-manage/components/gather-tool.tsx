@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import type { Key } from 'react'
-import { message } from 'antd'
+import { message, Tabs } from 'antd'
 
 import GaterToolInfo, { GatherInfo } from './gather-tool-info'
 import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
@@ -25,6 +25,7 @@ const GatherTool = (props: GatherToolProps) => {
   const [gaterInfo, setGaterInfo] = useState<GatherInfo | null>(null)
   const [skuViewInfo, setSkuViewInfo] = useState<SkuViewInfoI | null>(null)
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([])
+  const [activeTabKey, setActiveTabKey] = useState<string>('all')
 
   useEffect(() => {
     // 计算容器高度为整个视口高度
@@ -154,6 +155,37 @@ const GatherTool = (props: GatherToolProps) => {
     }
   }
 
+  // 获取收藏的商品列表
+  const getFavoriteSkuList = () => {
+    return gatherViewSkuList.filter(item => item.favorite)
+  }
+
+  // Tab项变化时触发
+  const handleTabChange = (key: string) => {
+    setActiveTabKey(key)
+    // 切换Tab时清除已选择的项
+    setSelectedRowKeys([])
+  }
+
+  // 获取Tab下的数据源
+  const getTabDataSource = () => {
+    if (activeTabKey === 'favorite') {
+      return getFavoriteSkuList()
+    }
+    return gatherViewSkuList
+  }
+
+  const items = [
+    {
+      key: 'all',
+      label: `全部商品 (${gatherViewSkuList.length})`,
+    },
+    {
+      key: 'favorite',
+      label: `收藏商品 (${getFavoriteSkuList().length})`,
+    },
+  ]
+
   return (
     <div
       style={{
@@ -224,9 +256,17 @@ const GatherTool = (props: GatherToolProps) => {
         </button>
       </div>
 
+      {/* Tab分类显示 */}
+      <Tabs
+        activeKey={activeTabKey}
+        onChange={handleTabChange}
+        items={items}
+        style={{ marginBottom: 8 }}
+      />
+
       {/* 采集商品列表 */}
       <GatherSkuList 
-        dataSource={gatherViewSkuList}
+        dataSource={getTabDataSource()}
         setGatherViewSkuList={setGatherViewSkuList}
         expandedRowKeys={expandedRowKeys}
         setExpandedRowKeys={setExpandedRowKeys}
