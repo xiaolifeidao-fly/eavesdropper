@@ -11,6 +11,7 @@ import { PDD } from "@enums/source";
 import * as path from 'path';
 import { app } from 'electron';
 import fs from 'fs'
+import { shell } from 'electron';
 
 
 const monitor = new PxxLoginMonitor();
@@ -181,6 +182,79 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             log.info(`Captured screenshot for item ${itemKey}`);
         } catch (error) {
             log.error(`Error capturing screenshot for item ${itemKey}:`, error);
+        }
+    }
+
+    /**
+     * 检查本地HTML文件是否存在
+     */
+    @InvokeType(Protocols.INVOKE)
+    async checkLocalHtmlExists(source: string, itemKey: string): Promise<boolean> {
+        try {
+            const userDataPath = app.getPath('userData');
+            let fileName = '';
+            let sourceDir = '';
+
+            if (source === PDD) {
+                fileName = `pdd_${itemKey}.html`;
+                sourceDir = path.join(userDataPath, 'resource', 'gather', 'pdd');
+            } else if (source === 'TB') {
+                fileName = `taobao_${itemKey}.html`;
+                sourceDir = path.join(userDataPath, 'resource', 'gather', 'taobao');
+            } else {
+                return false;
+            }
+
+            const filePath = path.join(sourceDir, fileName);
+            
+            // 检查文件是否存在
+            return fs.existsSync(filePath);
+        } catch (error) {
+            log.error('Error checking local HTML file:', error);
+            return false;
+        }
+    }
+
+    /**
+     * 打开本地HTML文件
+     */
+    @InvokeType(Protocols.INVOKE)
+    async openLocalHtmlFile(source: string, itemKey: string): Promise<boolean> {
+        try {
+            const userDataPath = app.getPath('userData');
+            let fileName = '';
+            let sourceDir = '';
+
+            if (source === PDD) {
+                fileName = `pdd_${itemKey}.html`;
+                sourceDir = path.join(userDataPath, 'resource', 'gather', 'pdd');
+            } else if (source === 'TB') {
+                fileName = `taobao_${itemKey}.html`;
+                sourceDir = path.join(userDataPath, 'resource', 'gather', 'taobao');
+            } else {
+                return false;
+            }
+
+            const filePath = path.join(sourceDir, fileName);
+            
+            // 检查文件是否存在
+            if (fs.existsSync(filePath)) {
+                // 使用系统默认应用打开文件
+                return shell.openPath(filePath).then(error => {
+                    if (error === '') {
+                        log.info(`Successfully opened ${filePath}`);
+                        return true;
+                    } else {
+                        log.error(`Error opening file: ${error}`);
+                        return false;
+                    }
+                });
+            }
+            
+            return false;
+        } catch (error) {
+            log.error('Error opening local HTML file:', error);
+            return false;
         }
     }
 }

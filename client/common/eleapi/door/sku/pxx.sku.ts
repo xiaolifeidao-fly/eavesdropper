@@ -16,4 +16,14 @@ export class MonitorPxxSkuApi extends ElectronApi{
     async onGatherSkuMessage(callback: (doorSkuDTO: DoorSkuDTO | null) => void) {
       return await this.onMessage('onGatherSkuMessage', callback)
     }
+
+    @InvokeType(Protocols.INVOKE)
+    async checkLocalHtmlExists(source: string, itemKey: string): Promise<boolean> {
+        return await this.invokeApi('checkLocalHtmlExists', source, itemKey);
+    }
+
+    @InvokeType(Protocols.INVOKE)
+    async openLocalHtmlFile(source: string, itemKey: string): Promise<boolean> {
+        return await this.invokeApi('openLocalHtmlFile', source, itemKey);
+    }
 }

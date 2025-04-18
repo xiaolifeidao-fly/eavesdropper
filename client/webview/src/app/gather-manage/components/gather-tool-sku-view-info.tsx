@@ -1,6 +1,6 @@
 import React from 'react'
 import { message } from 'antd'
-
+import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
 
 import { PDD, TB } from "@enums/source";
 
@@ -21,10 +21,32 @@ const SkuViewInfo = ({ skuViewInfo, onFavorite }: { skuViewInfo: SkuViewInfoI | 
   }
 
   // 查看详情
-  const onViewDetail = () => {
+  const onViewDetail = async () => {
     if (skuViewInfo.source === PDD) {
-      window.open(`${PDD_URL}${skuViewInfo.skuId}`, '_blank');
-      message.info(`查看商品详情: ${skuViewInfo.skuName}`)
+      try {
+        // 创建一个API实例来检查本地文件是否存在
+        const monitor = new MonitorPxxSkuApi()
+        
+        // 调用后端API查询本地HTML文件是否存在
+        // 这里假设后端有一个checkLocalHtmlExists方法，如果没有的话需要在后端添加
+        const localFileExists = await monitor.checkLocalHtmlExists(PDD, skuViewInfo.skuId)
+        
+        if (localFileExists) {
+          // 如果本地文件存在，打开本地文件
+          // 由于需要通过后端打开文件，可能需要新增一个openLocalFile方法
+          await monitor.openLocalHtmlFile(PDD, skuViewInfo.skuId)
+          message.success(`正在查看本地缓存的商品详情: ${skuViewInfo.skuName}`)
+        } else {
+          // 如果本地文件不存在，使用在线链接
+          window.open(`${PDD_URL}${skuViewInfo.skuId}`, '_blank')
+          message.info(`查看商品详情: ${skuViewInfo.skuName}`)
+        }
+      } catch (error) {
+        console.error('Error checking local HTML file:', error)
+        // 出错时回退到使用在线链接
+        window.open(`${PDD_URL}${skuViewInfo.skuId}`, '_blank')
+        message.info(`查看商品详情: ${skuViewInfo.skuName}`)
+      }
     } else {
       message.error(`暂未支持查看${skuViewInfo.source}商品详情`)
     }
