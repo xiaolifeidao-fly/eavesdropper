@@ -56,6 +56,9 @@ const GatherTool = (props: GatherToolProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // 添加useEffect来监控gatherViewSkuList的变化
+  useEffect(() => {}, [gatherViewSkuList])
+
   const initGatherInfo = () => {
     setGaterInfo(data)
   }
@@ -92,18 +95,20 @@ const GatherTool = (props: GatherToolProps) => {
     }
     setSkuViewInfo(skuViewInfo)
 
-    // 判断是否已存在
-    console.log('gatherViewSkuList', gatherViewSkuList)
-    const isExist = gatherViewSkuList.some((item) => item.skuId === skuViewInfo.skuId)
-    if (!isExist) {
-      updateGatherViewSkuList(skuViewInfo)
-      addGatherViewSkuListViewTotal()
-    }
-  }
+    // 使用函数式更新来处理状态，确保访问最新的状态
+    setGatherViewSkuList((prevList) => {
+      // 在函数内部检查是否已存在
+      const isExist = prevList.some((item) => item.skuId === skuViewInfo.skuId)
+      console.log('Current list in update function:', prevList)
 
-  // 更新采集商品列表
-  const updateGatherViewSkuList = (skuViewInfo: SkuViewInfoI) => {
-    setGatherViewSkuList((prev: SkuViewInfoI[]) => [skuViewInfo, ...prev])
+      if (!isExist) {
+        // 不存在，添加到列表
+        addGatherViewSkuListViewTotal()
+        return [skuViewInfo, ...prevList]
+      }
+      // 已存在，返回原列表
+      return prevList
+    })
   }
 
   // 修改采集批次查看数量
