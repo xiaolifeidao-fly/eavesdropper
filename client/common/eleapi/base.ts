@@ -19,7 +19,7 @@ abstract class ElectronApi {
 
   apiName: string;
 
-  event : any;
+  windows : any;
 
   consumers : {
     [key: string]: string
@@ -51,12 +51,12 @@ abstract class ElectronApi {
     return undefined;
   }
 
-  getEvent(){
-    return this.event
+  getWindows(){
+    return this.windows
   }
 
-  setEvent(event: any){
-    this.event = event
+  setWindows(windows: any){
+    this.windows = windows
   }
 
   abstract getApiName(): string;
@@ -81,7 +81,7 @@ abstract class ElectronApi {
   }
 
   sendMessage(channel: string, ...args: any): void{
-    this.getEvent().sender.send(channel, ...args);
+    this.getWindows().webContents.send(channel, ...args);
   }
 
   async invokeApi(functionName : string, ...args : any){
@@ -99,31 +99,25 @@ abstract class ElectronApi {
       return {};
   }
 
+  @InvokeType(Protocols.INVOKE)
+  async removeOnMessage(apiName : string, functionName : string){ 
+    try{  
+      return await this.invokeApi("removeOnMessage", apiName, functionName);
+    }catch(e : any){
+        
+    }
+  }
+
   async onMessage(functionName : string, callback : (...args: any) => void, topic : string|undefined = undefined){
-    var functionNameExecuted = `${functionName}Executed`;
-    // @ts-ignore
-    if (typeof window[functionNameExecuted] != 'undefined') {
-      return {};
-    }
-    // @ts-ignore
-    window[functionNameExecuted] = true; // 标记为已执行
-    if(topic == undefined){
-      topic = functionName;
-    }
     const env = this.getEnvironment();
     if(env == 'Electron'){
         let apiName = this.getApiName();
         if(this.getNamespace() != undefined){
             apiName = this.getNamespace() + "_" + apiName;
         }
-        if(topic){
-          if(topic in this.consumers){
-            return {};
-          }
-          this.consumers[topic] = apiName;
-        }
+        await this.removeOnMessage(apiName, functionName);
         //@ts-ignore
-        return await window[this.getApiName()][functionName](callback);
+        return await window[apiName][functionName](callback);
     }
     return {};
   }

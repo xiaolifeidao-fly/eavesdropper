@@ -2,6 +2,7 @@ import { ElectronApi, Protocols } from "@eleapi/base";
 import { registerApi } from "@src/impl/register";
 import { ipcMain } from "electron";
 import log from "electron-log";
+import { mainWindow } from "../windows";
 
  function registerMethodsFromClass(cls: { new(...args: any[]): ElectronApi }) {
     const prototype = cls.prototype; // 通过类获取原型
@@ -23,7 +24,7 @@ import log from "electron-log";
                 log.info("metadata impl", metadata, `${rendererApiName}.${methodName}`);
                 ipcMain.handle(`${rendererApiName}.${methodName}`, async (event, ...args) => {
                     const instance = new cls();
-                    instance.setEvent(event);
+                    instance.setWindows(mainWindow);
                     return method.apply(instance, args);
                 });
             }
