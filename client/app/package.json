@@ -1,6 +1,6 @@
 {
   "name": "eavesdropper",
-  "version": "1.2.18",
+  "version": "1.1.0",
   "description": "",
   "main": "dist/main.js",
   "scripts": {
@@ -52,7 +52,7 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "http://eavesdropper.eaochat.com/app/updates/"
+        "url": "http://101.43.28.195/updates/"
       }
     ],
     "releaseInfo": {

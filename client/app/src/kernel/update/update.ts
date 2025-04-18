@@ -30,6 +30,7 @@ export function enableUpdateInDev() {
   autoUpdater.setFeedURL({
     provider: 'generic',
     url: 'http://101.43.28.195/updates/'
+    // url: 'http://eavesdropper.eaochat.com/app/updates/'
   });
   
   return autoUpdater;
