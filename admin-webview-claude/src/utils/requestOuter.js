@@ -14,7 +14,7 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
     console.log('请求拦截器,store的token:' + store.getters.token)
-    console.log(process.env)
+    console.log(import.meta.env)
     return config
   },
   error => {

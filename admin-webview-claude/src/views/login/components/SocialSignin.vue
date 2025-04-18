@@ -15,7 +15,7 @@
 // import openWindow from '@/utils/open-window'
 
 export default {
-  name: 'SocialSignin',
+  name: 'SocialSignIn',
   methods: {
     wechatHandleClick(thirdpart) {
       alert('ok')
