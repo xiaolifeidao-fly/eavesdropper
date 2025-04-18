@@ -184,6 +184,7 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
 
     // 监听商品发布消息
     taskApi.onPublishSkuMessage(callback).then(() => {
+      console.log('onPublishSkuMessage callback')
       // 监听任务完成之后批量发布商品
       if (props.operationType === SkuTaskOperationType.PUSH) {
         const urls = props.urls.map(item => item.url);
@@ -213,6 +214,10 @@ const SkuPushProgress: React.FC<SkuPushProgressProps> = (props) => {
       console.error("onPublishSkuMessage error: ", error);
       message.error("商品发布失败");
     });
+     // 在组件卸载时移除事件监听
+    //  return () => {
+    //   taskApi.removeOnMessage(taskApi.getApiName(), "onPublishSkuMessage");
+    // }; 
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.publishStatus]);
