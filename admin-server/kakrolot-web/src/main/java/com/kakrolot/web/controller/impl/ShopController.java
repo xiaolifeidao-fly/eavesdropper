@@ -21,10 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -105,23 +102,10 @@ public class ShopController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "商品列表", httpMethod = "GET")
     public WebResponse<ShopModelResponse> list() {
-        List<ShopDTO> shopDTOs = shopService.getAllActiveFromBarry();
+        List<ShopDTO> all = shopService.getAll();
         ShopModelResponse shopModelResponse = ShopModelResponse.builder()
-                .items(shopWebConvert.toModels(shopDTOs)).total(shopDTOs.size()).build();
+                .items(shopWebConvert.toModels(all)).total(all.size()).build();
         return WebResponse.success(shopModelResponse);
-    }
-
-    @RequestMapping(value = "/currentList", method = RequestMethod.GET)
-    @ResponseBody
-    @ApiOperation(value = "当前登录用户的商品列表", httpMethod = "GET")
-    public WebResponse<List<ShopModel>> currentList() {
-//        UserDTO userDTO = getCurrentUser();
-//        List<Long> tenantIdsByUserId = userTenantService.getTenantIdsByUserId(userDTO.getId());
-//        List<TenantShopDTO> byTenantIds = tenantShopService.findByTenantIds(tenantIdsByUserId);
-//        List<Long> shopIds = byTenantIds.stream().map(TenantShopDTO::getShopId).collect(Collectors.toList());
-//        List<ShopDTO> shopDTOList = shopService.findByIdsAndActive(shopIds);
-//        return WebResponse.success(shopWebConvert.toShopModels(shopDTOList));
-        return WebResponse.success(new ArrayList<>());
     }
 
     @RequestMapping(value = "/shopCategory/currentList", method = RequestMethod.GET)
@@ -133,7 +117,8 @@ public class ShopController extends BaseController {
         List<TenantShopCategoryDTO> tenantShopCategoryDTOList = tenantShopCategoryService.findByTenantIds(tenantIdsByUserId);
         List<Long> shopCategoryIds = tenantShopCategoryDTOList.stream().map(TenantShopCategoryDTO::getShopCategoryId).collect(Collectors.toList());
         List<ShopCategoryDTO> shopCategoryDTOList = shopCategoryService.findByIdsAndActive(shopCategoryIds);
-        return WebResponse.success(shopCategoryWebConvert.toModels(shopCategoryDTOList));
+        List<ShopCategoryModel> shopCategoryModels = shopCategoryWebConvert.translateTenantShopDTOToTenantShopModelResponse(shopCategoryDTOList);
+        return WebResponse.success(shopCategoryModels);
     }
 
     @RequestMapping(value = "/shopCategoryList", method = RequestMethod.GET)

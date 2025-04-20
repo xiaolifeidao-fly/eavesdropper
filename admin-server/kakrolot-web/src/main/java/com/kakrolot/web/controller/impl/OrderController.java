@@ -12,7 +12,6 @@ import com.kakrolot.business.service.order.entity.OrderEntity;
 import com.kakrolot.business.service.response.Response;
 import com.kakrolot.business.service.user.UserAccountService;
 import com.kakrolot.business.service.user.UserTenantService;
-import com.kakrolot.common.utils.AmountUtils;
 import com.kakrolot.lock.KakrolotLock;
 import com.kakrolot.service.account.api.AccountService;
 import com.kakrolot.service.account.api.dto.AccountDTO;
@@ -24,6 +23,7 @@ import com.kakrolot.service.dashboard.api.dto.QueryOrderSummaryDTO;
 import com.kakrolot.service.order.api.OrderAmountDetailService;
 import com.kakrolot.service.order.api.OrderBkRecordService;
 import com.kakrolot.service.order.api.OrderRecordService;
+import com.kakrolot.service.order.api.OrderTokenDetailService;
 import com.kakrolot.service.order.api.RefundOrderService;
 import com.kakrolot.service.order.api.dto.*;
 import com.kakrolot.service.shop.api.*;
@@ -32,6 +32,7 @@ import com.kakrolot.service.user.api.dto.UserDTO;
 import com.kakrolot.web.auth.annotations.Auth;
 import com.kakrolot.web.controller.BaseController;
 import com.kakrolot.web.convert.order.OrderAmountDetailWebConvert;
+import com.kakrolot.web.convert.order.OrderTokenWebConvert;
 import com.kakrolot.web.convert.order.OrderWebConvert;
 import com.kakrolot.web.model.PageModel;
 import com.kakrolot.web.model.WebResponse;
@@ -50,6 +51,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,6 +72,9 @@ public class OrderController extends BaseController {
 
     @Autowired
     private OrderWebConvert orderWebConvert;
+
+    @Autowired
+    private OrderTokenWebConvert orderTokenWebConvert;
 
     @Autowired
     private OrderAmountDetailService orderAmountDetailService;
@@ -125,6 +130,9 @@ public class OrderController extends BaseController {
     @Autowired
     private ShopCategoryService shopCategoryService;
 
+    @Autowired
+    private OrderTokenDetailService orderTokenDetailService;
+
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "下单", httpMethod = "POST")
@@ -135,6 +143,8 @@ public class OrderController extends BaseController {
         String userName = userDTO.getUsername();
         orderEntity.setUserName(userName);
         orderEntity.setUserId(userDTO.getId());
+        orderEntity.setIp(getRemoteIp());
+        orderEntity.setOperator(getCurrentUser().getUsername());
         Response response = orderService.submit(orderEntity, userDTO.getId());
         return WebResponse.response(response);
     }
@@ -201,7 +211,7 @@ public class OrderController extends BaseController {
             if (num > 0) {
                 continue;
             }
-            refundOrderService.save(buildRefundOrderDTO(orderRecordDTO.getId(), orderRecordDTO.getTenantId(), orderRecordDTO.getShopCategoryId()));
+            refundOrderService.save(buildRefundOrderDTO(orderRecordDTO.getId(), orderRecordDTO.getTenantId(), orderRecordDTO.getShopCategoryId(), orderRecordDTO));
         }
         return WebResponse.success("success");
     }
@@ -258,12 +268,12 @@ public class OrderController extends BaseController {
         if (!(OrderStatus.PENDING.name().equals(orderStatus) || OrderStatus.INIT.name().equals(orderStatus))) {
             return WebResponse.error("订单不允许退单");
         }
-        extPlugin.refundToBarry(orderId);
+        // extPlugin.refundToBarry(orderId);
         Long num = refundOrderService.countByOrderId(orderId);
         if (num > 0) {
             return WebResponse.error("不允许重复退单");
         }
-        refundOrderService.save(buildRefundOrderDTO(orderId, orderRecordDTO.getTenantId(), orderRecordDTO.getShopCategoryId()));
+        refundOrderService.save(buildRefundOrderDTO(orderId, orderRecordDTO.getTenantId(), orderRecordDTO.getShopCategoryId(), orderRecordDTO));
         return WebResponse.successMessage("退单请求已发送");
     }
 
@@ -272,7 +282,7 @@ public class OrderController extends BaseController {
     @ApiOperation(value = "订单补款", httpMethod = "POST")
     public WebResponse<Object> payAmount(@PathVariable("id") Long id, @RequestBody OrderRecordModel orderModel) {
         OrderRecordDTO orderRecordDTO = orderRecordService.findById(id);
-        if (!(StringUtils.equals(orderRecordDTO.getOrderStatus(), OrderStatus.REFUND.name()) || StringUtils.equals(orderRecordDTO.getOrderStatus(), OrderStatus.DONE.name()))) {
+        if (!(StringUtils.equals(orderRecordDTO.getOrderStatus(), OrderStatus.REFUND_SUCCESS.name()) || StringUtils.equals(orderRecordDTO.getOrderStatus(), OrderStatus.DONE.name()))) {
             return WebResponse.error("此订单不允许退款");
         }
         Long bkNum = orderModel.getBkNum();
@@ -298,7 +308,7 @@ public class OrderController extends BaseController {
             }
             AccountDTO accountDTO = accountService.findByUserId(orderRecordDTO.getUserId());
             String businessId = AmountType.BK.name() + "_" + orderRecordDTO.getId();
-            Response response = userAccountService.handlerAmount(accountDTO, amount, getRemoteIp(), getCurrentUser().getUsername(), AmountType.BK, businessId);
+            Response response = userAccountService.handlerAmount(accountDTO, amount, getRemoteIp(), getCurrentUser().getUsername(), AmountType.BK, businessId,orderRecordDTO.getId());
             if (ResponseUtils.isSuccess(response)) {
                 orderAmountDetailService.save(buildOrderAmountDetail(id, amount));
                 OrderBkRecordDTO newOrderBkRecordDTO = buildOrderBkRecordDTO(orderRecordDTO, bkNum, amount);
@@ -358,7 +368,7 @@ public class OrderController extends BaseController {
             }
             return WebResponse.error("不能重复退单");
         }
-        refundOrderService.save(buildRefundOrderDTO(orderId, orderRecordDTO.getTenantId(), orderRecordDTO.getShopCategoryId()));
+        refundOrderService.save(buildRefundOrderDTO(orderId, orderRecordDTO.getTenantId(), orderRecordDTO.getShopCategoryId(), orderRecordDTO));
         return WebResponse.successMessage("退单请求已发送");
     }
 
@@ -375,13 +385,70 @@ public class OrderController extends BaseController {
         return orderEntity;
     }
 
-    private OrderRefundRecordDTO buildRefundOrderDTO(Long orderId, Long tenantId, Long shopCategoryId) {
+    private OrderRefundRecordDTO buildRefundOrderDTO(Long orderId, Long tenantId, Long shopCategoryId, OrderRecordDTO orderRecordDTO) {
+        // 获取该订单下所有token记录
+        List<OrderTokenDetailDTO> tokenDetails = orderTokenDetailService.findByOrderRecordId(orderId);
+        
+        // 计算UNBIND和BIND_FAILED状态的token数量
+        long refundableTokenCount = tokenDetails.stream()
+                .filter(token -> TokenBindStatus.UNBIND.name().equals(token.getStatus()) 
+                        || TokenBindStatus.BIND_FAILED.name().equals(token.getStatus()))
+                .count();
+        
+        // 计算退款金额 = 可退款token数量 * 单价
+        BigDecimal refundAmount = orderRecordDTO.getPrice().multiply(new BigDecimal(refundableTokenCount));
+        
+        // 创建退单记录
         OrderRefundRecordDTO refundRecordDTO = new OrderRefundRecordDTO();
         refundRecordDTO.setOrderId(orderId);
         refundRecordDTO.setTenantId(tenantId);
         refundRecordDTO.setShopCategoryId(shopCategoryId);
         refundRecordDTO.setOrderRefundStatus(OrderStatus.REFUND_PENDING.name());
-        refundRecordDTO.setRefundAmount(BigDecimal.ZERO);
+        refundRecordDTO.setRefundAmount(refundAmount);
+        
+        // 进行退款操作
+        try {
+            // 获取用户账户信息
+            AccountDTO accountDTO = accountService.findByUserId(orderRecordDTO.getUserId());
+            if (accountDTO == null) {
+                log.error("退款失败，未找到用户账户信息: userId={}", orderRecordDTO.getUserId());
+                refundRecordDTO.setOrderRefundStatus(OrderStatus.REFUND_FAILED.name());
+                return refundRecordDTO;
+            }
+            
+            // 退款业务ID
+            String businessId = AmountType.REFUND.name() + "_" + orderId;
+            
+            // 调用退款方法，注意这里是退款，所以金额是正数
+            Response refundResponse = userAccountService.handlerAmount(
+                accountDTO, 
+                refundAmount, // 正数表示退款
+                getRemoteIp(),
+                getCurrentUser().getUsername(),
+                AmountType.REFUND,
+                businessId,orderId
+            );
+            
+            // 根据退款结果更新退款记录状态
+            if (ResponseUtils.isSuccess(refundResponse)) {
+                log.info("订单{}退款成功：总token数量{}，可退款token数量{}，退款金额{}", 
+                        orderId, tokenDetails.size(), refundableTokenCount, refundAmount);
+                refundRecordDTO.setOrderRefundStatus(OrderStatus.REFUND_SUCCESS.name());
+                
+                // 更新订单状态为已退款
+                orderRecordDTO.setEndNum(orderRecordDTO.getOrderNum() - refundableTokenCount);
+                orderRecordDTO.setOrderStatus(OrderStatus.REFUND_SUCCESS.name());
+                orderRecordService.save(orderRecordDTO);
+            } else {
+                log.error("订单{}退款失败：{}，总token数量{}，可退款token数量{}，退款金额{}", 
+                        orderId, refundResponse.getMessage(), tokenDetails.size(), refundableTokenCount, refundAmount);
+                refundRecordDTO.setOrderRefundStatus(OrderStatus.REFUND_FAILED.name());
+            }
+        } catch (Exception e) {
+            log.error("订单{}退款异常：", orderId, e);
+            refundRecordDTO.setOrderRefundStatus(OrderStatus.REFUND_FAILED.name());
+        }
+        
         return refundRecordDTO;
     }
 
@@ -470,6 +537,88 @@ public class OrderController extends BaseController {
     public WebResponse<List<OrderAmountDetailModel>> getOrderAmountDetail(@PathVariable(name = "orderId") Long orderId) {
         List<OrderAmountDetailDTO> orderAmountDetailDTOs = orderAmountDetailService.findByOrderId(orderId);
         return WebResponse.success(orderAmountDetailWebConvert.convertModels(orderAmountDetailDTOs));
+    }
+
+    @RequestMapping(value = "/{orderId}/tokens", method = RequestMethod.GET)
+    @ResponseBody
+    @ApiOperation(value = "订单Token详情", httpMethod = "GET")
+    public WebResponse<PageModel<OrderTokenDetailModel>> getOrderTokenDetails(
+            @PathVariable(name = "orderId") Long orderId,
+            @RequestParam("page") int startIndex,
+            @RequestParam("limit") int pageSize) {
+        
+        // 获取当前用户信息
+        UserDTO userDTO = getCurrentUser();
+        
+        // 获取订单信息，验证权限
+        OrderRecordDTO orderRecordDTO = orderRecordService.findById(orderId);
+        if (orderRecordDTO == null) {
+            return WebResponse.error("订单不存在");
+        }
+        
+        // 验证权限 - 非管理员只能查看自己的订单
+        if (!(orderRecordDTO.getUserId().equals(userDTO.getId()))) {
+            return WebResponse.error("订单权限不足");
+        }
+        
+        List<OrderTokenDetailDTO> allTokenDetails = orderTokenDetailService.findByOrderRecordId(orderId);
+        
+        // 计算总数
+        long total = allTokenDetails.size();
+        
+        // 手动分页
+        int fromIndex = (startIndex - 1) * pageSize;
+        if (fromIndex >= allTokenDetails.size()) {
+            // 如果起始索引超出范围，返回空列表
+            allTokenDetails = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(fromIndex + pageSize, allTokenDetails.size());
+            allTokenDetails = allTokenDetails.subList(fromIndex, toIndex);
+        }
+        
+        // 构建分页模型
+        PageModel<OrderTokenDetailModel> pageModel = new PageModel<>();
+        pageModel.setTotal(total);
+        pageModel.setItems(orderTokenWebConvert.toModels(allTokenDetails));
+        
+        return WebResponse.success(pageModel);
+    }
+
+    @RequestMapping(value = "/manager/{orderId}/tokens", method = RequestMethod.GET)
+    @ResponseBody
+    @ApiOperation(value = "订单Token详情(管理员)", httpMethod = "GET")
+    public WebResponse<PageModel<OrderTokenDetailModel>> getOrderTokenDetailsForManager(
+            @PathVariable(name = "orderId") Long orderId,
+            @RequestParam("page") int startIndex,
+            @RequestParam("limit") int pageSize) {
+        
+        // 获取订单信息
+        OrderRecordDTO orderRecordDTO = orderRecordService.findById(orderId);
+        if (orderRecordDTO == null) {
+            return WebResponse.error("订单不存在");
+        }
+        
+        List<OrderTokenDetailDTO> allTokenDetails = orderTokenDetailService.findByOrderRecordId(orderId);
+        
+        // 计算总数
+        long total = allTokenDetails.size();
+        
+        // 手动分页
+        int fromIndex = (startIndex - 1) * pageSize;
+        if (fromIndex >= allTokenDetails.size()) {
+            // 如果起始索引超出范围，返回空列表
+            allTokenDetails = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(fromIndex + pageSize, allTokenDetails.size());
+            allTokenDetails = allTokenDetails.subList(fromIndex, toIndex);
+        }
+        
+        // 构建分页模型
+        PageModel<OrderTokenDetailModel> pageModel = new PageModel<>();
+        pageModel.setTotal(total);
+        pageModel.setItems(orderTokenWebConvert.toModels(allTokenDetails));
+        
+        return WebResponse.success(pageModel);
     }
 
 }

@@ -1,9 +1,13 @@
 package com.kakrolot.web.model.shop;
 
 import com.kakrolot.web.model.BaseModel;
-import lombok.Data;
+import lombok.*;
 
 @Data
+@ToString(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ShopModel extends BaseModel {
 
     private String name;

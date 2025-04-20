@@ -32,9 +32,6 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item lstyle="width: 30%;" label="链接">
-              <el-input v-model="listQuery.tinyUrl" style="width: 200px;" placeholder="作品短链" />
-            </el-form-item>
             <el-form-item lstyle="width: 30%;" label="订单号">
               <el-input v-model="listQuery.orderRecordId" style="width: 200px;" placeholder="订单号" />
             </el-form-item>
@@ -66,11 +63,6 @@
           <span>{{ row.shopCategoryName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="链接" width="180px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.businessId }}</span>
-        </template>
-      </el-table-column>
       <el-table-column v-for="(extParamModel, extParamModelIndex) in extParamModelList" :key="extParamModelIndex" :label="extParamModel.name" width="220px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.extParamModelList[extParamModelIndex].paramStr }}</span>
@@ -91,14 +83,16 @@
           <span>{{ row.orderAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="初始数量" width="80px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.initNum }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="结束数量" width="80px" align="center">
+      <el-table-column label="绑定数量" width="80px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.endNum }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="绑定详情" align="center" width="80px" class-name="small-padding fixed-width">
+        <template slot-scope="{row}">
+          <el-button size="mini" type="success" @click="showTokenDetail(row)">
+            绑定详情
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column label="订单状态" width="80px" align="center">
@@ -170,28 +164,59 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="图审" align="center" width="80px" class-name="small-padding fixed-width">
-        <template slot-scope="{row}">
-          <el-button :loading="bkLoading" size="mini" type="primary" @click="taskCheckRough(row)">
-            图审
-          </el-button>
-        </template>
-      </el-table-column>
-      <el-table-column label="执行图" align="center" width="80px" class-name="small-padding fixed-width">
-        <template slot-scope="{row}">
-          <el-button :loading="bkLoading" size="mini" type="primary" @click="taskAllPics(row)">
-            执行图
-          </el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getOrderList" />
 
+    <el-dialog title="绑定详情" :visible.sync="tokenDetailDialogVisible" width="70%">
+      <el-table v-loading="tokenListLoading" :data="tokenList" border fit highlight-current-row style="width: 100%">
+        <el-table-column label="ID" width="80px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Token" width="220px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.token }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="外部ID" width="120px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.tbExternalId }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="店铺名称" width="150px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.tbShopName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="店铺ID" width="120px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.tbShopId }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="100px" align="center">
+          <template slot-scope="{row}">
+            <el-tag :type="row.status | statusBindFilter">
+              {{ row.status }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="绑定时间" width="160px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.bindTime }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" width="160px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.tokenCreateTime }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination v-show="tokenTotal>0" :total="tokenTotal" :page.sync="tokenListQuery.page" :limit.sync="tokenListQuery.limit" @pagination="getTokens" />
+    </el-dialog>
+
     <el-dialog title="补款数量不能大于下单数量-实际数量" :visible.sync="orderRealdialogFormVisible" width="40%">
       <el-form ref="orderRealDataForm" :model="order" label-position="left" label-width="70px" style="width: 300px; margin-left:50px;">
-        <el-form-item label="链接" @click.native="gotoDyUrl">
-          <el-input v-model="order.businessId" type="text" :disabled="true" />
-        </el-form-item>
         <el-form-item label="初始值">
           <el-input v-model="order.initNum" type="text" :disabled="true" />
         </el-form-item>
@@ -238,7 +263,7 @@
 </template>
 
 <script>
-import { getOrderDetailList, getOrderManagerList, refundOrderForce, getOrderReal, reinForceOrder, queryXhsApi } from '@/api/order'
+import { getOrderDetailList, getOrderManagerList, refundOrderForce, getOrderReal, reinForceOrder, queryXhsApi, getTokenManagerList } from '@/api/order'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 // import axios from 'axios'
 export default {
@@ -253,7 +278,20 @@ export default {
         '处理失败': 'danger',
         '退单中': '',
         '退单处理中': '',
-        '已退单': 'success'
+        '退单成功': 'success',
+        '退单失败': 'danger'
+      }
+      return statusMap[status]
+    },
+    statusBindFilter(status) {
+      const statusMap = {
+        '未绑定': 'info',
+        '绑定中': '',
+        '已绑定': 'success',
+        '绑定失败': 'danger',
+        '授权过期': 'warning',
+        '已解绑': 'info',
+        '已禁用': 'danger'
       }
       return statusMap[status]
     }
@@ -362,6 +400,15 @@ export default {
             picker.$emit('pick', [start, end])
           }
         }]
+      },
+      tokenDetailDialogVisible: false,
+      tokenListLoading: false,
+      tokenList: [],
+      tokenTotal: 0,
+      currentOrderId: null,
+      tokenListQuery: {
+        page: 1,
+        limit: 20
       }
     }
   },
@@ -512,22 +559,20 @@ export default {
     openDyUrl() {
       window.open(this.dyUrl)
     },
-    taskCheckRough(row) {
-      this.$router.push({
-        path: '/check/taskRough',
-        query: {
-          orderId: row.id
-        }
-      })
+    showTokenDetail(row) {
+      this.currentOrderId = row.id
+      this.tokenDetailDialogVisible = true
+      this.getTokens()
     },
-    taskAllPics(row) {
-      // const routeUrl = this.$router.resolve({
-      //   path: 'http://101.133.132.220:27855/#/picList',
-      //   query: {
-      //     orderHash: row.orderHash
-      //   }
-      // })
-      window.open('http://101.133.132.220:27855/#/picList?orderHash=' + row.orderHash, '_blank')
+    getTokens() {
+      this.tokenListLoading = true
+      getTokenManagerList(this.currentOrderId, this.tokenListQuery).then(response => {
+        this.tokenList = response.data.items
+        this.tokenTotal = response.data.total
+        setTimeout(() => {
+          this.tokenListLoading = false
+        }, 1.5 * 1)
+      })
     }
   }
 }

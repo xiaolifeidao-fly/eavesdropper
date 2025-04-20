@@ -213,7 +213,7 @@ public class OrderController extends BaseController {
         }
         OrderResponseModel orderResponseModel = orderToResponseModel(orderRecordDTO);
         String orderStatus = orderResponseModel.getStatus();
-        if (OrderStatus.REFUND.name().equals(orderStatus)) {
+        if (OrderStatus.REFUND_SUCCESS.name().equals(orderStatus)) {
             OrderRefundRecordDTO orderRefundRecordDTO = refundOrderService.findByOrderId(orderId);
             orderResponseModel.setRefundAmt(orderRefundRecordDTO.getRefundAmount());
         }

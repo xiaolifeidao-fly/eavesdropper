@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -13,9 +14,9 @@ public class AccountDetail extends BasePO {
 
     private Long accountId;
 
-    private Long amount;
+    private BigDecimal amount;
 
-    private Long balanceAmount;
+    private BigDecimal balanceAmount;
 
     private String operator;
 

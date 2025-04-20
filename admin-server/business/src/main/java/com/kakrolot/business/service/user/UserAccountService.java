@@ -9,6 +9,9 @@ import com.kakrolot.service.account.api.dto.AccountDTO;
 import com.kakrolot.service.account.api.dto.AccountDetailDTO;
 import com.kakrolot.service.account.api.dto.AccountStatus;
 import com.kakrolot.service.account.api.dto.AmountType;
+import com.kakrolot.service.order.api.OrderAmountDetailService;
+import com.kakrolot.service.order.api.dto.OrderAmountDetailDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,15 +28,31 @@ public class UserAccountService extends BaseService {
     @Autowired
     private AccountDetailService accountDetailService;
 
+    @Autowired
+    private OrderAmountDetailService orderAmountDetailService;
+
 
     @Transactional
-    public Response handlerAmount(AccountDTO accountDTO, BigDecimal amount, String ip, String operator, AmountType amountType, String businessId) {
+    public Response handlerAmount(AccountDTO accountDTO, BigDecimal amount, String ip, String operator, AmountType amountType, String businessId, Long orderId) {
         if (!AccountStatus.ACTIVE.name().equals(accountDTO.getAccountStatus())) {
             return ResponseUtils.buildError("账户已被冻结,不能进行操作");
         }
         saveAccountDetail(accountDTO, amount, ip, operator, amountType, businessId);
         accountService.updateAmountById(accountDTO.getBalanceAmount(), accountDTO.getId());
+        saveAmountDetail(orderId, operator, amount, amountType,orderId);
         return ResponseUtils.buildSuccess("操作成功");
+    }
+
+    private void saveAmountDetail(Long orderId,String operator, BigDecimal amount, AmountType amountType,Long orderRecordId) {
+        OrderAmountDetailDTO orderAmountDetailDTO = new OrderAmountDetailDTO();
+        // 去除尾部的0，并使用普通字符串格式化
+        String formattedAmount = amount.stripTrailingZeros().toPlainString();
+        orderAmountDetailDTO.setDescription(amountType.getDesc() + ":" + formattedAmount + "元");
+        orderAmountDetailDTO.setOrderId(orderId);
+        orderAmountDetailDTO.setOrderConsumerAmount(amount);
+        orderAmountDetailDTO.setUpdateBy(operator);
+        orderAmountDetailDTO.setCreateBy(operator);
+        orderAmountDetailService.save(orderAmountDetailDTO);
     }
 
     @Transactional
@@ -53,14 +72,14 @@ public class UserAccountService extends BaseService {
         if (givenScale > 0) {
             BigDecimal givenAmount = amount.multiply(BigDecimal.valueOf(givenScale)).divide(BigDecimal.valueOf(100));
             String givenBusinessId = UUID.randomUUID().toString();
-            handlerAmount(accountDTO, givenAmount, ip, operator, AmountType.GIVEN, givenBusinessId);
+            handlerAmount(accountDTO, givenAmount, ip, operator, AmountType.GIVEN, givenBusinessId,0L);
         }
         return ResponseUtils.buildSuccess("无需赠送");
     }
 
     private Response payAmount(AccountDTO accountDTO, BigDecimal amount, String ip, String operator) {
         String payBusinessId = UUID.randomUUID().toString();
-        return handlerAmount(accountDTO, amount, ip, operator, AmountType.PAY, payBusinessId);
+        return handlerAmount(accountDTO, amount, ip, operator, AmountType.PAY, payBusinessId,0L);
     }
 
     public void saveAccountDetail(AccountDTO accountDTO, BigDecimal amount, String ip, String operator, AmountType amountType, String businessId) {

@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">叮咚新媒体推广平台</h3>
+        <h3 class="title">鲲鹏上传运营平台</h3>
       </div>
 
       <el-form-item>
