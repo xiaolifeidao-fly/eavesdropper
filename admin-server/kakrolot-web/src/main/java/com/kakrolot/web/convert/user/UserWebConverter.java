@@ -139,7 +139,7 @@ public class UserWebConverter extends WebConvert<UserDTO, UserModel> {
                 .menuList(userResourceModels).buttonList(buttonCodeList).roles(Collections.emptyList())
 //                .avatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif")
                 .avatar("https://p1.ssl.cdn.btime.com/t01f37ecd3e0593fee7.gif")
-                .introduction("无敌卡卡帮").amount(accountDTO.getBalanceAmount().toString()).build();
+                .introduction("无敌卡卡帮").amount(accountDTO.getBalanceAmount().stripTrailingZeros().toPlainString()).build();
         return userResourceModelResponse;
     }
 }

@@ -37,11 +37,6 @@
           <span>{{ row.shopCategoryName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="链接" width="220px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.businessId }}</span>
-        </template>
-      </el-table-column>
       <el-table-column v-for="(extParamModel, extParamModelIndex) in extParamModelList" :key="extParamModelIndex" :label="extParamModel.name" width="220px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.extParamModelList[extParamModelIndex].paramStr }}</span>
@@ -57,14 +52,16 @@
           <span>{{ row.orderNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="初始数量" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.initNum }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="当前数量" width="110px" align="center">
+      <el-table-column label="绑定数量" width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.endNum }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="绑定详情" align="center" width="110px" class-name="small-padding fixed-width">
+        <template slot-scope="{row}">
+          <el-button size="mini" type="success" @click="showTokenDetail(row)">
+            绑定详情
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column label="订单状态" width="110px" align="center">
@@ -127,6 +124,54 @@
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getOrderList" />
 
+    <el-dialog title="绑定详情" :visible.sync="tokenDetailDialogVisible" width="70%">
+      <el-table v-loading="tokenListLoading" :data="tokenList" border fit highlight-current-row style="width: 100%">
+        <el-table-column label="ID" width="80px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Token" width="220px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.token }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="外部ID" width="120px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.tbExternalId }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="店铺名称" width="150px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.tbShopName }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="店铺ID" width="120px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.tbShopId }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="100px" align="center">
+          <template slot-scope="{row}">
+            <el-tag :type="row.status | statusBindFilter">
+              {{ row.status }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="绑定时间" width="160px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.bindTime }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" width="160px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.tokenCreateTime }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination v-show="tokenTotal>0" :total="tokenTotal" :page.sync="tokenListQuery.page" :limit.sync="tokenListQuery.limit" @pagination="getTokens" />
+    </el-dialog>
+
     <el-dialog title="创建订单" :visible.sync="createOrderdialogFormVisible">
       <el-form ref="orderDataForm" :rules="rules" :model="order" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item v-if="tenantVisible" label="租户" prop="tenantId">
@@ -144,9 +189,6 @@
         </el-form-item>
         <el-form-item label="类目">
           <el-input v-model="order.shopCategoryName" :autosize="{ minRows: 2, maxRows: 4}" type="text" :disabled="true" />
-        </el-form-item>
-        <el-form-item label="链接" prop="businessId">
-          <el-input v-model="order.businessId" :autosize="{ minRows: 2, maxRows: 4}" type="text" />
         </el-form-item>
         <div v-for="(shopExtParamSelect, shopExtParamSelectIndex) in shopExtParamSelectList" :key="shopExtParamSelectIndex">
           <el-form-item :label="shopExtParamSelect.name">
@@ -191,7 +233,7 @@
 <script>
 import { getCurrentTenantList } from '@/api/user'
 import { getShopList, getCategoryList, getTenantShopListByTenantId, getShopExtParamList } from '@/api/shop'
-import { getOrderList, createOrder, getOrderDetailList, refundOrder } from '@/api/order'
+import { getOrderList, createOrder, getOrderDetailList, refundOrder, getTokenList } from '@/api/order'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 export default {
   components: { Pagination },
@@ -205,7 +247,20 @@ export default {
         '处理失败': 'danger',
         '退单中': '',
         '退单处理中': '',
-        '已退单': 'success'
+        '退单成功': 'success',
+        '退单失败': 'danger'
+      }
+      return statusMap[status]
+    },
+    statusBindFilter(status) {
+      const statusMap = {
+        '未绑定': 'info',
+        '绑定中': '',
+        '已绑定': 'success',
+        '绑定失败': 'danger',
+        '授权过期': 'warning',
+        '已解绑': 'info',
+        '已禁用': 'danger'
       }
       return statusMap[status]
     }
@@ -312,6 +367,15 @@ export default {
             picker.$emit('pick', [start, end])
           }
         }]
+      },
+      tokenDetailDialogVisible: false,
+      tokenListLoading: false,
+      tokenList: [],
+      tokenTotal: 0,
+      currentOrderId: null,
+      tokenListQuery: {
+        page: 1,
+        limit: 10
       }
     }
   },
@@ -484,6 +548,21 @@ export default {
     getOrderDetail(row, index) {
       getOrderDetailList(row.id).then(response => {
         this.orderDetailList = response.data
+      })
+    },
+    showTokenDetail(row) {
+      this.currentOrderId = row.id
+      this.tokenDetailDialogVisible = true
+      this.getTokens()
+    },
+    getTokens() {
+      this.tokenListLoading = true
+      getTokenList(this.currentOrderId, this.tokenListQuery).then(response => {
+        this.tokenList = response.data.items
+        this.tokenTotal = response.data.total
+        setTimeout(() => {
+          this.tokenListLoading = false
+        }, 1.5 * 1)
       })
     }
   }

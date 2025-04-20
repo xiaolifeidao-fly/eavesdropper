@@ -6,14 +6,19 @@ import com.kakrolot.business.service.ResponseUtils;
 import com.kakrolot.business.service.order.entity.OrderEntity;
 import com.kakrolot.business.service.order.support.OrderValidate;
 import com.kakrolot.business.service.response.Response;
+import com.kakrolot.business.service.user.UserAccountService;
 import com.kakrolot.common.utils.AmountUtils;
 import com.kakrolot.service.account.api.AccountService;
 import com.kakrolot.service.account.api.dto.AccountDTO;
+import com.kakrolot.service.account.api.dto.AmountType;
 import com.kakrolot.service.order.api.OrderRecordExtParamService;
 import com.kakrolot.service.order.api.OrderRecordService;
+import com.kakrolot.service.order.api.OrderTokenDetailService;
 import com.kakrolot.service.order.api.dto.OrderRecordDTO;
 import com.kakrolot.service.order.api.dto.OrderRecordExtParamDTO;
 import com.kakrolot.service.order.api.dto.OrderStatus;
+import com.kakrolot.service.order.api.dto.OrderTokenDetailDTO;
+import com.kakrolot.service.order.api.dto.TokenBindStatus;
 import com.kakrolot.service.shop.api.ShopCategoryService;
 import com.kakrolot.service.shop.api.ShopExtParamService;
 import com.kakrolot.service.shop.api.ShopService;
@@ -28,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -62,6 +68,12 @@ public class OrderService extends BaseService {
 
     @Autowired
     private OrderRecordExtParamService orderRecordExtParamService;
+    
+    @Autowired
+    private OrderTokenDetailService orderTokenDetailService;
+
+    @Autowired
+    private UserAccountService userAccountService;
 
     public Response submit(OrderEntity orderEntity, Long userId) {
         try {
@@ -102,7 +114,7 @@ public class OrderService extends BaseService {
             }
             Long tenantId = orderEntity.getTenantId();
             TenantDTO tenantDTO = tenantService.findById(tenantId);
-            orderRecordDTO.setOrderStatus(OrderStatus.INIT_ING.name());
+            orderRecordDTO.setOrderStatus(OrderStatus.PENDING.name());
             orderRecordDTO.setUserId(userId);
             orderRecordDTO.setTenantId(tenantId);
             orderRecordDTO.setPrice(price);
@@ -118,26 +130,76 @@ public class OrderService extends BaseService {
             orderRecordDTO.setExternalOrderId(orderEntity.getExternalOrderId());
             orderRecordDTO.setExternalOrderPrice(orderEntity.getExternalOrderPrice());
             orderRecordDTO.setExternalOrderAmount(orderEntity.getExternalOrderAmount());
+            orderRecordDTO.setInitNum(0L);
+            orderRecordDTO.setEndNum(0L);
             Long orderId = orderRecordService.save(orderRecordDTO);
             orderEntity.setId(orderId);
-            orderEntity.setUserId(userId);
-            orderEntity.setOrderStatus(OrderStatus.INIT_ING.name());
-            orderEntity.setShopCategoryId(shopCategoryDTO.getId());
-            orderEntity.setShopId(shopCategoryDTO.getShopId());
-            //保存附加属性
-            OrderRecordExtParamDTO orderRecordExtParamDTO = orderEntity.getOrderRecordExtParamDTO();
-            if(orderRecordExtParamDTO!=null) {
-                orderRecordExtParamDTO.setOrderRecordId(orderId);
-                orderRecordExtParamService.save(orderRecordExtParamDTO);
+            
+            String businessId = OrderConsumerConfig.SUBMIT.name() + "_" + orderId;
+            Response paymentResponse = userAccountService.handlerAmount(
+                accountDTO, 
+                orderAmount,
+                orderEntity.getIp(),
+                orderEntity.getOperator(),
+                AmountType.CONSUMER,
+                businessId, orderId
+            );
+            
+            if (ResponseUtils.isSuccess(paymentResponse)) {
+                orderEntity.setUserId(userId);
+                orderEntity.setOrderStatus(OrderStatus.INIT_ING.name());
+                orderEntity.setShopCategoryId(shopCategoryDTO.getId());
+                orderEntity.setShopId(shopCategoryDTO.getShopId());
+                 //保存附加属性
+                OrderRecordExtParamDTO orderRecordExtParamDTO = orderEntity.getOrderRecordExtParamDTO();
+                if(orderRecordExtParamDTO != null) {
+                    orderRecordExtParamDTO.setOrderRecordId(orderId);
+                    orderRecordExtParamService.save(orderRecordExtParamDTO);
+                }
+                // 创建token详情记录
+                createOrderTokenDetails(orderId, userId, accountDTO.getId(), orderEntity.getOrderNum());
+                
+                JSONObject data = new JSONObject();
+                data.put("orderId", orderId.toString());
+                return ResponseUtils.buildSuccess("下单成功", data);
+            } else {
+                orderRecordDTO.setOrderStatus(OrderStatus.ERROR.name());
+                orderRecordDTO.setDescription("支付失败: " + paymentResponse.getMessage());
+                orderRecordService.save(orderRecordDTO);
+                
+                return paymentResponse;
             }
-            orderQueue.submit(orderEntity, OrderConsumerConfig.SUBMIT, userId);
-            JSONObject data = new JSONObject();
-            data.put("orderId", orderId.toString());
-            return ResponseUtils.buildSuccess("下单请求已发送", data);
         } catch (Exception e) {
             log.error("submit user order by {} and {} error:", userId, orderEntity, e);
             return ResponseUtils.buildError("下单发生未知异常");
         }
+    }
+
+    /**
+     * 根据订单数量创建Token详情记录
+     * @param orderRecordId 订单ID
+     * @param userId 用户ID
+     * @param accountId 账户ID
+     * @param count 创建数量
+     */
+    private void createOrderTokenDetails(Long orderRecordId, Long userId, Long accountId, Long count) {
+        for (int i = 0; i < count; i++) {
+            OrderTokenDetailDTO tokenDetail = new OrderTokenDetailDTO();
+            tokenDetail.setOrderRecordId(orderRecordId);
+            tokenDetail.setUserId(userId);
+            tokenDetail.setAccountId(accountId);
+            tokenDetail.setToken(generateUniqueToken());
+            tokenDetail.setStatus(TokenBindStatus.UNBIND.name());
+            orderTokenDetailService.save(tokenDetail);
+        }
+    }
+    
+    /**
+     * 生成唯一的token
+     * @return 随机生成的UUID
+     */
+    private String generateUniqueToken() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     private OrderRecordDTO buildOrderRecordDTO(OrderEntity orderEntity) {

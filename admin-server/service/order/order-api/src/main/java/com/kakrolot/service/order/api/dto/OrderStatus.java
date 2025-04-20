@@ -12,7 +12,8 @@ public enum OrderStatus {
     ERROR("处理失败", 100),
     REFUND_PENDING("退单中", 10),
     REFUND_HANDING("退单处理中", 11),
-    REFUND("已退单", 100);
+    REFUND_FAILED("退单失败", 12),
+    REFUND_SUCCESS("退单成功", 13);
 
     private String desc;
 

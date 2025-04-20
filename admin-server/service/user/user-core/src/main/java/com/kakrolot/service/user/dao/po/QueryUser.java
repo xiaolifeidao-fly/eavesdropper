@@ -4,6 +4,7 @@ import com.kakrolot.common.po.BasePO;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -17,7 +18,7 @@ public class QueryUser extends BasePO {
 
     private String accountStatus;
 
-    private Long balanceAmount;
+    private BigDecimal balanceAmount;
 
     private Long accountId;
 

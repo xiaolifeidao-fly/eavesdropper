@@ -96,3 +96,19 @@ export function reinForceOrder(orderId, data) {
     data
   })
 }
+
+export function getTokenManagerList(orderId, query) {
+  return request({
+    url: baseUrl + `/orders/manager/${orderId}/tokens`,
+    method: 'get',
+    params: query
+  })
+}
+
+export function getTokenList(orderId, query) {
+  return request({
+    url: baseUrl + `/orders/${orderId}/tokens`,
+    method: 'get',
+    params: query
+  })
+}
