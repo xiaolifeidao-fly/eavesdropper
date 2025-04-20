@@ -32,7 +32,7 @@ public class QueryOrder extends BasePO {
 
     private Long orderNum;
 
-    private Long orderAmount;
+    private BigDecimal orderAmount;
 
     private Long userId;
 

@@ -489,7 +489,7 @@ public class DashboardServiceImpl implements DashboardService {
         shopCategoryIdsByUser.retainAll(shopCategoryIdsAll);
 
         OrderSummaryDTO orderSummaryDTO = OrderSummaryDTO.builder().name(shopGroupDTO.getDashboardTitle()).refundOrders(0L).refundCounts(0L).doneOrders(0L).doneCounts(0L).build();
-        List refundSummary = orderRecordRepository.getOrderRecordSummary(shopCategoryIdsByUser, OrderStatus.REFUND.name(), startDate, endDate);
+        List refundSummary = orderRecordRepository.getOrderRecordSummary(shopCategoryIdsByUser, OrderStatus.REFUND_SUCCESS.name(), startDate, endDate);
         List doneSummary = orderRecordRepository.getOrderRecordSummary(shopCategoryIdsByUser, OrderStatus.DONE.name(), startDate, endDate);
         List bkSummary = orderBkRecordRepository.getOrderBKRecordSummary(shopCategoryIdsByUser, startDate, endDate);
         if (CollectionUtils.isNotEmpty(refundSummary)) {

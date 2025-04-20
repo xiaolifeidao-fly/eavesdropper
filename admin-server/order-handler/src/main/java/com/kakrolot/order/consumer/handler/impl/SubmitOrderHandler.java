@@ -55,7 +55,7 @@ public class SubmitOrderHandler extends OrderAndAccountHandler<OrderRecordDTO> {
             return false;
         }
         String businessId = OrderConsumerConfig.SUBMIT.name() + "_" + orderRecordDTO.getId();
-        userAccountService.handlerAmount(accountDTO, orderRecordDTO.getOrderAmount(), orderEntity.getIp(), orderEntity.getOperator(), AmountType.CONSUMER, businessId);
+        userAccountService.handlerAmount(accountDTO, orderRecordDTO.getOrderAmount(), orderEntity.getIp(), orderEntity.getOperator(), AmountType.CONSUMER, businessId,orderRecordDTO.getId());
         return true;
     }
 

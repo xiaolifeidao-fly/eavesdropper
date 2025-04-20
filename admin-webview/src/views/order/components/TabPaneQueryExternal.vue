@@ -50,22 +50,12 @@
           <span>{{ row.shopCategoryName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="链接" width="220px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.businessId }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="订单数量" width="80px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.orderNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="初始数量" width="80px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.initNum }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="结束数量" width="80px" align="center">
+      <el-table-column label="绑定数量" width="80px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.endNum }}</span>
         </template>
@@ -108,7 +98,8 @@ export default {
         '处理失败': 'danger',
         '退单中': '',
         '退单处理中': '',
-        '已退单': 'success'
+        '退单成功': 'success',
+        '退单失败': 'danger'
       }
       return statusMap[status]
     }

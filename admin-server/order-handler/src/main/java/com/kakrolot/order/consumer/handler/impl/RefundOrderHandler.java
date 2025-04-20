@@ -84,7 +84,7 @@ public class RefundOrderHandler extends OrderAndAccountHandler<OrderRefundRecord
         }
         BigDecimal refundAmount = new BigDecimal(refundNum).multiply(orderEntity.getPrice());
         String businessId = "REFUND" + "_" + orderRefundRecordDTO.getId();
-        userAccountService.handlerAmount(accountDTO, refundAmount, orderEntity.getIp(), orderEntity.getOperator(), AmountType.REFUND, businessId);
+        userAccountService.handlerAmount(accountDTO, refundAmount, orderEntity.getIp(), orderEntity.getOperator(), AmountType.REFUND, businessId,orderRefundRecordDTO.getOrderId());
         return true;
     }
 
@@ -141,7 +141,7 @@ public class RefundOrderHandler extends OrderAndAccountHandler<OrderRefundRecord
         if (endNum < 0) {
             endNum = 0L;
         }
-        orderRecordService.updateOrderStatusAndInitNumAndEndNumById(OrderStatus.REFUND.name(), initNum, endNum, orderRefundRecordDTO.getOrderId());
+        orderRecordService.updateOrderStatusAndInitNumAndEndNumById(OrderStatus.REFUND_SUCCESS.name(), initNum, endNum, orderRefundRecordDTO.getOrderId());
     }
 
     private void saveAmountDetail(OrderEntity orderEntity, BigDecimal refundAmount, OrderRefundRecordDTO orderRefundRecordDTO) {
@@ -162,7 +162,7 @@ public class RefundOrderHandler extends OrderAndAccountHandler<OrderRefundRecord
     private void fillRefundOrderDTO(OrderRefundRecordDTO refundRecordDTO, Long refundNum, BigDecimal refundAmount) {
         refundRecordDTO.setRefundAmount(refundAmount);
         refundRecordDTO.setRefundNum(refundNum);
-        refundRecordDTO.setOrderRefundStatus(OrderStatus.REFUND.name());
+        refundRecordDTO.setOrderRefundStatus(OrderStatus.REFUND_SUCCESS.name());
     }
 
     /**
