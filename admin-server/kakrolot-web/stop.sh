@@ -1,10 +1,9 @@
 #!/bin/bash
 
 # 设置应用的目录路径
-remote_path="/data/program/app/kakrolot/kakrolot-web"
-cluster_name="cluster1"
+remote_path="/data/program/application/eavesdropper/admin-server/kakrolot-web"
 app_name="kakrolot-web-0.0.1-SNAPSHOT.jar"
-app_path="$remote_path/$cluster_name"
+app_path="$remote_path"
 
 # 步骤 1: 使用 lsof 查找进程，筛选出在特定目录下运行的进程，并只获取第一条
 pid=$(lsof +D "$app_path" |grep "$app_name" | awk '{print $2}' | grep -v "^PID" | head -n 1)
