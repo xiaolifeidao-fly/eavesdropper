@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 从环境变量获取配置
-remote_server="$eavesdropper_admin_server_remote_server"
+remote_server="root@$eavesdropper_admin_server_remote_server"
 remote_password="$eavesdropper_admin_server_remote_password"
 
 # 执行构建脚本
@@ -24,8 +24,8 @@ sshpass -p "$remote_password" ssh -o StrictHostKeyChecking=no -T "$remote_server
   rm -rf *.jar
 EOF
 
-# 上传新的jar包
-sshpass -p "$remote_password" scp -q ./target/$app_name "$remote_server:$remote_path"
+# 上传新的jar包，显示上传进度
+sshpass -p "$remote_password" scp ./target/$app_name "$remote_server:$remote_path"
 
 # 执行重启命令
 sshpass -p "$remote_password" ssh -o StrictHostKeyChecking=no -T "$remote_server" << EOF
