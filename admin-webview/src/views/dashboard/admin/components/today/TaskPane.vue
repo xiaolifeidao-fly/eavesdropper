@@ -110,11 +110,11 @@ export default {
     }
   },
   created() {
-    this.getAllData()
-    this.getUserTaskNum()
+    // this.getAllData()
+    // this.getUserTaskNum()
   },
   mounted() {
-    setInterval(this.getAllData, 10000)
+    // setInterval(this.getAllData, 10000)
   },
   methods: {
     getAllData() {
