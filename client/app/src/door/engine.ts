@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs'
 import { Browser, chromium, devices,firefox, BrowserContext, Page, Route ,Request, Response} from 'playwright';
-import { get, set } from '@utils/store/electron';
+import { get, remove, set } from '@utils/store/electron';
 import { app, screen as electronScreen } from 'electron';
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from './monitor/monitor';
 import { DoorEntity } from './entity';
@@ -325,6 +325,7 @@ export abstract class DoorEngine<T = any> {
                 if(headerData && Object.keys(headerData).length > 0){
                     const key = this.getKey();
                     const isNeedStoreContext = responseMonitor.needStoreContext(key, headerData);
+                    log.info("isNeedStoreContext is ", isNeedStoreContext);
                     if(isNeedStoreContext){
                         this.setHeader(headerData);
                         responseMonitor.setStoreContext(key);
@@ -580,6 +581,11 @@ export abstract class DoorEngine<T = any> {
     public getHeader(){
         const key = this.getHeaderKey();
         return get(key);
+    }
+
+    public clearHeader(){
+        const key = this.getHeaderKey();
+        remove(key);
     }
 
     public setParams(key : string, value : any){
