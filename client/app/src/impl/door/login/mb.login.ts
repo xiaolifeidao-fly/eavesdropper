@@ -132,6 +132,7 @@ export class MbLoginApiImpl extends MbLoginApi {
                 const resultData = result.getData();
                 if(resultData.result == "1"){
                     log.info("inputLoginInfo login success", result.getHeaderData());
+                    engine.clearHeader();
                     await engine.saveContextState();
                     return new DoorEntity<{}>(true, resultData.message);
                 }
@@ -193,6 +194,7 @@ export class MbLoginApiImpl extends MbLoginApi {
     }
 
     async awaitByLoginResult(header : {[key : string] : any}, engine : MbEngine<{}>, page : Page){
+        engine.clearHeader();
         engine.saveContextState();
         setTimeout(async () => {
             try{
