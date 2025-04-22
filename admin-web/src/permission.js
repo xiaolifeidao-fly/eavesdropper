@@ -6,7 +6,6 @@ import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 import Layout from '@/layout'
-const _import = require('./router/_import_' + process.env.NODE_ENV)
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -105,12 +104,24 @@ function generaMenu(routes, data) {
       menu.redirect = item.redirect
     }
     console.log('111 menu2')
-    if (item.component === 'Layout') {
-      menu.component = Layout
+    // Load component: Use standard dynamic import for production, require for development
+    if (item.component) { // Check if component path exists
+      if (item.component === 'Layout') {
+        menu.component = Layout
+      } else {
+        // Use standard import() for production for Webpack analysis
+        if (process.env.NODE_ENV === 'production') {
+          // Construct the full path string directly for import()
+          menu.component = () => import(`@/views${item.component}.vue`) // <-- Key change!
+        } else {
+          // Keep using require for development (faster HMR)
+          // Note: Ensure .default as require brings in the module object
+          menu.component = require('@/views' + item.component + '.vue').default
+        }
+      }
     } else {
-      console.log('111 menu3 开始导入组件')
-      menu.component = _import(item.component) // 导入组件
-      console.log('111 menu4 导入组件成功')
+      console.warn(`Menu item ${item.path} is missing the 'component' property.`)
+      // Optionally handle cases where component is missing, e.g., assign a default component or skip
     }
     console.log('111 menu5')
     // alert('组装后的单个menu:' + JSON.stringify(menu))
