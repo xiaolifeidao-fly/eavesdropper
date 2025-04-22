@@ -1,0 +1,30 @@
+[package]
+edition = "2021"
+name = "algorithm"
+version = "0.0.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[package.metadata.napi]
+name = "algorithm"
+target = ["x86_64-apple-darwin", "aarch64-apple-darwin", "x86_64-pc-windows-msvc"]
+
+[dependencies]
+# Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
+napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
+napi-derive = "2.12.2"
+aes-gcm = "0.10.3"
+rand = "0.8.5"
+base64 = "0.21.7"
+uuid = { version = "1.6.1", features = ["v4", "serde"] }
+mac_address = "1.1.5"
+sysinfo = "0.29.10"
+thiserror = "1.0.56"
+
+[build-dependencies]
+napi-build = "2.0.1"
+
+[profile.release]
+lto = true
+strip = "symbols"

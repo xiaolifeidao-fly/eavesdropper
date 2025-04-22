@@ -13,6 +13,8 @@ import Store from 'electron-store';
 import { initPlatform } from '@src/door/engine';
 import { validateTest } from '@src/validator/image.validator.test';
 import { onResponse, syncPrice } from '@src/door/mb/sku/mb.publish.on';
+import { encryptSensitiveData } from '@src/examples/cryptoExample';
+import { CryptoUtils } from '../utils/crypto-bridge';
 
 
 log.info("app load")
@@ -140,9 +142,41 @@ function checkUpdate(mainWindow: BrowserWindow){
   // }, 60 * 1000) // 60秒检查一次更新
 }
 
+// 测试加密功能
+async function testCryptoUtils() {
+  try {
+    log.info('正在测试加密功能...');
+    await CryptoUtils.initialize();
+    
+    const machineId = await CryptoUtils.getMachineId();
+    log.info(`当前机器 ID: ${machineId}`);
+    
+    const testText = '这是一段需要加密的测试文本';
+    const password = 'test-password-123';
+    
+    log.info(`原始文本: ${testText}`);
+    
+    const encrypted = await CryptoUtils.encrypt(testText, password);
+    log.info(`加密后: ${encrypted}`);
+    
+    const decrypted = await CryptoUtils.decrypt(encrypted, password);
+    log.info(`解密后: ${decrypted}`);
+    
+    if (decrypted === testText) {
+      log.info('✅ 加密解密测试成功!');
+    } else {
+      log.info('❌ 加密解密测试失败!');
+    }
+  } catch (error) {
+    log.error('加密测试失败:', error);
+  }
+}
 
 export const start = () => {
+  // 在应用启动时测试加密功能
+  testCryptoUtils();
   
+  // 设置应用程序图标
     app.on('ready', async ()=> {
       try {
         registerRpc();

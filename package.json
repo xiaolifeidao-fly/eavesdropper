@@ -1,5 +1,10 @@
 {
 	"dependencies": {
-		"delayed-stream": "^1.0.0"
-	}
+		"delayed-stream": "^1.0.0",
+		"yarn": "^1.22.22"
+	},
+	"packageManager": "yarn@4.9.1",
+	"workspaces": [
+		"algorithm"
+	]
 }
