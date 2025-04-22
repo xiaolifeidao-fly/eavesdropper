@@ -54,12 +54,12 @@ export async function uploadByFileApi(resourceId : number, skuItemId : string, s
 }
 
 async function getHeaderData(resourceId : number, validateTag : boolean, fileQueryMonitor : MbFileQueryMonitor){
-    let headerless = true;
-    if(validateTag){
-        headerless = false;
-    }
-    const mbEngine = new MbEngine(resourceId, headerless);
-    if(headerless){
+    // let headerless = true;
+    // if(validateTag){
+    //     headerless = false;
+    // }
+    const mbEngine = new MbEngine(resourceId);
+    if(!validateTag){
         const headerData = mbEngine.getHeader();
         //TODO cookie失效 要做处理
         if(headerData){
@@ -81,10 +81,10 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
                 header : undefined
             };
         }
-        if(!headerless){
-            log.info("upload image setHeaderData is ", result.getHeaderData());
-            mbEngine.setHeader(result.getHeaderData());
-        }
+        // if(validateTag){
+        log.info("upload image setHeaderData is ", result.getHeaderData());
+        mbEngine.setHeader(result.getHeaderData());
+        // }
         return result.getHeaderData();
     }finally{
         if(result){
@@ -111,6 +111,7 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
                 "Connection" : "keep-alive"
             }
         }
+        delete headers['referer'];
         headers['accept'] = "application/json, text/plain, */*";
         headers['accept-language'] = "zh-CN,zh;q=0.9";
         headers['cache-control'] = "no-cache";
@@ -123,6 +124,7 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
         headers['Origin'] = "https://myseller.taobao.com";
         headers['Host'] = "stream-upload.taobao.com";
         headers['x-requested-with'] = "XMLHttpRequest";
+        log.info("uploadFileByFileApi headers ", headers);
         form.append('file', fs.createReadStream(filePath), path.basename(filePath));
         // 发送 POST 请求
         let attempt = 0; // 当前尝试次数
@@ -184,6 +186,10 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
             continue;
         }
         const fileData : FileData = data.object;
+        if(!fileData){
+            log.error("MbFileUploadMonitor not success ", data);
+            return undefined;
+        }
         const doorFileRecord = await saveDoorFileRecordByResult(source, "IMAGE", resourceId, fileData);
         const fileName = doorFileRecord.fileName;
         if(!fileName){
