@@ -9,6 +9,7 @@ import (
 	"server/common/server/middleware"
 	"server/internal/gather/services"
 	"server/internal/gather/services/dto"
+	"sort"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -100,6 +101,11 @@ func GetGatherBatchSkuList(ctx *gin.Context) {
 		controller.Error(ctx, err.Error())
 		return
 	}
+
+	// 按更新时间排序
+	sort.Slice(skuList, func(i, j int) bool {
+		return skuList[i].UpdatedAt.After(skuList[j].UpdatedAt)
+	})
 
 	controller.OK(ctx, skuList)
 }

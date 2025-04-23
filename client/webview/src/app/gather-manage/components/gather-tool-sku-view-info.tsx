@@ -7,6 +7,7 @@ import { PDD, TB } from "@enums/source";
 const PDD_URL = "https://mobile.yangkeduo.com/goods1.html?goods_id=";
 
 interface SkuViewInfoI {
+  id: number
   source: string
   skuId: string
   skuName: string
@@ -15,7 +16,7 @@ interface SkuViewInfoI {
   favorite: boolean
 }
 
-const SkuViewInfo = ({ skuViewInfo, onFavorite }: { skuViewInfo: SkuViewInfoI | null; onFavorite: () => void }) => {
+const SkuViewInfo = ({ skuViewInfo, onFavorite }: { skuViewInfo: SkuViewInfoI | null; onFavorite: (id: number, isFavorite: boolean) => void }) => {
   if (!skuViewInfo) {
     return null
   }
@@ -109,7 +110,7 @@ const SkuViewInfo = ({ skuViewInfo, onFavorite }: { skuViewInfo: SkuViewInfoI | 
         }}>
         <button
           className={`favorite-btn ${skuViewInfo.favorite ? 'favorited' : ''}`}
-          onClick={onFavorite}
+          onClick={() => onFavorite(skuViewInfo.id, skuViewInfo.favorite)}
           style={{
             backgroundColor: skuViewInfo.favorite ? '#722ed1' : '#ff4d4f',
             color: 'white',

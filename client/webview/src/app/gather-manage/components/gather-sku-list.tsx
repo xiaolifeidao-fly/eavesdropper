@@ -5,6 +5,7 @@ import { Empty, message } from 'antd'
 import { SkuViewInfoI } from './gather-tool-sku-view-info'
 import './gather-sku-list.less' // 引入自定义样式
 import { getSkuUrl } from '@utils/sku_url'
+import { favoriteGatherSku } from '@api/gather/gather-sku.api'
 
 function copyToClipboard(inputText: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -85,7 +86,11 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
   }
 
   // 更新商品收藏状态
-  const handleFavoriteChange = (record: SkuViewInfoI) => {
+  const handleFavoriteChange = async (record: SkuViewInfoI) => {
+    const isFavorite = !record.favorite
+    console.log('record', record)
+    await favoriteGatherSku(record.id, isFavorite)
+
     // 更新列表数据
     const updatedDataSource = dataSource.map((item) => {
       if (item.skuId === record.skuId) {
@@ -259,7 +264,7 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
                     }}>
                     <button
                       className={`item-favorite-btn ${record.favorite ? 'favorited' : ''}`}
-                      onClick={() => handleFavoriteChange(record)}
+                      onClick={async () => await handleFavoriteChange(record)}
                       style={{
                         color: '#ff4d4f',
                         background: 'none',

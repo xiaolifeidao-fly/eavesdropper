@@ -21,3 +21,25 @@ func (r *gatherSkuRepository) GetGatherSkuListByBatchID(batchID uint64) ([]*mode
 	}
 	return list, nil
 }
+
+func (r *gatherSkuRepository) GetGatherSkuByID(id uint64) (*models.GatherSku, error) {
+	var err error
+
+	sql := "select * from gather_sku where id = ? and deleted_at is null"
+	gatherSku, err := r.GetOne(sql, id)
+	if err != nil {
+		return nil, err
+	}
+	return gatherSku, nil
+}
+
+func (r *gatherSkuRepository) GetGatherSkuByBatchIDAndSkuID(batchID uint64, skuID string) (*models.GatherSku, error) {
+	var err error
+
+	sql := "select * from gather_sku where batch_id = ? and sku_id = ? and deleted_at is null"
+	gatherSku, err := r.GetOne(sql, batchID, skuID)
+	if err != nil {
+		return nil, err
+	}
+	return gatherSku, nil
+}

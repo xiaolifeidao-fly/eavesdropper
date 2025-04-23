@@ -10,6 +10,8 @@ import { PDD } from '@enums/source'
 import GatherSkuList from './gather-sku-list'
 import { GatherSku } from '@model/gather/gather-sku'
 import { getGatherBatchSkuList } from '@api/gather/gather-batch.api'
+import { favoriteGatherSku } from '@api/gather/gather-sku.api'
+
 interface GatherToolProps {
   hideModal: () => void
   onSuccess?: () => void
@@ -58,6 +60,7 @@ const GatherTool = (props: GatherToolProps) => {
     const gatherSkuList = await getGatherBatchSkuList(id)
     const skuViewInfoList: SkuViewInfoI[] = gatherSkuList.map((item) => {
       return {
+        id: item.id,
         source: item.source,
         skuId: item.skuId,
         skuName: item.name,
@@ -92,6 +95,7 @@ const GatherTool = (props: GatherToolProps) => {
   const gatherDoorSkuHandler = (source: string, gatherSku: GatherSku) => {
     // 将pxx当前查看的商品展示到当前展示商品信息列表
     const skuViewInfo: SkuViewInfoI = {
+      id: gatherSku.id,
       source: source,
       skuId: gatherSku.skuId,
       skuName: gatherSku.name,
@@ -148,11 +152,14 @@ const GatherTool = (props: GatherToolProps) => {
   }
 
   // 切换收藏状态
-  const toggleFavorite = () => {
+  const toggleFavorite = async (id: number, isFavorite: boolean) => {
     // 更新当前商品的收藏状态
     if (!skuViewInfo) {
       return
     }
+
+    // 更新当前商品的收藏状态
+    await favoriteGatherSku(id, isFavorite)
 
     // 更新当前查看商品的收藏状态
     setSkuViewInfo((prev: SkuViewInfoI | null) => {

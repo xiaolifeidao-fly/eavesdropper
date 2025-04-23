@@ -128,7 +128,6 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
             // 保存采集商品
             const gatherSkuCreateReq = new GatherSkuCreateReq(gatherBatchId, doorSkuDTO.baseInfo.title, PDD, doorSkuDTO.doorSkuSaleInfo.saleNum, doorSkuDTO.doorSkuSaleInfo.price, doorSkuDTO.baseInfo.itemId, false);
-            log.info("gatherSkuCreateReq is ", gatherSkuCreateReq);
             addGatherSku(gatherSkuCreateReq).then(gatherSku => {
                 // 发送采集商品消息
                 this.send('onGatherSkuMessage', gatherSku);
