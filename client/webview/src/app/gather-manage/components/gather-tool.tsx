@@ -8,7 +8,8 @@ import SkuViewInfo, { SkuViewInfoI } from './gather-tool-sku-view-info'
 import { DoorSkuDTO } from '@model/door/sku'
 import { PDD } from '@enums/source'
 import GatherSkuList from './gather-sku-list'
-
+import { GatherSku } from '@model/gather/gather-sku'
+import { getGatherBatchSkuList } from '@api/gather/gather-batch.api'
 interface GatherToolProps {
   hideModal: () => void
   onSuccess?: () => void
@@ -17,6 +18,7 @@ interface GatherToolProps {
 
 const GatherTool = (props: GatherToolProps) => {
   const { hideModal, onSuccess, data } = props
+  const { id } = data
   const [containerHeight, setContainerHeight] = useState(0)
 
   const [gatherViewSkuList, setGatherViewSkuList] = useState<SkuViewInfoI[]>([])
@@ -39,7 +41,7 @@ const GatherTool = (props: GatherToolProps) => {
     window.addEventListener('resize', handleResize)
 
     initGatherInfo()
-    
+
     // 打开PXX
     openPxx()
 
@@ -50,19 +52,36 @@ const GatherTool = (props: GatherToolProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const initGatherInfo = () => {
+  const initGatherInfo = async () => {
     setGaterInfo(data)
+    // 获取采集批次商品列表
+    const gatherSkuList = await getGatherBatchSkuList(id)
+    const skuViewInfoList: SkuViewInfoI[] = gatherSkuList.map((item) => {
+      return {
+        source: item.source,
+        skuId: item.skuId,
+        skuName: item.name,
+        skuPrice: item.price,
+        skuSales: item.sales,
+        favorite: item.favorite
+      }
+    })
+    setGatherViewSkuList(skuViewInfoList)
   }
 
   // 打开PXX
   const openPxx = async () => {
     try {
       const monitor = new MonitorPxxSkuApi()
-      await monitor.monitorSku()
+      if (!id) {
+        message.error('打开PXX失败，请先选择采集批次')
+        return
+      }
 
+      await monitor.monitorSku(id)
       // 监听PXX采集商品消息
-      monitor.onGatherSkuMessage((doorSkuDTO: DoorSkuDTO | null) => {
-        gatherDoorSkuHandler(PDD, doorSkuDTO)
+      monitor.onGatherSkuMessage((gatherSku: GatherSku) => {
+        gatherDoorSkuHandler(PDD, gatherSku)
       })
     } catch (error: any) {
       message.error('打开PXX失败', error)
@@ -70,19 +89,15 @@ const GatherTool = (props: GatherToolProps) => {
   }
 
   // 采集商品消息处理
-  const gatherDoorSkuHandler = (source: string, doorSkuDTO: DoorSkuDTO | null) => {
-    if (!doorSkuDTO) {
-      setSkuViewInfo(null)
-      return
-    }
+  const gatherDoorSkuHandler = (source: string, gatherSku: GatherSku) => {
     // 将pxx当前查看的商品展示到当前展示商品信息列表
     const skuViewInfo: SkuViewInfoI = {
       source: source,
-      skuId: doorSkuDTO.baseInfo.itemId,
-      skuName: doorSkuDTO.baseInfo.title,
-      skuPrice: doorSkuDTO.doorSkuSaleInfo.price,
-      skuSales: doorSkuDTO.doorSkuSaleInfo.saleNum,
-      favorite: false
+      skuId: gatherSku.skuId,
+      skuName: gatherSku.name,
+      skuPrice: gatherSku.price,
+      skuSales: gatherSku.sales,
+      favorite: gatherSku.favorite
     }
     setSkuViewInfo(skuViewInfo)
 
@@ -90,14 +105,15 @@ const GatherTool = (props: GatherToolProps) => {
     setGatherViewSkuList((prevList) => {
       // 在函数内部检查是否已存在
       const isExist = prevList.some((item) => item.skuId === skuViewInfo.skuId)
-      
+
       if (!isExist) {
         // 不存在，添加到列表
         addGatherViewSkuListViewTotal()
         return [skuViewInfo, ...prevList]
+      } else {
+        // 已存在将数据放置到列表的开头
+        return [skuViewInfo, ...prevList.filter((item) => item.skuId !== skuViewInfo.skuId)]
       }
-      // 已存在，返回原列表
-      return prevList
     })
   }
 
@@ -137,7 +153,7 @@ const GatherTool = (props: GatherToolProps) => {
     if (!skuViewInfo) {
       return
     }
-    
+
     // 更新当前查看商品的收藏状态
     setSkuViewInfo((prev: SkuViewInfoI | null) => {
       if (!prev) {
@@ -148,7 +164,7 @@ const GatherTool = (props: GatherToolProps) => {
         favorite: !prev.favorite
       }
     })
-    
+
     // 同步更新商品列表中的收藏状态
     setGatherViewSkuList((prevList) => {
       return prevList.map((item) => {
@@ -172,7 +188,7 @@ const GatherTool = (props: GatherToolProps) => {
 
   // 获取收藏的商品列表
   const getFavoriteSkuList = () => {
-    return gatherViewSkuList.filter(item => item.favorite)
+    return gatherViewSkuList.filter((item) => item.favorite)
   }
 
   // Tab项变化时触发
@@ -204,12 +220,12 @@ const GatherTool = (props: GatherToolProps) => {
   const items = [
     {
       key: 'all',
-      label: `全部商品 (${gatherViewSkuList.length})`,
+      label: `全部商品 (${gatherViewSkuList.length})`
     },
     {
       key: 'favorite',
-      label: `收藏商品 (${getFavoriteSkuList().length})`,
-    },
+      label: `收藏商品 (${getFavoriteSkuList().length})`
+    }
   ]
 
   return (
@@ -291,7 +307,7 @@ const GatherTool = (props: GatherToolProps) => {
       />
 
       {/* 采集商品列表 */}
-      <GatherSkuList 
+      <GatherSkuList
         dataSource={getTabDataSource()}
         setGatherViewSkuList={setGatherViewSkuList}
         expandedRowKeys={expandedRowKeys}

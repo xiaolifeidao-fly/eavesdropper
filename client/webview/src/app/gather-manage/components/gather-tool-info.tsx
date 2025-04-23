@@ -1,6 +1,7 @@
 import React from 'react'
 
 interface GatherInfo {
+  id: number
   batchNo: string
   name: string
   source: string
@@ -11,8 +12,7 @@ interface GatherInfo {
 }
 
 const GaterToolInfo = ({ gaterInfo }: { gaterInfo: GatherInfo | null }) => {
-  const { batchNo, name, source, createdAt, gatherTotal, viewTotal } =
-    gaterInfo || {}
+  const { batchNo, name, source, createdAt, gatherTotal, viewTotal } = gaterInfo || {}
   return (
     <div
       className='info-section'

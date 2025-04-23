@@ -1,9 +1,33 @@
 import React from 'react'
 import type { Key } from 'react'
 import { ProList } from '@ant-design/pro-components'
-import { Empty } from 'antd'
+import { Empty, message } from 'antd'
 import { SkuViewInfoI } from './gather-tool-sku-view-info'
 import './gather-sku-list.less' // 引入自定义样式
+import { getSkuUrl } from '@utils/sku_url'
+
+function copyToClipboard(inputText: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const textarea = document.createElement('textarea')
+    textarea.value = inputText
+    textarea.style.position = 'fixed' // 避免滚动到底部
+    document.body.appendChild(textarea)
+    textarea.select()
+
+    try {
+      const successful = document.execCommand('copy')
+      if (successful) {
+        resolve()
+      } else {
+        reject(new Error('无法复制文本'))
+      }
+    } catch (err) {
+      reject(err)
+    } finally {
+      document.body.removeChild(textarea)
+    }
+  })
+}
 
 interface GatherSkuListProps {
   dataSource: SkuViewInfoI[]
@@ -265,7 +289,10 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
                       }}
                       onClick={() => {
                         updateViewedProducts(record.skuId)
-                        alert(`已复制商品链接: ${record.skuName}`)
+                        // 复制商品链接
+                        copyToClipboard(getSkuUrl(record.source, record.skuId)).then(() => {
+                          message.success('复制成功')
+                        })
                       }}>
                       复制
                     </a>

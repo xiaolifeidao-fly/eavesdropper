@@ -4,9 +4,9 @@ import (
 	"errors"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
+	"server/common/base/page"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
 	"server/internal/gather/models"
@@ -28,19 +28,15 @@ func AddGatherBatch(addDto *dto.GatherBatchDTO) (*dto.GatherBatchDTO, error) {
 	return addDto, nil
 }
 
-var lock = sync.Mutex{}
-
 func GetGatherBatchNo(userId uint64, source string) (string, error) {
 	var err error
 	gatherRepository := repositories.GatherBatchRepository
 
-	lock.Lock()
 	count, err := gatherRepository.GetTodayGatherBatchNoCount(userId, source)
 	if err != nil {
 		logger.Errorf("GetGatherBatchNo failed, with error is %v", err)
 		return "", errors.New("数据库错误")
 	}
-	defer lock.Unlock()
 
 	// count 部分补齐3位
 	countStr := strconv.FormatInt(count+1, 10)
@@ -49,4 +45,23 @@ func GetGatherBatchNo(userId uint64, source string) (string, error) {
 	}
 
 	return source + "-" + time.Now().Format("20060102") + "-" + countStr, nil
+}
+
+func PageGatherBatch(param *dto.GatherBatchPageParamDTO) (*page.Page[dto.GatherBatchPageDTO], error) {
+	var err error
+	gatherRepository := repositories.GatherBatchRepository
+
+	var count int64
+	var pageData = make([]*dto.GatherBatchPageDTO, 0)
+	if err = gatherRepository.Page(&models.GatherBatch{}, *param, param.Query, &pageData, &count); err != nil {
+		return nil, err
+	}
+
+	if count <= 0 {
+		return page.BuildEmptyPage[dto.GatherBatchPageDTO](param.ToPageInfo(count)), nil
+	}
+
+	pageDTO := page.BuildPage(param.ToPageInfo(count), pageData)
+
+	return pageDTO, nil
 }

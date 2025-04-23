@@ -12,7 +12,8 @@ import * as path from 'path';
 import { app } from 'electron';
 import fs from 'fs'
 import { shell } from 'electron';
-
+import { GatherSku, GatherSkuCreateReq } from "@model/gather/gather-sku";
+import { addGatherSku } from "@api/gather/gather-sku.api";
 
 const monitor = new PxxLoginMonitor();
 
@@ -24,11 +25,10 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
     private currentPage: Page | null = null;
     
     @InvokeType(Protocols.INVOKE)
-    async monitorSku(){
-        const resourceId = 111111;
-        log.info("open pxx resourceId is ", resourceId);
+    async monitorSku(gatherBatchId: number){
+        log.info("open pxx resourceId is ", gatherBatchId);
         try{
-            const engine = new PxxEngine(resourceId, false);
+            const engine = new PxxEngine(gatherBatchId, false);
             const url = "https://mobile.yangkeduo.com/";
             const page = await engine.init(url);
             if(!page){ 
@@ -48,7 +48,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             log.info("open wait monitor");
             const result = await engine.openWaitMonitor(page, url, monitor, {});
             if(result){
-                this.saveSku(resourceId, context, monitor.getType());
+                this.saveSku(gatherBatchId, context, monitor.getType());
             }
             return result;
         } catch(error){
@@ -77,7 +77,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                     let rawData = match[0];
                     rawData = rawData.substring(rawData.indexOf("{"), rawData.length);
                     this.saveByJson(rawData, requestUrl, monitorKey, goodsId, type);
-                    this.sendGatherSkuMessage(goodsId, rawData);
+                    this.saveGatherSku(resourceId, goodsId, rawData);  // 保存采集商品
                 } else {
                     log.info("row data not found");
                 }
@@ -107,7 +107,8 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         }
     }
 
-    async sendGatherSkuMessage(itemKey : string, rawData : string){
+
+    async saveGatherSku(gatherBatchId : number, itemKey : string, rawData : string){
         const jsonData = JSON.parse(rawData);
         const initDataObj = jsonData?.store?.initDataObj;
         if(!initDataObj){
@@ -124,7 +125,14 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                 log.warn(`${itemKey} doorSkuDTO not found`);
                 return;
             }
-            this.send('onGatherSkuMessage', doorSkuDTO);
+
+            // 保存采集商品
+            const gatherSkuCreateReq = new GatherSkuCreateReq(gatherBatchId, doorSkuDTO.baseInfo.title, PDD, doorSkuDTO.doorSkuSaleInfo.saleNum, doorSkuDTO.doorSkuSaleInfo.price, doorSkuDTO.baseInfo.itemId, false);
+            log.info("gatherSkuCreateReq is ", gatherSkuCreateReq);
+            addGatherSku(gatherSkuCreateReq).then(gatherSku => {
+                // 发送采集商品消息
+                this.send('onGatherSkuMessage', gatherSku);
+            });
         });
     }
 

@@ -1,5 +1,5 @@
 import { ElectronApi, InvokeType, Protocols } from "@eleapi/base";
-import { DoorSkuDTO } from "@model/door/sku";
+import { GatherSku } from "@model/gather/gather-sku";
 
 export class MonitorPxxSkuApi extends ElectronApi{
 
@@ -8,12 +8,12 @@ export class MonitorPxxSkuApi extends ElectronApi{
     }
 
     @InvokeType(Protocols.INVOKE)
-    async monitorSku(){
-        return await this.invokeApi("monitorSku");
+    async monitorSku(gatherBatchId: number){
+        return await this.invokeApi("monitorSku", gatherBatchId);
     }
 
     @InvokeType(Protocols.TRRIGER)
-    async onGatherSkuMessage(callback: (doorSkuDTO: DoorSkuDTO | null) => void) {
+    async onGatherSkuMessage(callback: (gatherSku: GatherSku) => void) {
       return await this.onMessage('onGatherSkuMessage', callback)
     }
 

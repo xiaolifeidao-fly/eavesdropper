@@ -6,14 +6,11 @@ import { Button } from 'antd'
 import styles from './index.module.less'
 import OpenModal from './components/open-modal'
 import Layout from '@/components/layout'
-
+import { getGatherBatchPage } from '@api/gather/gather-batch.api'
 export default function GatherManage() {
   const actionRef = useRef<ActionType>() // 表格操作
   const [modalType, setModalType] = useState('')
   const [modalData, setModalData] = useState({})
-
-  // 查看详情
-  const handleView = (record: any) => {}
 
   // 导出链接
   const handleExport = (record: any) => {}
@@ -73,8 +70,8 @@ export default function GatherManage() {
       search: {
         transform: (value) => {
           return {
-            startTime: value[0],
-            endTime: value[1]
+            createdAtStart: value[0],
+            createdAtEnd: value[1]
           }
         }
       }
@@ -110,22 +107,17 @@ export default function GatherManage() {
 
   // 获取数据源
   const getDataSource = async (params?: any) => {
-    console.log(params)
+    const res = await getGatherBatchPage(params)
+    const data = res.data.map((item: any) => {
+      return {
+        ...item
+      }
+    })
+
     return {
-      data: [
-        {
-          id: 1,
-          batchNo: 'pxx-20250417-001',
-          name: 'pxx手机采集',
-          source: 'pdd',
-          gatherTotal: 0,
-          favoriteTotal: 0,
-          viewTotal: 0,
-          createdAt: '2025-04-16 12:00:00'
-        }
-      ],
+      data,
       success: true,
-      total: 1
+      total: res.pageInfo.total
     }
   }
 
