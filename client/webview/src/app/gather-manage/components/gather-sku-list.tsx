@@ -88,7 +88,6 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
   // 更新商品收藏状态
   const handleFavoriteChange = async (record: SkuViewInfoI) => {
     const isFavorite = !record.favorite
-    console.log('record', record)
     await favoriteGatherSku(record.id, isFavorite)
 
     // 更新列表数据
@@ -101,6 +100,7 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
 
     // 更新列表数据
     setGatherViewSkuList(updatedDataSource)
+    // 更新当前查看商品的收藏状态
 
     // 通知父组件收藏状态变化，父组件可能需要更新当前查看商品的状态
     if (onItemFavoriteChange) {

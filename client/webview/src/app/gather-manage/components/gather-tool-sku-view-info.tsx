@@ -110,7 +110,7 @@ const SkuViewInfo = ({ skuViewInfo, onFavorite }: { skuViewInfo: SkuViewInfoI | 
         }}>
         <button
           className={`favorite-btn ${skuViewInfo.favorite ? 'favorited' : ''}`}
-          onClick={() => onFavorite(skuViewInfo.id, skuViewInfo.favorite)}
+          onClick={() => onFavorite(skuViewInfo.id, !skuViewInfo.favorite)}
           style={{
             backgroundColor: skuViewInfo.favorite ? '#722ed1' : '#ff4d4f',
             color: 'white',

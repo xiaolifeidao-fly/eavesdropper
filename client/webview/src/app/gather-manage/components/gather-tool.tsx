@@ -70,6 +70,16 @@ const GatherTool = (props: GatherToolProps) => {
       }
     })
     setGatherViewSkuList(skuViewInfoList)
+    // 修改查看和采集的数量
+    const gatherTotal = skuViewInfoList.filter((item) => item.favorite).length
+    const viewTotal = skuViewInfoList.length
+
+    setGaterInfo((prev: GatherInfo | null) => {
+      if (!prev) {
+        return null
+      }
+      return { ...prev, viewTotal, gatherTotal }
+    })
   }
 
   // 打开PXX
@@ -134,6 +144,19 @@ const GatherTool = (props: GatherToolProps) => {
     })
   }
 
+  // 修改采集批次采集数量
+  const addGatherViewSkuListGatherTotal = (num: number = 1) => {
+    setGaterInfo((prev: GatherInfo | null) => {
+      if (!prev) {
+        return null
+      }
+      return {
+        ...prev,
+        gatherTotal: prev.gatherTotal + num
+      }
+    })
+  }
+
   // 更新导出按钮状态
   const updateExportButtonState = () => {
     const exportBtn = document.getElementById('exportBtn') as HTMLButtonElement | null
@@ -158,8 +181,15 @@ const GatherTool = (props: GatherToolProps) => {
       return
     }
 
+    console.log('id', id, 'isFavorite', isFavorite)
+
     // 更新当前商品的收藏状态
     await favoriteGatherSku(id, isFavorite)
+    if (isFavorite) {
+      addGatherViewSkuListGatherTotal(1)
+    } else {
+      addGatherViewSkuListGatherTotal(-1)
+    }
 
     // 更新当前查看商品的收藏状态
     setSkuViewInfo((prev: SkuViewInfoI | null) => {
@@ -185,6 +215,8 @@ const GatherTool = (props: GatherToolProps) => {
       })
     })
   }
+
+
 
   // 导出选中商品
   const handleExport = () => {
@@ -221,6 +253,13 @@ const GatherTool = (props: GatherToolProps) => {
         ...skuViewInfo,
         favorite: favorite
       })
+    }
+
+    // 更新采集批次采集数量
+    if (favorite) {
+      addGatherViewSkuListGatherTotal(1)
+    } else {
+      addGatherViewSkuListGatherTotal(-1)
     }
   }
 
