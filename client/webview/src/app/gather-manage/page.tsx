@@ -93,12 +93,12 @@ export default function GatherManage() {
             >
               开始采集
             </Button>
-            <Button
+            {/* <Button
               type='link'
               onClick={() => handleExport(record)} // 导出操作
               style={{ display: 'inline-block', paddingLeft: '4px' }}>
               导出收藏链接
-            </Button>
+            </Button> */}
           </div>
         )
       }

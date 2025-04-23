@@ -11,6 +11,7 @@ import GatherSkuList from './gather-sku-list'
 import { GatherSku } from '@model/gather/gather-sku'
 import { getGatherBatchSkuList } from '@api/gather/gather-batch.api'
 import { favoriteGatherSku } from '@api/gather/gather-sku.api'
+import { getSkuUrl } from '@utils/sku_url'
 
 interface GatherToolProps {
   hideModal: () => void
@@ -216,12 +217,41 @@ const GatherTool = (props: GatherToolProps) => {
     })
   }
 
-
-
   // 导出选中商品
   const handleExport = () => {
     if (selectedRowKeys.length > 0) {
-      alert('导出商品')
+      // 获取选中的商品
+      const selectedSkus = gatherViewSkuList.filter((item) => selectedRowKeys.includes(item.skuId))
+
+      // 使用getSkuUrl获取商品URL并拼接成文本
+      const skuUrlsText = selectedSkus.map((item) => getSkuUrl(item.source, item.skuId)).join('\n')
+
+      // 创建Blob对象
+      const blob = new Blob([skuUrlsText], { type: 'text/plain;charset=utf-8' })
+
+      // 创建下载链接
+      const downloadLink = document.createElement('a')
+      downloadLink.href = URL.createObjectURL(blob)
+        
+      // 使用批次号作为文件名前缀，如果没有批次号就使用"未知批次"
+      const batchNo = gaterInfo?.batchNo || '未知批次'
+      const now = new Date()
+      const dateStr = `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}`
+      const timeStr = `${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}`
+      
+      downloadLink.download = `${batchNo}_${dateStr}_${timeStr}.txt`
+
+      // 添加到DOM并触发点击
+      document.body.appendChild(downloadLink)
+      downloadLink.click()
+
+      // 清理DOM
+      document.body.removeChild(downloadLink)
+
+      // 释放URL对象
+      URL.revokeObjectURL(downloadLink.href)
+
+      message.success(`成功导出 ${selectedRowKeys.length} 个商品链接`)
     }
   }
 
