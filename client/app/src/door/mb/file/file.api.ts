@@ -13,6 +13,7 @@ import { MbEngine } from "../mb.engine";
 import { saveDoorFileRecord } from "@api/door/file.api";
 import { Page } from "playwright";
 import log from "electron-log";
+import { UPLOAD_IMAGE_HEADER } from "../tb.header";
 
 function getFilePaths(skuFileNames: { [key: string]: FileInfo } = {}){
     const filePaths = [];
@@ -58,13 +59,19 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
     // if(validateTag){
     //     headerless = false;
     // }
-    const mbEngine = new MbEngine(resourceId);
+    let mbEngine = new MbEngine(resourceId);
     if(!validateTag){
-        const headerData = mbEngine.getHeader();
+        const headerData = mbEngine.getHeader(UPLOAD_IMAGE_HEADER);
         //TODO cookie失效 要做处理
         if(headerData){
             return headerData;
         }
+    }
+
+    const validateAutoTag = mbEngine.getValidateAutoTag();
+    log.info("upload image show page ", !validateAutoTag);
+    if(!validateAutoTag){
+        mbEngine = new MbEngine(resourceId, false);
     }
     let result;
     try{
@@ -82,8 +89,8 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
             };
         }
         // if(validateTag){
-        log.info("upload image setHeaderData is ", result.getHeaderData());
-        mbEngine.setHeader(result.getHeaderData());
+        log.info("upload image query result is ", result);
+        mbEngine.setHeader(UPLOAD_IMAGE_HEADER, result.getHeaderData());
         // }
         return result.getHeaderData();
     }finally{
@@ -124,7 +131,6 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
         headers['Origin'] = "https://myseller.taobao.com";
         headers['Host'] = "stream-upload.taobao.com";
         headers['x-requested-with'] = "XMLHttpRequest";
-        log.info("uploadFileByFileApi headers ", headers);
         form.append('file', fs.createReadStream(filePath), path.basename(filePath));
         // 发送 POST 请求
         let attempt = 0; // 当前尝试次数

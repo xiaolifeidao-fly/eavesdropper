@@ -4,21 +4,23 @@ import axios from "axios";
 import log from "electron-log";
 import { DoorEntity } from "@src/door/entity";
 import { buildValidateDoorEntity } from "@src/door/monitor/mb/mb.monitor";
+import { SEARCH_CATEGORY_HEADER } from "../tb.header";
 
 async function getHeaderData(resourceId : number, validateTag : boolean){
-    let headerless = true;
-    if(validateTag){
-        headerless = false;
-    }
     const searchStartTraceId = "searchStartTraceId";
-    const mbEngine = new MbEngine(resourceId, headerless);
-    if(headerless){
-        const headerData = mbEngine.getHeader();
+    let mbEngine = new MbEngine(resourceId);
+    if(!validateTag){
+        const headerData = mbEngine.getHeader(SEARCH_CATEGORY_HEADER);
         log.info("headerData", headerData);
         //TODO cookie失效 要做处理
         if(headerData){
             return {header : headerData, startTraceId : mbEngine.getParams(searchStartTraceId)};
         }
+    }
+    const validateAutoTag = mbEngine.getValidateAutoTag();
+    log.info("search category show page ", !validateAutoTag);
+    if(!validateAutoTag){
+        mbEngine = new MbEngine(resourceId, false);
     }
     let result;
     try{
@@ -33,10 +35,8 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
         if(!result.code){
             return undefined;
         }
-        if(!headerless){
-            mbEngine.setHeader(result.getHeaderData());
-            mbEngine.setParams(searchStartTraceId, result.getResponseHeaderData()['S_tid']);
-        }
+        mbEngine.setHeader(SEARCH_CATEGORY_HEADER, result.getHeaderData());
+        mbEngine.setParams(searchStartTraceId, result.getResponseHeaderData()['S_tid']);
         log.info("search category headerData", result.getHeaderData());
         return result.getHeaderData();
     }finally{
@@ -69,9 +69,10 @@ async function getCategoryInfo(requestHeader : { [key: string]: any }, startTrac
     requestHeader['sec-fetch-mode'] = "cors";
     requestHeader['sec-fetch-site'] = "same-origin";
     requestHeader['x-requested-with'] = "XMLHttpRequest";
-
-    delete requestHeader['upgrade-insecure-requests'];
-
+    log.info("get category info requestHeader: ", requestHeader);
+    if(!requestHeader['upgrade-insecure-requests']){
+        delete requestHeader['upgrade-insecure-requests'];
+    }
     const jsonBody = encodeURIComponent(JSON.stringify({
         keyword: categoryKeyword
     }));
