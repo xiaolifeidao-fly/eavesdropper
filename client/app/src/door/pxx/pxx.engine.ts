@@ -270,7 +270,6 @@ export class PxxEngine<T> extends DoorEngine<T> {
                     const key = this.getKey();
                     const isNeedStoreContext = responseMonitor.needStoreContext(key, headerData);
                     if(isNeedStoreContext){
-                        this.setHeader(headerData);
                         responseMonitor.setStoreContext(key);
                         log.info("session reset save context state");
                         await this.saveContextState();
@@ -486,23 +485,6 @@ export class PxxEngine<T> extends DoorEngine<T> {
         const sessionDir = this.getSessionDir();
         set(this.getKey(), sessionDir);
         await this.context.storageState({ path: sessionDir});
-    }
-
-    public getHeaderKey(){
-        return `${this.resourceId}_door_header_${this.getKey()}`;
-    }
-
-    public setHeader(header : {[key : string] : any}){
-        if(!header || Object.keys(header).length == 0){
-            return;
-        }
-        const key = this.getHeaderKey();
-        set(key, header);
-    }
-
-    public getHeader(){
-        const key = this.getHeaderKey();
-        return get(key);
     }
 
     public setParams(key : string, value : any){

@@ -327,7 +327,6 @@ export abstract class DoorEngine<T = any> {
                     const isNeedStoreContext = responseMonitor.needStoreContext(key, headerData);
                     log.info("isNeedStoreContext is ", isNeedStoreContext);
                     if(isNeedStoreContext){
-                        this.setHeader(headerData);
                         responseMonitor.setStoreContext(key);
                         log.info("session reset save context state");
                         await this.saveContextState();
@@ -566,25 +565,43 @@ export abstract class DoorEngine<T = any> {
         await this.context.storageState({ path: sessionDir});
     }
 
-    public getHeaderKey(){
-        return `${this.resourceId}_door_header_${this.getKey()}`;
+    public getHeaderKey(type : string){
+        return `${this.resourceId}_door_header_${type}_${this.getKey()}`;
     }
 
-    public setHeader(header : {[key : string] : any}){
+    public getValidateAutoTagKey(){
+        return `${this.resourceId}_door_validate_auto_tag_${this.getKey()}`;
+    }
+
+    public setHeader(type : string, header : {[key : string] : any}){
         if(!header || Object.keys(header).length == 0){
             return;
         }
-        const key = this.getHeaderKey();
+        const key = this.getHeaderKey(type);
         set(key, header);
     }
 
-    public getHeader(){
-        const key = this.getHeaderKey();
+    public setValidateAutoTag(validateAutoTag : boolean){
+        const key = this.getValidateAutoTagKey();
+        set(key, validateAutoTag);
+    }
+
+    public getValidateAutoTag(){
+        const key = this.getValidateAutoTagKey();
+        const validateAutoTag = get(key);
+        if(validateAutoTag == undefined){
+            return true;
+        }
+        return validateAutoTag;
+    }
+
+    public getHeader(type : string){
+        const key = this.getHeaderKey(type);
         return get(key);
     }
 
-    public clearHeader(){
-        const key = this.getHeaderKey();
+    public clearHeader(type : string){
+        const key = this.getHeaderKey(type);
         remove(key);
     }
 
