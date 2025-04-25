@@ -555,7 +555,6 @@ async function getSlideContent(imageInfo : string) {
             } else {
                 log.info(`验证最终失败，尝试了 ${validateNum + 1} 次`);
             }
-            
             return result;
         }
       } catch(error){
@@ -597,6 +596,8 @@ function checkValidate(){
             }
             
             if(result && isValidateSuccess(result)){
+                const cacheEngine = new MbEngine(validateItem.resourceId);
+                cacheEngine.setValidateAutoTag(autoFlag);
                 delete userValidateMap[validateItem.resourceId];
                 log.info("验证最终成功，返回成功结果");
                 validateItem.resolve(result.getHeaderData(), true);
