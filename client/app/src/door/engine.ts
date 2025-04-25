@@ -559,19 +559,19 @@ export abstract class DoorEngine<T = any> {
         await this.context.storageState({ path: sessionDir});
     }
 
-    public getHeaderKey(){
-        return `${this.resourceId}_door_header_${this.getKey()}`;
+    public getHeaderKey(type : string){
+        return `${this.resourceId}_door_header_${type}_${this.getKey()}`;
     }
 
     public getValidateAutoTagKey(){
         return `${this.resourceId}_door_validate_auto_tag_${this.getKey()}`;
     }
 
-    public setHeader(header : {[key : string] : any}){
+    public setHeader(type : string, header : {[key : string] : any}){
         if(!header || Object.keys(header).length == 0){
             return;
         }
-        const key = this.getHeaderKey();
+        const key = this.getHeaderKey(type);
         set(key, header);
     }
 
@@ -589,13 +589,13 @@ export abstract class DoorEngine<T = any> {
         return validateAutoTag;
     }
 
-    public getHeader(){
-        const key = this.getHeaderKey();
+    public getHeader(type : string){
+        const key = this.getHeaderKey(type);
         return get(key);
     }
 
-    public clearHeader(){
-        const key = this.getHeaderKey();
+    public clearHeader(type : string){
+        const key = this.getHeaderKey(type);
         remove(key);
     }
 

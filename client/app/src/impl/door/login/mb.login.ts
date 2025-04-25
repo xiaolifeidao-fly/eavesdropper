@@ -13,6 +13,7 @@ import { Frame, Page } from "playwright-core";
 import { v4 as uuidv4 } from 'uuid';
 import fs from "fs";
 import { validate } from "@src/validator/image.validator";
+import { SEARCH_CATEGORY_HEADER, UPLOAD_IMAGE_HEADER } from "@src/door/mb/tb.header";
 
 const loginEngineMap : { [key: string]: DoorEngine; } = {};
 
@@ -106,7 +107,8 @@ async function getFrame(page: Page, frameName: string) {
 
 
 async function clearHeader(engine : MbEngine<{}>){
-    engine.clearHeader();
+    engine.clearHeader(SEARCH_CATEGORY_HEADER);
+    engine.clearHeader(UPLOAD_IMAGE_HEADER);
 }
 
 export class MbLoginApiImpl extends MbLoginApi {
