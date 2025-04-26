@@ -1,19 +1,23 @@
 package com.kakrolot.service.order;
 
+import com.kakrolot.service.business.response.BindResult;
 import com.kakrolot.service.common.context.TenantContext;
 import com.kakrolot.service.order.api.OrderTokenDetailService;
 import com.kakrolot.service.order.api.dto.OrderTokenDetailDTO;
 import com.kakrolot.service.order.api.dto.QueryTokenDetailDTO;
+import com.kakrolot.service.order.api.dto.TokenBindStatus;
 import com.kakrolot.service.order.convert.OrderTokenDetailConverter;
 import com.kakrolot.service.order.dao.po.OrderTokenDetail;
 import com.kakrolot.service.order.dao.po.QueryTokenDetail;
 import com.kakrolot.service.order.dao.repository.OrderTokenDetailRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +82,78 @@ public class OrderTokenDetailServiceImpl implements OrderTokenDetailService {
         orderTokenDetailRepository.deleteById(id);
     }
     
+    @Override
+    @Transactional
+    public BindResult bindToken(String token, String tbShopName, String tbShopId) {
+        if (StringUtils.isBlank(token)) {
+            log.error("绑定失败：token为空");
+            return BindResult.fail("激活码不能为空");
+        }
+        
+        // 查找token
+        OrderTokenDetail orderTokenDetail = orderTokenDetailRepository.findByToken(token);
+        if (orderTokenDetail == null) {
+            log.error("绑定失败：token不存在, token={}", token);
+            return BindResult.fail("激活码不存在");
+        }
+        
+        // 检查token状态是否允许绑定
+        if (TokenBindStatus.BOUND.name().equals(orderTokenDetail.getStatus())) {
+            log.error("绑定失败：token已绑定, token={}", token);
+            return BindResult.fail("激活码已被绑定，不能重复绑定");
+        }
+
+        // 检查token授权是否已过期
+        if (TokenBindStatus.AUTH_EXPIRED.name().equals(orderTokenDetail.getStatus())) {
+            log.error("绑定失败：token授权已过期, token={}", token);
+            return BindResult.fail("激活码已过期，无法使用");
+        }
+        
+        // 更新token绑定信息
+        orderTokenDetail.setTbShopName(tbShopName);
+        orderTokenDetail.setTbShopId(tbShopId);
+        orderTokenDetail.setStatus(TokenBindStatus.BOUND.name()); // 更新状态为已绑定
+        orderTokenDetail.setBindTime(new Date()); // 设置绑定时间
+        //设置失效时间一个月后
+        orderTokenDetail.setExpireTime(DateUtils.addMonths(new Date(), 1));
+        try {
+            // 保存到数据库
+            orderTokenDetailRepository.save(orderTokenDetail);
+            log.info("token绑定成功: token={}, tbShopName={}, tbShopId={}", token, tbShopName, tbShopId);
+            return BindResult.success("激活码绑定成功");
+        } catch (Exception e) {
+            log.error("token绑定异常: token={}, tbShopName={}, tbShopId={}", token, tbShopName, tbShopId, e);
+            return BindResult.fail("系统异常，绑定失败：" + e.getMessage());
+        }
+    }
+    
+    @Override
+    public OrderTokenDetailDTO findActiveBindingByTbShopId(String tbShopId) {
+        if (tbShopId == null) {
+            return null;
+        }
+        // 查找该店铺所有绑定成功的记录，按绑定时间倒序排列
+        List<OrderTokenDetail> bindings = orderTokenDetailRepository
+                .findByTbShopIdAndStatusOrderByBindTimeDesc(tbShopId, TokenBindStatus.BOUND.name());
+                
+        if (bindings == null || bindings.isEmpty()) {
+            // 没有找到任何绑定记录
+            return null;
+        }
+        
+        // 从最新的记录开始查找，找到第一个未过期的
+        Date now = new Date();
+        for (OrderTokenDetail detail : bindings) {
+            // 如果过期时间为空或在当前时间之后，则认为是生效的
+            if (detail.getExpireTime() == null || detail.getExpireTime().after(now)) {
+                return orderTokenDetailConverter.toDTO(detail);
+            }
+        }
+        
+        // 所有绑定记录都已过期
+        return null;
+    }
+
     @Override
     public Long countByCondition(QueryTokenDetailDTO queryTokenDetailDTO) {
         StringBuffer sql = new StringBuffer();

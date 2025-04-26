@@ -15,9 +15,9 @@ public class QueryTokenDetail extends BasePO {
     private Long id;
     private Long orderRecordId;
     private String token;
-    private Long tbExternalId;
+    private String tbExternalId;
     private String tbShopName;
-    private Long tbShopId;
+    private String tbShopId;
     private String status;
     private Date bindTime;
     private Date createTime;

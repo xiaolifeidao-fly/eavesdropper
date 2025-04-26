@@ -12,33 +12,6 @@ import java.util.stream.Collectors;
 @Component
 public class OrderTokenDetailConverter extends CommonConvert<OrderTokenDetailDTO, OrderTokenDetail> {
 
-    public OrderTokenDetailDTO toDTO(OrderTokenDetail po) {
-        if (po == null) {
-            return null;
-        }
-        OrderTokenDetailDTO dto = new OrderTokenDetailDTO();
-        // 复制属性
-        // ...
-        return dto;
-    }
-
-    public List<OrderTokenDetailDTO> toDTOs(List<OrderTokenDetail> pos) {
-        if (pos == null) {
-            return null;
-        }
-        return pos.stream().map(this::toDTO).collect(Collectors.toList());
-    }
-
-    public OrderTokenDetail toPo(OrderTokenDetailDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-        OrderTokenDetail po = new OrderTokenDetail();
-        // 复制属性
-        // ...
-        return po;
-    }
-    
     /**
      * 将查询结果转换为DTO列表
      * @param queryTokenDetails 查询结果
