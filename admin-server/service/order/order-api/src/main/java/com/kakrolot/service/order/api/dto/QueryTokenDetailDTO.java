@@ -10,7 +10,7 @@ public class QueryTokenDetailDTO {
     private Long orderRecordId;
     private String token;
     private String tbShopName;
-    private Long tbShopId;
+    private String tbShopId;
     private String status;
     private String bindTimeStart;
     private String bindTimeEnd;

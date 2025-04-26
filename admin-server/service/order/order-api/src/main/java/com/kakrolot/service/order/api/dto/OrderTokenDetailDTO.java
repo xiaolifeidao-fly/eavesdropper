@@ -16,11 +16,11 @@ public class OrderTokenDetailDTO extends BaseDTO {
     
     private String token;
     
-    private Long tbExternalId;
+    private String tbExternalId;
     
     private String tbShopName;
     
-    private Long tbShopId;
+    private String tbShopId;
     
     private String status; // 绑定状态，参考TokenBindStatus枚举
     
