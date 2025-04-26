@@ -621,4 +621,61 @@ public class OrderController extends BaseController {
         return WebResponse.success(pageModel);
     }
 
+    @RequestMapping(value = "/tokens/list", method = RequestMethod.GET)
+    @ResponseBody
+    @ApiOperation(value = "激活码列表", httpMethod = "GET")
+    public WebResponse<PageModel<OrderTokenDetailModel>> tokenList(QueryTokenDetailModel queryTokenDetailModel,
+                                                        @RequestParam("page") int startIndex,
+                                                        @RequestParam("limit") int pageSize,
+                                                        @RequestParam("sort") String sort) {
+        
+        // 创建查询条件对象并设置当前用户ID
+        QueryTokenDetailDTO queryTokenDetailDTO = orderTokenWebConvert.toQueryDTO(queryTokenDetailModel, startIndex, pageSize);
+        queryTokenDetailDTO.setUserId(getCurrentUser().getId());
+//        queryTokenDetailDTO.setSort(sort);
+        
+        // 查询总数
+        Long count = orderTokenDetailService.countByCondition(queryTokenDetailDTO);
+        List<OrderTokenDetailDTO> tokenDetailDTOs = null;
+        if (count > 0) {
+            // 查询数据
+            tokenDetailDTOs = orderTokenDetailService.findByCondition(queryTokenDetailDTO);
+        }
+        
+        // 构建返回结果
+        PageModel<OrderTokenDetailModel> pageModel = new PageModel<>();
+        pageModel.setTotal(count);
+        pageModel.setItems(orderTokenWebConvert.toModels(tokenDetailDTOs));
+        
+        return WebResponse.success(pageModel);
+    }
+
+    @RequestMapping(value = "/manager/tokens/list", method = RequestMethod.GET)
+    @ResponseBody
+    @ApiOperation(value = "激活码列表(管理员)", httpMethod = "GET")
+    public WebResponse<PageModel<OrderTokenDetailModel>> managerTokenList(QueryTokenDetailModel queryTokenDetailModel,
+                                                              @RequestParam("page") int startIndex,
+                                                              @RequestParam("limit") int pageSize,
+                                                              @RequestParam("sort") String sort) {
+        
+        // 创建查询条件对象
+        QueryTokenDetailDTO queryTokenDetailDTO = orderTokenWebConvert.toQueryDTO(queryTokenDetailModel, startIndex, pageSize);
+//        queryTokenDetailDTO.setSort(sort);
+        
+        // 查询总数
+        Long count = orderTokenDetailService.countByManagerCondition(queryTokenDetailDTO);
+        List<OrderTokenDetailDTO> tokenDetailDTOs = null;
+        if (count > 0) {
+            // 查询数据
+            tokenDetailDTOs = orderTokenDetailService.findByManagerCondition(queryTokenDetailDTO);
+        }
+        
+        // 构建返回结果
+        PageModel<OrderTokenDetailModel> pageModel = new PageModel<>();
+        pageModel.setTotal(count);
+        pageModel.setItems(orderTokenWebConvert.toModels(tokenDetailDTOs));
+        
+        return WebResponse.success(pageModel);
+    }
+
 }

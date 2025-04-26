@@ -30,6 +30,9 @@ public class OrderTokenDetailModel extends BaseModel {
 
     private String bindTime; // 绑定成功的时间
 
+    private String expireTime; // Token 过期时间
+
     private String tokenCreateTime;
+
 
 }

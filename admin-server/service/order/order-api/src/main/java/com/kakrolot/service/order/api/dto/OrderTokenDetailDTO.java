@@ -26,4 +26,6 @@ public class OrderTokenDetailDTO extends BaseDTO {
     
     private Date bindTime; // 绑定成功的时间
 
+    private Date expireTime; // Token 过期时间
+
 } 
