@@ -29,4 +29,6 @@ public class OrderTokenDetail extends BasePO {
     private String status; // 绑定状态，参考TokenBindStatus枚举
     
     private Date bindTime; // 绑定成功的时间
+    
+    private Date expireTime; // Token 过期时间
 }

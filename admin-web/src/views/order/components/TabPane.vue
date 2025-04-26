@@ -158,14 +158,19 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="创建时间" width="160px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.tokenCreateTime }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="绑定时间" width="160px" align="center">
           <template slot-scope="{row}">
             <span>{{ row.bindTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" width="160px" align="center">
+        <el-table-column label="过期时间" width="160px" align="center">
           <template slot-scope="{row}">
-            <span>{{ row.tokenCreateTime }}</span>
+            <span>{{ row.expireTime }}</span>
           </template>
         </el-table-column>
       </el-table>
