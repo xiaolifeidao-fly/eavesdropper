@@ -593,7 +593,7 @@ async function loginTaobao() {
     });
     
     // 修改为本地文件URL，与validate.image.roc.js类似
-    const validateUrl = 'file:///Users/chai/code/eavesdropper/client/resource/validate_image.html?iframeUrl=aHR0cHM6Ly9zdHJlYW0tdXBsb2FkLnRhb2Jhby5jb206NDQzLy9hcGkvdXBsb2FkLmFwaS9fX19fX3RtZF9fX19fL3B1bmlzaD94NXNlY2RhdGE9eGRlZTVkYzE0YWYzZDFlZTNmNTk0MjlhZWNmOGIyZWI4NGZmNDMwMjdiMWRhZTE3ZDMxNzQzMjQ2NzIyYTE4NTUxNDQxMzhhMzcyNzU5NDAzYWJhYWMyZGo4NjI5NjEyNzBqY2FwcHV6emxlX19ieF9fc3RyZWFtLXVwbG9hZC50YW9iYW8uY29tJTNBNDQzJTJGYXBpJTJGdXBsb2FkLmFwaSZ4NXN0ZXA9MiZhY3Rpb249Y2FwdGNoYWNhcHB1enpsZSZwdXJlQ2FwdGNoYT0=';
+    const validateUrl = 'file:///Users/chai/code/eavesdropper/client/resource/html/validate_image.html?iframeUrl=aHR0cHM6Ly9zdHJlYW0tdXBsb2FkLnRhb2Jhby5jb206NDQzLy9hcGkvdXBsb2FkLmFwaS9fX19fX3RtZF9fX19fL3B1bmlzaD94NXNlY2RhdGE9eGU1NGRlZDU2YTIxNTc2MDYyOTFmYjBiZDgzNDMzOWY5NGRjNzIwOWRkYmEyMDljNzAxNzQ1NzU3NzU4YTE4NTUxNDQxMzhhMzcyNzU5NDAzYWJhYWMyZGo4NjI5NjEyNzBqY2FwcHV6emxlYWFfX2J4X19zdHJlYW0tdXBsb2FkLnRhb2Jhby5jb20lM0E0NDMlMkZhcGklMkZ1cGxvYWQuYXBpJng1c3RlcD0yJmFjdGlvbj1jYXB0Y2hhY2FwcHV6emxlJnB1cmVDYXB0Y2hhPQ==';
     
     console.log('开始加载验证页面...');
     
@@ -835,12 +835,17 @@ async function validatePuzzleCaptchaOnce(
     }
     
     // 请求打码平台获取滑动距离
+    console.log("开始请求打码平台!");
+    const startTime = Date.now();
     const slideContent = await getSlideContent(imageBase64).catch(err => {
       console.error("打码平台请求失败:", err.message);
       return null;
     });
+    const endTime = Date.now();
+    const duration = endTime - startTime;
     
     console.log("打码平台返回结果: ", slideContent);
+    console.log(`打码平台请求耗时: ${duration}ms`);
     
     if (!slideContent || slideContent.code !== 200 || !slideContent.data) {
       console.error("打码平台返回错误或无数据");

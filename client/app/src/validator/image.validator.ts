@@ -263,8 +263,12 @@ async function validateByPuzzleCaptcha(page : Page, frame : Frame, retryCount : 
       .resize(Number(width), Number(height)).toBuffer() // 设置宽高
       const imageBase64 = await convertImageToBase64WithHeader(imageBuffer);
       if(imageBase64){
+          const startTime = Date.now();
           const slideContent = await getSlideContent(imageBase64);
-          log.info("slideContent is ", slideContent);
+          const endTime = Date.now();
+          const duration = endTime - startTime;
+          log.info("打码平台返回结果: ", slideContent);
+          log.info(`打码平台请求耗时: ${duration}ms`);
           if (slideContent && slideContent.code == 200){
               log.info("slideContent.data.px_distance ====", slideContent.data.px_distance);
               const slider = await frame.locator('#puzzle-captcha-btn').first();
@@ -587,7 +591,7 @@ function checkValidate(){
               log.info("强制手动验证");
               autoFlag = false;
             }
-            let result = await validateImage(validateItem, autoFlag, 4);
+            let result = await validateImage(validateItem, autoFlag, 5);
             
             // 如果自动验证失败且原本设置为自动，降级为手动
             if(!isValidateSuccess(result) && autoFlag){

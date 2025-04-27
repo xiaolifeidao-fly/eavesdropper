@@ -686,7 +686,10 @@ export abstract class DoorEngine<T = any> {
             '--disable-automation',
             '--disable-remote-fonts',
             '--disable-permissions-api',
-            '--disable-device-orientation'
+            '--disable-device-orientation',
+            // 禁用WebGL，防止硬件指纹
+            '--disable-webgl',
+            '--disable-webgl2'
         ];
         
         if (this.headless) {
