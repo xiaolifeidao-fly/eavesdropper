@@ -17,6 +17,8 @@ import { addGatherSku } from "@api/gather/gather-sku.api";
 import { BrowserWindow } from 'electron';
 import { setUpdateWindow } from '@src/kernel/windows'
 
+const PDD_URL = "https://mobile.yangkeduo.com/goods1.html?goods_id=";
+
 const monitor = new PxxLoginMonitor();
 
 const monitorConfig : {[key : number] : any} = {};
@@ -225,49 +227,6 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         }
     }
 
-    /**
-     * 打开本地HTML文件
-     */
-    @InvokeType(Protocols.INVOKE)
-    async openLocalHtmlFile(source: string, itemKey: string): Promise<boolean> {
-        try {
-            const userDataPath = app.getPath('userData');
-            let fileName = '';
-            let sourceDir = '';
-
-            if (source === PDD) {
-                fileName = `pdd_${itemKey}.html`;
-                sourceDir = path.join(userDataPath, 'resource', 'gather', 'pdd');
-            } else if (source === 'TB') {
-                fileName = `taobao_${itemKey}.html`;
-                sourceDir = path.join(userDataPath, 'resource', 'gather', 'taobao');
-            } else {
-                return false;
-            }
-
-            const filePath = path.join(sourceDir, fileName);
-            
-            // 检查文件是否存在
-            if (fs.existsSync(filePath)) {
-                // 使用系统默认应用打开文件
-                return shell.openPath(filePath).then(error => {
-                    if (error === '') {
-                        // log.info(`Successfully opened ${filePath}`);
-                        return true;
-                    } else {
-                        // log.error(`Error opening file: ${error}`);
-                        return false;
-                    }
-                });
-            }
-            
-            return false;
-        } catch (error) {
-            log.error('Error opening local HTML file:', error);
-            return false;
-        }
-    }
-
     @InvokeType(Protocols.INVOKE)
   async openGatherTool(gatherBatchId: number): Promise<boolean> {
     // 打开更新页面
@@ -293,5 +252,96 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         updateWindow.destroy()
     })
     return true
+  }
+
+   /**
+     * 打开本地HTML文件
+     */
+   @InvokeType(Protocols.INVOKE)
+   async openLocalHtmlFile(source: string, itemKey: string): Promise<boolean> {
+       try {
+           const userDataPath = app.getPath('userData');
+           let fileName = '';
+           let sourceDir = '';
+
+           if (source === PDD) {
+               fileName = `pdd_${itemKey}.html`;
+               sourceDir = path.join(userDataPath, 'resource', 'gather', 'pdd');
+           } else if (source === 'TB') {
+               fileName = `taobao_${itemKey}.html`;
+               sourceDir = path.join(userDataPath, 'resource', 'gather', 'taobao');
+           } else {
+               return false;
+           }
+
+           const filePath = path.join(sourceDir, fileName);
+
+           // 检查文件是否存在
+           if (fs.existsSync(filePath)) {
+                const htmlWindow = new BrowserWindow({
+                    width: 1000,
+                    height: 1000,
+                    // alwaysOnTop: true,
+                    autoHideMenuBar: true,
+                    webPreferences: {
+                    preload: path.join(__dirname, 'preload.js'),
+                    contextIsolation: true,
+                    webviewTag: true, // 启用 webview 标签
+                    // devTools: true,
+                    webSecurity: false,
+                    nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
+                    }
+                })
+
+                // 先加载空白页
+                htmlWindow.loadURL('about:blank');
+               // 使用系统默认应用打开文件
+               const htmlContent = fs.readFileSync(filePath, 'utf-8');
+            //    htmlWindow.loadURL(`data:text/html;charset=utf-8,${htmlContent}`)
+                htmlWindow.webContents.on('did-finish-load', () => {
+                    htmlWindow.webContents.executeJavaScript(`
+                    document.open();
+                    document.write(\`${htmlContent.replace(/`/g, '\\`')}\`);
+                    document.close();
+                    `);
+                });
+
+                htmlWindow.on('closed', () => {
+                    htmlWindow.destroy()
+                })
+           }
+
+           return false;
+       } catch (error) {
+           log.error('Error opening local HTML file:', error);
+           return false;
+       }
+   }
+
+  @InvokeType(Protocols.INVOKE)
+  async openSkuInfoPage(skuId: string): Promise<boolean> {
+    // 调用后端API查询本地HTML文件是否存在
+    try {
+        // 这里假设后端有一个checkLocalHtmlExists方法，如果没有的话需要在后端添加
+        const localFileExists = await this.checkLocalHtmlExists(PDD, skuId)
+        
+        if (localFileExists) {
+          // 如果本地文件存在，打开本地文件
+          // 由于需要通过后端打开文件，可能需要新增一个openLocalFile方法
+          await this.openLocalHtmlFile(PDD, skuId)
+          return true;
+        } else {
+          // 如果本地文件不存在，使用在线链接
+        //   window.open(`${PDD_URL}${skuId}`, '_blank')
+          return true;
+        }
+      } catch (error) {
+        console.error('Error checking local HTML file:', error)
+        // 出错时回退到使用在线链接
+        // window.open(`${PDD_URL}${skuId}`, '_blank')
+        return true;
+      }
+
+    return true;
   }
 }

@@ -31,4 +31,9 @@ export class MonitorPxxSkuApi extends ElectronApi{
     async openGatherTool(gatherBatchId: number): Promise<boolean> {
         return await this.invokeApi('openGatherTool', gatherBatchId);
     }
+
+    @InvokeType(Protocols.INVOKE)
+    async openSkuInfoPage(skuId: string): Promise<boolean> {
+        return await this.invokeApi('openSkuInfoPage', skuId);
+    }
 }
