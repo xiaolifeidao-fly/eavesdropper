@@ -4,6 +4,7 @@ import { Form, Input, Button, Space, Select, message } from 'antd'
 import { addGatherBatch } from '@api/gather/gather-batch.api'
 import { getResourceSourceList } from '@api/resource/resource.api'
 
+
 interface ModalCreateProps {
   hideModal: () => void
   onSuccess?: () => void
@@ -19,6 +20,7 @@ const ModalCreate = (props: ModalCreateProps) => {
   const { hideModal, onSuccess } = props
 
   const [sourceList, setSourceList] = useState<any[]>([])
+  const [resourceList, setResourceList] = useState<any[]>([])
 
   useEffect(() => {
     getResourceSourceList().then((resp) => {
@@ -28,6 +30,14 @@ const ModalCreate = (props: ModalCreateProps) => {
       }))
       setSourceList(sourceList)
     })
+
+    // getResourceList().then((resp) => {
+    //   const resourceList = resp.map((item: any) => ({
+    //     label: item.label,
+    //     value: item.value
+    //   }))
+    //   setResourceList(resourceList)
+    // })
   }, [])
 
   // 提交表单
@@ -66,6 +76,15 @@ const ModalCreate = (props: ModalCreateProps) => {
           placeholder='请选择采集来源'
         />
       </Form.Item>
+      {/* <Form.Item
+        label='采集账号'
+        name='resourceId'
+        rules={[{ required: true, message: '请选择采集账号' }]}>
+        <Select
+          options={resourceList}
+          placeholder='请选择采集账号'
+        />
+      </Form.Item> */}
       <Form.Item style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 0 }}>
         <Space>
           <Button
