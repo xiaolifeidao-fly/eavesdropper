@@ -28,35 +28,32 @@ const GatherTool = () => {
     // Listen for update progress
     const searchParams = new URLSearchParams(window.location.search)
     const gatherId = searchParams.get('gatherBatchId')
-    if (!gatherId) {
-      message.error('采集批次不存在')
-      return
-    }
+    if (gatherId) {
+      initGatherTool(Number(gatherId))
 
-    initGatherTool(Number(gatherId))
-
-    // 计算容器高度为整个视口高度
-    setContainerHeight(window.innerHeight)
-
-    // 监听窗口大小变化
-    const handleResize = () => {
+      // 计算容器高度为整个视口高度
       setContainerHeight(window.innerHeight)
+  
+      // 监听窗口大小变化
+      const handleResize = () => {
+        setContainerHeight(window.innerHeight)
+      }
+  
+      window.addEventListener('resize', handleResize)
+  
+      // 清理事件监听
+      return () => {
+        window.removeEventListener('resize', handleResize)
+      }
     }
-
-    window.addEventListener('resize', handleResize)
-
-    // 清理事件监听
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
+    message.error('采集批次不存在')
+    return
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const initGatherTool = async (gatherId: number) => {
-    console.log('initGatherTool', gatherId)
     setGatherId(Number(gatherId))
     const gatherBatch = await initGatherInfo(Number(gatherId))
-    console.log('gatherBatch', gatherBatch)
     if (gatherBatch) {
       openPxx(gatherBatch.id)
     }
@@ -76,9 +73,9 @@ const GatherTool = () => {
       name: gatherBatch.name,
       source: gatherBatch.source,
       createdAt: gatherBatch.createdAt,
-      gatherTotal: 0,
-      viewTotal: 0,
-      favoriteTotal: 0
+      gatherTotal: gatherBatch.gatherTotal,
+      viewTotal: gatherBatch.viewTotal,
+      favoriteTotal: gatherBatch.favoriteTotal
     }
 
     setGaterInfo(gatherInfo)
@@ -113,12 +110,12 @@ const GatherTool = () => {
   // 打开PXX
   const openPxx = async (resourceId: number) => {
     try {
-      const monitor = new MonitorPxxSkuApi()
-      if (!gatherId) {
+      if (resourceId == 0) {
         message.error('打开PXX失败，请先选择采集批次')
         return
       }
-
+      
+      const monitor = new MonitorPxxSkuApi()
       await monitor.monitorSku(resourceId)
       // 监听PXX采集商品消息
       monitor.onGatherSkuMessage((gatherSku: GatherSku) => {

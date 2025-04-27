@@ -8,7 +8,11 @@ export class GatherBatch {
     public createdAt: string,
     public createdBy: number,
     public updatedAt: string,
-    public updatedBy: number
+    public updatedBy: number,
+    public sourceId: number,
+    public viewTotal: number,
+    public gatherTotal: number,
+    public favoriteTotal: number
   ) {
     this.id = id
     this.userId = userId
@@ -19,6 +23,10 @@ export class GatherBatch {
     this.createdBy = createdBy
     this.updatedAt = updatedAt
     this.updatedBy = updatedBy
+    this.sourceId = sourceId
+    this.viewTotal = viewTotal
+    this.gatherTotal = gatherTotal
+    this.favoriteTotal = favoriteTotal
   }
 }
 
