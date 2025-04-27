@@ -13,7 +13,6 @@ import { MbEngine } from "../mb.engine";
 import { saveDoorFileRecord } from "@api/door/file.api";
 import { Page } from "playwright";
 import log from "electron-log";
-import { UPLOAD_IMAGE_HEADER } from "../tb.header";
 
 function getFilePaths(skuFileNames: { [key: string]: FileInfo } = {}){
     const filePaths = [];
@@ -61,7 +60,7 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
     // }
     let mbEngine = new MbEngine(resourceId);
     if(!validateTag){
-        const headerData = mbEngine.getHeader(UPLOAD_IMAGE_HEADER);
+        const headerData = mbEngine.getHeader();
         //TODO cookie失效 要做处理
         if(headerData){
             return headerData;
@@ -89,8 +88,7 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
             };
         }
         // if(validateTag){
-        log.info("upload image query result is ", result);
-        mbEngine.setHeader(UPLOAD_IMAGE_HEADER, result.getHeaderData());
+        mbEngine.setHeader(result.getHeaderData());
         // }
         return result.getHeaderData();
     }finally{
