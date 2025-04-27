@@ -78,3 +78,17 @@ func GetGatherSkuListByBatchIDAndSkuID(batchID uint64, skuID string) (*dto.Gathe
 	gatherSkuDTO := database.ToDTO[dto.GatherSkuDTO](gatherSku)
 	return gatherSkuDTO, nil
 }
+
+func GetFavoriteGatherSkuListByBatchID(batchID uint64) ([]*dto.GatherSkuDTO, error) {
+	var err error
+	gatherRepository := repositories.GatherSkuRepository
+
+	var gatherSkuList []*models.GatherSku
+	if gatherSkuList, err = gatherRepository.GetFavoriteGatherSkuListByBatchID(batchID); err != nil {
+		logger.Errorf("GetFavoriteGatherSkuListByBatchID failed, with error is %v", err)
+		return nil, errors.New("操作数据库错误")
+	}
+
+	gatherSkuDTOList := database.ToDTOs[dto.GatherSkuDTO](gatherSkuList)
+	return gatherSkuDTOList, nil
+}

@@ -21,6 +21,7 @@ interface PushSkuStepsFormProps {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   onClose: () => void;
+  urls?: string[];
 }
 
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {

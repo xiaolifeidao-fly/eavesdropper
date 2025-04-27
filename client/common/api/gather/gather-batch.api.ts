@@ -24,3 +24,8 @@ export const getGatherBatchInfo = async (id: number) => {
   const result = await instance.get(`/gather-batch/${id}`)
   return plainToClass(GatherBatch, result)
 }
+
+export const getGatherBatchFavoriteSkuList = async (id: number) => {
+  const result = await instance.get(`/gather-batch/${id}/favorite-sku-list`)
+  return plainToClass(Array<GatherSku>, result)
+}

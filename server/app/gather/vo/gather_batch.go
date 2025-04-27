@@ -8,3 +8,7 @@ type GatherBatchSkuListVO struct {
 	ID      uint64 `uri:"id"`
 	SkuName string `json:"skuName" form:"skuName"`
 }
+
+type GatherBatchFavoriteSkuListVO struct {
+	ID uint64 `uri:"id"`
+}

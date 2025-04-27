@@ -22,6 +22,7 @@ func LoadGatherBatchRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).GET("/page", PageGatherBatch)
 		r.Use(middleware.Authorization()).GET("/:id/sku-list", GetGatherBatchSkuList)
 		r.Use(middleware.Authorization()).GET("/:id", GetGatherBatchInfo)
+		r.Use(middleware.Authorization()).GET("/:id/favorite-sku-list", GetGatherBatchFavoriteSkuList)
 	}
 }
 
@@ -131,4 +132,26 @@ func GetGatherBatchSkuList(ctx *gin.Context) {
 	})
 
 	controller.OK(ctx, skuList)
+}
+
+// GetGatherBatchFavoriteSkuList
+// @Description 获取采集批次收藏商品列表
+// @Router /gather-batch/{id}/favorite-sku-list [get]
+func GetGatherBatchFavoriteSkuList(ctx *gin.Context) {
+	var err error
+
+	var req vo.GatherBatchFavoriteSkuListVO
+	if err = controller.Bind(ctx, &req, nil); err != nil {
+		logger.Infof("GetGatherBatchFavoriteSkuList Bind error: %v", err)
+		controller.Error(ctx, "参数错误")
+		return
+	}
+
+	var favoriteSkuList []*dto.GatherSkuDTO
+	if favoriteSkuList, err = services.GetFavoriteGatherSkuListByBatchID(req.ID); err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	controller.OK(ctx, favoriteSkuList)
 }

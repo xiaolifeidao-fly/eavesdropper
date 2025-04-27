@@ -65,3 +65,15 @@ func (r *gatherSkuRepository) CountGatherSku(batchID uint64) (int, int, error) {
 	}
 	return total, favoriteTotal, nil
 }
+
+func (r *gatherSkuRepository) GetFavoriteGatherSkuListByBatchID(batchID uint64) ([]*models.GatherSku, error) {
+	var err error
+
+	sql := "select * from gather_sku where batch_id = ? and favorite = true and deleted_at is null"
+	list, err := r.GetList(sql, batchID)
+	if err != nil {
+		return nil, err
+	}
+
+	return list, nil
+}

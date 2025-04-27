@@ -6,13 +6,18 @@ import { Button } from 'antd'
 import styles from './index.module.less'
 import OpenModal from './components/open-modal'
 import Layout from '@/components/layout'
-import { getGatherBatchPage } from '@api/gather/gather-batch.api'
+import { getGatherBatchPage, getGatherBatchFavoriteSkuList } from '@api/gather/gather-batch.api'
 import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
+import { PDD_URL } from '@enums/source'
+import SkuPushStepsForm from '../sku/components/SkuPushSteps'
 
 export default function GatherManage() {
   const actionRef = useRef<ActionType>() // 表格操作
   const [modalType, setModalType] = useState('')
   const [modalData, setModalData] = useState({})
+  const [visible, setVisible] = useState(false)
+  const [taskId, setTaskId] = useState<number | undefined>(undefined)
+  const [operationType, setOperationType] = useState('')
 
   const columns: ProColumns<any>[] = [
     {
@@ -92,12 +97,12 @@ export default function GatherManage() {
             >
               开始采集
             </Button>
-            {/* <Button
+            <Button
               type='link'
-              onClick={() => handleExport(record)} // 导出操作
+              onClick={() => publishGatherSku(record)} // 导出操作
               style={{ display: 'inline-block', paddingLeft: '4px' }}>
-              导出收藏链接
-            </Button> */}
+              发布商品
+            </Button>
           </div>
         )
       }
@@ -108,6 +113,21 @@ export default function GatherManage() {
   const openGatherTool = (record: any) => {
     const monitor = new MonitorPxxSkuApi()
     monitor.openGatherTool(record.id)
+  }
+
+  // 发布商品
+  const publishGatherSku = async (record: any) => {
+    // 查询采集批次收藏商品
+    const res = await getGatherBatchFavoriteSkuList(record.id)
+
+    const urls = res.map((item: any) => {
+      const url = `${PDD_URL}${item.skuId}`
+      return url
+    })
+
+    setVisible(true)
+    setTaskId(undefined)
+    setOperationType('publish')
   }
 
   // 获取数据源
@@ -188,6 +208,19 @@ export default function GatherManage() {
               onSuccess: onSuccess
             }}
           />
+
+          {/* 发布商品 */}
+          {visible && (
+            <SkuPushStepsForm
+              visible={visible}
+              setVisible={setVisible}
+              taskId={taskId}
+              setTaskId={setTaskId}
+              operationType={operationType}
+              setOperationType={setOperationType}
+              onClose={() => {}}
+            />
+          )}
         </div>
       </main>
     </Layout>
