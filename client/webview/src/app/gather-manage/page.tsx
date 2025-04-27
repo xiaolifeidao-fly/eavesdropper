@@ -129,7 +129,8 @@ export default function GatherManage() {
 
   // 成功回调
   const onSuccess = () => {
-    getDataSource()
+    actionRef.current?.reload()
+    // getDataSource()
   }
 
   // 打开弹窗

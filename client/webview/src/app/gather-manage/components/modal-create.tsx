@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, Space, Select, message } from 'antd'
 
 import { addGatherBatch } from '@api/gather/gather-batch.api'
-import { getResourceSourceList } from '@api/resource/resource.api';
+import { getResourceSourceList } from '@api/resource/resource.api'
 
 interface ModalCreateProps {
   hideModal: () => void
@@ -21,7 +21,7 @@ const ModalCreate = (props: ModalCreateProps) => {
   const [sourceList, setSourceList] = useState<any[]>([])
 
   useEffect(() => {
-    getResourceSourceList().then(resp => {
+    getResourceSourceList().then((resp) => {
       const sourceList = resp.map((item: any) => ({
         label: item.label,
         value: item.value
@@ -31,7 +31,7 @@ const ModalCreate = (props: ModalCreateProps) => {
   }, [])
 
   // 提交表单
-  const onFinish = async(values: FromInfo) => {
+  const onFinish = async (values: FromInfo) => {
     const result = await addGatherBatch({
       name: values.name,
       source: values.source
@@ -53,10 +53,9 @@ const ModalCreate = (props: ModalCreateProps) => {
       wrapperCol={{ span: 20 }} // 内容宽度
       onFinish={onFinish}>
       <Form.Item
-        label='采集批次'
-        name='name'
-        rules={[{ required: true, message: '请输入采集批次' }]}>
-        <Input placeholder='请输入采集批次' />
+        label='采集名称'
+        name='name'>
+        <Input placeholder='请输入采集任务名称' />
       </Form.Item>
       <Form.Item
         label='采集来源'
