@@ -43,3 +43,22 @@ func (r *gatherSkuRepository) GetGatherSkuByBatchIDAndSkuID(batchID uint64, skuI
 	}
 	return gatherSku, nil
 }
+
+func (r *gatherSkuRepository) CountGatherSku(batchID uint64) (int, int, error) {
+	var err error
+
+	sql := "select * from gather_sku where batch_id = ? and deleted_at is null"
+	list, err := r.GetList(sql, batchID)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	total := len(list)
+	favoriteTotal := 0
+	for _, item := range list {
+		if item.Favorite {
+			favoriteTotal++
+		}
+	}
+	return total, favoriteTotal, nil
+}

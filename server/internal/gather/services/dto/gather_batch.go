@@ -24,10 +24,12 @@ type GatherBatchPageParamDTO struct {
 }
 
 type GatherBatchPageDTO struct {
-	ID        uint64    `json:"id" select:"table:gather_batch;column:id"`
-	UserID    uint64    `json:"userId" select:"table:gather_batch;column:user_id"`
-	BatchNo   string    `json:"batchNo" select:"table:gather_batch;column:batch_no"`
-	Name      string    `json:"name" select:"table:gather_batch;column:name"`
-	Source    string    `json:"source" select:"table:gather_batch;column:source"`
-	CreatedAt base.Time `json:"createdAt" select:"table:gather_batch;column:created_at"`
+	ID            uint64    `json:"id" select:"table:gather_batch;column:id"`
+	UserID        uint64    `json:"userId" select:"table:gather_batch;column:user_id"`
+	BatchNo       string    `json:"batchNo" select:"table:gather_batch;column:batch_no"`
+	Name          string    `json:"name" select:"table:gather_batch;column:name"`
+	Source        string    `json:"source" select:"table:gather_batch;column:source"`
+	CreatedAt     base.Time `json:"createdAt" select:"table:gather_batch;column:created_at"`
+	Total         int       `json:"total"`
+	FavoriteTotal int       `json:"favoriteTotal"`
 }

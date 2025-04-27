@@ -50,6 +50,7 @@ func GetGatherBatchNo(userId uint64, source string) (string, error) {
 func PageGatherBatch(param *dto.GatherBatchPageParamDTO) (*page.Page[dto.GatherBatchPageDTO], error) {
 	var err error
 	gatherRepository := repositories.GatherBatchRepository
+	gatherSkuRepository := repositories.GatherSkuRepository
 
 	var count int64
 	var pageData = make([]*dto.GatherBatchPageDTO, 0)
@@ -59,6 +60,16 @@ func PageGatherBatch(param *dto.GatherBatchPageParamDTO) (*page.Page[dto.GatherB
 
 	if count <= 0 {
 		return page.BuildEmptyPage[dto.GatherBatchPageDTO](param.ToPageInfo(count)), nil
+	}
+
+	for _, item := range pageData {
+		total, favoriteTotal, err := gatherSkuRepository.CountGatherSku(item.ID)
+		if err != nil {
+			logger.Errorf("CountGatherSku failed, with error is %v", err)
+			return nil, errors.New("数据库错误")
+		}
+		item.Total = total
+		item.FavoriteTotal = favoriteTotal
 	}
 
 	pageDTO := page.BuildPage(param.ToPageInfo(count), pageData)
