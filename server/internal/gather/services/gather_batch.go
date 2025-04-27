@@ -76,3 +76,26 @@ func PageGatherBatch(param *dto.GatherBatchPageParamDTO) (*page.Page[dto.GatherB
 
 	return pageDTO, nil
 }
+
+func GetGatherBatchByID(id uint64) (*dto.GatherBatchDTO, error) {
+	var err error
+	gatherRepository := repositories.GatherBatchRepository
+	gatherSkuRepository := repositories.GatherSkuRepository
+
+	var gatherBatch *models.GatherBatch
+	if gatherBatch, err = gatherRepository.GetGatherBatchByID(id); err != nil {
+		logger.Errorf("GetGatherBatchByID failed, with error is %v", err)
+		return nil, errors.New("数据库错误")
+	}
+
+	gatherBatchDTO := database.ToDTO[dto.GatherBatchDTO](gatherBatch)
+	total, favoriteTotal, err := gatherSkuRepository.CountGatherSku(id)
+	if err != nil {
+		logger.Errorf("CountGatherSku failed, with error is %v", err)
+		return nil, errors.New("数据库错误")
+	}
+	gatherBatchDTO.Total = total
+	gatherBatchDTO.FavoriteTotal = favoriteTotal
+
+	return gatherBatchDTO, nil
+}

@@ -26,4 +26,9 @@ export class MonitorPxxSkuApi extends ElectronApi{
     async openLocalHtmlFile(source: string, itemKey: string): Promise<boolean> {
         return await this.invokeApi('openLocalHtmlFile', source, itemKey);
     }
+
+    @InvokeType(Protocols.INVOKE)
+    async openGatherTool(gatherBatchId: number): Promise<boolean> {
+        return await this.invokeApi('openGatherTool', gatherBatchId);
+    }
 }

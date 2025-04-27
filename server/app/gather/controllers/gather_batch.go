@@ -21,6 +21,7 @@ func LoadGatherBatchRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).POST("", AddGatherBatch)
 		r.Use(middleware.Authorization()).GET("/page", PageGatherBatch)
 		r.Use(middleware.Authorization()).GET("/:id/sku-list", GetGatherBatchSkuList)
+		r.Use(middleware.Authorization()).GET("/:id", GetGatherBatchInfo)
 	}
 }
 
@@ -81,6 +82,28 @@ func PageGatherBatch(ctx *gin.Context) {
 	}
 
 	controller.OK(ctx, pageDTO)
+}
+
+// GetGatherBatchInfo
+// @Description 获取采集批次信息
+// @Router /gather-batch/{id} [get]
+func GetGatherBatchInfo(ctx *gin.Context) {
+	var err error
+
+	var req vo.GatherBatchInfoVO
+	if err = controller.Bind(ctx, &req, nil); err != nil {
+		logger.Infof("GetGatherBatchInfo Bind error: %v", err)
+		controller.Error(ctx, "参数错误")
+		return
+	}
+
+	var gatherBatchDTO *dto.GatherBatchDTO
+	if gatherBatchDTO, err = services.GetGatherBatchByID(req.ID); err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	controller.OK(ctx, gatherBatchDTO)
 }
 
 // GetGatherBatchSkuList

@@ -14,6 +14,8 @@ import fs from 'fs'
 import { shell } from 'electron';
 import { GatherSku, GatherSkuCreateReq } from "@model/gather/gather-sku";
 import { addGatherSku } from "@api/gather/gather-sku.api";
+import { BrowserWindow } from 'electron';
+import { setUpdateWindow } from '@src/kernel/windows'
 
 const monitor = new PxxLoginMonitor();
 
@@ -164,7 +166,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             // 同时截取屏幕截图作为备份
             await this.captureScreenshot(itemKey);
             
-            log.info(`Successfully saved HTML for item ${itemKey} to ${filePath}`);
+            // log.info(`Successfully saved HTML for item ${itemKey} to ${filePath}`);
         } catch (error) {
             log.error(`Error saving HTML for item ${itemKey}:`, error);
         }
@@ -265,4 +267,31 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             return false;
         }
     }
+
+    @InvokeType(Protocols.INVOKE)
+  async openGatherTool(gatherBatchId: number): Promise<boolean> {
+    // 打开更新页面
+    const updateWindow = new BrowserWindow({
+      width: 300,
+      height: 1000,
+      alwaysOnTop: true,
+      autoHideMenuBar: true,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        contextIsolation: true,
+        webviewTag: true, // 启用 webview 标签
+        // devTools: true,
+        webSecurity: false,
+        nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
+      }
+    })
+
+    setUpdateWindow(updateWindow)
+    const updateUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
+    updateWindow.loadURL(updateUrl)
+    updateWindow.on('closed', () => {
+        updateWindow.destroy()
+    })
+    return true
+  }
 }

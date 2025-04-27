@@ -5,25 +5,17 @@ import { message, Tabs } from 'antd'
 import GaterToolInfo, { GatherInfo } from './gather-tool-info'
 import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
 import SkuViewInfo, { SkuViewInfoI } from './gather-tool-sku-view-info'
-import { DoorSkuDTO } from '@model/door/sku'
 import { PDD } from '@enums/source'
 import GatherSkuList from './gather-sku-list'
 import { GatherSku } from '@model/gather/gather-sku'
-import { getGatherBatchSkuList } from '@api/gather/gather-batch.api'
+import { getGatherBatchSkuList, getGatherBatchInfo } from '@api/gather/gather-batch.api'
 import { favoriteGatherSku } from '@api/gather/gather-sku.api'
 import { getSkuUrl } from '@utils/sku_url'
 
-interface GatherToolProps {
-  hideModal: () => void
-  onSuccess?: () => void
-  data?: any
-}
-
-const GatherTool = (props: GatherToolProps) => {
-  const { hideModal, onSuccess, data } = props
-  const { id } = data
+const GatherTool = () => {
   const [containerHeight, setContainerHeight] = useState(0)
 
+  const [gatherId, setGatherId] = useState<number>(0)
   const [gatherViewSkuList, setGatherViewSkuList] = useState<SkuViewInfoI[]>([])
   const [expandedRowKeys, setExpandedRowKeys] = useState<readonly Key[]>([])
   const [viewedProducts, setViewedProducts] = useState<Set<string>>(new Set())
@@ -33,6 +25,16 @@ const GatherTool = (props: GatherToolProps) => {
   const [activeTabKey, setActiveTabKey] = useState<string>('all')
 
   useEffect(() => {
+    // Listen for update progress
+    const searchParams = new URLSearchParams(window.location.search)
+    const gatherId = searchParams.get('gatherBatchId')
+    if (!gatherId) {
+      message.error('采集批次不存在')
+      return
+    }
+
+    initGatherTool(Number(gatherId))
+
     // 计算容器高度为整个视口高度
     setContainerHeight(window.innerHeight)
 
@@ -43,11 +45,6 @@ const GatherTool = (props: GatherToolProps) => {
 
     window.addEventListener('resize', handleResize)
 
-    initGatherInfo()
-
-    // 打开PXX
-    openPxx()
-
     // 清理事件监听
     return () => {
       window.removeEventListener('resize', handleResize)
@@ -55,10 +52,38 @@ const GatherTool = (props: GatherToolProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const initGatherInfo = async () => {
-    setGaterInfo(data)
+  const initGatherTool = async (gatherId: number) => {
+    console.log('initGatherTool', gatherId)
+    setGatherId(Number(gatherId))
+    const gatherBatch = await initGatherInfo(Number(gatherId))
+    console.log('gatherBatch', gatherBatch)
+    if (gatherBatch) {
+      openPxx(gatherBatch.id)
+    }
+  }
+
+  const initGatherInfo = async (gatherId: number) => {
+    const gatherBatch = await getGatherBatchInfo(gatherId)
+
+    if (!gatherBatch) {
+      message.error('采集批次不存在')
+      return
+    }
+
+    const gatherInfo: GatherInfo = {
+      id: gatherBatch.id,
+      batchNo: gatherBatch.batchNo,
+      name: gatherBatch.name,
+      source: gatherBatch.source,
+      createdAt: gatherBatch.createdAt,
+      gatherTotal: 0,
+      viewTotal: 0,
+      favoriteTotal: 0
+    }
+
+    setGaterInfo(gatherInfo)
     // 获取采集批次商品列表
-    const gatherSkuList = await getGatherBatchSkuList(id)
+    const gatherSkuList = await getGatherBatchSkuList(gatherId)
     const skuViewInfoList: SkuViewInfoI[] = gatherSkuList.map((item) => {
       return {
         id: item.id,
@@ -81,18 +106,20 @@ const GatherTool = (props: GatherToolProps) => {
       }
       return { ...prev, viewTotal, gatherTotal }
     })
+
+    return gatherInfo
   }
 
   // 打开PXX
-  const openPxx = async () => {
+  const openPxx = async (resourceId: number) => {
     try {
       const monitor = new MonitorPxxSkuApi()
-      if (!id) {
+      if (!gatherId) {
         message.error('打开PXX失败，请先选择采集批次')
         return
       }
 
-      await monitor.monitorSku(id)
+      await monitor.monitorSku(resourceId)
       // 监听PXX采集商品消息
       monitor.onGatherSkuMessage((gatherSku: GatherSku) => {
         gatherDoorSkuHandler(PDD, gatherSku)
@@ -233,13 +260,13 @@ const GatherTool = (props: GatherToolProps) => {
     // 创建下载链接
     const downloadLink = document.createElement('a')
     downloadLink.href = URL.createObjectURL(blob)
-      
+
     // 使用批次号作为文件名前缀，如果没有批次号就使用"未知批次"
     const batchNo = gaterInfo?.batchNo || '未知批次'
     const now = new Date()
     const dateStr = `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}`
     const timeStr = `${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}`
-    
+
     downloadLink.download = `${batchNo}_${dateStr}_${timeStr}.txt`
 
     // 添加到DOM并触发点击
@@ -328,7 +355,7 @@ const GatherTool = (props: GatherToolProps) => {
         padding: '12px 12px 8px',
         overflow: 'hidden'
       }}>
-      <div style={{ position: 'absolute', top: 12, right: 12 }}>
+      {/* <div style={{ position: 'absolute', top: 12, right: 12 }}>
         <button
           onClick={() => {
             onSuccess && onSuccess()
@@ -352,7 +379,7 @@ const GatherTool = (props: GatherToolProps) => {
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}>
           ✕
         </button>
-      </div>
+      </div> */}
 
       {/* 采集批次信息 */}
       <GaterToolInfo gaterInfo={gaterInfo} />
@@ -384,8 +411,7 @@ const GatherTool = (props: GatherToolProps) => {
             cursor: getTabDataSource().length === 0 ? 'not-allowed' : 'pointer',
             fontSize: 13
           }}
-          disabled={getTabDataSource().length === 0}
-        >
+          disabled={getTabDataSource().length === 0}>
           导出{activeTabKey === 'favorite' ? '收藏' : '全部'}商品
         </button>
         <button

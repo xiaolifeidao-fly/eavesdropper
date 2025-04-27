@@ -22,3 +22,14 @@ func (r *gatherBatchRepository) GetTodayGatherBatchNoCount(userId uint64, source
 	}
 	return int64(len(list)), nil
 }
+
+func (r *gatherBatchRepository) GetGatherBatchByID(id uint64) (*models.GatherBatch, error) {
+	var err error
+
+	sql := "select * from gather_batch where id = ? and deleted_at is null"
+	gatherBatch := &models.GatherBatch{}
+	if gatherBatch, err = r.GetOne(sql, id); err != nil {
+		return nil, err
+	}
+	return gatherBatch, nil
+}

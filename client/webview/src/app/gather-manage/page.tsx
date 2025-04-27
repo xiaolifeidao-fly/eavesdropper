@@ -7,13 +7,12 @@ import styles from './index.module.less'
 import OpenModal from './components/open-modal'
 import Layout from '@/components/layout'
 import { getGatherBatchPage } from '@api/gather/gather-batch.api'
+import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
+
 export default function GatherManage() {
   const actionRef = useRef<ActionType>() // 表格操作
   const [modalType, setModalType] = useState('')
   const [modalData, setModalData] = useState({})
-
-  // 导出链接
-  const handleExport = (record: any) => {}
 
   const columns: ProColumns<any>[] = [
     {
@@ -88,7 +87,7 @@ export default function GatherManage() {
           <div style={{ display: 'flex', gap: '4px' }}>
             <Button
               type='link'
-              onClick={() => openModal('gatherTool', record)} // 查看操作
+              onClick={() => openGatherTool(record)} // 查看操作
               style={{ display: 'inline-block', paddingRight: '4px' }} // 缩小右边距
             >
               开始采集
@@ -104,6 +103,12 @@ export default function GatherManage() {
       }
     }
   ] // 表格列
+
+  // 打开采集工具
+  const openGatherTool = (record: any) => {
+    const monitor = new MonitorPxxSkuApi()
+    monitor.openGatherTool(record.id)
+  }
 
   // 获取数据源
   const getDataSource = async (params?: any) => {

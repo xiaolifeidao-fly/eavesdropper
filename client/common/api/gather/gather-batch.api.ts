@@ -19,3 +19,8 @@ export const getGatherBatchSkuList = async (id: number) => {
   const result = await instance.get(`/gather-batch/${id}/sku-list`)
   return plainToClass(Array<GatherSku>, result)
 }
+
+export const getGatherBatchInfo = async (id: number) => {
+  const result = await instance.get(`/gather-batch/${id}`)
+  return plainToClass(GatherBatch, result)
+}

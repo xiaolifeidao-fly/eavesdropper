@@ -12,6 +12,9 @@ type GatherBatchDTO struct {
 	BatchNo string `json:"batchNo"`
 	Name    string `json:"name"`
 	Source  string `json:"source"`
+
+	Total         int `json:"total"`
+	FavoriteTotal int `json:"favoriteTotal"`
 }
 
 type GatherBatchPageParamDTO struct {
