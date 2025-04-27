@@ -551,6 +551,13 @@ async function getSlideContent(imageInfo : string) {
             }
             
             if (isValidateSuccess(result)) {
+              if(validateItem.validateUrl.includes("member/login.jhtml")){
+                await page.waitForTimeout(3000);
+                log.info("validate image set header", result.getHeaderData());
+                engine.setHeader(result.getHeaderData());
+                await engine.saveContextState();
+                return;
+              }
                 log.info(`验证成功，总共尝试 ${validateNum + 1} 次`);
             } else {
                 log.info(`验证最终失败，尝试了 ${validateNum + 1} 次`);
@@ -579,9 +586,10 @@ function checkValidate(){
                 autoFlag = true;
                 log.info("检测到可自动验证的URL类型");
             }
-            
+            if(url.includes("member/login.jhtml")){
+              autoFlag = false;
+            }
             log.info(`验证模式: ${autoFlag ? '自动' : '手动'}`);
-            
             if(userValidateMap[validateItem.resourceId]){
               log.info("强制手动验证");
               autoFlag = false;

@@ -4,13 +4,12 @@ import axios from "axios";
 import log from "electron-log";
 import { DoorEntity } from "@src/door/entity";
 import { buildValidateDoorEntity } from "@src/door/monitor/mb/mb.monitor";
-import { SEARCH_CATEGORY_HEADER } from "../tb.header";
 
 async function getHeaderData(resourceId : number, validateTag : boolean){
     const searchStartTraceId = "searchStartTraceId";
     let mbEngine = new MbEngine(resourceId);
     if(!validateTag){
-        const headerData = mbEngine.getHeader(SEARCH_CATEGORY_HEADER);
+        const headerData = mbEngine.getHeader();
         log.info("headerData", headerData);
         //TODO cookie失效 要做处理
         if(headerData){
@@ -29,13 +28,14 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
             return undefined;
         }
         result = await mbEngine.openWaitMonitor(page, "https://item.upload.taobao.com/sell/ai/category.htm?type=category", new MbPublishSearchMonitor());
+        log.info("search result is ", result);
         if(!result || !result.getCode()){
             return undefined;
         }
         if(!result.code){
             return undefined;
         }
-        mbEngine.setHeader(SEARCH_CATEGORY_HEADER, result.getHeaderData());
+        mbEngine.setHeader(result.getHeaderData());
         mbEngine.setParams(searchStartTraceId, result.getResponseHeaderData()['S_tid']);
         log.info("search category headerData", result.getHeaderData());
         return result.getHeaderData();
@@ -69,6 +69,8 @@ async function getCategoryInfo(requestHeader : { [key: string]: any }, startTrac
     requestHeader['sec-fetch-mode'] = "cors";
     requestHeader['sec-fetch-site'] = "same-origin";
     requestHeader['x-requested-with'] = "XMLHttpRequest";
+    delete requestHeader[':authority'];
+    delete requestHeader['authority'];
     log.info("get category info requestHeader: ", requestHeader);
     if(!requestHeader['upgrade-insecure-requests']){
         delete requestHeader['upgrade-insecure-requests'];
@@ -96,6 +98,15 @@ async function getCategoryInfo(requestHeader : { [key: string]: any }, startTrac
         log.error("搜索商品分类失败", data);
         return new DoorEntity<{}>(false, {});
     }
+
+    if('rgv587_flag' in data && data.rgv587_flag == 'sm'){
+        const doorEntity = new DoorEntity<{}>(false, {});
+        doorEntity.validateUrl = data.url;
+        doorEntity.headerData = requestHeader;
+        doorEntity.setValidateParams({});
+        return doorEntity;
+    }
+
     const categories = data.data?.category;
     if (!categories || categories.length == 0) {
         log.error("搜索商品分类失败", data);

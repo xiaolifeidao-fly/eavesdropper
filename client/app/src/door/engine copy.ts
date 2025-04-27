@@ -22,15 +22,21 @@ const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
 
-function getDefaultChromePath(headless : boolean = false){
-    return get("defaultChromePath_" + (headless ? "headless" : "browser"));
-}
 
-
-export async function getRealChromePath(headless : boolean = false){
-    const chromePath = getDefaultChromePath(headless);
-    //chromium-1169
-    return chromePath;
+async function getRealChromePath(){
+    const platform = process.platform;
+    // 判断是否是打包环境
+    if(platform != "darwin"){
+        const isPackaged = app.isPackaged;
+        if (isPackaged) {
+            // 打包后的路径 (在 resources/app.asar 或 resources/app 目录下)
+            const chromeBinPath = path.join(path.dirname(app.getAppPath()),'Chrome-bin','chrome.exe');
+            if(fs.existsSync(chromeBinPath)){
+                return chromeBinPath;
+            }
+        }
+    }
+    return undefined;
 }
 
 export abstract class DoorEngine<T = any> {
@@ -559,19 +565,19 @@ export abstract class DoorEngine<T = any> {
         await this.context.storageState({ path: sessionDir});
     }
 
-    public getHeaderKey(){
-        return `${this.resourceId}_door_header_${this.getKey()}`;
+    public getHeaderKey(type : string){
+        return `${this.resourceId}_door_header_${type}_${this.getKey()}`;
     }
 
     public getValidateAutoTagKey(){
         return `${this.resourceId}_door_validate_auto_tag_${this.getKey()}`;
     }
 
-    public setHeader(header : {[key : string] : any}){
+    public setHeader(type : string, header : {[key : string] : any}){
         if(!header || Object.keys(header).length == 0){
             return;
         }
-        const key = this.getHeaderKey();
+        const key = this.getHeaderKey(type);
         set(key, header);
     }
 
@@ -589,13 +595,13 @@ export abstract class DoorEngine<T = any> {
         return validateAutoTag;
     }
 
-    public getHeader(){
-        const key = this.getHeaderKey();
+    public getHeader(type : string){
+        const key = this.getHeaderKey(type);
         return get(key);
     }
 
-    public clearHeader(){
-        const key = this.getHeaderKey();
+    public clearHeader(type : string){
+        const key = this.getHeaderKey(type);
         remove(key);
     }
 
@@ -655,7 +661,7 @@ export abstract class DoorEngine<T = any> {
     }
 
     async getRealChromePath(){
-        const storeBrowserPath = await getRealChromePath(this.headless);
+        const storeBrowserPath = await getRealChromePath();
         if(storeBrowserPath){
             return storeBrowserPath;
         }
@@ -684,8 +690,31 @@ export abstract class DoorEngine<T = any> {
         
         const args = [
             ...this.browserArgs,
-            `--window-size=${viewportWidth},${viewportHeight}`
+            `--window-size=${viewportWidth},${viewportHeight}`,
+            '--disable-blink-features=AutomationControlled',
+            '--disable-features=IsolateOrigins,site-per-process',
+            '--start-maximized',
+            '--disable-infobars',
+            '--disable-notifications',
+            '--disable-extensions',
+            '--allow-running-insecure-content',
+            '--disable-web-security',
+            '--lang=zh-CN',
+            '--disable-automation',
+            '--disable-remote-fonts',
+            '--disable-permissions-api',
+            '--disable-device-orientation'
         ];
+        
+        if (this.headless) {
+            args.push(
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-gpu',
+                '--no-first-run',
+                '--no-zygote'
+            );
+        }
         
         const browser = await chromium.launch({
             headless: this.headless,
@@ -1183,7 +1212,7 @@ export async function initPlatform(){
         if(platform){
             return platform;
         }
-        let storeBrowserPath = await getRealChromePath(false);
+        let storeBrowserPath = await getRealChromePath();
 
         browser = await chromium.launch({
             headless: false,
@@ -1220,13 +1249,12 @@ export async function setPlatform(page : Page){
         }
         return result;
     });
-    set("browserPlatform_" + (process.env.CHROME_VERSION || '1169'), JSON.stringify(platform));
+    set("browserPlatform", JSON.stringify(platform));
     return platform;
 }
 
 export async function getPlatform(){
-    const chromeVersion = process.env.CHROME_VERSION || '1169';
-    const browserPlatform = await get("browserPlatform_" + chromeVersion);
+    const browserPlatform = await get("browserPlatform");
     if(browserPlatform){
         return JSON.parse(browserPlatform);
     }
