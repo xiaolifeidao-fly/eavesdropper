@@ -142,7 +142,6 @@ function checkUpdate(mainWindow: BrowserWindow){
 
 
 export const start = () => {
-  
     app.on('ready', async ()=> {
       try {
         registerRpc();

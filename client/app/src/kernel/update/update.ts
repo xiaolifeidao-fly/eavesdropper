@@ -5,6 +5,7 @@ import { BrowserWindow, dialog, ipcMain, app } from 'electron'
 import * as fs from 'fs'
 import * as path from 'path'
 import { setUpdateWindow } from '../windows'
+import { InstallerExtImpl } from '@src/impl/installer/installer.ext'
 
 let updateFlag = false // 防止重复检查
 let isUpdateAvailable = false // 标志是否发现新版本
@@ -138,8 +139,14 @@ export function setupAutoUpdater(win: BrowserWindow) {
 
   });
 
-  autoUpdater.on('update-not-available', () => {
+  autoUpdater.on('update-not-available', async () => {
+    
     log.info('当前已经是最新版本.');
+    const needUpdateChrome = await InstallerExtImpl.needUpdateChrome();
+    log.info('当前更新组件结果为 ', needUpdateChrome);
+    if(needUpdateChrome){
+      checkExtUpdate();
+    }
   });
 
   autoUpdater.on('error', (error: any) => {
@@ -154,6 +161,32 @@ export function setupAutoUpdater(win: BrowserWindow) {
     updateFlag = false; // 解除更新锁
   });
 }
+
+function checkExtUpdate(){
+   // 打开更新页面
+   const updateWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    alwaysOnTop: true,
+    autoHideMenuBar: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      webviewTag: true, // 启用 webview 标签
+      // devTools: true,
+      webSecurity: false,
+      nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
+    }
+  });
+
+  setUpdateWindow(updateWindow);
+  const updateUrl = `${process.env.UPDATE_EXT_WEBVIEW_URL}`
+  updateWindow.loadURL(updateUrl);
+  updateWindow.on('closed', () => {
+     app.quit();
+  });
+}
+
 
 // 示例：监听前端用户确认事件
 ipcMain.on('user-update-confirm', (event, userConfirmed) => {

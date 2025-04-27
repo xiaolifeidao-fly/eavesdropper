@@ -9,7 +9,7 @@ import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from '../monit
 import log from 'electron-log';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
 import { DoorRecord } from '@model/door/door';
-import { DoorEngine } from '../engine';
+import { DoorEngine, getRealChromePath } from '../engine';
 import { DoorEntity } from '../entity';
 const browserMap = new Map<string, Browser>();
 
@@ -536,25 +536,7 @@ export class PxxEngine<T> extends DoorEngine<T> {
     }
 
     async getRealChromePath(){
-        // if(this.chromePath && this.chromePath != ""){
-        //     return this.chromePath;
-        // }
-        // return get("browserPath");
-        const platform = process.platform;
-        // 判断是否是打包环境
-        if(platform != "darwin"){
-            const isPackaged = app.isPackaged;
-            if (isPackaged) {
-                // 打包后的路径 (在 resources/app.asar 或 resources/app 目录下)
-                const chromeBinPath = path.join(path.dirname(app.getAppPath()),'Chrome-bin','chrome.exe');
-                if(fs.existsSync(chromeBinPath)){
-                    return chromeBinPath;
-                }
-                // 如果不在 asar 中，则使用：
-                // return path.join(process.resourcesPath, 'app', 'Chrome-bin');
-            }
-        }
-        return this.chromePath;
+        return await getRealChromePath(this.headless);
     }
 
     getBrowserKey(){
