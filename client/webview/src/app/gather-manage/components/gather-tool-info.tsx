@@ -12,7 +12,7 @@ interface GatherInfo {
 }
 
 const GaterToolInfo = ({ gaterInfo }: { gaterInfo: GatherInfo | null }) => {
-  const { batchNo, name, source, createdAt, gatherTotal, viewTotal } = gaterInfo || {}
+  // const { batchNo, name, source, createdAt, gatherTotal, viewTotal } = gaterInfo || {}
   return (
     <div
       className='info-section'
@@ -35,23 +35,23 @@ const GaterToolInfo = ({ gaterInfo }: { gaterInfo: GatherInfo | null }) => {
           paddingBottom: 6,
           borderBottom: '1px dashed #e8e8e8'
         }}>
-        批次号：{batchNo}
+        批次号：{gaterInfo?.batchNo || ''}
       </div>
       <div style={{ marginBottom: 4, display: 'flex', justifyContent: 'space-between' }}>
         <span style={{ fontWeight: 500, color: '#666' }}>采集批次：</span>
-        <span>{name || ''}</span>
+        <span>{gaterInfo?.name || ''}</span>
       </div>
       <div style={{ marginBottom: 4, display: 'flex', justifyContent: 'space-between' }}>
         <span style={{ fontWeight: 500, color: '#666' }}>采集来源：</span>
-        <span>{source || ''}</span>
+        <span>{gaterInfo?.source || ''}</span>
       </div>
       <div style={{ marginBottom: 4, display: 'flex', justifyContent: 'space-between' }}>
         <span style={{ fontWeight: 500, color: '#666' }}>采集时间：</span>
-        <span>{createdAt || ''}</span>
+        <span>{gaterInfo?.createdAt || ''}</span>
       </div>
       <div style={{ marginBottom: 4, display: 'flex', justifyContent: 'space-between' }}>
         <span style={{ fontWeight: 500, color: '#666' }}>本次采集数量：</span>
-        <span>{gatherTotal || 0}</span>
+        <span>{gaterInfo?.gatherTotal || 0}</span>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <span style={{ fontWeight: 500, color: '#666' }}>已查看数量：</span>
@@ -65,7 +65,7 @@ const GaterToolInfo = ({ gaterInfo }: { gaterInfo: GatherInfo | null }) => {
             borderRadius: 10,
             fontSize: 12
           }}>
-          {viewTotal || 0}
+          {gaterInfo?.viewTotal || 0}
         </span>
       </div>
     </div>

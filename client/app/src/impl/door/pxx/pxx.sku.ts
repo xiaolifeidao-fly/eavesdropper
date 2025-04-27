@@ -27,8 +27,9 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
     @InvokeType(Protocols.INVOKE)
     async monitorSku(gatherBatchId: number){
         log.info("open pxx resourceId is ", gatherBatchId);
+        const resourceId = 11111;
         try{
-            const engine = new PxxEngine(gatherBatchId, false);
+            const engine = new PxxEngine(resourceId, false);
             const url = "https://mobile.yangkeduo.com/";
             const page = await engine.init(url);
             if(!page){ 
