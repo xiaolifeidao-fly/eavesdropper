@@ -250,10 +250,10 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                 // 使用系统默认应用打开文件
                 return shell.openPath(filePath).then(error => {
                     if (error === '') {
-                        log.info(`Successfully opened ${filePath}`);
+                        // log.info(`Successfully opened ${filePath}`);
                         return true;
                     } else {
-                        log.error(`Error opening file: ${error}`);
+                        // log.error(`Error opening file: ${error}`);
                         return false;
                     }
                 });

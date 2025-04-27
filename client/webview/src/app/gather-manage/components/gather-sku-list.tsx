@@ -7,6 +7,12 @@ import './gather-sku-list.less' // 引入自定义样式
 import { getSkuUrl } from '@utils/sku_url'
 import { favoriteGatherSku } from '@api/gather/gather-sku.api'
 
+import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
+
+import { PDD, TB } from '@enums/source'
+
+const PDD_URL = 'https://mobile.yangkeduo.com/goods1.html?goods_id='
+
 function copyToClipboard(inputText: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const textarea = document.createElement('textarea')
@@ -117,6 +123,35 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
         style={{ marginTop: 50 }}
       />
     )
+  }
+
+  // 查看详情
+  const onViewDetail = async (skuViewInfo: SkuViewInfoI) => {
+    if (skuViewInfo.source === PDD) {
+      try {
+        // 创建一个API实例来检查本地文件是否存在
+        const monitor = new MonitorPxxSkuApi()
+
+        // 调用后端API查询本地HTML文件是否存在
+        // 这里假设后端有一个checkLocalHtmlExists方法，如果没有的话需要在后端添加
+        const localFileExists = await monitor.checkLocalHtmlExists(PDD, skuViewInfo.skuId)
+
+        if (localFileExists) {
+          // 如果本地文件存在，打开本地文件
+          // 由于需要通过后端打开文件，可能需要新增一个openLocalFile方法
+          await monitor.openLocalHtmlFile(PDD, skuViewInfo.skuId)
+        } else {
+          // 如果本地文件不存在，使用在线链接
+          window.open(`${PDD_URL}${skuViewInfo.skuId}`, '_blank')
+        }
+      } catch (error) {
+        console.error('Error checking local HTML file:', error)
+        // 出错时回退到使用在线链接
+        window.open(`${PDD_URL}${skuViewInfo.skuId}`, '_blank')
+      }
+    } else {
+      message.error(`暂未支持查看${skuViewInfo.source}商品详情`)
+    }
   }
 
   return (
@@ -300,6 +335,18 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
                         })
                       }}>
                       复制
+                    </a>
+                    <a
+                      href='javascript:void(0);'
+                      className='copy-link'
+                      style={{
+                        color: '#1890ff',
+                        fontSize: 12
+                      }}
+                      onClick={() => {
+                        onViewDetail(record)
+                      }}>
+                      详情
                     </a>
                   </div>
                 )
