@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import type { Key } from 'react'
-import { message, Tabs } from 'antd'
+import { message, Tabs, Input } from 'antd'
 
 import GaterToolInfo, { GatherInfo } from './gather-tool-info'
 import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
@@ -33,14 +33,14 @@ const GatherTool = () => {
 
       // 计算容器高度为整个视口高度
       setContainerHeight(window.innerHeight)
-  
+
       // 监听窗口大小变化
       const handleResize = () => {
         setContainerHeight(window.innerHeight)
       }
-  
+
       window.addEventListener('resize', handleResize)
-  
+
       // 清理事件监听
       return () => {
         window.removeEventListener('resize', handleResize)
@@ -80,18 +80,8 @@ const GatherTool = () => {
 
     setGaterInfo(gatherInfo)
     // 获取采集批次商品列表
-    const gatherSkuList = await getGatherBatchSkuList(gatherId)
-    const skuViewInfoList: SkuViewInfoI[] = gatherSkuList.map((item) => {
-      return {
-        id: item.id,
-        source: item.source,
-        skuId: item.skuId,
-        skuName: item.name,
-        skuPrice: item.price,
-        skuSales: item.sales,
-        favorite: item.favorite
-      }
-    })
+
+    const skuViewInfoList = await getGatherSkuList(gatherId)
     setGatherViewSkuList(skuViewInfoList)
     // 修改查看和采集的数量
     const gatherTotal = skuViewInfoList.filter((item) => item.favorite).length
@@ -107,6 +97,22 @@ const GatherTool = () => {
     return gatherInfo
   }
 
+  const getGatherSkuList = async (gatherId: number, searchValue?: string) => {
+    const gatherSkuList = await getGatherBatchSkuList(gatherId, { skuName: searchValue })
+    const skuViewInfoList: SkuViewInfoI[] = gatherSkuList.map((item) => {
+      return {
+        id: item.id,
+        source: item.source,
+        skuId: item.skuId,
+        skuName: item.name,
+        skuPrice: item.price,
+        skuSales: item.sales,
+        favorite: item.favorite
+      }
+    })
+    return skuViewInfoList
+  }
+
   // 打开PXX
   const openPxx = async (resourceId: number) => {
     try {
@@ -114,7 +120,7 @@ const GatherTool = () => {
         message.error('打开PXX失败，请先选择采集批次')
         return
       }
-      
+
       const monitor = new MonitorPxxSkuApi()
       await monitor.monitorSku(resourceId)
       // 监听PXX采集商品消息
@@ -396,6 +402,16 @@ const GatherTool = () => {
           marginBottom: 8,
           gap: 8
         }}>
+        <Input.Search
+          placeholder='搜索'
+          style={{
+            width: 200
+          }}
+          onSearch={async (value) => {
+            const skuViewInfoList = await getGatherSkuList(gatherId, value)
+            setGatherViewSkuList(skuViewInfoList)
+          }}
+        />
         <button
           className='export-all-btn'
           onClick={handleExportAll}

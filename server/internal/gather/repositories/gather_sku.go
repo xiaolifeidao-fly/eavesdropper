@@ -11,10 +11,13 @@ type gatherSkuRepository struct {
 	database.Repository[*models.GatherSku]
 }
 
-func (r *gatherSkuRepository) GetGatherSkuListByBatchID(batchID uint64) ([]*models.GatherSku, error) {
+func (r *gatherSkuRepository) GetGatherSkuListByBatchIDAndSkuName(batchID uint64, skuName string) ([]*models.GatherSku, error) {
 	var err error
 
 	sql := "select * from gather_sku where batch_id = ? and deleted_at is null"
+	if skuName != "" {
+		sql += " and name like '%" + skuName + "%'"
+	}
 	list, err := r.GetList(sql, batchID)
 	if err != nil {
 		return nil, err

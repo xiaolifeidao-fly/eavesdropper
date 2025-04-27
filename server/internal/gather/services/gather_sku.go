@@ -51,12 +51,12 @@ func UpdateGatherSku(gatherSku *dto.GatherSkuDTO) (*dto.GatherSkuDTO, error) {
 	return gatherSkuDTO, nil
 }
 
-func GetGatherSkuListByBatchID(batchID uint64) ([]*dto.GatherSkuDTO, error) {
+func GetGatherSkuListByBatchID(batchID uint64, skuName string) ([]*dto.GatherSkuDTO, error) {
 	var err error
 	gatherRepository := repositories.GatherSkuRepository
 
 	var gatherSkuList []*models.GatherSku
-	if gatherSkuList, err = gatherRepository.GetGatherSkuListByBatchID(batchID); err != nil {
+	if gatherSkuList, err = gatherRepository.GetGatherSkuListByBatchIDAndSkuName(batchID, skuName); err != nil {
 		logger.Errorf("GetGatherSkuListByBatchID failed, with error is %v", err)
 		return nil, errors.New("操作数据库错误")
 	}

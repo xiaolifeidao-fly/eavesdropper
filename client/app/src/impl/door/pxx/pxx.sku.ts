@@ -272,7 +272,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
   async openGatherTool(gatherBatchId: number): Promise<boolean> {
     // 打开更新页面
     const updateWindow = new BrowserWindow({
-      width: 300,
+      width: 450,
       height: 1000,
       alwaysOnTop: true,
       autoHideMenuBar: true,

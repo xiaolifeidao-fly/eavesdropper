@@ -15,8 +15,8 @@ export const getGatherBatchPage = async (req: GatherBatchPageReq) => {
   return plainToClass(BasePageResp<GatherBatchPage>, result)
 }
 
-export const getGatherBatchSkuList = async (id: number) => {
-  const result = await instance.get(`/gather-batch/${id}/sku-list`)
+export const getGatherBatchSkuList = async (id: number, params: {skuName?: string}) => {
+  const result = await instance.get(`/gather-batch/${id}/sku-list`, { params })
   return plainToClass(Array<GatherSku>, result)
 }
 

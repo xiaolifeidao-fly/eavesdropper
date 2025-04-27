@@ -113,14 +113,14 @@ func GetGatherBatchSkuList(ctx *gin.Context) {
 	var err error
 
 	var req vo.GatherBatchSkuListVO
-	if err = controller.Bind(ctx, &req, nil); err != nil {
+	if err = controller.Bind(ctx, &req, nil, binding.Form); err != nil {
 		logger.Infof("GetGatherBatchSkuList Bind error: %v", err)
 		controller.Error(ctx, "参数错误")
 		return
 	}
 
 	var skuList []*dto.GatherSkuDTO
-	if skuList, err = services.GetGatherSkuListByBatchID(req.ID); err != nil {
+	if skuList, err = services.GetGatherSkuListByBatchID(req.ID, req.SkuName); err != nil {
 		controller.Error(ctx, err.Error())
 		return
 	}

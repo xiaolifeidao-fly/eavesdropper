@@ -5,5 +5,6 @@ type GatherBatchInfoVO struct {
 }
 
 type GatherBatchSkuListVO struct {
-	ID uint64 `uri:"id"`
+	ID      uint64 `uri:"id"`
+	SkuName string `json:"skuName" form:"skuName"`
 }
