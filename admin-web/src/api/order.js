@@ -112,3 +112,19 @@ export function getTokenList(orderId, query) {
     params: query
   })
 }
+
+export function queryTokenList(query) {
+  return request({
+    url: baseUrl + '/orders/tokens/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function queryTokenManagerList(query) {
+  return request({
+    url: baseUrl + '/orders/manager/tokens/list',
+    method: 'get',
+    params: query
+  })
+}
