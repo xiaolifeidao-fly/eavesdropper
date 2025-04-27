@@ -4,6 +4,7 @@ import { EventEmitter } from 'events';
 import log from 'electron-log';
 import { app } from "electron";
 import { updateWindow } from "@src/kernel/windows";
+import { InvokeType, Protocols } from "@eleapi/base";
 
 export class InstallerImpl extends InstallerApi {
   private isDownloading = false;
@@ -45,6 +46,7 @@ export class InstallerImpl extends InstallerApi {
   }
 
   //立即更新
+  @InvokeType(Protocols.INVOKE)
   async update() {
     try {
       this.isDownloading = true;
@@ -57,6 +59,7 @@ export class InstallerImpl extends InstallerApi {
   }
 
   //立即退出应用
+  @InvokeType(Protocols.INVOKE)
   async cancelUpdate() {
     try {
       this.isDownloading = false;
@@ -69,6 +72,7 @@ export class InstallerImpl extends InstallerApi {
   }
 
   //立即安装
+  @InvokeType(Protocols.INVOKE)
   async install() {
     try {
       autoUpdater.quitAndInstall();
