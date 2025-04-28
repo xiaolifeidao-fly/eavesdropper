@@ -320,7 +320,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
         const priceRate : PriceRangeConfig[] | undefined = this.getParams("priceRate");
         const components = commonData.data.components;
         const saleProBuilder = new SaleProBuilder(priceRate, isNeedCombine(components), isNeedSellPointCollection(components));
-        draftData.price = await saleProBuilder.getPrice(Number(skuItem.doorSkuSaleInfo.price));
+        draftData.price = await saleProBuilder.getActiveMinPrice(skuItem);
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
         await this.fillSellProp(commonData, skuItem, draftData);
         await saleProBuilder.fillSellSku(skuItem, draftData);

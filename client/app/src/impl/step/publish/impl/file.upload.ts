@@ -26,7 +26,6 @@ export class SkuPublishFileUploadStep extends StepUnit{
         const imageFileList = uploadResult.skuFiles;
         const validateUrl = uploadResult.validateData?.validateUrl;
         const validateParams = uploadResult.validateData?.validateParams;
-        log.info("uploadResult is ", uploadResult);
         const header = uploadResult.header;
         if(uploadResult && validateUrl){
             log.info("uploadResult validate is ", validateUrl);
@@ -39,7 +38,12 @@ export class SkuPublishFileUploadStep extends StepUnit{
         }
         this.setParams("skuItem", skuItem);
         this.setParams("imagePath", imagePath);
-        return new StepResult(true, "上传成功", [
+        const testFileUpload = process.env.TEST_FILE_UPLOAD;
+        let testResult = false;
+        if (testFileUpload && testFileUpload === "true"){
+            testResult = true;
+        }
+        return new StepResult(!testResult, "上传成功", [
             new StepResponse("imageFileList", imageFileList)
         ]);
     }
