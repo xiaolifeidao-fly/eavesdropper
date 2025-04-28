@@ -48,14 +48,3 @@ type ShopBindAuthCodeReq struct {
 	ID    uint64 `uri:"id"`
 	Token string `json:"token"`
 }
-
-type ShopInfoResp struct {
-	ID             uint64     `json:"id"` // 商店ID
-	UserID         uint64     `json:"userId"`
-	ResourceID     uint64     `json:"resourceId"`
-	Name           string     `json:"name"`
-	ShopID         uint64     `json:"shopId"`
-	Remark         string     `json:"remark"`
-	Status         string     `json:"status"`
-	ExpirationDate *base.Time `json:"expirationDate"`
-}
