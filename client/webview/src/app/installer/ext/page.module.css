@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f0f2f5;
+}
+
+.card {
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.progress {
+  margin: 24px 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.cancelButton {
+  margin-left: 16px;
+}
+
+.updateInfo {
+  margin-bottom: 24px;
+}
+
+.updateInfo h3 {
+  margin-bottom: 8px;
+  color: #1890ff;
+}
+
+.updateInfo p {
+  color: #666;
+  white-space: pre-line;
+} 

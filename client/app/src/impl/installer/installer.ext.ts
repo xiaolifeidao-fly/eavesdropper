@@ -15,6 +15,7 @@ import { createWriteStream } from 'fs';
 import extract from 'extract-zip';
 import { execSync } from 'child_process';
 import { InvokeType, Protocols } from "@eleapi/base";
+import { initPlatform } from "@src/door/engine";
 export class InstallerExtImpl extends InstallerExtApi {
   private isDownloading = false;
 
@@ -159,7 +160,7 @@ export class InstallerExtImpl extends InstallerExtApi {
      log.info(`Downloading Chrome from ${downloadUrl}`);
      
      // 下载文件
-    //  await this.downloadFile(downloadUrl, downloadPath, updateProgress);
+     await this.downloadFile(downloadUrl, downloadPath, updateProgress);
      
      log.info(`Extracting to ${userDataDir}`);
      
@@ -258,6 +259,7 @@ export class InstallerExtImpl extends InstallerExtApi {
    
    log.info(`Chrome installation completed: browser at ${browserPath}`);
    log.info(`Chrome headless shell at ${headlessPath}`);
+   initPlatform();
    this.send('onMonitorUpdateDownloaded');
    return browserPath;
  }
