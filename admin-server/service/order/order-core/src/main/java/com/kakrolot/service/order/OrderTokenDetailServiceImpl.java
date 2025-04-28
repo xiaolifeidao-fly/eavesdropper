@@ -98,29 +98,23 @@ public class OrderTokenDetailServiceImpl implements OrderTokenDetailService {
         }
         
         // 检查token状态是否允许绑定
-        if (TokenBindStatus.BOUND.name().equals(orderTokenDetail.getStatus())) {
+        if (!TokenBindStatus.UNBIND.name().equals(orderTokenDetail.getStatus())) {
             log.error("绑定失败：token已绑定, token={}", token);
             return BindResult.fail("激活码已被绑定，不能重复绑定");
         }
 
-        // 检查token授权是否已过期
-        if (TokenBindStatus.AUTH_EXPIRED.name().equals(orderTokenDetail.getStatus())) {
-            log.error("绑定失败：token授权已过期, token={}", token);
-            return BindResult.fail("激活码已过期，无法使用");
-        }
-        
         // 更新token绑定信息
         orderTokenDetail.setTbShopName(tbShopName);
         orderTokenDetail.setTbShopId(tbShopId);
         orderTokenDetail.setStatus(TokenBindStatus.BOUND.name()); // 更新状态为已绑定
         orderTokenDetail.setBindTime(new Date()); // 设置绑定时间
-        //设置失效时间一个月后
-        orderTokenDetail.setExpireTime(DateUtils.addMonths(new Date(), 1));
+        // TODO 这里根据参数配置 设置失效时间
+        // orderTokenDetail.setExpireTime(DateUtils.addMonths(new Date(), 1));
         try {
             // 保存到数据库
             orderTokenDetailRepository.save(orderTokenDetail);
             log.info("token绑定成功: token={}, tbShopName={}, tbShopId={}", token, tbShopName, tbShopId);
-            return BindResult.success("激活码绑定成功");
+            return BindResult.success("激活码绑定成功", orderTokenDetailConverter.toDTO(orderTokenDetail));
         } catch (Exception e) {
             log.error("token绑定异常: token={}, tbShopName={}, tbShopId={}", token, tbShopName, tbShopId, e);
             return BindResult.fail("系统异常，绑定失败：" + e.getMessage());
