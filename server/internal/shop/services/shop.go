@@ -12,6 +12,7 @@ import (
 	"server/common/middleware/logger"
 	timeutil "server/common/time_util"
 	resourceServices "server/internal/resource/services"
+	resourceDto "server/internal/resource/services/dto"
 	"server/internal/shop/models"
 	"server/internal/shop/repositories"
 	"server/internal/shop/services/dto"
@@ -182,12 +183,30 @@ func BindShopAuthCode(id uint64, token string) error {
 		return err
 	}
 
+	resultByte, _ := json.Marshal(authTokenResult)
+	recordDTO := &resourceDto.ResourceTokenBindingRecordDTO{
+		UserID:        common.GetLoginUserID(),
+		ResourceID:    shop.ResourceID,
+		ShopID:        shop.ID,
+		Token:         token,
+		BindingResult: string(resultByte),
+	}
+	if _, err = resourceServices.CreateBindingRecord(recordDTO); err != nil {
+		return err
+	}
+
 	expireTime, err := calculateNewExpiration(authTokenResult, shop.ResourceID)
 	if err != nil {
 		return err
 	}
 
-	return updateShopAndResource(shop, expireTime)
+	if err = updateShopAndResource(shop, expireTime); err != nil {
+		return err
+	}
+
+	// 保存绑定记录
+
+	return nil
 }
 
 // 获取并验证店铺信息
@@ -251,6 +270,10 @@ func processToken(token string, tbShopName string, tbShopId uint64) (*dto.AuthTo
 		return nil, errors.New("绑定失败")
 	}
 	return authTokenResultDTO, nil
+	// return &dto.AuthTokenResultDTO{
+	// 	ExpireUnit:  "hour",
+	// 	ExpireValue: "1",
+	// }, nil
 }
 
 // 计算新的过期时间
