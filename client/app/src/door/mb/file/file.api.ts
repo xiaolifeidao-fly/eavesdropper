@@ -117,8 +117,6 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
             }
         }
         delete headers['referer'];
-        delete headers[':authority'];
-        delete headers['authority'];
         headers['accept'] = "application/json, text/plain, */*";
         headers['accept-language'] = "zh-CN,zh;q=0.9";
         headers['cache-control'] = "no-cache";
