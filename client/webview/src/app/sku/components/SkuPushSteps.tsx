@@ -22,6 +22,7 @@ interface PushSkuStepsFormProps {
   setVisible: (visible: boolean) => void;
   onClose: () => void;
   urls?: string[];
+  source?: string;
 }
 
 const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
@@ -46,6 +47,13 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
       // setOperationType(props.operationType);
       setCurrent(2); // 设置当前步骤为第二步
       setPushSkuFlag(true);
+    } else if (props.urls) {
+      if (!props.source) {
+        message.error('商品来源不能为空');
+        return;
+      }
+      setSkuSource(props.source);
+      setUrls(props.urls.map(url => ({ url })));
     } else {
       initSource();
       initPriceRangeConfig();

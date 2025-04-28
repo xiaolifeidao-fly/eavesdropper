@@ -18,6 +18,8 @@ export default function GatherManage() {
   const [visible, setVisible] = useState(false)
   const [taskId, setTaskId] = useState<number | undefined>(undefined)
   const [operationType, setOperationType] = useState('')
+  const [urls, setUrls] = useState<string[]>([])
+  const [source, setSource] = useState<string>('')
 
   const columns: ProColumns<any>[] = [
     {
@@ -125,6 +127,8 @@ export default function GatherManage() {
       return url
     })
 
+    setUrls(urls)
+    setSource(record.source)
     setVisible(true)
     setTaskId(undefined)
     setOperationType('publish')
@@ -219,6 +223,8 @@ export default function GatherManage() {
               operationType={operationType}
               setOperationType={setOperationType}
               onClose={() => {}}
+              urls={urls}
+              source={source}
             />
           )}
         </div>
