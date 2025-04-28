@@ -329,25 +329,36 @@ export default function ResourceManage() {
       valueType: 'option',
       align: 'center',
       width: 150,
-      render: (_, record) => [
-        <Button key="bind" type="link" style={{ paddingRight: 0 }} onClick={async () => {
-          await openLoginPage(record);
-        }}>重绑定</Button>,
-        <Button key="openUserInfo" type="link" style={{ paddingRight: 0 }} onClick={async () => {
-          const userApi = new MbUserApi();
-          await userApi.openUserInfo(record.id);
-        }}>打开用户信息</Button>,
-        <UpdateResourceModal key="updateResourceModal"
-          id={record.id}
-          form={{ source: record.source.value, tag: record.tag.value, remark: record.remark }}
-          sources={sourceList}
-          tags={tagList}
-          onFinish={() => { refreshPage(actionRef, false); }} />,
-        <Popconfirm key="deleteConfirm" title="确定要删除吗？" onConfirm={async () => await deleteConfirm(record.id)}>
-          <Button key="delete" type="link" danger style={{ paddingLeft: 0 }}>删除</Button>
-        </Popconfirm>
-
-      ],
+      render: (_, record) => {
+        const buttons = [];
+        if(record.source.value == 'taobao'){
+          buttons.push(
+            <Button key="bind" type="link" style={{ paddingRight: 0 }} onClick={async () => {
+              await openLoginPage(record);
+            }}>重绑定</Button>,
+          )
+          buttons.push(
+            <Button key="openUserInfo" type="link" style={{ paddingRight: 0 }} onClick={async () => {
+              const userApi = new MbUserApi();
+              await userApi.openUserInfo(record.id);
+            }}>打开用户信息</Button>,
+          )
+        }
+        buttons.push(
+          <UpdateResourceModal key="updateResourceModal"
+            id={record.id}
+            form={{ source: record.source.value, tag: record.tag.value, remark: record.remark }}
+            sources={sourceList}
+            tags={tagList}
+            onFinish={() => { refreshPage(actionRef, false); }} />,
+        )
+        buttons.push(
+          <Popconfirm key="deleteConfirm" title="确定要删除吗？" onConfirm={async () => await deleteConfirm(record.id)}>
+            <Button key="delete" type="link" danger style={{ paddingLeft: 0 }}>删除</Button>
+          </Popconfirm>
+        )
+        return <div style={{ display: 'flex', justifyContent: 'center' }}>{buttons}</div>;
+      }
     }
   ]
 
