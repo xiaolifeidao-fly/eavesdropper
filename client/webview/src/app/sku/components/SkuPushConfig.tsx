@@ -30,7 +30,7 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
     let priceRangeConfig = await store.getItem(`sku_publish_config`);
     if (!priceRangeConfig) {
       priceRangeConfig = new SkuPublishConfig();
-      priceRangeConfig.priceRate = [new PriceRangeConfig(0.01, 100, 1.1, 0, 'yuan')];
+      priceRangeConfig.priceRate = [new PriceRangeConfig(0.01, 1000, 1.1, 0, 'yuan')];
       await store.setItem(`sku_publish_config`, priceRangeConfig);
     }
 
