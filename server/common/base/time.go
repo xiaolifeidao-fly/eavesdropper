@@ -11,6 +11,10 @@ func Now() Time {
 	return Time(time.Now())
 }
 
+func TimeNow(t time.Time) Time {
+	return Time(t)
+}
+
 const (
 	TimeFormat = "2006-01-02 15:04:05"
 )
