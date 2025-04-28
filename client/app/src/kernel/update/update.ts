@@ -182,9 +182,6 @@ function checkExtUpdate(){
   setUpdateWindow(updateWindow);
   const updateUrl = `${process.env.UPDATE_EXT_WEBVIEW_URL}`
   updateWindow.loadURL(updateUrl);
-  updateWindow.on('closed', () => {
-     app.quit();
-  });
 }
 
 
