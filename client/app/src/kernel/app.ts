@@ -23,7 +23,7 @@ async function createDefaultWindow() {
     const mainWindow = await createWindow('main', process.env.WEBVIEW_URL || "");
     checkUpdate(mainWindow);
     setMainWindow(mainWindow);
-    initPlatform();
+    
   } catch (e) {
     log.error("createDefaultWindow error", e);
   }
