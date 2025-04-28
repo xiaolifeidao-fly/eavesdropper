@@ -25,3 +25,9 @@ export const syncShop = async (id: number, req: SyncShopReq) => {
 export const getShopList = async () => {
     return getDataList(ShopPageResp, "/shop/list")
 }
+
+// 绑定激活码
+export const bindShopAuthCode = async (shopId: number, authCode: string) => {
+    const result = await instance.post(`/shop/${shopId}/bindAuthCode`, { token: authCode })
+    return plainToClass(String, result)
+}

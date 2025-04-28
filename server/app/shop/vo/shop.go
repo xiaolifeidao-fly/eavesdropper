@@ -41,3 +41,9 @@ type ShopSyncReq struct {
 	ShopID     uint64 `json:"shopId"`
 	Status     string `json:"status"`
 }
+
+// ShopBindAuthCodeReq 绑定激活码请求
+type ShopBindAuthCodeReq struct {
+	ID    uint64 `uri:"id"`
+	Token string `json:"token"`
+}
