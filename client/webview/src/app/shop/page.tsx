@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Button, message, Popconfirm, Tooltip, Spin, Space, Tag, Modal, Form, Input } from 'antd';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
@@ -172,28 +172,37 @@ export default function ShopManage() {
 
   const [open, setOpen] = useState(false);
   const [bindAuthCodeLoading, setBindAuthCodeLoading] = useState(false);
-  const [authCode, setAuthCode] = useState('');
   const [shopId, setShopId] = useState(0);
+  const [form] = Form.useForm();
+
   const openBindAuthModal = async (shopId: number) => {
     setOpen(true);
-    setAuthCode('');
     setShopId(shopId);
+    form.resetFields(); // 重置表单所有字段
   }
 
   const bindAuthCode = async () => {
-    if (!authCode) {
+    let values;
+    try {
+      values = await form.validateFields();
+    } catch (error) {
+      // 忽略验证错误，继续执行
+      values = form.getFieldsValue();
+    }
+
+    if (!values || !values.authCode) {
       message.error('请输入激活码');
       return;
     }
 
     setBindAuthCodeLoading(true);
     try {
-      const result = await bindShopAuthCodeApi(shopId, authCode);
+      const result = await bindShopAuthCodeApi(shopId, values.authCode);
       if (!result) {
         message.error('绑定失败,请联系管理员');
         return
       }
-      setAuthCode('');
+      form.resetFields();
       setOpen(false);
       message.success('绑定成功');
     } catch (error: any) {
@@ -243,11 +252,13 @@ export default function ShopManage() {
 
       <Modal title="绑定激活码" open={open} onCancel={() => setOpen(false)} onOk={() => setOpen(false)} footer={null} style={{ height: '400px' }}>
         <Spin spinning={bindAuthCodeLoading} tip={"绑定激活码中..."}>
-          <div style={{ textAlign: 'center', marginTop: 50 }}>
-            <Form.Item label="激活码:" name="authCode" required={true} rules={[{ required: true, message: '请输入激活码' }]}>
-              <Input placeholder='请输入激活码' onChange={(e) => setAuthCode(e.target.value)}></Input>
-            </Form.Item>
-            <Button onClick={async () => await bindAuthCode()}>绑定</Button>
+          <div style={{ textAlign: 'center', marginTop: 20 }}>
+            <Form form={form}>
+              <Form.Item label="激活码:" name="authCode" required={true} rules={[{ required: true, message: '请输入激活码' }]}>
+                <Input placeholder='请输入激活码' />
+              </Form.Item>
+              <Button onClick={bindAuthCode}>绑定</Button>
+            </Form>
           </div>
         </Spin>
       </Modal>      
