@@ -57,11 +57,6 @@ const saleConfigMap : { [key: string]: SkuSaleConfig } = {
     }, (subItem : { [key: string]: any }) => {
         return buildDefaultByComboboxSaleProps(subItem);
     }),
-    // "newMeasurement": new SkuSaleConfig("newMeasurement",true, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
-    //     return handlerNewMeasurement(salesAttrValues, subItem)
-    // }, (subItem : { [key: string]: any }) => {
-    //     return new SalesAttr(subItem.label, [], "", "", "", subItem.name);
-    // }),
     "checkbox" : new SkuSaleConfig("checkbox",true, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
         return handlerCheckbox(salesAttrValues, subItem)
     }, (subItem : { [key: string]: any }) => {
@@ -71,8 +66,37 @@ const saleConfigMap : { [key: string]: SkuSaleConfig } = {
         return handlerInput(salesAttrValues, subItem)
     }, (subItem : { [key: string]: any }) => {
         return new SalesAttr(subItem.label, [], "", "", "", subItem.name);
+    }),
+    "newMeasurement" : new SkuSaleConfig("newMeasurement",false, (showUploadImage : boolean, salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) => {
+        return handlerByNewMeasurement(salesAttrValues, subItem);
+    }, (subItem : { [key: string]: any }) => {
+        return buildDefaultByNewMeasurement(subItem);
     })
 }
+
+function handlerByNewMeasurement(salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) {
+    const salesAttrValue = salesAttrValues[0];
+    const saleProp = [{
+        "value": salesAttrValue.value,
+        "text": salesAttrValue.text,
+        "structItems": {
+            "ts-1": "1",
+            "ts-2": {
+                "text": "kg",
+                "value": 33
+            }
+        }
+    }]
+    return new SaleConvertValue(saleProp, subItem.name)
+
+}
+function buildDefaultByNewMeasurement(subItem : { [key: string]: any }) {
+    let saleProp : SalesAttrValue[] = [];
+    saleProp.push(new SalesAttrValue("1kg", "-833717732","",""))
+    return new SalesAttr(subItem.label, saleProp, "false", "", "", subItem.name.split("-")[1]);
+}
+
+
 
 function buildDefaultByComboboxSaleProps(subItem : { [key: string]: any }) {
     let saleProp : SalesAttrValue[] = [];
@@ -123,9 +147,6 @@ function handlerInput(salesAttrValues : SalesAttrValue[], subItem : { [key: stri
     return new SaleConvertValue(saleProp, subItem.name);
 }
 
-function handlerNewMeasurement(salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) {
-    return new SaleConvertValue([], subItem.name);
-}
 
 function handlerCheckbox(salesAttrValues : SalesAttrValue[], subItem : { [key: string]: any }) {
     let saleProp : {[key: string]: any}[] = [];
@@ -177,6 +198,7 @@ export class SaleMapper {
    mergeSourcePids : string[] = []
    matchFlag : boolean = false
 
+
    constructor(saleAttr : SalesAttr | undefined, subItem : { [key: string]: any }, salePid : string|null, hadAssign : boolean = false, hadImage : boolean = false, matchFlag : boolean = false) {
         this.saleAttr = saleAttr;
         this.subItem = subItem;
@@ -222,9 +244,11 @@ export class RebuildSalePro{
                 }
             }
         }
+        log.info("subItem.required subItem is ", subItem, " saleConfig.allowInput is ", saleConfig.allowInput);
         if(subItem.required && !saleConfig.allowInput){
             const saleValue = saleConfig.buildSalesAttr(subItem);
-            return new SaleMapper(saleValue, subItem, null, true, false);
+            log.info("subItem.required saleValue is ", saleValue);
+            return new SaleMapper(saleValue, subItem, null, true, false, true);
         }
         return undefined;
     }
@@ -544,6 +568,7 @@ export class RebuildSalePro{
                 }
             }
         }
+
         log.info("first assign saleMappers is ", saleMappers);
         const unAssignSaleAttrs = this.getUnAssignSaleAttrs(saleMappers, salesAttrs);
         log.info("unAssignSaleAttrs is ", unAssignSaleAttrs);
@@ -552,6 +577,7 @@ export class RebuildSalePro{
         if(unAssignSaleAttrs.length > 0){
             this.assignOtherSaleAttrs(saleMappers, unAssignSaleAttrs);
         }
+        log.info("finally saleMappers is ", saleMappers);
         // 将tb 已经分配的 且不是merge的的pid和value进行映射
         for(const saleMapper of saleMappers){
             if(!saleMapper.hadAssign){
@@ -569,7 +595,7 @@ export class RebuildSalePro{
                 if(values && values.length > 0){
                     for(const value of values){
                         let newValue = value.value;
-                        if(allowInput){
+                        if(allowInput && !newValue.includes("-")){
                             newValue = "-" + value.value;
                         }
                         this.putSkuMap(value.value, saleMapper.pid + ":" + newValue);
@@ -696,6 +722,7 @@ export class RebuildSalePro{
             const newValue : SalesAttrValue[] = [];
             for(const value of values){
                 const salePropPath = saleMapper.pid + ":" + value.value;
+                log.info("buildSaleProp salePropPath is ", salePropPath);
                 // 去除没有库存的商品
                 if(this.containsSaleProp(salesSkus, salePropPath)){
                     newValue.push(value);
@@ -704,8 +731,9 @@ export class RebuildSalePro{
                     value.image = "";
                 }
             }
+            log.info("buildSaleProp subItem is ", subItem, " newValue is ", newValue);
             const saleValue = saleConfig.toSaleValue(subItem.showUploadImage, newValue, subItem);
-            saleProp[saleValue.pidKey] = saleValue.saleProp;
+            saleProp[subItem.name] = saleValue.saleProp;
         }
         return saleProp;
     }

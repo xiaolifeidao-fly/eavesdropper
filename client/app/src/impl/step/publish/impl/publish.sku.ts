@@ -175,6 +175,7 @@ export class PublishSkuStep extends AbsPublishStep {
             updateDraftData['fakeCreditSubmit'] = true;
             log.info("submit updateDraftData is ", JSON.stringify(updateDraftData));
             const url = "https://item.upload.taobao.com/sell/v2/submit.htm";
+            log.info("submit catId ", catId);
             const data = {
                 "catId": catId,
                 "jsonBody": JSON.stringify(updateDraftData),

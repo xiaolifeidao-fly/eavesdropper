@@ -70,7 +70,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         context.on("response", async response => {
             const request = response.request();
             const requestUrl = request.url();
-            if(requestUrl.includes("goods.html?goods_id")){
+            if(requestUrl.includes("goods_id=")){
                 const requestParams = getUrlParameter(requestUrl);
                 const goodsId = requestParams.get("goods_id");
                 if(!goodsId){

@@ -12,6 +12,7 @@ import log from "electron-log";
 import { app } from "electron";
 
 
+
 const code = `
 
 let result = {
@@ -100,6 +101,11 @@ return async function doHandler(page, params, preResult){
 export async function getUnUploadFile(source : string, resourceId : number, paths: string[]){
     const unUploadFiles = [];
     for(let filePath of paths){
+        const testFileUpload = process.env.TEST_FILE_UPLOAD;
+        if (testFileUpload && testFileUpload === "true"){
+            unUploadFiles.push(filePath);
+            continue;
+        }
         let fileName = path.basename(filePath);
         const fileKey = getFileKey(fileName);
         const doorFileRecord = await getDoorFileRecordByKey(source, resourceId, fileKey);

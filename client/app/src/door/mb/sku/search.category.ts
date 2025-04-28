@@ -36,7 +36,7 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
             return undefined;
         }
         mbEngine.setHeader(result.getHeaderData());
-        mbEngine.setParams(searchStartTraceId, result.getResponseHeaderData()['S_tid']);
+        mbEngine.setParams(searchStartTraceId, getSid(result.getResponseHeaderData()));
         log.info("search category headerData", result.getHeaderData());
         return result.getHeaderData();
     }finally{
@@ -45,6 +45,22 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
         }
         await mbEngine.closePage();
     }
+}
+
+function getSid(headerData : { [key: string]: any }){
+    let sid = headerData['S_tid'];
+    if(!sid){
+        return undefined;
+    }
+    sid = headerData['s_tid'];
+    if(!sid){
+        return undefined;
+    }
+    sid = headerData['S_TID'];
+    if(!sid){
+        return undefined;
+    }
+    return sid;
 }
 
 
@@ -69,8 +85,6 @@ async function getCategoryInfo(requestHeader : { [key: string]: any }, startTrac
     requestHeader['sec-fetch-mode'] = "cors";
     requestHeader['sec-fetch-site'] = "same-origin";
     requestHeader['x-requested-with'] = "XMLHttpRequest";
-    delete requestHeader[':authority'];
-    delete requestHeader['authority'];
     log.info("get category info requestHeader: ", requestHeader);
     if(!requestHeader['upgrade-insecure-requests']){
         delete requestHeader['upgrade-insecure-requests'];

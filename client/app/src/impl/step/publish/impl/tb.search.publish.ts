@@ -15,10 +15,6 @@ export class TbPublishSearchStep extends AbsPublishStep{
 
 
     async getCatId(pddSkuId: string): Promise<string | undefined> {
-        const tbCategory = this.getParams("tbCategory");
-        if(tbCategory){
-            return tbCategory.categoryId;
-        }
         const result = await getDoorCategoryByPddCatId(pddSkuId);
         if(result){
             this.setParams("tbCategory", {
@@ -40,6 +36,8 @@ export class TbPublishSearchStep extends AbsPublishStep{
 
         let catId = await this.getCatId(skuItem.baseInfo.catId);
         if(catId){
+            this.setParams("catId", catId);
+            log.info("搜索商品分类成功 ", catId);
             return new StepResult(true, "搜索商品分类成功");
         }
         log.info("标题为：", title);

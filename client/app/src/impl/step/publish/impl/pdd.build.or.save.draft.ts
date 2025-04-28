@@ -25,7 +25,7 @@ export class PddSkuBuildDraftStep extends SkuBuildDraftStep{
         const needSellPointCollection = isNeedSellPointCollection(components);
         log.info("needSellPointCollection is ", needSellPointCollection);
         const saleProBuilder = new SaleProBuilder(priceRate, needCombine, needSellPointCollection);
-        const minPrice = await saleProBuilder.getPrice(Number(skuItem.doorSkuSaleInfo.price));
+        const minPrice = await saleProBuilder.getActiveMinPrice(skuItem);
         draftData.price = minPrice;
         draftData.quantity = skuItem.doorSkuSaleInfo.quantity;
         const salePropSubItems = commonData.data.components.saleProp.props.subItems;
