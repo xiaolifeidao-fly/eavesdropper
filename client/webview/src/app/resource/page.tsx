@@ -356,7 +356,7 @@ export default function ResourceManage() {
       <Spin spinning={loading} tip="绑定中">
         <ProTable<DataType>
           rowKey="id"
-          headerTitle="商品管理"
+          headerTitle="资源管理"
           columns={columns}
           actionRef={actionRef}
           options={false}

@@ -8,8 +8,11 @@ import (
 	"server/common/middleware/logger"
 	"server/common/server/controller"
 	"server/common/server/middleware"
+	resourceServices "server/internal/resource/services"
+	resourceDTO "server/internal/resource/services/dto"
 	"server/internal/shop/services"
 	"server/internal/shop/services/dto"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -22,6 +25,7 @@ func LoadShopRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).GET("/page", PageShop)
 		r.Use(middleware.Authorization()).POST("/:id/sync", SyncShop)
 		r.Use(middleware.Authorization()).GET("/list", GetShopInfos)
+		r.Use(middleware.Authorization()).POST("/:id/bindAuthCode", BindShopAuthCode)
 	}
 }
 
@@ -109,6 +113,20 @@ func SyncShop(ctx *gin.Context) {
 		return
 	}
 
+	// 判断店铺的资源是否有效
+	var resourceDTO *resourceDTO.ResourceDTO
+	if resourceDTO, err = resourceServices.GetResourceByID(req.ResourceID); err != nil {
+		logger.Errorf("SyncShop failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	if resourceDTO.ExpirationDate == nil || resourceDTO.ExpirationDate.BeforeTime(time.Now()) {
+		req.Status = dto.LoseEfficacy.Value
+	} else {
+		req.Status = dto.Effective.Value
+	}
+
 	syncDTO := converter.ToDTO[dto.ShopSyncDTO](&req)
 	if err = services.SyncShop(syncDTO); err != nil {
 		logger.Errorf("SyncShop failed, with error is %v", err)
@@ -117,4 +135,26 @@ func SyncShop(ctx *gin.Context) {
 	}
 
 	controller.OK(ctx, "同步成功")
+}
+
+// BindShopAuthCode
+// @Description 绑定激活码
+// @Router /shop/:id/bindAuthCode [post]
+func BindShopAuthCode(ctx *gin.Context) {
+	var err error
+
+	var req vo.ShopBindAuthCodeReq
+	if err = controller.Bind(ctx, &req, nil, binding.JSON); err != nil {
+		logger.Errorf("BindShopAuthCode failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	if err = services.BindShopAuthCode(req.ID, req.Token); err != nil {
+		logger.Errorf("BindShopAuthCode failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	controller.OK(ctx, "绑定成功")
 }

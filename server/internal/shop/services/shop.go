@@ -4,6 +4,7 @@ import (
 	"errors"
 	"server/common"
 	"server/common/base/page"
+	"server/common/http"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
 	"server/internal/shop/models"
@@ -162,4 +163,47 @@ func GetShopStatus(status string) (*dto.ShopStatusEnum, error) {
 	default:
 		return nil, errors.New("获取店铺状态失败")
 	}
+}
+
+func BindShopAuthCode(id uint64, token string) error {
+	var err error
+	shopRepository := repositories.ShopRepository
+
+	shop := &models.Shop{}
+	if shop, err = shopRepository.FindById(id); err != nil {
+		logger.Errorf("BindShopAuthCode failed, with error is %v", err)
+		return errors.New("数据库操作失败")
+	}
+
+	if shop.ShopID == 0 {
+		return errors.New("请先同步店铺")
+	}
+
+	if err = processToken(token, shop.Name, shop.ShopID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func processToken(token string, tbShopName string, tbShopId uint64) error {
+	requestBody := map[string]interface{}{
+		"tbShopName": tbShopName,
+		"tbShopId":   tbShopId,
+		"token":      token,
+	}
+
+	response, err := http.Post("http://8.152.204.115:8009/admin_web/orders/token/bind", requestBody, "", map[string]string{})
+	if err != nil {
+		logger.Errorf("BindShopAuthCode failed, with error is %v", err)
+		return errors.New("绑定失败")
+	}
+	logger.Infof("BindShopAuthCode response is %v", response)
+
+	if response["code"] == "1" {
+		errMsg := response["message"].(string)
+		return errors.New(errMsg)
+	}
+
+	return nil
 }
