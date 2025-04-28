@@ -684,7 +684,7 @@ public class OrderController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "绑定激活码", httpMethod = "POST")
     @Auth(isIntercept = false)
-    public WebResponse<String> bindToken(@RequestBody TokenBindModel tokenBindModel) {
+    public WebResponse<OrderTokenDetailModel> bindToken(@RequestBody TokenBindModel tokenBindModel) {
         if (tokenBindModel == null || StringUtils.isEmpty(tokenBindModel.getToken())) {
             return WebResponse.error("激活码不能为空");
         }
@@ -704,7 +704,7 @@ public class OrderController extends BaseController {
         );
         
         if (result.isSuccess()) {
-            return WebResponse.successMessage(result.getMessage());
+            return WebResponse.success(orderTokenWebConvert.toModel(result.getOrderTokenDetailDTO()));
         } else {
             return WebResponse.error(result.getMessage());
         }

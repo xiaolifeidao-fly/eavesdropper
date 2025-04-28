@@ -28,4 +28,8 @@ public class OrderTokenDetailDTO extends BaseDTO {
 
     private Date expireTime; // Token 过期时间
 
+    private String expireUnit; // 过期单位：year month day hour minute 等
+    
+    private String expireValue; // 过期值
+
 } 

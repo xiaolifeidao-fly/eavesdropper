@@ -34,5 +34,9 @@ public class OrderTokenDetailModel extends BaseModel {
 
     private String tokenCreateTime;
 
+    private String expireUnit; // 过期单位：year month day hour minute 等
+    
+    private String expireValue; // 过期值
+
 
 }
