@@ -170,7 +170,7 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
             title: {
               render: (_, record: SkuViewInfoI) => {
                 // 商品名称最大显示长度
-                const MAX_TITLE_LENGTH = 10
+                const MAX_TITLE_LENGTH = 20
                 const displayName = record.skuName.length > MAX_TITLE_LENGTH ? `${record.skuName.substring(0, MAX_TITLE_LENGTH)}...` : record.skuName
 
                 return (

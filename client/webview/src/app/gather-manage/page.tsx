@@ -131,7 +131,7 @@ export default function GatherManage() {
     setSource(record.source)
     setVisible(true)
     setTaskId(undefined)
-    setOperationType('publish')
+    setOperationType('push')
   }
 
   // 获取数据源

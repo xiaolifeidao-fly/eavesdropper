@@ -54,6 +54,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
       }
       setSkuSource(props.source);
       setUrls(props.urls.map(url => ({ url })));
+      setCurrent(1); // 设置当前步骤为第二步
     } else {
       initSource();
       initPriceRangeConfig();
