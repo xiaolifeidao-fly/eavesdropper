@@ -82,7 +82,7 @@ export default function InstallerPage() {
     <div className={styles.container}>
       <Card title="软件更新" className={styles.card}>
           <div className={styles.updateInfo}>
-            <p>有新组件更新，请先更新,更新点击完成即可.</p>
+            <p>有新组件更新，请先更新,更新完成之后关掉此窗口即可.</p>
           </div>
         
         <Progress 
