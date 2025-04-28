@@ -59,3 +59,33 @@ func Setup(configPath string) error {
 
 	return nil
 }
+
+// Get 获取配置
+// key 配置key
+func Get(key string) any {
+	return viper.Get(key)
+}
+
+// GetString 获取字符串配置
+// key 配置key
+func GetString(key string) string {
+	return viper.GetString(key)
+}
+
+// GetInt 获取整数配置
+// key 配置key
+func GetInt(key string) int {
+	return viper.GetInt(key)
+}
+
+// GetBool 获取布尔配置
+// key 配置key
+func GetBool(key string) bool {
+	return viper.GetBool(key)
+}
+
+// GetFloat64 获取浮点数配置
+// key 配置key
+func GetFloat64(key string) float64 {
+	return viper.GetFloat64(key)
+}
