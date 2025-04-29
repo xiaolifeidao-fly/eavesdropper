@@ -31,9 +31,3 @@ export const bindShopAuthCode = async (shopId: number, authCode: string) => {
     const result = await instance.post(`/shop/${shopId}/bindAuthCode`, { token: authCode })
     return plainToClass(String, result)
 }
-
-// 绑定激活码
-export const bindShopAuthCode = async (shopId: number, authCode: string) => {
-    const result = await instance.post(`/shop/${shopId}/bindAuthCode`, { token: authCode })
-    return plainToClass(String, result)
-}
