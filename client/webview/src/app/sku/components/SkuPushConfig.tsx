@@ -8,7 +8,7 @@ import { StoreApi } from '@eleapi/store/store';
 
 import { getShopList } from '@api/shop/shop.api';
 import { PriceRangeConfig, SkuPublishConfig } from "@model/sku/skuTask";
-
+import { ShopStatus } from '@model/shop/shop';
 export interface SukPushConfigProp {
   setSourceAccount: (account: number) => void, // 资源账号
   priceRangeConfigFormRef: MutableRefObject<ProFormInstance | undefined>,
@@ -66,22 +66,32 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
         }}
         request={async () => {
           const shopList = await getShopList();
-          const sourceList: { value: number, label: string }[] = [];
+          const sourceList: { value: number, label: string, disabled: boolean }[] = [];
           for (const shop of shopList) {
+            let label = shop.name;
+            // 禁用选择已失效的账号
+            if (shop.status === ShopStatus.LosEffective) {
+              label = `${label}（已失效）`
+            }
             sourceList.push({
               value: shop.resourceId,
-              label: shop.name
+              label: label,
+              disabled: shop.status === ShopStatus.LosEffective
             })
           }
           // 获取上次选择的账号
           const lastAccount = await store.getItem(`sku_publish_source_account`);
           // 判断lastAccount是否在sourceList中
-          if (lastAccount && sourceList.find(item => item.value === lastAccount)) {
+          if (lastAccount && sourceList.find(item => item.value === lastAccount && item.disabled === false)) {
             setAccount(lastAccount);
             props.setSourceAccount(lastAccount);
           } else if (sourceList.length !== 0) {
-            setAccount(sourceList[0].value);
-            props.setSourceAccount(sourceList[0].value);
+            // 找到第一个未失效的账号
+            const firstValidAccount = sourceList.find(item => item.disabled === false);
+            if (firstValidAccount) {
+              setAccount(firstValidAccount.value);
+              props.setSourceAccount(firstValidAccount.value);
+            }
           }
           return sourceList
         }}

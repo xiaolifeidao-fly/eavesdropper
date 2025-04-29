@@ -39,15 +39,16 @@ type ShopPageParamDTO struct {
 
 // ShopPageDTO 店铺分页DTO
 type ShopPageDTO struct {
-	ID         uint64    `json:"id" select:"table:shop;column:id"`
-	UserID     uint64    `json:"userId" select:"table:shop;column:user_id"`
-	ResourceID uint64    `json:"resourceId" select:"table:shop;column:resource_id"`
-	Account    string    `json:"account" select:"table:resource;column:account"`
-	Name       string    `json:"name" select:"table:shop;column:name"`
-	Remark     string    `json:"remark" select:"table:shop;column:remark"`
-	CreatedBy  string    `json:"createdBy" select:"table:shop;column:created_by"`
-	UpdatedAt  base.Time `json:"updatedAt" select:"table:shop;column:updated_at"`
-	Status     string    `json:"status" select:"table:shop;column:status"`
+	ID             uint64     `json:"id" select:"table:shop;column:id"`
+	UserID         uint64     `json:"userId" select:"table:shop;column:user_id"`
+	ResourceID     uint64     `json:"resourceId" select:"table:shop;column:resource_id"`
+	Account        string     `json:"account" select:"table:resource;column:account"`
+	ExpirationDate *base.Time `json:"expirationDate" select:"table:resource;column:expiration_date"`
+	Name           string     `json:"name" select:"table:shop;column:name"`
+	Remark         string     `json:"remark" select:"table:shop;column:remark"`
+	CreatedBy      string     `json:"createdBy" select:"table:shop;column:created_by"`
+	UpdatedAt      base.Time  `json:"updatedAt" select:"table:shop;column:updated_at"`
+	Status         string     `json:"status" select:"table:shop;column:status"`
 }
 
 // ShopSyncDTO 同步店铺DTO
