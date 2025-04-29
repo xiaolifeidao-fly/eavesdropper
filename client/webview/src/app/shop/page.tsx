@@ -89,9 +89,9 @@ export default function ShopManage() {
       )
     },
     {
-      title: '更新时间',
-      dataIndex: 'updatedAt',
-      key: 'updatedAt',
+      title: '过期时间',
+      dataIndex: 'expirationDate',
+      key: 'expirationDate',
       align: 'center',
       width: 200,
       search: false,

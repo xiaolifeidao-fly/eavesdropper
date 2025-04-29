@@ -70,16 +70,17 @@ func PageShop(ctx *gin.Context) {
 		controller.Error(ctx, err.Error())
 		return
 	}
-
 	pageData := make([]*vo.ShopPageResp, 0)
 	for _, d := range pageDTO.Data {
 		resp := &vo.ShopPageResp{}
 		converter.Copy(resp, d)
 		var shopStatusEnum *dto.ShopStatusEnum
-		if shopStatusEnum, err = services.GetShopStatus(d.Status); err != nil {
-			logger.Errorf("PageShop failed, with error is %v", err)
-			controller.Error(ctx, err.Error())
-			return
+		if d.ExpirationDate == nil {
+			shopStatusEnum = &dto.LoseEfficacy
+		} else if d.ExpirationDate.BeforeTime(time.Now()) {
+			shopStatusEnum = &dto.LoseEfficacy
+		} else {
+			shopStatusEnum = &dto.Effective
 		}
 		converter.Copy(&resp.Status, shopStatusEnum)
 		pageData = append(pageData, resp)
@@ -97,7 +98,28 @@ func GetShopInfos(ctx *gin.Context) {
 		controller.Error(ctx, err.Error())
 		return
 	}
-	controller.OK(ctx, shopInfos)
+
+	shopInfosResp := make([]*vo.ShopInfoResp, 0)
+	for _, shopInfo := range shopInfos {
+		shopInfoResp := &vo.ShopInfoResp{}
+		converter.Copy(shopInfoResp, shopInfo)
+		resource, err := resourceServices.GetResourceByID(shopInfo.ResourceID)
+		shopInfoResp.ExpirationDate = resource.ExpirationDate
+		if err != nil {
+			logger.Errorf("GetShopInfos failed, with error is %v", err)
+			controller.Error(ctx, err.Error())
+			return
+		}
+		if resource.ExpirationDate == nil {
+			shopInfoResp.Status = dto.LoseEfficacy.Value
+		} else if resource.ExpirationDate.BeforeTime(time.Now()) {
+			shopInfoResp.Status = dto.LoseEfficacy.Value
+		} else {
+			shopInfoResp.Status = dto.Effective.Value
+		}
+		shopInfosResp = append(shopInfosResp, shopInfoResp)
+	}
+	controller.OK(ctx, shopInfosResp)
 }
 
 // SyncShop
