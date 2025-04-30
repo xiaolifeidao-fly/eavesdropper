@@ -96,7 +96,19 @@ export default function SkuTaskManage() {
       dataIndex: 'shopName',
       search: false,
       key: 'shopName',
-      align: 'center'
+      align: 'center',
+      render: (_, record) => {
+        let shopName = record.shopName || '--'
+        if (record.resourceStatus === ShopStatus.LosEffective) {
+          shopName = shopName + '（已失效）'
+        }
+
+        return (
+          <div>
+            {shopName}
+          </div>
+        )
+      }
     },
     {
       title: '时间',
