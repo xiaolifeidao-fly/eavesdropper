@@ -88,16 +88,14 @@ export class MonitorPxxLogin extends PxxLoginApi {
     async saveByJson(resourceId : number, rawData : string, url : string, doorKey : string, itemKey : string, type : string){
         try{
             const jsonData = JSON.parse(rawData);
-            log.info("jsonData ", JSON.stringify(jsonData));
-            const initDataObj = jsonData?.store?.initDataObj;
-            if(!initDataObj){
-                log.warn(itemKey, " initDataObj not found");
+            const nickname = jsonData.stores?.store?.userInfo?.nickname;
+            if(!nickname){
+                log.warn(itemKey, " nickname not found");
                 return;
             }
-            // const bindResourceReq = new BindResourceReq("", "", 0);
-            // await bindResource(resourceId, bindResourceReq);
-    
-            log.info("bind resource success ", itemKey);
+            const bindResourceReq = new BindResourceReq(nickname, nickname, 1);
+            const result = await bindResource(resourceId, bindResourceReq);
+            log.info("bind resource success ", itemKey, result);
         } catch(error){
             log.error("save by json error ", error);
         }
