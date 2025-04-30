@@ -100,7 +100,7 @@ export default function SkuTaskManage() {
       render: (_, record) => {
         let shopName = record.shopName || '--'
         if (record.resourceStatus === ShopStatus.LosEffective) {
-          shopName = shopName + '（已过期）'
+          shopName = shopName + '（已失效）'
         }
 
         return (
