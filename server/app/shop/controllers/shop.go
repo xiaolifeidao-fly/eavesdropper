@@ -74,15 +74,8 @@ func PageShop(ctx *gin.Context) {
 	for _, d := range pageDTO.Data {
 		resp := &vo.ShopPageResp{}
 		converter.Copy(resp, d)
-		var shopStatusEnum *dto.ShopStatusEnum
-		if d.ExpirationDate == nil {
-			shopStatusEnum = &dto.LoseEfficacy
-		} else if d.ExpirationDate.BeforeTime(time.Now()) {
-			shopStatusEnum = &dto.LoseEfficacy
-		} else {
-			shopStatusEnum = &dto.Effective
-		}
-		converter.Copy(&resp.Status, shopStatusEnum)
+		shopStatus := services.GetShopStatusByExpirationDate(d.ExpirationDate)
+		converter.Copy(&resp.Status, shopStatus)
 		pageData = append(pageData, resp)
 	}
 
@@ -110,13 +103,8 @@ func GetShopInfos(ctx *gin.Context) {
 			controller.Error(ctx, err.Error())
 			return
 		}
-		if resource.ExpirationDate == nil {
-			shopInfoResp.Status = dto.LoseEfficacy.Value
-		} else if resource.ExpirationDate.BeforeTime(time.Now()) {
-			shopInfoResp.Status = dto.LoseEfficacy.Value
-		} else {
-			shopInfoResp.Status = dto.Effective.Value
-		}
+		shopStatus := services.GetShopStatusByExpirationDate(resource.ExpirationDate)
+		shopInfoResp.Status = shopStatus.Value
 		shopInfosResp = append(shopInfosResp, shopInfoResp)
 	}
 	controller.OK(ctx, shopInfosResp)

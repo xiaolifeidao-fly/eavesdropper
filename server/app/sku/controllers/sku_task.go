@@ -11,6 +11,7 @@ import (
 	"server/common/server/controller"
 	"server/common/server/middleware"
 	resourceDTO "server/internal/resource/services/dto"
+	shopServices "server/internal/shop/services"
 	"server/internal/sku/services"
 	"server/internal/sku/services/dto"
 	"strconv"
@@ -199,6 +200,8 @@ func PageSkuTask(ctx *gin.Context) {
 			converter.Copy(&sourceLableValue, sourceLableValueEnum)
 			resp.SourceLableValue = sourceLableValue
 		}
+		shopStatus := shopServices.GetShopStatusByExpirationDate(pageDTO.ExpirationDate)
+		resp.ResourceStatus = shopStatus.Value
 		pageData = append(pageData, resp)
 	}
 
