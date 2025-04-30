@@ -108,12 +108,18 @@ export abstract class AbsPublishStep extends StepUnit{
     }
     
     async releaseDraftData(draftId: string, resourceId: number) {
-        const deleteResult = await this.deleteDraft(draftId);
-        if(!deleteResult){
-            return;
+        const deleteDraft = process.env.DELETE_DRAFT;
+        log.info("deleteDraft is ", deleteDraft);
+        if(deleteDraft == undefined || deleteDraft == "true"){
+            log.info("delete draft is true");
+            const deleteResult = await this.deleteDraft(draftId);
+            if(!deleteResult){
+                return;
+            }
+            const itemId = this.getParams("itemId");
+            await expireSkuDraft(resourceId, itemId);
+            log.info("delete draft is success");
         }
-        const itemId = this.getParams("itemId");
-        await expireSkuDraft(resourceId, itemId);
     }
 
     public async updateDraftData(catId: string, draftId: string, header: { [key: string]: any }, startTraceId: string, draftData: {}) {

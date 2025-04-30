@@ -3,7 +3,10 @@ import { PriceRangeConfig } from "@model/sku/skuTask";
 import log from "electron-log";
 
 export function isNeedCombine(components : { [key: string]: any }) : boolean {
-    const attributes = components.sku.props.attributes;
+    const attributes = components.sku?.props?.attributes;
+    if(!attributes){
+        return false;
+    }
     for(const attribute in attributes){
         if(attribute == "skuCombineContent"){
             const skuCombineContent = attributes[attribute];
@@ -18,7 +21,10 @@ export function isNeedCombine(components : { [key: string]: any }) : boolean {
 }
 
 export function isNeedSellPointCollection(components : { [key: string]: any }) : boolean {
-    const attributes = components.sku.props.attributes;
+    const attributes = components.sku?.props?.attributes;
+    if(!attributes){
+        return false;
+    }
     for(const attribute in attributes){
         if(attribute == "sellPointCollection"){
             const sellPointCollection = attributes[attribute];
@@ -127,13 +133,30 @@ export class SaleProBuilder {
             skuList.push(skuProps);
         }
         if (minPrice > 0) {
-            draftData.price = await this.getPrice(minPrice);
+            draftData.price = await this.getActiveMinPrice(skuItem);
         }
         if (quantity > 0) {
             draftData.quantity = quantity.toString();
         }
         draftData.sku = skuList;
 
+    }
+
+    async getActiveMinPrice(skuItem: DoorSkuDTO) {
+        const salesSkus = skuItem.doorSkuSaleInfo.salesSkus;
+        let minPrice = 0;
+        for (let index = 0; index < salesSkus.length; index++) {
+            const sale = salesSkus[index];
+            const quantity = Number(sale.quantity);
+            if(quantity <= 0){
+                continue;
+            }
+            if (minPrice == 0 || Number(sale.price) < minPrice) {
+                minPrice = Number(sale.price);
+            }
+        }
+        log.info("getActiveMinPrice minPrice is ", minPrice);
+        return await this.getPrice(minPrice);
     }
 
     buildSalePropKey(salePropPath: string) {

@@ -184,7 +184,15 @@ export class UpdateDraftStep extends AbsPublishStep {
                 }
             }
             if(dataSource.label.includes("净含量")){
-                draftCatProp[dataSource.name] = "20g";
+                draftCatProp[dataSource.name] = "1g";
+                continue;
+            }
+            if(dataSource.uiType == "taoSirProp"){
+                const units = dataSource.units;
+                if(units && units.length > 0){
+                    draftCatProp[dataSource.name] = "1" + units[0].text;
+                }
+                continue;
             }
             const catPropDataSource = dataSource.dataSource;
             if(!catPropDataSource){
