@@ -9,7 +9,7 @@ import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from '../monit
 import log from 'electron-log';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
 import { DoorRecord } from '@model/door/door';
-import { DoorEngine, getRealChromePath } from '../engine';
+import { DoorEngine, getPlatform, getRealChromePath } from '../engine';
 import { DoorEntity } from '../entity';
 const browserMap = new Map<string, Browser>();
 
@@ -579,55 +579,3 @@ function getSecChUa(platform : any){
     return result.join(", ");
 }
 
-export async function initPlatform(){
-    let browser : Browser | undefined = undefined;
-    try{
-        let platform = await getPlatform();
-        if(platform){
-            return platform;
-        }
-        browser = await chromium.launch({
-            headless: false,
-            args: [
-            '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
-            '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
-            '--disable-setuid-sandbox',
-            '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
-          ]
-         });
-        const context = await browser.newContext();
-        const page = await context.newPage();
-        await page.goto("https://www.baidu.com");
-        platform = await setPlatform(page);
-        log.info("login platform is ", JSON.stringify(platform));
-        return platform;
-    }catch(error){
-        log.error("initPlatform error", error);
-    }finally{
-        if(browser){
-            await browser.close();
-        }
-    }
-}
-
-export async function setPlatform(page : Page){
-    const platform = await page.evaluate(() => {
-        // @ts-ignore
-        const navigatorObj = navigator;
-        const result : any = {};
-        for(let key in navigatorObj){
-            result[key] = navigatorObj[key];
-        }
-        return result;
-    });
-    set("browserPlatform", JSON.stringify(platform));
-    return platform;
-}
-
-export async function getPlatform(){
-    const browserPlatform = await get("browserPlatform");
-    if(browserPlatform){
-        return JSON.parse(browserPlatform);
-    }
-    return undefined;
-}

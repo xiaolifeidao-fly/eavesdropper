@@ -88,6 +88,7 @@ export class MonitorPxxLogin extends PxxLoginApi {
     async saveByJson(resourceId : number, rawData : string, url : string, doorKey : string, itemKey : string, type : string){
         try{
             const jsonData = JSON.parse(rawData);
+            log.info("jsonData ", JSON.stringify(jsonData));
             const initDataObj = jsonData?.store?.initDataObj;
             if(!initDataObj){
                 log.warn(itemKey, " initDataObj not found");
