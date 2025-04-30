@@ -322,3 +322,11 @@ func updateShopAndResource(shop *models.Shop, expireTime time.Time) error {
 
 	return nil
 }
+
+func GetShopStatusByExpirationDate(expirationDate *base.Time) dto.ShopStatusEnum {
+	if expirationDate == nil || expirationDate.Before(base.TimeNow(time.Now())) {
+		return dto.LoseEfficacy
+	}
+
+	return dto.Effective
+}

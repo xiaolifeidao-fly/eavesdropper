@@ -162,6 +162,8 @@ export class SkuTaskPageResp {
     public failedCount: number,
     public cancelCount: number,
     public existenceCount: number,
+    public expirationDate: string,
+    public resourceStatus: string,
   ) {
     this.id = id
     this.resourceId = resourceId
@@ -178,6 +180,8 @@ export class SkuTaskPageResp {
     this.failedCount = failedCount
     this.cancelCount = cancelCount
     this.existenceCount = existenceCount
+    this.expirationDate = expirationDate
+    this.resourceStatus = resourceStatus
   }
 }
 
