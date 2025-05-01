@@ -12,7 +12,8 @@ export class GatherBatch {
     public sourceId: number,
     public viewTotal: number,
     public gatherTotal: number,
-    public favoriteTotal: number
+    public favoriteTotal: number,
+    public resourceId: number,
   ) {
     this.id = id
     this.userId = userId
@@ -27,6 +28,7 @@ export class GatherBatch {
     this.viewTotal = viewTotal
     this.gatherTotal = gatherTotal
     this.favoriteTotal = favoriteTotal
+    this.resourceId = resourceId
   }
 }
 

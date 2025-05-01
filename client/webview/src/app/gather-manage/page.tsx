@@ -138,7 +138,7 @@ export default function GatherManage() {
     }
 
     const monitor = new MonitorPxxSkuApi()
-    monitor.openGatherTool(record.id)
+    monitor.openGatherTool(record.resourceId, record.id)
   }
 
   // 发布商品

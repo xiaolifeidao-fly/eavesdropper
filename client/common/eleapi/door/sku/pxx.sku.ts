@@ -8,8 +8,8 @@ export class MonitorPxxSkuApi extends ElectronApi{
     }
 
     @InvokeType(Protocols.INVOKE)
-    async monitorSku(gatherBatchId: number){
-        return await this.invokeApi("monitorSku", gatherBatchId);
+    async monitorSku(resourceId: number, gatherBatchId : number){
+        return await this.invokeApi("monitorSku", resourceId, gatherBatchId);
     }
 
     @InvokeType(Protocols.TRRIGER)
@@ -28,8 +28,8 @@ export class MonitorPxxSkuApi extends ElectronApi{
     }
 
     @InvokeType(Protocols.INVOKE)
-    async openGatherTool(gatherBatchId: number): Promise<boolean> {
-        return await this.invokeApi('openGatherTool', gatherBatchId);
+    async openGatherTool(resourceId: number, gatherBatchId : number): Promise<boolean> {
+        return await this.invokeApi('openGatherTool', resourceId, gatherBatchId);
     }
 
     @InvokeType(Protocols.INVOKE)

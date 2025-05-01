@@ -29,9 +29,8 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
     private currentPage: Page | null = null;
     
     @InvokeType(Protocols.INVOKE)
-    async monitorSku(gatherBatchId: number){
-        log.info("open pxx resourceId is ", gatherBatchId);
-        const resourceId = 11111;
+    async monitorSku(resourceId: number, gatherBatchId : number){
+        log.info("open pxx resourceId is ", resourceId);
         try{
             const engine = new PxxEngine(resourceId, false);
             const url = "https://mobile.yangkeduo.com/";
@@ -53,7 +52,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             log.info("open wait monitor");
             const result = await engine.openWaitMonitor(page, url, monitor, {});
             if(result){
-                this.saveSku(gatherBatchId, context, monitor.getType());
+                this.saveSku(resourceId, gatherBatchId, context, monitor.getType());
             }
             return result;
         } catch(error){
@@ -61,7 +60,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         }
     }
 
-    saveSku(resourceId : number, context : BrowserContext|undefined, type : string){
+    saveSku(resourceId : number, gatherBatchId : number , context : BrowserContext|undefined, type : string){
         if(!context || monitorConfig[resourceId]){
             return;
         }
@@ -82,7 +81,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                     let rawData = match[0];
                     rawData = rawData.substring(rawData.indexOf("{"), rawData.length);
                     this.saveByJson(rawData, requestUrl, monitorKey, goodsId, type);
-                    this.saveGatherSku(resourceId, goodsId, rawData);  // 保存采集商品
+                    this.saveGatherSku(gatherBatchId, goodsId, rawData);  // 保存采集商品
                 } else {
                     log.info("row data not found");
                 }
@@ -124,20 +123,26 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         // 保存页面的静态HTML
         await this.saveCurrentPageHtml(itemKey);
 
-        // 解析商品信息
-        parseSku(PDD, initDataObj).then(doorSkuDTO => {
-            if(!doorSkuDTO){
-                log.warn(`${itemKey} doorSkuDTO not found`);
-                return;
-            }
+        const doorSkuDTO = await parseSku(PDD, initDataObj);
+        if(!doorSkuDTO){
+            log.warn(`${itemKey} doorSkuDTO not found`);
+            return;
+        }
 
-            // 保存采集商品
-            const gatherSkuCreateReq = new GatherSkuCreateReq(gatherBatchId, doorSkuDTO.baseInfo.title, PDD, doorSkuDTO.doorSkuSaleInfo.saleNum, doorSkuDTO.doorSkuSaleInfo.price, doorSkuDTO.baseInfo.itemId, false);
-            addGatherSku(gatherSkuCreateReq).then(gatherSku => {
-                // 发送采集商品消息
-                this.send('onGatherSkuMessage', gatherSku);
-            });
-        });
+        // 保存采集商品
+        const gatherSkuCreateReq = new GatherSkuCreateReq(
+            gatherBatchId,
+            doorSkuDTO.baseInfo.title,
+            PDD,
+            doorSkuDTO.doorSkuSaleInfo.saleNum,
+            doorSkuDTO.doorSkuSaleInfo.price,
+            doorSkuDTO.baseInfo.itemId,
+            false
+        )
+
+        const gatherSku = await addGatherSku(gatherSkuCreateReq);
+        log.info('gatherSku: ', gatherSku);
+        this.send('onGatherSkuMessage', gatherSku);
     }
 
     private async saveCurrentPageHtml(itemKey: string): Promise<void> {
@@ -228,9 +233,11 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
     }
 
     @InvokeType(Protocols.INVOKE)
-  async openGatherTool(gatherBatchId: number): Promise<boolean> {
+  async openGatherTool(resourceId: number, gatherBatchId : number): Promise<boolean> {
     // 打开更新页面
     const updateWindow = new BrowserWindow({
+      x: 0,
+      y: 0,
       width: 450,
       height: 1000,
       alwaysOnTop: true,

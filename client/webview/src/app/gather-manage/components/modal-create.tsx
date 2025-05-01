@@ -31,7 +31,7 @@ const ModalCreate = (props: ModalCreateProps) => {
       form.setFieldsValue({
         name: data.name,
         source: data.source,
-        resourceId: data.resourceId
+        resourceId: data.resourceId && data.resourceId !== 0 ? data.resourceId : undefined
       })
     }
 
@@ -62,8 +62,6 @@ const ModalCreate = (props: ModalCreateProps) => {
 
   // 提交表单
   const onFinish = async (values: FromInfo) => {
-    const onFinishApi = isUpdate ? addGatherBatch : updateGatherBatch
-
     const req = {
       name: values.name,
       source: values.source,

@@ -34,7 +34,7 @@ func UpdateGatherBatch(ctx *gin.Context) {
 	var err error
 
 	var addDto dto.GatherBatchDTO
-	if err = controller.Bind(ctx, &addDto, binding.JSON); err != nil {
+	if err = controller.Bind(ctx, &addDto, nil, binding.JSON); err != nil {
 		logger.Infof("UpdateGatherBatch Bind error: %v", err)
 		controller.Error(ctx, "参数错误")
 		return
@@ -53,7 +53,7 @@ func UpdateGatherBatch(ctx *gin.Context) {
 	gatherBatchDTO.ResourceId = addDto.ResourceId
 
 	// 添加采集批次
-	if gatherBatchDTO, err = services.UpdateGatherBatch(&addDto); err != nil {
+	if gatherBatchDTO, err = services.UpdateGatherBatch(gatherBatchDTO); err != nil {
 		controller.Error(ctx, err.Error())
 		return
 	}

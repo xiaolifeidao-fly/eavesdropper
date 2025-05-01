@@ -55,7 +55,7 @@ const GatherTool = () => {
     setGatherId(Number(gatherId))
     const gatherBatch = await initGatherInfo(Number(gatherId))
     if (gatherBatch) {
-      openPxx(gatherBatch.id)
+      openPxx(gatherBatch.resourceId, gatherBatch.id)
     }
   }
 
@@ -72,6 +72,7 @@ const GatherTool = () => {
       batchNo: gatherBatch.batchNo,
       name: gatherBatch.name,
       source: gatherBatch.source,
+      resourceId: gatherBatch.resourceId,
       createdAt: gatherBatch.createdAt,
       gatherTotal: gatherBatch.gatherTotal,
       viewTotal: gatherBatch.viewTotal,
@@ -117,17 +118,18 @@ const GatherTool = () => {
   }
 
   // 打开PXX
-  const openPxx = async (resourceId: number) => {
+  const openPxx = async (resourceId: number, gatherBatchId: number) => {
     try {
-      if (resourceId == 0) {
+      if (gatherBatchId == 0) {
         message.error('打开PXX失败，请先选择采集批次')
         return
       }
 
       const monitor = new MonitorPxxSkuApi()
-      await monitor.monitorSku(resourceId)
+      await monitor.monitorSku(resourceId, gatherBatchId)
       // 监听PXX采集商品消息
       monitor.onGatherSkuMessage((gatherSku: GatherSku) => {
+        message.success('回调成功')
         gatherDoorSkuHandler(PDD, gatherSku)
       })
     } catch (error: any) {

@@ -5,6 +5,7 @@ interface GatherInfo {
   batchNo: string
   name: string
   source: string
+  resourceId: number,
   createdAt: string
   gatherTotal: number
   viewTotal: number
