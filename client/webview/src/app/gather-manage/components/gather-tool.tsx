@@ -99,6 +99,9 @@ const GatherTool = () => {
 
   const getGatherSkuList = async (gatherId: number, searchValue?: string) => {
     const gatherSkuList = await getGatherBatchSkuList(gatherId, { skuName: searchValue })
+    if (!gatherSkuList || gatherSkuList.length === 0) {
+      return [];
+    }
     const skuViewInfoList: SkuViewInfoI[] = gatherSkuList.map((item) => {
       return {
         id: item.id,
