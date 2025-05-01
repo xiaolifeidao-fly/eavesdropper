@@ -101,7 +101,7 @@ const GatherTool = () => {
   const getGatherSkuList = async (gatherId: number, searchValue?: string) => {
     const gatherSkuList = await getGatherBatchSkuList(gatherId, { skuName: searchValue })
     if (!gatherSkuList || gatherSkuList.length === 0) {
-      return [];
+      return []
     }
     const skuViewInfoList: SkuViewInfoI[] = gatherSkuList.map((item) => {
       return {
@@ -126,11 +126,11 @@ const GatherTool = () => {
       }
 
       const monitor = new MonitorPxxSkuApi()
-      await monitor.monitorSku(resourceId, gatherBatchId)
       // 监听PXX采集商品消息
       monitor.onGatherSkuMessage((gatherSku: GatherSku) => {
-        message.success('回调成功')
         gatherDoorSkuHandler(PDD, gatherSku)
+      }).then(() => {
+        monitor.monitorSku(resourceId, gatherBatchId)
       })
     } catch (error: any) {
       message.error('打开PXX失败', error)

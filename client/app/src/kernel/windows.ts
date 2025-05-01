@@ -69,12 +69,18 @@ const targetWindows : any = {};
 
 export let updateWindow: BrowserWindow | null = null;
 
+export let gatherToolWindow: BrowserWindow | null = null;
+
 export const setMainWindow = (window: BrowserWindow)=>{
     mainWindow = window;
 }
 
 export const setUpdateWindow = (window: BrowserWindow)=>{
     updateWindow = window;
+}
+
+export const setGatherToolWindow = (window: BrowserWindow) => {
+    gatherToolWindow = window
 }
 
 export function getTargetWinodw(windowId: string): TargetWindow{

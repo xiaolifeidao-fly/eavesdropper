@@ -15,7 +15,7 @@ import { shell } from 'electron';
 import { GatherSku, GatherSkuCreateReq } from "@model/gather/gather-sku";
 import { addGatherSku } from "@api/gather/gather-sku.api";
 import { BrowserWindow } from 'electron';
-import { setUpdateWindow } from '@src/kernel/windows'
+import { setGatherToolWindow, gatherToolWindow } from '@src/kernel/windows'
 
 const PDD_URL = "https://mobile.yangkeduo.com/goods1.html?goods_id=";
 
@@ -27,6 +27,11 @@ const monitorConfig : {[key : number] : any} = {};
 export class MonitorPddSku extends MonitorPxxSkuApi {
     
     private currentPage: Page | null = null;
+
+    sendMessage(key : string, ...args: any){
+        gatherToolWindow?.webContents.send(key, ...args);
+        log.info(`sendMessage: ${key}`, args);
+      }
     
     @InvokeType(Protocols.INVOKE)
     async monitorSku(resourceId: number, gatherBatchId : number){
@@ -252,7 +257,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
       }
     })
 
-    setUpdateWindow(updateWindow)
+    setGatherToolWindow(updateWindow)
     const updateUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
     updateWindow.loadURL(updateUrl)
     updateWindow.on('closed', () => {
