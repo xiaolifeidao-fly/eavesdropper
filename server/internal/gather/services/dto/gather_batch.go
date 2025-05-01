@@ -8,10 +8,11 @@ import (
 
 type GatherBatchDTO struct {
 	dto.BaseDTO
-	UserID  uint64 `json:"userId"`
-	BatchNo string `json:"batchNo"`
-	Name    string `json:"name"`
-	Source  string `json:"source"`
+	UserID     uint64 `json:"userId"`
+	BatchNo    string `json:"batchNo"`
+	Name       string `json:"name"`
+	Source     string `json:"source"`
+	ResourceId uint64 `json:"resourceId"`
 
 	Total         int `json:"total"`
 	FavoriteTotal int `json:"favoriteTotal"`
@@ -24,6 +25,7 @@ type GatherBatchPageParamDTO struct {
 	CreatedAtEnd   string `form:"createdAtEnd" search:"type:lte;table:gather_batch;column:created_at"`
 	_              any    `search:"type:order;table:gather_batch;column:id;default:desc"`
 	_              any    `search:"type:isNull;table:gather_batch;column:deleted_at"`
+	_              any    `search:"type:left;table:gather_batch;join:resource;as:resource;on:id:resource_id"`
 }
 
 type GatherBatchPageDTO struct {
@@ -32,6 +34,8 @@ type GatherBatchPageDTO struct {
 	BatchNo       string    `json:"batchNo" select:"table:gather_batch;column:batch_no"`
 	Name          string    `json:"name" select:"table:gather_batch;column:name"`
 	Source        string    `json:"source" select:"table:gather_batch;column:source"`
+	ResourceId    uint64    `json:"resourceId" select:"table:gather_batch;column:resource_id"`
+	Account       string    `json:"account" select:"table:resource;column:account"`
 	CreatedAt     base.Time `json:"createdAt" select:"table:gather_batch;column:created_at"`
 	Total         int       `json:"total"`
 	FavoriteTotal int       `json:"favoriteTotal"`

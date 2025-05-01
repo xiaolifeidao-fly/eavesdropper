@@ -28,6 +28,20 @@ func AddGatherBatch(addDto *dto.GatherBatchDTO) (*dto.GatherBatchDTO, error) {
 	return addDto, nil
 }
 
+func UpdateGatherBatch(addDto *dto.GatherBatchDTO) (*dto.GatherBatchDTO, error) {
+	var err error
+	gatherRepository := repositories.GatherBatchRepository
+
+	gatherBatch := database.ToPO[models.GatherBatch](addDto)
+	if _, err = gatherRepository.SaveOrUpdate(gatherBatch); err != nil {
+		logger.Errorf("UpdateGatherBatch failed, with error is %v", err)
+		return nil, errors.New("操作数据库错误")
+	}
+
+	addDto = database.ToDTO[dto.GatherBatchDTO](gatherBatch)
+	return addDto, nil
+}
+
 func GetGatherBatchNo(userId uint64, source string) (string, error) {
 	var err error
 	gatherRepository := repositories.GatherBatchRepository

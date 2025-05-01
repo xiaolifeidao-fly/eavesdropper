@@ -10,6 +10,11 @@ export const addGatherBatch = async (req: GatherBatchCreateReq) => {
   return plainToClass(GatherBatch, result)
 }
 
+export const updateGatherBatch = async (id: number, req: GatherBatchCreateReq) => {
+  const result = await instance.put(`/gather-batch/${id}`, req)
+  return plainToClass(GatherBatch, result)
+}
+
 export const getGatherBatchPage = async (req: GatherBatchPageReq) => {
   const result = await instance.get(`/gather-batch/page`, { params: req })
   return plainToClass(BasePageResp<GatherBatchPage>, result)

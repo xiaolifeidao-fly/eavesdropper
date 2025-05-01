@@ -4,7 +4,12 @@ import ModalCreate from './modal-create'
 import GatherTool from './gather-tool'
 const TARGET = {
   create: {
-    title: '创建采集',
+    title: '创建采集批次',
+    width: 600,
+    target: ModalCreate
+  },
+  update: {
+    title: '修改采集批次',
     width: 600,
     target: ModalCreate
   },

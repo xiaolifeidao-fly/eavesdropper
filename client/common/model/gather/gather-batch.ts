@@ -31,9 +31,10 @@ export class GatherBatch {
 }
 
 export class GatherBatchCreateReq {
-  constructor(public name: string, public source: string) {
+  constructor(public name: string, public source: string, public resourceId: number) {
     this.name = name
     this.source = source
+    this.resourceId = resourceId
   }
 }
 
@@ -53,6 +54,8 @@ export class GatherBatchPage {
     public batchNo: string,
     public name: string,
     public source: string,
+    public resourceId: number,
+    public account: string,
     public createdAt: string
   ) {
     this.id = id
@@ -61,5 +64,7 @@ export class GatherBatchPage {
     this.name = name
     this.source = source
     this.createdAt = createdAt
+    this.resourceId = resourceId
+    this.account = account
   }
 }

@@ -1,14 +1,14 @@
 'use client'
 import React, { useRef, useState } from 'react'
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 
 import styles from './index.module.less'
 import OpenModal from './components/open-modal'
 import Layout from '@/components/layout'
 import { getGatherBatchPage, getGatherBatchFavoriteSkuList } from '@api/gather/gather-batch.api'
 import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
-import { PDD_URL } from '@enums/source'
+import { PDD, PDD_URL } from '@enums/source'
 import SkuPushStepsForm from '../sku/components/SkuPushSteps'
 
 export default function GatherManage() {
@@ -30,7 +30,7 @@ export default function GatherManage() {
       align: 'center'
     },
     {
-      title: '采集批次',
+      title: '采集备注',
       dataIndex: 'name',
       search: false,
       key: 'name',
@@ -41,6 +41,13 @@ export default function GatherManage() {
       dataIndex: 'source',
       search: false,
       key: 'source',
+      align: 'center'
+    },
+    {
+      title: '采集账号',
+      dataIndex: 'account',
+      search: false,
+      key: 'account',
       align: 'center'
     },
     {
@@ -94,15 +101,22 @@ export default function GatherManage() {
           <div style={{ display: 'flex', gap: '4px' }}>
             <Button
               type='link'
+              onClick={() => openModal('update', record)} // 修改操作
+              style={{ display: 'inline-block', paddingRight: '2px' }} // 缩小右边距
+            >
+              修改
+            </Button>
+            <Button
+              type='link'
               onClick={() => openGatherTool(record)} // 查看操作
-              style={{ display: 'inline-block', paddingRight: '4px' }} // 缩小右边距
+              style={{ display: 'inline-block', paddingLeft: '2px', paddingRight: '2px' }} // 缩小右边距
             >
               开始采集
             </Button>
             <Button
               type='link'
               onClick={() => publishGatherSku(record)} // 导出操作
-              style={{ display: 'inline-block', paddingLeft: '4px' }}>
+              style={{ display: 'inline-block', paddingLeft: '2px' }}>
               发布商品
             </Button>
           </div>
@@ -113,6 +127,16 @@ export default function GatherManage() {
 
   // 打开采集工具
   const openGatherTool = (record: any) => {
+    if (record.source !== PDD) {
+      message.error('暂不支持除PDD外的其他商品来源')
+      return
+    }
+
+    if (!record.resourceId || record.resourceId === 0) {
+      message.error('请先选择采集资源账号,可在修改操作中选择')
+      return
+    }
+
     const monitor = new MonitorPxxSkuApi()
     monitor.openGatherTool(record.id)
   }
@@ -121,6 +145,11 @@ export default function GatherManage() {
   const publishGatherSku = async (record: any) => {
     // 查询采集批次收藏商品
     const res = await getGatherBatchFavoriteSkuList(record.id)
+
+    if (!res || res.length === 0) {
+      message.error('请先采集商品,在发布商品')
+      return
+    }
 
     const urls = res.map((item: any) => {
       const url = `${PDD_URL}${item.skuId}`

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { Form, Input, Button, Space, Select, message } from 'antd'
 
-import { addGatherBatch } from '@api/gather/gather-batch.api'
-import { getResourceSourceList } from '@api/resource/resource.api'
-
+import { addGatherBatch, updateGatherBatch } from '@api/gather/gather-batch.api'
+import { getResourceSourceList, getAllResourceList } from '@api/resource/resource.api'
+import { PDD } from '@enums/source'
 
 interface ModalCreateProps {
+  data?: any
   hideModal: () => void
   onSuccess?: () => void
 }
@@ -13,42 +14,71 @@ interface ModalCreateProps {
 interface FromInfo {
   name: string
   source: string
+  resourceId: number
 }
 
 const ModalCreate = (props: ModalCreateProps) => {
   const [form] = Form.useForm<FromInfo>()
-  const { hideModal, onSuccess } = props
+  const { hideModal, onSuccess, data } = props
 
   const [sourceList, setSourceList] = useState<any[]>([])
   const [resourceList, setResourceList] = useState<any[]>([])
+  const [isUpdate, setIsUpdate] = useState(false)
 
   useEffect(() => {
+    if (data) {
+      setIsUpdate(true)
+      form.setFieldsValue({
+        name: data.name,
+        source: data.source,
+        resourceId: data.resourceId
+      })
+    }
+
     getResourceSourceList().then((resp) => {
       const sourceList = resp.map((item: any) => ({
         label: item.label,
-        value: item.value
+        value: item.value,
+        disabled: item.value !== PDD
       }))
       setSourceList(sourceList)
     })
 
-    // getResourceList().then((resp) => {
-    //   const resourceList = resp.map((item: any) => ({
-    //     label: item.label,
-    //     value: item.value
-    //   }))
-    //   setResourceList(resourceList)
-    // })
+    getAllResourceList().then((resp) => {
+      const resourceList: any[] = []
+      resp.forEach((item) => {
+        if (item.source !== PDD) {
+          return
+        }
+
+        resourceList.push({
+          label: item.account,
+          value: item.id
+        })
+      })
+      setResourceList(resourceList)
+    })
   }, [])
 
   // 提交表单
   const onFinish = async (values: FromInfo) => {
-    const result = await addGatherBatch({
+    const onFinishApi = isUpdate ? addGatherBatch : updateGatherBatch
+
+    const req = {
       name: values.name,
-      source: values.source
-    })
+      source: values.source,
+      resourceId: values.resourceId
+    }
+
+    let result
+    if (isUpdate) {
+      result = await updateGatherBatch(data.id, req)
+    } else {
+      result = await addGatherBatch(req)
+    }
 
     if (!result) {
-      message.error('采集失败')
+      message.error('创建或者更新采集批次失败')
       return
     }
 
@@ -63,20 +93,21 @@ const ModalCreate = (props: ModalCreateProps) => {
       wrapperCol={{ span: 20 }} // 内容宽度
       onFinish={onFinish}>
       <Form.Item
-        label='采集名称'
+        label='采集备注'
         name='name'>
-        <Input placeholder='请输入采集任务名称' />
+        <Input placeholder='请输入采集任务备注' />
       </Form.Item>
       <Form.Item
         label='采集来源'
         name='source'
         rules={[{ required: true, message: '请选择采集来源' }]}>
         <Select
+          disabled={isUpdate}
           options={sourceList}
           placeholder='请选择采集来源'
         />
       </Form.Item>
-      {/* <Form.Item
+      <Form.Item
         label='采集账号'
         name='resourceId'
         rules={[{ required: true, message: '请选择采集账号' }]}>
@@ -84,7 +115,7 @@ const ModalCreate = (props: ModalCreateProps) => {
           options={resourceList}
           placeholder='请选择采集账号'
         />
-      </Form.Item> */}
+      </Form.Item>
       <Form.Item style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 0 }}>
         <Space>
           <Button

@@ -19,11 +19,46 @@ func LoadGatherBatchRouter(router *gin.RouterGroup) {
 	r := router.Group("/gather-batch")
 	{
 		r.Use(middleware.Authorization()).POST("", AddGatherBatch)
+		r.Use(middleware.Authorization()).PUT("/:id", UpdateGatherBatch)
 		r.Use(middleware.Authorization()).GET("/page", PageGatherBatch)
 		r.Use(middleware.Authorization()).GET("/:id/sku-list", GetGatherBatchSkuList)
 		r.Use(middleware.Authorization()).GET("/:id", GetGatherBatchInfo)
 		r.Use(middleware.Authorization()).GET("/:id/favorite-sku-list", GetGatherBatchFavoriteSkuList)
 	}
+}
+
+// UpdateGatherBatch
+// @Description 更新采集批次
+// @Router /gather [put]
+func UpdateGatherBatch(ctx *gin.Context) {
+	var err error
+
+	var addDto dto.GatherBatchDTO
+	if err = controller.Bind(ctx, &addDto, binding.JSON); err != nil {
+		logger.Infof("UpdateGatherBatch Bind error: %v", err)
+		controller.Error(ctx, "参数错误")
+		return
+	}
+
+	addDto.UserID = common.GetLoginUserID()
+	addDto.UpdatedBy = common.GetLoginUserID()
+
+	var gatherBatchDTO *dto.GatherBatchDTO
+	if gatherBatchDTO, err = services.GetGatherBatchByID(addDto.ID); err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	gatherBatchDTO.Name = addDto.Name
+	gatherBatchDTO.ResourceId = addDto.ResourceId
+
+	// 添加采集批次
+	if gatherBatchDTO, err = services.UpdateGatherBatch(&addDto); err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	controller.OK(ctx, gatherBatchDTO)
 }
 
 // AddGatherBatch
