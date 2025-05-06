@@ -422,7 +422,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
            // 检查文件是否存在
            if (fs.existsSync(filePath)) {
-                 getGatherWindow().webContents.loadURL(filePath);
+                 getGatherWindow().webContents.loadFile(filePath);
             //     const htmlWindow = getGatherWindow();
             //     // 先加载空白页
             //     htmlWindow.webContents.loadURL('about:blank');
