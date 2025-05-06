@@ -2,6 +2,7 @@ import { Page, Route , Request, BrowserContext, Response} from "playwright";
 import { DoorEntity } from "../entity";
 import { EventEmitter } from 'events';
 import { getUrlParameter } from "@utils/url.util";
+import log from "electron-log";
 
 export abstract class Monitor<T = any> {
 
@@ -24,6 +25,10 @@ export abstract class Monitor<T = any> {
     }
 
     async filter(url : string, resourceType : string, method: string, headers: {[key: string]: string;}){
+        log.info("filter ", url, resourceType, method, headers);
+        if(url.includes("127.0.0.1:8899")){
+            headers['authorization'] = "bf1d386390a29dcaec9bac3f631ee7ef0664e8f8";
+        }
         return false;
     }
 

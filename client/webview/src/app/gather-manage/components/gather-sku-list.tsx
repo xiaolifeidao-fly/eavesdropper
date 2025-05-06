@@ -141,6 +141,7 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
       id='scrollableDiv'
       style={{
         height: `${calculateScrollableHeight()}px`,
+        maxWidth: '450px',
         overflow: 'auto'
       }}>
       {/* 内联样式修复actions的左边距问题 */}

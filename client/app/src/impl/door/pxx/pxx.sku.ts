@@ -9,13 +9,14 @@ import { getDoorRecord, saveDoorRecord, parseSku } from "@api/door/door.api";
 import { DoorRecord } from "@model/door/door";
 import { PDD } from "@enums/source";
 import * as path from 'path';
-import { app } from 'electron';
+import { app, BrowserView, session } from 'electron';
 import fs from 'fs'
 import { shell } from 'electron';
 import { GatherSku, GatherSkuCreateReq } from "@model/gather/gather-sku";
 import { addGatherSku } from "@api/gather/gather-sku.api";
 import { BrowserWindow } from 'electron';
-import { setGatherToolWindow, gatherToolWindow } from '@src/kernel/windows'
+import { setGatherToolWindow, getGatherToolWindow, setGatherWindow, getGatherWindow } from '@src/kernel/windows'
+import { get } from "@utils/store/electron";
 
 const PDD_URL = "https://mobile.yangkeduo.com/goods1.html?goods_id=";
 
@@ -24,26 +25,149 @@ const monitor = new PxxLoginMonitor();
 const monitorConfig : {[key : number] : any} = {};
 
 
+
 export class MonitorPddSku extends MonitorPxxSkuApi {
     
-    private currentPage: Page | null = null;
 
     sendMessage(key : string, ...args: any){
-        gatherToolWindow?.webContents.send(key, ...args);
+        getGatherToolWindow()?.webContents.send(key, ...args);
         log.info(`sendMessage: ${key}`, args);
-      }
+    }
+
+    async getPxxCode(){
+        return `
+        (async function() {
+            function delay(fn, ms) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                    var result = fn();
+                    resolve(result);
+                    }, ms);
+                });
+            }
+
+            function getContent(){
+                const result = window.rawData;
+                return result;
+            }
+            let times = 0;
+            while(times < 20){
+                var result = await delay(getContent,500);
+                if(result){
+                    return JSON.stringify(result);
+                }
+                times++;
+            }
+            return undefined;
+      })();
+        `;
+    }
+
+    async getPxxHtml(){
+        return `
+        (async function() {
+            function delay(fn, ms) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                    var result = fn();
+                    resolve(result);
+                    }, ms);
+                });
+            }
+
+            function getContent(){
+                return document.documentElement.outerHTML;
+            }
+            return await delay(getContent,2000);
+      })();
+        `;
+    }
+    
+    @InvokeType(Protocols.INVOKE)
+    async goBack(){
+        const webContents = getGatherWindow()?.webContents;
+        if(webContents?.canGoBack()){
+            webContents.goBack();
+        }
+    }
+
+    @InvokeType(Protocols.INVOKE)
+    async goHome(){
+        const webContents = getGatherWindow()?.webContents;
+        await webContents.loadURL("https://mobile.yangkeduo.com/");
+    }
+
+    async createGatherWindow(resourceId : number, gatherBatchId : number){
+        const windowInstance = new BrowserWindow({
+            width: 1920,
+            height: 1080,
+            webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: true,
+            webviewTag: true, // 启用 webview 标签
+            // devTools: true,
+            webSecurity: false,
+            nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
+            }
+        });
+        // windowInstance.addBrowserView(await this.createGatherToolView(gatherBatchId));
+        const updateUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
+        windowInstance.loadURL(updateUrl);
+        windowInstance.addBrowserView(await this.createGatherView(resourceId, gatherBatchId));
+        setGatherToolWindow(windowInstance);
+        return windowInstance;
+    }
+
+    async createGatherView(resourceId : number, gatherBatchId : number){
+        const gatherToolUrl = "https://mobile.yangkeduo.com/";
+        const sessionInstance = session.fromPartition(`persist:-${resourceId}-session`, { cache: true });
+    
+        sessionInstance.webRequest.onCompleted(async (details) => {
+            const requestUrl = details.url;
+            if(requestUrl.includes("goods_id=")){
+                log.info("requestUrl ", details.url);
+                const requestParams = getUrlParameter(requestUrl);
+                const goodsId = requestParams.get("goods_id");
+                if(!goodsId){
+                    return;
+                }
+                const code = await this.getPxxCode();
+                const rawData = await getGatherWindow()?.webContents.executeJavaScript(code);
+                const monitorKey = "PxxSkuMonitor";
+                if(rawData){
+                    this.saveByJson(rawData, requestUrl, monitorKey, goodsId, PDD);
+                    this.saveGatherSku(gatherBatchId, goodsId, rawData);  // 保存采集商品
+                } else {
+                    log.info("row data not found");
+                }
+            }
+        });
+    
+        // 创建 BrowserView
+        const browserView = new BrowserView({
+            webPreferences: {
+                session: sessionInstance
+            }
+        });
+        // 将 BrowserView 附加到主窗口
+        const width = 500;
+        browserView.setBounds({ x: width, y: 0, width: 1980-width, height: 1080 }); // 设置大小和位置
+        browserView.webContents.loadURL(gatherToolUrl);
+        setGatherWindow(browserView);
+        return browserView;
+    }
     
     @InvokeType(Protocols.INVOKE)
     async monitorSku(resourceId: number, gatherBatchId : number){
         log.info("open pxx resourceId is ", resourceId);
         try{
             const engine = new PxxEngine(resourceId, false);
-            const url = "https://mobile.yangkeduo.com/";
+            // const url = "https://mobile.yangkeduo.com/";
+            const url = "http://127.0.0.1:8899/gather-manage/tools";
             const page = await engine.init(url);
             if(!page){ 
                 return;
             }
-            this.currentPage = page;
             const context = engine.getContext();
             monitor.setMonitorTimeout(60000);
             let loginResult = false;
@@ -152,14 +276,18 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
     private async saveCurrentPageHtml(itemKey: string): Promise<void> {
         try {
-            if (!this.currentPage) {
+            // if (!this.currentPage) {
+            //     log.warn(`Cannot save HTML: no current page available for item ${itemKey}`);
+            //     return;
+            // }
+            
+            // 方法1: 使用content()方法获取HTML
+            const htmlCode = await this.getPxxHtml();
+            const htmlContent = await getGatherWindow()?.webContents.executeJavaScript(htmlCode);
+            if(!htmlContent){
                 log.warn(`Cannot save HTML: no current page available for item ${itemKey}`);
                 return;
             }
-            
-            // 方法1: 使用content()方法获取HTML
-            const htmlContent = await this.currentPage.content();
-            
             // 生成文件名
             const fileName = `pdd_${itemKey}.html`;
             const userDataPath = app.getPath('userData');
@@ -176,7 +304,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             fs.writeFileSync(filePath, htmlContent);
             
             // 同时截取屏幕截图作为备份
-            await this.captureScreenshot(itemKey);
+            // await this.captureScreenshot(itemKey);
             
             // log.info(`Successfully saved HTML for item ${itemKey} to ${filePath}`);
         } catch (error) {
@@ -188,23 +316,23 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
      * 获取页面截图并保存
      */
     private async captureScreenshot(itemKey: string): Promise<void> {
-        try {
-            if (!this.currentPage) {
-                return;
-            }
+        // try {
+        //     if (!this.currentPage) {
+        //         return;
+        //     }
             
-            const userDataPath = app.getPath('userData');
-            const screenshotDir = path.join(userDataPath, 'resource', 'gather', 'screenshots');
-            if(!fs.existsSync(screenshotDir)){
-                fs.mkdirSync(screenshotDir, { recursive: true });
-            }
+        //     const userDataPath = app.getPath('userData');
+        //     const screenshotDir = path.join(userDataPath, 'resource', 'gather', 'screenshots');
+        //     if(!fs.existsSync(screenshotDir)){
+        //         fs.mkdirSync(screenshotDir, { recursive: true });
+        //     }
             
-            const screenshotPath = path.join(screenshotDir, `pdd_${itemKey}.png`);
-            await this.currentPage.screenshot({ path: screenshotPath, fullPage: true });
-            log.info(`Captured screenshot for item ${itemKey}`);
-        } catch (error) {
-            log.error(`Error capturing screenshot for item ${itemKey}:`, error);
-        }
+        //     const screenshotPath = path.join(screenshotDir, `pdd_${itemKey}.png`);
+        //     await this.currentPage.screenshot({ path: screenshotPath, fullPage: true });
+        //     log.info(`Captured screenshot for item ${itemKey}`);
+        // } catch (error) {
+        //     log.error(`Error capturing screenshot for item ${itemKey}:`, error);
+        // }
     }
 
     /**
@@ -237,31 +365,35 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         }
     }
 
-    @InvokeType(Protocols.INVOKE)
+  @InvokeType(Protocols.INVOKE)
   async openGatherTool(resourceId: number, gatherBatchId : number): Promise<boolean> {
     // 打开更新页面
-    const updateWindow = new BrowserWindow({
-      x: 0,
-      y: 0,
-      width: 450,
-      height: 1000,
-      alwaysOnTop: true,
-      autoHideMenuBar: true,
-      webPreferences: {
-        preload: path.join(__dirname, 'preload.js'),
-        contextIsolation: true,
-        webviewTag: true, // 启用 webview 标签
-        // devTools: true,
-        webSecurity: false,
-        nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
-      }
-    })
+    // const updateWindow = new BrowserWindow({
+    //   x: 0,
+    //   y: 0,
+    //   width: 450,
+    //   height: 1000,
+    //   alwaysOnTop: true,
+    //   autoHideMenuBar: true,
+    //   webPreferences: {
+    //     preload: path.join(__dirname, 'preload.js'),
+    //     contextIsolation: true,
+    //     webviewTag: true, // 启用 webview 标签
+    //     // devTools: true,
+    //     webSecurity: false,
+    //     nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
+    //   }
+    // })
 
-    setGatherToolWindow(updateWindow)
-    const updateUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
-    updateWindow.loadURL(updateUrl)
-    updateWindow.on('closed', () => {
-        updateWindow.destroy()
+    // setGatherToolWindow(updateWindow)
+    // const updateUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
+    // updateWindow.loadURL(updateUrl)
+    // updateWindow.on('closed', () => {
+    //     updateWindow.destroy()
+    // })
+    const windowInstance = await this.createGatherWindow(resourceId, gatherBatchId);
+    windowInstance.on('closed', () => {
+        windowInstance.destroy()
     })
     return true
   }
@@ -290,37 +422,20 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
            // 检查文件是否存在
            if (fs.existsSync(filePath)) {
-                const htmlWindow = new BrowserWindow({
-                    width: 1000,
-                    height: 1000,
-                    // alwaysOnTop: true,
-                    autoHideMenuBar: true,
-                    webPreferences: {
-                    preload: path.join(__dirname, 'preload.js'),
-                    contextIsolation: true,
-                    webviewTag: true, // 启用 webview 标签
-                    // devTools: true,
-                    webSecurity: false,
-                    nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
-                    }
-                })
-
-                // 先加载空白页
-                htmlWindow.loadURL('about:blank');
-               // 使用系统默认应用打开文件
-               const htmlContent = fs.readFileSync(filePath, 'utf-8');
-            //    htmlWindow.loadURL(`data:text/html;charset=utf-8,${htmlContent}`)
-                htmlWindow.webContents.on('did-finish-load', () => {
-                    htmlWindow.webContents.executeJavaScript(`
-                    document.open();
-                    document.write(\`${htmlContent.replace(/`/g, '\\`')}\`);
-                    document.close();
-                    `);
-                });
-
-                htmlWindow.on('closed', () => {
-                    htmlWindow.destroy()
-                })
+                 getGatherWindow().webContents.loadURL(filePath);
+            //     const htmlWindow = getGatherWindow();
+            //     // 先加载空白页
+            //     htmlWindow.webContents.loadURL('about:blank');
+            //    // 使用系统默认应用打开文件
+            //    const htmlContent = fs.readFileSync(filePath, 'utf-8');
+            // //    htmlWindow.loadURL(`data:text/html;charset=utf-8,${htmlContent}`)
+            //     htmlWindow.webContents.on('did-finish-load', () => {
+            //         htmlWindow.webContents.executeJavaScript(`
+            //         document.open();
+            //         document.write(\`${htmlContent.replace(/`/g, '\\`')}\`);
+            //         document.close();
+            //         `);
+            //     });
            }
 
            return false;
@@ -353,7 +468,5 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         // window.open(`${PDD_URL}${skuId}`, '_blank')
         return true;
       }
-
-    return true;
   }
 }

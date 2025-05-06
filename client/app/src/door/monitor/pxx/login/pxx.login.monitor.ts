@@ -1,11 +1,12 @@
 
 import { PxxMonitorRequest } from "../pxx.monitor";
-
+import log from "electron-log";
 export class PxxLoginMonitor extends PxxMonitorRequest<{}>{
     hasLogin : boolean = false;
 
     isLogin(headers: { [key: string]: string; }): boolean{
         const cookies = headers['cookie'];
+        log.info("pxx cookies ", cookies);
         if(!cookies){
             return false;
         }

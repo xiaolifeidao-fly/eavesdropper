@@ -23,6 +23,16 @@ export class MonitorPxxSkuApi extends ElectronApi{
     }
 
     @InvokeType(Protocols.INVOKE)
+    async goBack(){
+        return await this.invokeApi('goBack');
+    }
+
+    @InvokeType(Protocols.INVOKE)
+    async goHome(){
+        return await this.invokeApi('goHome');
+    }
+
+    @InvokeType(Protocols.INVOKE)
     async openLocalHtmlFile(source: string, itemKey: string): Promise<boolean> {
         return await this.invokeApi('openLocalHtmlFile', source, itemKey);
     }

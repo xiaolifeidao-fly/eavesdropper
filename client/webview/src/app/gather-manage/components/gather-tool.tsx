@@ -130,7 +130,7 @@ const GatherTool = () => {
       monitor.onGatherSkuMessage((gatherSku: GatherSku) => {
         gatherDoorSkuHandler(PDD, gatherSku)
       }).then(() => {
-        monitor.monitorSku(resourceId, gatherBatchId)
+        // monitor.monitorSku(resourceId, gatherBatchId)
       })
     } catch (error: any) {
       message.error('打开PXX失败', error)
