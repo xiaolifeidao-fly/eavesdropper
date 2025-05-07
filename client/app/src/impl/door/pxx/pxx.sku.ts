@@ -97,7 +97,8 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         await webContents.loadURL("https://mobile.yangkeduo.com/");
     }
 
-    async createGatherWindow(resourceId : number, gatherBatchId : number){
+    async createGatherWindow(resourceId : number, gatherBatchId : number) {
+        // 主窗口
         const windowInstance = new BrowserWindow({
             width: 1920,
             height: 1080,
@@ -110,16 +111,28 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
             }
         });
+
+        windowInstance.addBrowserView(await this.createPddView(resourceId, gatherBatchId));
         // windowInstance.addBrowserView(await this.createGatherToolView(gatherBatchId));
-        const updateUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
-        windowInstance.loadURL(updateUrl);
-        windowInstance.addBrowserView(await this.createGatherView(resourceId, gatherBatchId));
+
+        const gatherToolUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
+        windowInstance.loadURL(gatherToolUrl)
+
         setGatherToolWindow(windowInstance);
         return windowInstance;
     }
 
-    async createGatherView(resourceId : number, gatherBatchId : number){
-        const gatherToolUrl = "https://mobile.yangkeduo.com/";
+    async createGatherToolView(gatherBatchId : number) {
+        const gatherToolUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
+        // 创建 BrowserView
+        const browserView = new BrowserView();
+        browserView.setBounds({ x: 0, y: 0, width: 500, height: 1080 }); // 设置大小和位置
+        browserView.webContents.loadURL(gatherToolUrl);
+        return browserView;
+    }
+
+    async createPddView(resourceId : number, gatherBatchId : number){
+        const pddHomeUrl = "https://mobile.yangkeduo.com/";
         const sessionInstance = session.fromPartition(`persist:-${resourceId}-session`, { cache: true });
     
         sessionInstance.webRequest.onCompleted(async (details) => {
@@ -147,12 +160,13 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         const browserView = new BrowserView({
             webPreferences: {
                 session: sessionInstance
-            }
+            },
         });
+
         // 将 BrowserView 附加到主窗口
-        const width = 500;
-        browserView.setBounds({ x: width, y: 0, width: 1980-width, height: 1080 }); // 设置大小和位置
-        browserView.webContents.loadURL(gatherToolUrl);
+        const width = 400;
+        browserView.setBounds({ x: width, y: 0, width: 1920-width, height: 1080 }); // 设置大小和位置
+        browserView.webContents.loadURL(pddHomeUrl);
         setGatherWindow(browserView);
         return browserView;
     }
@@ -367,30 +381,6 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
   @InvokeType(Protocols.INVOKE)
   async openGatherTool(resourceId: number, gatherBatchId : number): Promise<boolean> {
-    // 打开更新页面
-    // const updateWindow = new BrowserWindow({
-    //   x: 0,
-    //   y: 0,
-    //   width: 450,
-    //   height: 1000,
-    //   alwaysOnTop: true,
-    //   autoHideMenuBar: true,
-    //   webPreferences: {
-    //     preload: path.join(__dirname, 'preload.js'),
-    //     contextIsolation: true,
-    //     webviewTag: true, // 启用 webview 标签
-    //     // devTools: true,
-    //     webSecurity: false,
-    //     nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
-    //   }
-    // })
-
-    // setGatherToolWindow(updateWindow)
-    // const updateUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
-    // updateWindow.loadURL(updateUrl)
-    // updateWindow.on('closed', () => {
-    //     updateWindow.destroy()
-    // })
     const windowInstance = await this.createGatherWindow(resourceId, gatherBatchId);
     windowInstance.on('closed', () => {
         windowInstance.destroy()
