@@ -17,7 +17,6 @@ export class InstallerImpl extends InstallerApi {
 
   sendMessage(key : string, ...args: any){
     updateWindow?.webContents.send(key, ...args);
-    log.info(`sendMessage: ${key}`, args);
   }
 
   private setupAutoUpdater() {

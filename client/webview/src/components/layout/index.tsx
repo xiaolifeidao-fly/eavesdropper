@@ -73,15 +73,15 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
   };
 
   const openPxx = async () => {
-    try{
-      setPxxLoading(true);
-      const monitor = new MonitorPxxSkuApi();
-      await monitor.monitorSku();
-    } catch(error : any){
-      message.error("打开PXX失败", error);
-    } finally {
-      setPxxLoading(false);
-    }
+    // try{
+    //   setPxxLoading(true);
+    //   const monitor = new MonitorPxxSkuApi();
+    //   await monitor.monitorSku();
+    // } catch(error : any){
+    //   message.error("打开PXX失败", error);
+    // } finally {
+    //   setPxxLoading(false);
+    // }
   }
 
   const [pxxLoading, setPxxLoading] = useState(false);

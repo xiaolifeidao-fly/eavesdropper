@@ -112,8 +112,9 @@ export class DoorSkuSaleInfoDTO {
     barcode: string;
     subStock: string;
     shelfTime: ShelfTimeDTO;
+    saleNum: string; // 商品销售量
 
-    constructor(salesAttr: { [key: string]: SalesAttr }, salesSkus: SalesSku[], price: string, quantity: string, purchaseTips: string, outerId: string, barcode: string, subStock: string, shelfTime: ShelfTimeDTO) {
+    constructor(salesAttr: { [key: string]: SalesAttr }, salesSkus: SalesSku[], price: string, quantity: string, purchaseTips: string, outerId: string, barcode: string, subStock: string, shelfTime: ShelfTimeDTO, saleNum: string) {
         this.salesAttr = salesAttr;
         this.salesSkus = salesSkus;
         this.price = price;
@@ -123,6 +124,7 @@ export class DoorSkuSaleInfoDTO {
         this.barcode = barcode;
         this.subStock = subStock;
         this.shelfTime = shelfTime;
+        this.saleNum = saleNum;
     }
 }
 

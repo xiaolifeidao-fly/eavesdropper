@@ -10,7 +10,7 @@ type DTO interface {
 }
 
 type BaseDTO struct {
-	ID        uint64    `json:"id"`
+	ID        uint64    `json:"id" uri:"id"`
 	CreatedAt base.Time `json:"createdAt"`
 	UpdatedAt base.Time `json:"updatedAt"`
 	CreatedBy uint64    `json:"createdBy"`

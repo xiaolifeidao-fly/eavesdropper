@@ -1,0 +1,13 @@
+// 覆盖ProList组件中actions部分的默认样式
+.compact-list-actions {
+  // 减小actions区域的左边距
+  :global(.ant-list-item-action) {
+    margin-inline-start: 12px !important; // 默认值通常为48px，这里改为更小的值
+    padding-left: 0;
+  }
+
+  // 增加description区域的宽度
+  :global(.ant-list-item-meta-content) {
+    width: calc(100% - 16px);
+  }
+} 

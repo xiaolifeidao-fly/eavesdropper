@@ -126,6 +126,8 @@ func PageResource(param *dto.ResourcePageParamDTO) (*page.Page[dto.ResourcePageD
 				continue
 			}
 			nick = taobaoDTO.Nick
+		} else {
+			nick = d.Account
 		}
 		d.Nick = nick
 	}

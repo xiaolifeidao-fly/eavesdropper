@@ -72,6 +72,7 @@ export class TaskApiImpl extends TaskApi {
     const req = new AddSkuTaskReq(count, publishResourceId, skuSource)
     req.priceRange = publishConfig.priceRate
     req.items = taskItems
+    log.info('startTask skuTask: ', req)
     const skuTask = await addSkuTask(req) // 保存任务
     skuTask.skuPublishConfig = publishConfig
     this.asyncStartSkuTask(skuTask) // 异步执行任务

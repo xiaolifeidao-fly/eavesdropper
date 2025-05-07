@@ -1,14 +1,18 @@
 'use client'
 import React, { useState, MutableRefObject, useEffect } from 'react';
-import { Space } from 'antd';
+import { Space, Button } from 'antd';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import { ProFormSelect, ProCard, ProFormList, ProForm, ProFormDigit, ProFormGroup, ProFormMoney } from '@ant-design/pro-components';
-import { CloseCircleOutlined, SmileOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, SmileOutlined, ArrowLeftOutlined, HomeOutlined } from '@ant-design/icons';
 import { StoreApi } from '@eleapi/store/store';
+import { useRouter } from 'next/navigation';
 
 import { getShopList } from '@api/shop/shop.api';
 import { PriceRangeConfig, SkuPublishConfig } from "@model/sku/skuTask";
 import { ShopStatus } from '@model/shop/shop';
+import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku';
+
+
 export interface SukPushConfigProp {
   setSourceAccount: (account: number) => void, // 资源账号
   priceRangeConfigFormRef: MutableRefObject<ProFormInstance | undefined>,
@@ -19,6 +23,7 @@ export interface SukPushConfigProp {
 const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
   const store = new StoreApi();
   const [account, setAccount] = useState<number>();
+  const router = useRouter();
 
   useEffect(() => {
     console.log('loading SkuPushConfig...')
@@ -54,6 +59,21 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
         overflow: 'auto',
       }}
     >
+      <Space size={16} style={{ marginBottom: 16 }}>
+        <Button
+          icon={<ArrowLeftOutlined />}
+          onClick={() => router.back()}
+        >
+          返回
+        </Button>
+        <Button
+          icon={<HomeOutlined />}
+          type="primary"
+          onClick={() => router.push('/')}
+        >
+          回首页
+        </Button>
+      </Space>
       <ProFormSelect
         name="sourceAccoun"
         label="资源账号"

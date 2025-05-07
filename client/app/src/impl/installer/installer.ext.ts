@@ -26,7 +26,6 @@ export class InstallerExtImpl extends InstallerExtApi {
 
   sendMessage(key: string, ...args: any) {
     updateWindow?.webContents.send(key, ...args);
-    log.info(`sendMessage: ${key}`, args);
   }
 
   //立即更新
