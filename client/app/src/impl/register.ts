@@ -9,6 +9,7 @@ import { MonitorPddSku } from "@src/impl/door/pxx/pxx.sku";
 import { TaskApiImpl } from "@src/impl/door/task/task";
 import { InstallerImpl } from "@src/impl/installer/installer.impl";
 import { MonitorPxxLogin } from "./door/pxx/pxx.login";
+
 import { InstallerExtImpl } from "./installer/installer.ext";
 const register : { new(...args: any[]): ElectronApi }[] = [
 ]

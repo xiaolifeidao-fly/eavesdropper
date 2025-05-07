@@ -11,6 +11,8 @@ import { getShopList } from '@api/shop/shop.api';
 import { PriceRangeConfig, SkuPublishConfig } from "@model/sku/skuTask";
 import { ShopStatus } from '@model/shop/shop';
 import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku';
+
+
 export interface SukPushConfigProp {
   setSourceAccount: (account: number) => void, // 资源账号
   priceRangeConfigFormRef: MutableRefObject<ProFormInstance | undefined>,
