@@ -157,19 +157,21 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         const secChUa = getSecChUa(platform);
         sessionInstance.webRequest.onBeforeSendHeaders(async (details,callback) => {
             const header = details.requestHeaders;
-            for(const key in header){
-                const lowerKey = key.toLowerCase();
-                if(lowerKey == "sec-ch-ua"){
-                    header[key] = secChUa;
-                }
-                if(lowerKey == "sec-ch-ua-mobile"){
-                    header[key] = "?0";
-                }
-                if(lowerKey == "sec-ch-ua-platform"){
-                    header[key] = `"${platform.userAgentData.platform}"`;
-                }
-                if(lowerKey == 'user-agent'){
-                    header[key] = platform.userAgent;
+            if(platform){
+                for(const key in header){
+                    const lowerKey = key.toLowerCase();
+                    if(lowerKey == "sec-ch-ua"){
+                        header[key] = secChUa;
+                    }
+                    if(lowerKey == "sec-ch-ua-mobile"){
+                        header[key] = "?0";
+                    }
+                    if(lowerKey == "sec-ch-ua-platform"){
+                        header[key] = `"${platform.userAgentData.platform}"`;
+                    }
+                    if(lowerKey == 'user-agent'){
+                        header[key] = platform.userAgent;
+                    }
                 }
             }
             callback({requestHeaders: header});
