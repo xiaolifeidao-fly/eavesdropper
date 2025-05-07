@@ -120,6 +120,10 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         windowInstance.addBrowserView(await this.createPddView(resourceId, gatherBatchId));
 
         setGatherToolWindow(windowInstance);
+        windowInstance.on('closed', () => {
+            const channel = this.buildKey("onGatherToolClosed");
+            super.sendMessage(channel)
+        })
         return windowInstance;
     }
 

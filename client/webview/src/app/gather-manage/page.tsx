@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components'
 import { Button, message } from 'antd'
 
@@ -19,7 +19,16 @@ export default function GatherManage() {
   const [taskId, setTaskId] = useState<number | undefined>(undefined)
   const [operationType, setOperationType] = useState('')
   const [urls, setUrls] = useState<string[]>([])
-  const [source, setSource] = useState<string>('')
+  const [source, setSource] = useState<string>('');
+
+
+  useEffect(() => {
+    const monitor = new MonitorPxxSkuApi();
+    monitor.onGatherToolClosed(() => {
+      onSuccess();
+    });
+  }, []);
+
 
   const columns: ProColumns<any>[] = [
     {
@@ -138,7 +147,7 @@ export default function GatherManage() {
     }
 
     const monitor = new MonitorPxxSkuApi()
-    monitor.openGatherTool(record.resourceId, record.id)
+    monitor.openGatherTool(record.resourceId, record.id);
   }
 
   // 发布商品
@@ -251,7 +260,9 @@ export default function GatherManage() {
               setTaskId={setTaskId}
               operationType={operationType}
               setOperationType={setOperationType}
-              onClose={() => {}}
+              onClose={() => {
+
+              }}
               urls={urls}
               source={source}
             />
