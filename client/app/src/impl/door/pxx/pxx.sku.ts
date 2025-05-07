@@ -309,7 +309,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             }
 
 
-            const doorSkuDTO = await parseSku(PDD, initDataObj);
+            const doorSkuDTO = this.parseSku(initDataObj);
             if(!doorSkuDTO){
                 log.warn(`${itemKey} doorSkuDTO not found`);
                 return;
@@ -318,9 +318,9 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             // 保存采集商品
             const gatherSkuCreateReq = new GatherSkuCreateReq(
                 gatherBatchId,
-                doorSkuDTO.baseInfo.title,
+                doorSkuDTO.title,
                 PDD,
-                doorSkuDTO.doorSkuSaleInfo.saleNum,
+                doorSkuDTO.saleNum,
                 doorSkuDTO.doorSkuSaleInfo.price,
                 doorSkuDTO.baseInfo.itemId,
                 false
@@ -334,6 +334,22 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         }
          // 保存页面的静态HTML
          await this.saveCurrentPageHtml(itemKey);
+    }
+
+    private parseSku(initDataObj: any): any {
+        const doorSkuDTO = {
+            title: '',
+            saleNum: '',
+            price: '',
+            itemId: '',
+        }
+
+        doorSkuDTO.title = initDataObj.goods?.goodsName;
+        doorSkuDTO.saleNum = initDataObj.goods?.sideSalesTip;
+        doorSkuDTO.price = initDataObj.goods?.ui?.new_price_section?.price;
+        doorSkuDTO.itemId = initDataObj.goods?.goodsID;
+
+        return doorSkuDTO
     }
 
     private async saveCurrentPageHtml(itemKey: string): Promise<void> {
