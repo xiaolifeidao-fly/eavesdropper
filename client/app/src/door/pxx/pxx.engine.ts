@@ -8,8 +8,9 @@ import { app, screen } from 'electron';
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from '../monitor/monitor';
 import log from 'electron-log';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
-import { DoorRecord } from '@model/door/door';
 import { DoorEngine, getPlatform, getRealChromePath } from '../engine';
+import { DoorEntity } from '../entity';
+import { DoorRecord } from '@model/door/door';
 const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
