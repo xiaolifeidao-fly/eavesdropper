@@ -1167,7 +1167,7 @@ export abstract class DoorEngine<T = any> {
 
 }
 
-function getSecChUa(platform : any){
+export function getSecChUa(platform : any){
     const brands = platform.userAgentData.brands;
     const result = [];
     for(const brand of brands){

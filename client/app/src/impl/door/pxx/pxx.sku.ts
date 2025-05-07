@@ -15,8 +15,9 @@ import { shell } from 'electron';
 import { GatherSku, GatherSkuCreateReq } from "@model/gather/gather-sku";
 import { addGatherSku } from "@api/gather/gather-sku.api";
 import { BrowserWindow } from 'electron';
-import { setGatherToolWindow, getGatherToolWindow, setGatherWindow, getGatherWindow } from '@src/kernel/windows'
+import { setGatherToolWindow, getGatherToolWindow, setGatherWindow, getGatherWindow, setPxxDetailWindow, getPxxDetailWindow } from '@src/kernel/windows'
 import { get } from "@utils/store/electron";
+import { getPlatform, getSecChUa } from "@src/door/engine";
 
 const PDD_URL = "https://mobile.yangkeduo.com/goods1.html?goods_id=";
 
@@ -28,6 +29,7 @@ const monitorConfig : {[key : number] : any} = {};
 
 export class MonitorPddSku extends MonitorPxxSkuApi {
     
+    private readonly width = 450;
 
     sendMessage(key : string, ...args: any){
         getGatherToolWindow()?.webContents.send(key, ...args);
@@ -112,46 +114,89 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             }
         });
 
-        windowInstance.addBrowserView(await this.createPddView(resourceId, gatherBatchId));
         // windowInstance.addBrowserView(await this.createGatherToolView(gatherBatchId));
-
+        
         const gatherToolUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
         windowInstance.loadURL(gatherToolUrl)
+        windowInstance.addBrowserView(await this.createPddView(resourceId, gatherBatchId));
 
         setGatherToolWindow(windowInstance);
         return windowInstance;
     }
 
-    async createGatherToolView(gatherBatchId : number) {
-        const gatherToolUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
-        // 创建 BrowserView
-        const browserView = new BrowserView();
-        browserView.setBounds({ x: 0, y: 0, width: 500, height: 1080 }); // 设置大小和位置
-        browserView.webContents.loadURL(gatherToolUrl);
-        return browserView;
+    async createDetailWindow(url : string) {
+        const pxxDetailWindow = getPxxDetailWindow();
+        if(pxxDetailWindow && !pxxDetailWindow.isDestroyed()){
+            pxxDetailWindow.show();
+            pxxDetailWindow.loadFile(url);
+            return;
+        }
+        // 主窗口
+        const windowInstance = new BrowserWindow({
+            width: 1090-this.width,
+            height: 1080,
+            webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: true,
+            webviewTag: true, // 启用 webview 标签
+            // devTools: true,
+            webSecurity: false,
+            nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
+            }
+        });
+        setPxxDetailWindow(windowInstance);
+        windowInstance.loadFile(url);
     }
+
 
     async createPddView(resourceId : number, gatherBatchId : number){
         const pddHomeUrl = "https://mobile.yangkeduo.com/";
         const sessionInstance = session.fromPartition(`persist:-${resourceId}-session`, { cache: true });
-    
+        
+        const platform = await getPlatform();
+        const secChUa = getSecChUa(platform);
+        sessionInstance.webRequest.onBeforeSendHeaders(async (details,callback) => {
+            const header = details.requestHeaders;
+            for(const key in header){
+                const lowerKey = key.toLowerCase();
+                if(lowerKey == "sec-ch-ua"){
+                    header[key] = secChUa;
+                }
+                if(lowerKey == "sec-ch-ua-mobile"){
+                    header[key] = "?0";
+                }
+                if(lowerKey == "sec-ch-ua-platform"){
+                    header[key] = `"${platform.userAgentData.platform}"`;
+                }
+                if(lowerKey == 'user-agent'){
+                    header[key] = platform.userAgent;
+                }
+            }
+            callback({requestHeaders: header});
+        });
+
+
         sessionInstance.webRequest.onCompleted(async (details) => {
             const requestUrl = details.url;
             if(requestUrl.includes("goods_id=")){
-                log.info("requestUrl ", details.url);
-                const requestParams = getUrlParameter(requestUrl);
-                const goodsId = requestParams.get("goods_id");
-                if(!goodsId){
-                    return;
-                }
-                const code = await this.getPxxCode();
-                const rawData = await getGatherWindow()?.webContents.executeJavaScript(code);
-                const monitorKey = "PxxSkuMonitor";
-                if(rawData){
-                    this.saveByJson(rawData, requestUrl, monitorKey, goodsId, PDD);
-                    this.saveGatherSku(gatherBatchId, goodsId, rawData);  // 保存采集商品
-                } else {
-                    log.info("row data not found");
+                try{
+                    this.send('onGatherToolLoaded', true);
+                    const requestParams = getUrlParameter(requestUrl);
+                    const goodsId = requestParams.get("goods_id");
+                    if(!goodsId){
+                        return;
+                    }
+                    const code = await this.getPxxCode();
+                    const rawData = await getGatherWindow()?.webContents.executeJavaScript(code);
+                    const monitorKey = "PxxSkuMonitor";
+                    if(rawData){
+                        await this.saveByJson(rawData, requestUrl, monitorKey, goodsId, PDD);
+                        await this.saveGatherSku(gatherBatchId, goodsId, rawData);  // 保存采集商品
+                    } else {
+                        log.info("row data not found");
+                    }
+                }catch(error){
+                    log.error("send onGatherToolLoaded error ", error);
                 }
             }
         });
@@ -164,8 +209,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         });
 
         // 将 BrowserView 附加到主窗口
-        const width = 400;
-        browserView.setBounds({ x: width, y: 0, width: 1920-width, height: 1080 }); // 设置大小和位置
+        browserView.setBounds({ x: this.width, y: 0, width: 1920-this.width, height: 1080}); // 设置大小和位置
         browserView.webContents.loadURL(pddHomeUrl);
         setGatherWindow(browserView);
         return browserView;
@@ -233,7 +277,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         monitorConfig[resourceId] = true;
     }
 
-    saveByJson(rawData : string, url : string, doorKey : string, itemKey : string, type : string){
+    async saveByJson(rawData : string, url : string, doorKey : string, itemKey : string, type : string){
         try{
             const jsonData = JSON.parse(rawData);
             const initDataObj = jsonData?.store?.initDataObj;
@@ -247,7 +291,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                 return;
             }
             const doorRecord = new DoorRecord(undefined, doorKey, url, itemKey, type, JSON.stringify(initDataObj));
-            saveDoorRecord(doorRecord);
+            await saveDoorRecord(doorRecord);
             log.info("save door record success ", itemKey);
         } catch(error){
             log.error("save by json error ", error);
@@ -256,36 +300,40 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
 
     async saveGatherSku(gatherBatchId : number, itemKey : string, rawData : string){
-        const jsonData = JSON.parse(rawData);
-        const initDataObj = jsonData?.store?.initDataObj;
-        if(!initDataObj){
-            log.warn(`${itemKey} initDataObj not found`);
-            return;
+        try{
+            const jsonData = JSON.parse(rawData);
+            const initDataObj = jsonData?.store?.initDataObj;
+            if(!initDataObj){
+                log.warn(`${itemKey} initDataObj not found`);
+                return;
+            }
+
+
+            const doorSkuDTO = await parseSku(PDD, initDataObj);
+            if(!doorSkuDTO){
+                log.warn(`${itemKey} doorSkuDTO not found`);
+                return;
+            }
+
+            // 保存采集商品
+            const gatherSkuCreateReq = new GatherSkuCreateReq(
+                gatherBatchId,
+                doorSkuDTO.baseInfo.title,
+                PDD,
+                doorSkuDTO.doorSkuSaleInfo.saleNum,
+                doorSkuDTO.doorSkuSaleInfo.price,
+                doorSkuDTO.baseInfo.itemId,
+                false
+            )
+
+            const gatherSku = await addGatherSku(gatherSkuCreateReq);
+            log.info('gatherSku: ', gatherSku);
+            this.send('onGatherSkuMessage', gatherSku);
+        }finally{
+            this.send('onGatherToolLoaded', false);
         }
-
-        // 保存页面的静态HTML
-        await this.saveCurrentPageHtml(itemKey);
-
-        const doorSkuDTO = await parseSku(PDD, initDataObj);
-        if(!doorSkuDTO){
-            log.warn(`${itemKey} doorSkuDTO not found`);
-            return;
-        }
-
-        // 保存采集商品
-        const gatherSkuCreateReq = new GatherSkuCreateReq(
-            gatherBatchId,
-            doorSkuDTO.baseInfo.title,
-            PDD,
-            doorSkuDTO.doorSkuSaleInfo.saleNum,
-            doorSkuDTO.doorSkuSaleInfo.price,
-            doorSkuDTO.baseInfo.itemId,
-            false
-        )
-
-        const gatherSku = await addGatherSku(gatherSkuCreateReq);
-        log.info('gatherSku: ', gatherSku);
-        this.send('onGatherSkuMessage', gatherSku);
+         // 保存页面的静态HTML
+         await this.saveCurrentPageHtml(itemKey);
     }
 
     private async saveCurrentPageHtml(itemKey: string): Promise<void> {
@@ -412,7 +460,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
            // 检查文件是否存在
            if (fs.existsSync(filePath)) {
-                 getGatherWindow().webContents.loadFile(filePath);
+                    this.createDetailWindow(filePath);
             //     const htmlWindow = getGatherWindow();
             //     // 先加载空白页
             //     htmlWindow.webContents.loadURL('about:blank');

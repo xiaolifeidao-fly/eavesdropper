@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import type { Key } from 'react'
-import { message, Tabs, Input } from 'antd'
+import { message, Tabs, Input, Spin } from 'antd'
 
 import GaterToolInfo, { GatherInfo } from './gather-tool-info'
 import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
@@ -47,15 +47,19 @@ const GatherTool = () => {
       }
     }
     message.error('采集批次不存在')
-    return
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const initGatherTool = async (gatherId: number) => {
-    setGatherId(Number(gatherId))
-    const gatherBatch = await initGatherInfo(Number(gatherId))
-    if (gatherBatch) {
-      openPxx(gatherBatch.resourceId, gatherBatch.id)
+    try{
+      setIsLoading(true)
+      setGatherId(Number(gatherId))
+      const gatherBatch = await initGatherInfo(Number(gatherId))
+      if (gatherBatch) {
+        await openPxx(gatherBatch.resourceId, gatherBatch.id)
+      }
+    }finally{
+      setIsLoading(false)
     }
   }
 
@@ -132,6 +136,10 @@ const GatherTool = () => {
       }).then(() => {
         // monitor.monitorSku(resourceId, gatherBatchId)
       })
+      monitor.onGatherToolLoaded((loaded: boolean) => {
+          setIsLoading(loaded);
+      });
+
     } catch (error: any) {
       message.error('打开PXX失败', error)
     }
@@ -354,11 +362,15 @@ const GatherTool = () => {
     }
   ]
 
+  const [isLoading, setIsLoading] = useState(false)
+
+
   return (
+  <Spin spinning={isLoading}> 
     <div
       style={{
         height: `${containerHeight}px`,
-        width: '100%',
+        maxWidth : '450px',
         background: 'white',
         padding: '12px 12px 8px',
         overflow: 'hidden'
@@ -472,6 +484,7 @@ const GatherTool = () => {
         onItemFavoriteChange={handleItemFavoriteChange}
       />
     </div>
+    </Spin>
   )
 }
 

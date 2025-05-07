@@ -102,6 +102,18 @@ export function setGatherWindow(window: BrowserView){
     gatherWindow = window;
 }
 
+export let pxxDetailWindow: BrowserWindow;
+
+export function getPxxDetailWindow(): BrowserWindow{
+    return pxxDetailWindow;
+}
+
+export function setPxxDetailWindow(window: BrowserWindow){
+    pxxDetailWindow = window;
+}
+
+
+
 export const addTargetWindow = (windowId : string, window : BrowserWindow, views : TargetView[])=>{
     const targetWindow = new TargetWindow(windowId, window, views);
     for(const view of views){
