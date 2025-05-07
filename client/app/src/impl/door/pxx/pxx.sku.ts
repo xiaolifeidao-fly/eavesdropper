@@ -33,7 +33,6 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
     sendMessage(key : string, ...args: any){
         getGatherToolWindow()?.webContents.send(key, ...args);
-        log.info(`sendMessage: ${key}`, args);
     }
 
     async getPxxCode(){
@@ -186,6 +185,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                     const requestParams = getUrlParameter(requestUrl);
                     const goodsId = requestParams.get("goods_id");
                     if(!goodsId){
+                        this.send('onGatherToolLoaded', false);
                         return;
                     }
                     const code = await this.getPxxCode();

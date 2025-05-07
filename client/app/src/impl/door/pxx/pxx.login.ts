@@ -11,43 +11,120 @@ import { PxxLoginApi } from "@eleapi/door/login/pxx.login";
 
 import { bindResource } from "@api/resource/resource.api";
 import { BindResourceReq } from "@model/resource/resource";
+import { getPlatform, getSecChUa } from "@src/door/engine";
+import { BrowserView, BrowserWindow, session } from "electron";
+import path from "path";
+import { PDD } from "@enums/source";
 
 const monitor = new PxxLoginMonitor();
 
 const monitorConfig : {[key : number] : any} = {};
 
 
+
+
+
+
+
 export class MonitorPxxLogin extends PxxLoginApi {
+
+    async getPxxCode(){
+        return `
+        (async function() {
+            function delay(fn, ms) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                    var result = fn();
+                    resolve(result);
+                    }, ms);
+                });
+            }
+
+            function getContent(){
+                const result = window.rawData;
+                return result;
+            }
+            let times = 0;
+            while(times < 20){
+                var result = await delay(getContent,500);
+                if(result){
+                    return JSON.stringify(result);
+                }
+                times++;
+            }
+            return undefined;
+      })();
+        `;
+    }
+
+    async createPddWindow(resourceId : number){
+        const pddHomeUrl = "https://mobile.yangkeduo.com/personal_profile.html";
+        const sessionInstance = session.fromPartition(`persist:-${resourceId}-session`, { cache: true });
+        
+        const platform = await getPlatform();
+        const secChUa = getSecChUa(platform);
+        sessionInstance.webRequest.onBeforeSendHeaders(async (details,callback) => {
+            const header = details.requestHeaders;
+            if(platform){
+                for(const key in header){
+                    const lowerKey = key.toLowerCase();
+                    if(lowerKey == "sec-ch-ua"){
+                        header[key] = secChUa;
+                    }
+                    if(lowerKey == "sec-ch-ua-mobile"){
+                        header[key] = "?0";
+                    }
+                    if(lowerKey == "sec-ch-ua-platform"){
+                        header[key] = `"${platform?.userAgentData?.platform}"`;
+                    }
+                    if(lowerKey == 'user-agent'){
+                        header[key] = platform?.userAgent;
+                    }
+                }
+            }
+            callback({requestHeaders: header});
+        });
+
+
+        sessionInstance.webRequest.onCompleted(async (details) => {
+            const requestUrl = details.url;
+            if(requestUrl.includes("personal_profile.html")){
+                try{
+                    const monitorKey = "PxxSkuMonitor";
+                    const code = await this.getPxxCode();
+                    const rawData = await windowInstance.webContents.executeJavaScript(code);
+                    if(rawData){
+                        this.saveByJson(resourceId, rawData, requestUrl, monitorKey, "PxxLogin", PDD);
+                    } else {
+                        log.info("row data not found");
+                    }
+                }catch(error){
+                    log.error("send onGatherToolLoaded error ", error);
+                }
+            }
+        });
+    
+        const windowInstance = new BrowserWindow({
+            width: 1090-450,
+            height: 1080,
+            webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: true,
+            webviewTag: true, // 启用 webview 标签
+            session: sessionInstance,
+            // devTools: true,
+            webSecurity: false,
+            nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
+            }
+        });
+
+        // 将 BrowserView 附加到主窗口
+        windowInstance.webContents.loadURL("https://mobile.yangkeduo.com/personal_profile.html");
+    }
 
     @InvokeType(Protocols.INVOKE)
     async login(resourceId : number){
-        log.info("login pxx resourceId is ", resourceId);
-        try{
-            const engine = new PxxEngine(resourceId, false);
-            const url = "https://mobile.yangkeduo.com/personal_profile.html";
-            const page = await engine.init(url);
-            if(!page){ 
-                return;
-            }
-            const context = engine.getContext();
-            monitor.setMonitorTimeout(60000);
-            let loginResult = false;
-            monitor.setHandler(async (request : any, response) => {
-                const header = await request?.allHeaders();
-                log.info("login monitor request ", header);
-                loginResult = true;
-                engine.saveContextState();
-                return { "loginResult": true };
-            });
-            log.info("open wait monitor");
-            const result = await engine.openWaitMonitor(page, url, monitor, {});
-            if(result){
-                this.saveLoginInfo(resourceId, context, monitor.getType());
-            }
-            return result;
-        } catch(error){
-            log.error("login error", error);
-        }
+        await this.createPddWindow(resourceId);
     }
 
 
