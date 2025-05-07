@@ -167,10 +167,10 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                         header[key] = "?0";
                     }
                     if(lowerKey == "sec-ch-ua-platform"){
-                        header[key] = `"${platform.userAgentData.platform}"`;
+                        header[key] = `"${platform?.userAgentData?.platform}"`;
                     }
                     if(lowerKey == 'user-agent'){
-                        header[key] = platform.userAgent;
+                        header[key] = platform?.userAgent;
                     }
                 }
             }
