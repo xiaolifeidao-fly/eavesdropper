@@ -323,10 +323,12 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                 doorSkuDTO.title,
                 PDD,
                 doorSkuDTO.saleNum,
-                doorSkuDTO.doorSkuSaleInfo.price,
-                doorSkuDTO.baseInfo.itemId,
+                doorSkuDTO.price,
+                doorSkuDTO.itemId,
                 false
             )
+
+            log.info(doorSkuDTO)
 
             const gatherSku = await addGatherSku(gatherSkuCreateReq);
             log.info('gatherSku: ', gatherSku);
@@ -350,6 +352,9 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         doorSkuDTO.saleNum = initDataObj.goods?.sideSalesTip;
         doorSkuDTO.price = initDataObj.goods?.ui?.new_price_section?.price;
         doorSkuDTO.itemId = initDataObj.goods?.goodsID;
+        if (doorSkuDTO.itemId) {
+            doorSkuDTO.itemId = String(doorSkuDTO.itemId)
+        }
 
         return doorSkuDTO
     }
