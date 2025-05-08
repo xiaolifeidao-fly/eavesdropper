@@ -1,29 +1,21 @@
 #!/bin/bash
 
-# 远程服务器信息
-remote_server="root@$eavesdropper_app_remote_server"
-remote_password="$eavesdropper_app_remote_password"
-remote_path="/usr/local/nginx/html/updates"
+remote_path="app/updates"
+bucket_name="eavesdropper" # 七牛云空间名
+qiniuyun_domain="http://eavesdropper.eaochat.com"
+
 
 echo "开始部署Electron应用更新文件..."
-echo "远程服务器: $remote_server"
-echo "远程路径: $remote_path"
 
-# 读取.env.dev中的SERVER_TARGET环境变量
-if [ -f ./.env.dev ]; then
-    echo "正在读取.env.dev文件..."
+# 读取.env中的SERVER_TARGET环境变量
+if [ -f ./.env ]; then
+    echo "正在读取.env文件..."
     # 修改grep命令，排除注释行（以#开头的行）
-    SERVER_TARGET=$(grep -v "^#" ./.env.dev | grep SERVER_TARGET | cut -d '=' -f2 | tr -d ' "')
-    echo "从.env.dev获取SERVER_TARGET: $SERVER_TARGET"
+    SERVER_TARGET=$(grep -v "^#" ./.env | grep SERVER_TARGET | cut -d '=' -f2 | tr -d ' "')
+    echo "从.env获取SERVER_TARGET: $SERVER_TARGET"
     
-    # 确保SERVER_TARGET有值
-    if [ -z "$SERVER_TARGET" ]; then
-        echo "未从.env.dev中找到有效的SERVER_TARGET，将使用默认值"
-        SERVER_TARGET="http://101.43.28.195:8081"
-    fi
 else
-    echo "无法找到.env.dev文件，将使用默认SERVER_TARGET"
-    SERVER_TARGET="http://101.43.28.195:8081"
+    echo "无法找到.env文件，将使用默认SERVER_TARGET"
 fi
 
 # 显示将要使用的SERVER_TARGET
@@ -139,6 +131,7 @@ package_and_upload() {
     if [ "$platform" == "mac" ]; then
         npm run package:mac
     elif [ "$platform" == "win" ]; then
+        # 安装Windows平台特定的Sharp模块
         npm run package:win
     else
         echo "不支持的平台: $platform"
@@ -251,44 +244,12 @@ package_and_upload() {
         local filename=$(basename "$file")
         echo "正在上传 $filename..."
         
-        # 创建一个没有空格的临时文件名
-        local safe_filename=$(echo "$filename" | tr ' ' '_')
-        local temp_safe_file="$TEMP_DIR/$safe_filename"
-        
-        # 复制到安全文件名
-        cp "$file" "$temp_safe_file"
-        
-        # 上传文件，使用没有空格的文件名
-        echo "执行命令: scp $temp_safe_file $remote_server:$remote_path/$safe_filename"
-        sshpass -p "$remote_password" scp $SSH_OPTS "$temp_safe_file" "$remote_server:$remote_path/$safe_filename"
+        # 直接使用原始文件名上传到七牛云
+        qiniuyun_upload "$file" "$remote_path/$filename"
         
         if [ $? -ne 0 ]; then
             echo "上传 $filename 失败"
             return 1
-        fi
-        
-        # 如果上传的是含空格的文件名，在服务器上重命名回原始文件名
-        if [ "$filename" != "$safe_filename" ]; then
-            echo "在服务器上重命名 $safe_filename 回 '$filename'"
-            sshpass -p "$remote_password" ssh $SSH_OPTS "$remote_server" "cd $remote_path && mv $safe_filename \"$filename\""
-        fi
-        
-        # 验证上传是否成功
-        echo "验证 $filename 是否上传成功..."
-        
-        # 先尝试查找安全文件名
-        sshpass -p "$remote_password" ssh $SSH_OPTS "$remote_server" "ls -la $remote_path/$safe_filename" > /dev/null 2>&1
-        local safe_exists=$?
-        
-        # 如果安全文件名不存在，尝试查找原始文件名
-        if [ $safe_exists -ne 0 ]; then
-            sshpass -p "$remote_password" ssh $SSH_OPTS "$remote_server" "ls -la \"$remote_path/$filename\"" > /dev/null 2>&1
-            local orig_exists=$?
-            
-            if [ $orig_exists -ne 0 ]; then
-                echo "无法在服务器上找到 $filename 或 $safe_filename，上传可能失败"
-                return 1
-            fi
         fi
         
         echo "$filename 上传并验证成功"
@@ -297,17 +258,34 @@ package_and_upload() {
     return 0
 }
 
-# 步骤2: 设置SSH选项并确保目录存在
-echo "检查sshpass是否安装..."
-which sshpass || echo "sshpass未安装，请先安装: brew install sshpass"
+# 文件上传至七牛云
+# 配置qshell账号
+# 使用前创建用户配置KEY qshell account "$QINIU_ACCESS_KEY" "$QINIU_SECRET_KEY" "eavesdropper"
+qiniuyun_upload() {
+    local_file=$1 # 本地文件路径
+    remote_file=$2 # 远程文件路径
 
-# 配置SSH选项
-echo "配置SSH选项..."
-SSH_OPTS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+    # 检查qshell是否安装
+    if ! command -v qshell &> /dev/null; then
+        echo "错误：qshell未安装，请先安装qshell工具"
+        echo "下载地址：https://developer.qiniu.com/kodo/tools/1302/qshell"
+        exit 1
+    fi
 
-# 创建更新目录(如果不存在)
-echo "确保更新目录存在..."
-sshpass -p "$remote_password" ssh $SSH_OPTS "$remote_server" "mkdir -p $remote_path"
+    # 上传文件
+    echo "正在上传文件 \"$local_file\" 到七牛云空间 $bucket_name..."
+    qshell fput "$bucket_name" "$remote_file" "$local_file" --overwrite
+
+    # 检查上传结果
+    if [ $? -eq 0 ]; then
+        echo "上传成功！"
+        # 获取文件公开访问URL（如果是公开空间）
+        echo "文件URL：$qiniuyun_domain/$remote_file"
+    else
+        echo "上传失败！"
+        exit 1
+    fi
+}
 
 # 步骤3: 执行打包和上传
 if [ "$platform" == "both" ]; then
@@ -342,51 +320,6 @@ fi
 
 # 清理临时文件
 rm -rf $TEMP_DIR
-
-# 额外验证及上传步骤：直接查找并上传latest.yml和latest-mac.yml文件
-echo "额外验证步骤：检查YML文件上传状态..."
-
-# 检查服务器上是否有latest.yml文件
-sshpass -p "$remote_password" ssh $SSH_OPTS "$remote_server" "ls -la $remote_path/latest.yml" > /dev/null 2>&1
-if [ $? -ne 0 ] && [ "$platform" == "win" -o "$platform" == "both" ]; then
-    # 再次尝试查找并上传Windows的latest.yml
-    win_yml=$(find ./package -name "latest.yml" | head -1)
-    if [ -n "$win_yml" ]; then
-        echo "检测到latest.yml未上传成功，尝试重新上传..."
-        echo "找到的latest.yml: $win_yml"
-        sshpass -p "$remote_password" scp $SSH_OPTS "$win_yml" "$remote_server:$remote_path/"
-        if [ $? -eq 0 ]; then
-            echo "latest.yml重新上传成功"
-        else
-            echo "latest.yml重新上传失败"
-        fi
-    else
-        echo "未找到latest.yml文件，请检查是否正确打包"
-    fi
-fi
-
-# 检查服务器上是否有latest-mac.yml文件
-sshpass -p "$remote_password" ssh $SSH_OPTS "$remote_server" "ls -la $remote_path/latest-mac.yml" > /dev/null 2>&1
-if [ $? -ne 0 ] && [ "$platform" == "mac" -o "$platform" == "both" ]; then
-    # 再次尝试查找并上传macOS的latest-mac.yml
-    mac_yml=$(find ./package -name "latest-mac.yml" | head -1)
-    if [ -n "$mac_yml" ]; then
-        echo "检测到latest-mac.yml未上传成功，尝试重新上传..."
-        echo "找到的latest-mac.yml: $mac_yml"
-        sshpass -p "$remote_password" scp $SSH_OPTS "$mac_yml" "$remote_server:$remote_path/"
-        if [ $? -eq 0 ]; then
-            echo "latest-mac.yml重新上传成功"
-        else
-            echo "latest-mac.yml重新上传失败"
-        fi
-    else
-        echo "未找到latest-mac.yml文件，请检查是否正确打包"
-    fi
-fi
-
-# 查看更新服务器上的文件列表
-echo "服务器上的文件列表:"
-sshpass -p "$remote_password" ssh $SSH_OPTS "$remote_server" "ls -la $remote_path/"
 
 echo "所有文件上传完成!"
 echo "版本更新文件已部署到服务器: $remote_server:$remote_path/"

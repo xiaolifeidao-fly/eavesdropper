@@ -129,6 +129,7 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
         headers['Origin'] = "https://myseller.taobao.com";
         headers['Host'] = "stream-upload.taobao.com";
         headers['x-requested-with'] = "XMLHttpRequest";
+        log.info("uploadFileByFileApi headers ", headers);
         form.append('file', fs.createReadStream(filePath), path.basename(filePath));
         // 发送 POST 请求
         let attempt = 0; // 当前尝试次数

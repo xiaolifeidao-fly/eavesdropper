@@ -10,6 +10,7 @@ type OssEntity struct {
 	AccessKeySecret string `json:"accessKeySecret"`
 	ExpireTime      int64  `json:"expireTime"`
 	CallbackUrl     string `json:"callbackUrl"`
+	TokenExpireTime int64  `json:"tokenExpireTime"`
 }
 
 func (entity *OssEntity) Default() {
@@ -19,5 +20,10 @@ func (entity *OssEntity) Default() {
 	}
 	if entity.ExpireTime == 0 {
 		entity.ExpireTime = 600
+	}
+
+	// 默认5分钟
+	if entity.TokenExpireTime == 0 {
+		entity.TokenExpireTime = 5 * 60
 	}
 }
