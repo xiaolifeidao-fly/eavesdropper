@@ -1,6 +1,6 @@
 'use client'
-import { useRef, useState } from 'react';
-import { Button, message, Popconfirm, Tooltip, Spin, Space, Tag } from 'antd';
+import { useRef, useState, useEffect } from 'react';
+import { Button, message, Popconfirm, Tooltip, Spin, Space, Tag, Modal, Form, Input } from 'antd';
 import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
 import Layout from '@/components/layout';
 
@@ -8,7 +8,8 @@ import useRefreshPage from '@/components/RefreshPage';
 import {
   getShopPage as getShopPageApi,
   deleteShop as deleteShopApi,
-  syncShop as syncShopApi
+  syncShop as syncShopApi,
+  bindShopAuthCode as bindShopAuthCodeApi
 } from '@api/shop/shop.api';
 import { getSyncResourceList as getSyncResourceListApi } from '@api/resource/resource.api';
 import { ShopPageReq, ShopPageResp, SyncShopReq, ShopStatus } from '@model/shop/shop';
@@ -88,9 +89,9 @@ export default function ShopManage() {
       )
     },
     {
-      title: '更新时间',
-      dataIndex: 'updatedAt',
-      key: 'updatedAt',
+      title: '过期时间',
+      dataIndex: 'expirationDate',
+      key: 'expirationDate',
       align: 'center',
       width: 200,
       search: false,
@@ -104,6 +105,7 @@ export default function ShopManage() {
   };
 
   const syncAllShop = async () => {
+    // 一键同步只同步未同步的资源
     const resources = await getSyncResourceListApi();
     if (!resources) {
       return false;
@@ -121,7 +123,6 @@ export default function ShopManage() {
       const shopApi = new MbShopApi();
       const shopInfo = await shopApi.findMbShopInfo(resourceId);
       if (shopInfo.code) {
-        req.status = ShopStatus.Effective
         const shop = shopInfo.data.result;
         req.account = shop.nick;
         req.name = shop.shopName;
@@ -146,24 +147,70 @@ export default function ShopManage() {
       valueType: 'option',
       align: 'center',
       width: 50,
-      render: (_, record) => [
-        <Button key="sync" type="link" style={{ paddingRight: 0 }} onClick={async () => {
-          setLoading(true);
-          const result = await syncShop(record.id, record.resourceId);
-          if (!result) {
+      render: (_, record) => {
+        return [
+          <Button key="sync" type="link" style={{ paddingRight: 0, paddingLeft: 0 }} disabled={record.status.value !== ShopStatus.LosEffective} onClick={async () => {
+            openBindAuthModal(record.id);
+          }}>绑定激活码</Button>,
+          <Button key="sync" type="link" style={{ paddingRight: 0, paddingLeft: 0 }} onClick={async () => {
+            setLoading(true);
+            const result = await syncShop(record.id, record.resourceId);
+            if (!result) {
+              setLoading(false);
+              message.error('同步失败');
+            }
+            refreshPage(actionRef, false);
             setLoading(false);
-            message.error('同步失败');
-          }
-          refreshPage(actionRef, false);
-          setLoading(false);
-          message.success('同步成功');
-        }}>同步</Button>,
-        <Popconfirm key="deleteConfirm" title="确定要删除吗？" onConfirm={async () => await deleteConfirm(record.id)}>
-          <Button key="delete" type="link" danger style={{ paddingLeft: 0 }}>删除</Button>
-        </Popconfirm>
-      ],
+            message.success('同步成功');
+          }}>同步</Button>,
+          <Popconfirm key="deleteConfirm" title="确定要删除吗？" onConfirm={async () => await deleteConfirm(record.id)}>
+            <Button key="delete" type="link" danger style={{ paddingLeft: 0 }}>删除</Button>
+          </Popconfirm>
+      ]},
     }
   ]
+
+  const [open, setOpen] = useState(false);
+  const [bindAuthCodeLoading, setBindAuthCodeLoading] = useState(false);
+  const [shopId, setShopId] = useState(0);
+  const [form] = Form.useForm();
+
+  const openBindAuthModal = async (shopId: number) => {
+    setOpen(true);
+    setShopId(shopId);
+    form.resetFields(); // 重置表单所有字段
+  }
+
+  const bindAuthCode = async () => {
+    let values;
+    try {
+      values = await form.validateFields();
+    } catch (error) {
+      // 忽略验证错误，继续执行
+      values = form.getFieldsValue();
+    }
+
+    if (!values || !values.authCode) {
+      message.error('请输入激活码');
+      return;
+    }
+
+    setBindAuthCodeLoading(true);
+    try {
+      const result = await bindShopAuthCodeApi(shopId, values.authCode);
+      if (!result) {
+        message.error('绑定失败,请联系管理员');
+        return
+      }
+      form.resetFields();
+      setOpen(false);
+      message.success('绑定成功');
+    } catch (error: any) {
+      message.error(error.message || '绑定失败,请联系管理员');
+    } finally {
+      setBindAuthCodeLoading(false);
+    }
+  }
 
   return (
     <Layout curActive='/shop'>
@@ -202,6 +249,19 @@ export default function ShopManage() {
           }}
         />
       </Spin>
+
+      <Modal title="绑定激活码" open={open} onCancel={() => setOpen(false)} onOk={() => setOpen(false)} footer={null} style={{ height: '400px' }}>
+        <Spin spinning={bindAuthCodeLoading} tip={"绑定激活码中..."}>
+          <div style={{ textAlign: 'center', marginTop: 20 }}>
+            <Form form={form}>
+              <Form.Item label="激活码:" name="authCode" required={true} rules={[{ required: true, message: '请输入激活码' }]}>
+                <Input placeholder='请输入激活码' />
+              </Form.Item>
+              <Button onClick={bindAuthCode}>绑定</Button>
+            </Form>
+          </div>
+        </Spin>
+      </Modal>      
     </Layout>
   )
 }

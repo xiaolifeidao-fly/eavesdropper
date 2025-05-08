@@ -49,6 +49,11 @@ const getNavList = () => {
             key: '/sku/task',
             icon: <LayoutOutlined />,
             label: '任务管理'
+        },
+        {
+            key: '/gather-manage',
+            icon: <LayoutOutlined />,
+            label: '采集管理'
         }
         // {
         //     key: '/shop2',

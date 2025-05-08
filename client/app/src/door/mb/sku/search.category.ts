@@ -6,19 +6,20 @@ import { DoorEntity } from "@src/door/entity";
 import { buildValidateDoorEntity } from "@src/door/monitor/mb/mb.monitor";
 
 async function getHeaderData(resourceId : number, validateTag : boolean){
-    let headerless = true;
-    if(validateTag){
-        headerless = false;
-    }
     const searchStartTraceId = "searchStartTraceId";
-    const mbEngine = new MbEngine(resourceId, headerless);
-    if(headerless){
+    let mbEngine = new MbEngine(resourceId);
+    if(!validateTag){
         const headerData = mbEngine.getHeader();
         log.info("headerData", headerData);
         //TODO cookie失效 要做处理
         if(headerData){
             return {header : headerData, startTraceId : mbEngine.getParams(searchStartTraceId)};
         }
+    }
+    const validateAutoTag = mbEngine.getValidateAutoTag();
+    log.info("search category show page ", !validateAutoTag);
+    if(!validateAutoTag){
+        mbEngine = new MbEngine(resourceId, false);
     }
     let result;
     try{
@@ -27,16 +28,15 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
             return undefined;
         }
         result = await mbEngine.openWaitMonitor(page, "https://item.upload.taobao.com/sell/ai/category.htm?type=category", new MbPublishSearchMonitor());
+        log.info("search result is ", result);
         if(!result || !result.getCode()){
             return undefined;
         }
         if(!result.code){
             return undefined;
         }
-        if(!headerless){
-            mbEngine.setHeader(result.getHeaderData());
-            mbEngine.setParams(searchStartTraceId, result.getResponseHeaderData()['S_tid']);
-        }
+        mbEngine.setHeader(result.getHeaderData());
+        mbEngine.setParams(searchStartTraceId, getSid(result.getResponseHeaderData()));
         log.info("search category headerData", result.getHeaderData());
         return result.getHeaderData();
     }finally{
@@ -45,6 +45,22 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
         }
         await mbEngine.closePage();
     }
+}
+
+function getSid(headerData : { [key: string]: any }){
+    let sid = headerData['S_tid'];
+    if(!sid){
+        return undefined;
+    }
+    sid = headerData['s_tid'];
+    if(!sid){
+        return undefined;
+    }
+    sid = headerData['S_TID'];
+    if(!sid){
+        return undefined;
+    }
+    return sid;
 }
 
 
@@ -69,9 +85,10 @@ async function getCategoryInfo(requestHeader : { [key: string]: any }, startTrac
     requestHeader['sec-fetch-mode'] = "cors";
     requestHeader['sec-fetch-site'] = "same-origin";
     requestHeader['x-requested-with'] = "XMLHttpRequest";
-
-    delete requestHeader['upgrade-insecure-requests'];
-
+    log.info("get category info requestHeader: ", requestHeader);
+    if(!requestHeader['upgrade-insecure-requests']){
+        delete requestHeader['upgrade-insecure-requests'];
+    }
     const jsonBody = encodeURIComponent(JSON.stringify({
         keyword: categoryKeyword
     }));
@@ -95,6 +112,15 @@ async function getCategoryInfo(requestHeader : { [key: string]: any }, startTrac
         log.error("搜索商品分类失败", data);
         return new DoorEntity<{}>(false, {});
     }
+
+    if('rgv587_flag' in data && data.rgv587_flag == 'sm'){
+        const doorEntity = new DoorEntity<{}>(false, {});
+        doorEntity.validateUrl = data.url;
+        doorEntity.headerData = requestHeader;
+        doorEntity.setValidateParams({});
+        return doorEntity;
+    }
+
     const categories = data.data?.category;
     if (!categories || categories.length == 0) {
         log.error("搜索商品分类失败", data);

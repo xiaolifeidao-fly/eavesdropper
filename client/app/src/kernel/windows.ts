@@ -69,6 +69,8 @@ const targetWindows : any = {};
 
 export let updateWindow: BrowserWindow | null = null;
 
+export let gatherToolWindow: BrowserWindow;
+
 export const setMainWindow = (window: BrowserWindow)=>{
     mainWindow = window;
 }
@@ -77,9 +79,64 @@ export const setUpdateWindow = (window: BrowserWindow)=>{
     updateWindow = window;
 }
 
+export let gatherToolView: BrowserView;
+
+export const setGatherToolView = (view: BrowserView) => {
+    gatherToolView = view
+}
+
+export const getGatherToolView = (): BrowserView => {
+    return gatherToolView;    
+}
+
+export let gatherPreviewView: BrowserView;
+
+export const setGatherPreviewView = (view: BrowserView) => {
+    gatherPreviewView = view
+}
+
+export const getGatherPreviewView = (): BrowserView => {
+    return gatherPreviewView;    
+}
+
+
+export const setGatherToolWindow = (window: BrowserWindow) => {
+    gatherToolWindow = window
+}
+
+
+
+
+export const getGatherToolWindow = (): BrowserWindow => {
+    return gatherToolWindow;    
+}
+
 export function getTargetWinodw(windowId: string): TargetWindow{
     return targetWindows[windowId];
 }
+
+
+export let gatherWindow: BrowserView;
+
+export function getGatherWindow(): BrowserView{
+    return gatherWindow;
+}
+
+export function setGatherWindow(window: BrowserView){
+    gatherWindow = window;
+}
+
+export let pxxDetailWindow: BrowserWindow;
+
+export function getPxxDetailWindow(): BrowserWindow{
+    return pxxDetailWindow;
+}
+
+export function setPxxDetailWindow(window: BrowserWindow){
+    pxxDetailWindow = window;
+}
+
+
 
 export const addTargetWindow = (windowId : string, window : BrowserWindow, views : TargetView[])=>{
     const targetWindow = new TargetWindow(windowId, window, views);

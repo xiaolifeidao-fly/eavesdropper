@@ -1,13 +1,17 @@
 'use client'
 import React, { useState, MutableRefObject, useEffect } from 'react';
-import { Space } from 'antd';
+import { Space, Button } from 'antd';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import { ProFormSelect, ProCard, ProFormList, ProForm, ProFormDigit, ProFormGroup, ProFormMoney } from '@ant-design/pro-components';
-import { CloseCircleOutlined, SmileOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, SmileOutlined, ArrowLeftOutlined, HomeOutlined } from '@ant-design/icons';
 import { StoreApi } from '@eleapi/store/store';
+import { useRouter } from 'next/navigation';
 
 import { getShopList } from '@api/shop/shop.api';
 import { PriceRangeConfig, SkuPublishConfig } from "@model/sku/skuTask";
+import { ShopStatus } from '@model/shop/shop';
+import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku';
+
 
 export interface SukPushConfigProp {
   setSourceAccount: (account: number) => void, // 资源账号
@@ -19,6 +23,7 @@ export interface SukPushConfigProp {
 const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
   const store = new StoreApi();
   const [account, setAccount] = useState<number>();
+  const router = useRouter();
 
   useEffect(() => {
     console.log('loading SkuPushConfig...')
@@ -30,7 +35,7 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
     let priceRangeConfig = await store.getItem(`sku_publish_config`);
     if (!priceRangeConfig) {
       priceRangeConfig = new SkuPublishConfig();
-      priceRangeConfig.priceRate = [new PriceRangeConfig(0.01, 100, 1.1, 0, 'yuan')];
+      priceRangeConfig.priceRate = [new PriceRangeConfig(0.01, 1000, 1.1, 0, 'yuan')];
       await store.setItem(`sku_publish_config`, priceRangeConfig);
     }
 
@@ -54,6 +59,23 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
         overflow: 'auto',
       }}
     >
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+        <Space size={16}>
+          <Button
+            icon={<ArrowLeftOutlined />}
+            onClick={() => router.back()}
+          >
+            返回
+          </Button>
+          <Button
+            icon={<HomeOutlined />}
+            type="primary"
+            onClick={() => router.push('/')}
+          >
+            回首页
+          </Button>
+        </Space>
+      </div>
       <ProFormSelect
         name="sourceAccoun"
         label="资源账号"
@@ -66,22 +88,32 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
         }}
         request={async () => {
           const shopList = await getShopList();
-          const sourceList: { value: number, label: string }[] = [];
+          const sourceList: { value: number, label: string, disabled: boolean }[] = [];
           for (const shop of shopList) {
+            let label = shop.name;
+            // 禁用选择已失效的账号
+            if (shop.status === ShopStatus.LosEffective) {
+              label = `${label}（已失效）`
+            }
             sourceList.push({
               value: shop.resourceId,
-              label: shop.name
+              label: label,
+              disabled: shop.status === ShopStatus.LosEffective
             })
           }
           // 获取上次选择的账号
           const lastAccount = await store.getItem(`sku_publish_source_account`);
           // 判断lastAccount是否在sourceList中
-          if (lastAccount && sourceList.find(item => item.value === lastAccount)) {
+          if (lastAccount && sourceList.find(item => item.value === lastAccount && item.disabled === false)) {
             setAccount(lastAccount);
             props.setSourceAccount(lastAccount);
           } else if (sourceList.length !== 0) {
-            setAccount(sourceList[0].value);
-            props.setSourceAccount(sourceList[0].value);
+            // 找到第一个未失效的账号
+            const firstValidAccount = sourceList.find(item => item.disabled === false);
+            if (firstValidAccount) {
+              setAccount(firstValidAccount.value);
+              props.setSourceAccount(firstValidAccount.value);
+            }
           }
           return sourceList
         }}

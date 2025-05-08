@@ -126,6 +126,8 @@ func PageResource(param *dto.ResourcePageParamDTO) (*page.Page[dto.ResourcePageD
 				continue
 			}
 			nick = taobaoDTO.Nick
+		} else {
+			nick = d.Account
 		}
 		d.Nick = nick
 	}
@@ -144,9 +146,9 @@ func BindResource(req *dto.ResourceBindDTO) error {
 
 	resourceDTO.Account = req.Nick
 	// 资源账号有效期,先固定30天
-	userID := common.GetLoginUserID()
-	expirationDate, _ := GetResourceAuthExpirationDate(userID)
-	resourceDTO.ExpirationDate = &expirationDate
+	// userID := common.GetLoginUserID()
+	// expirationDate, _ := GetResourceAuthExpirationDate(userID)
+	// resourceDTO.ExpirationDate = &expirationDate
 	resourceDTO.InitUpdate()
 	if _, err = UpdateResource(resourceDTO); err != nil {
 		return err

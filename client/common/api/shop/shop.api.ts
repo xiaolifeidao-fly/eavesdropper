@@ -2,7 +2,7 @@ import { plainToClass } from 'class-transformer'
 import { getDataList, instance } from '@utils/axios'
 
 import { BasePageResp } from '@model/base/base'
-import { ShopPageReq, ShopPageResp, SyncShopReq } from '@model/shop/shop'
+import { ShopPageReq, ShopPageResp, SyncShopReq, ShopInfoResp } from '@model/shop/shop'
 
 // 删除店铺
 export const deleteShop = async (id: number) => {
@@ -23,5 +23,11 @@ export const syncShop = async (id: number, req: SyncShopReq) => {
 }
 
 export const getShopList = async () => {
-    return getDataList(ShopPageResp, "/shop/list")
+    return getDataList(ShopInfoResp, "/shop/list")
+}
+
+// 绑定激活码
+export const bindShopAuthCode = async (shopId: number, authCode: string) => {
+    const result = await instance.post(`/shop/${shopId}/bindAuthCode`, { token: authCode })
+    return plainToClass(String, result)
 }

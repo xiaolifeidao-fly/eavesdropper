@@ -56,6 +56,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.kakrolot.service.business.response.BindResult;
+
 @RestController
 @RequestMapping("/orders")
 @Slf4j
@@ -619,6 +621,112 @@ public class OrderController extends BaseController {
         pageModel.setItems(orderTokenWebConvert.toModels(allTokenDetails));
         
         return WebResponse.success(pageModel);
+    }
+
+    @RequestMapping(value = "/tokens/list", method = RequestMethod.GET)
+    @ResponseBody
+    @ApiOperation(value = "激活码列表", httpMethod = "GET")
+    public WebResponse<PageModel<OrderTokenDetailModel>> tokenList(QueryTokenDetailModel queryTokenDetailModel,
+                                                        @RequestParam("page") int startIndex,
+                                                        @RequestParam("limit") int pageSize,
+                                                        @RequestParam("sort") String sort) {
+        
+        // 创建查询条件对象并设置当前用户ID
+        QueryTokenDetailDTO queryTokenDetailDTO = orderTokenWebConvert.toQueryDTO(queryTokenDetailModel, startIndex, pageSize);
+        queryTokenDetailDTO.setUserId(getCurrentUser().getId());
+//        queryTokenDetailDTO.setSort(sort);
+        
+        // 查询总数
+        Long count = orderTokenDetailService.countByCondition(queryTokenDetailDTO);
+        List<OrderTokenDetailDTO> tokenDetailDTOs = null;
+        if (count > 0) {
+            // 查询数据
+            tokenDetailDTOs = orderTokenDetailService.findByCondition(queryTokenDetailDTO);
+        }
+        
+        // 构建返回结果
+        PageModel<OrderTokenDetailModel> pageModel = new PageModel<>();
+        pageModel.setTotal(count);
+        pageModel.setItems(orderTokenWebConvert.toModels(tokenDetailDTOs));
+        
+        return WebResponse.success(pageModel);
+    }
+
+    @RequestMapping(value = "/manager/tokens/list", method = RequestMethod.GET)
+    @ResponseBody
+    @ApiOperation(value = "激活码列表(管理员)", httpMethod = "GET")
+    public WebResponse<PageModel<OrderTokenDetailModel>> managerTokenList(QueryTokenDetailModel queryTokenDetailModel,
+                                                              @RequestParam("page") int startIndex,
+                                                              @RequestParam("limit") int pageSize,
+                                                              @RequestParam("sort") String sort) {
+        
+        // 创建查询条件对象
+        QueryTokenDetailDTO queryTokenDetailDTO = orderTokenWebConvert.toQueryDTO(queryTokenDetailModel, startIndex, pageSize);
+//        queryTokenDetailDTO.setSort(sort);
+        
+        // 查询总数
+        Long count = orderTokenDetailService.countByManagerCondition(queryTokenDetailDTO);
+        List<OrderTokenDetailDTO> tokenDetailDTOs = null;
+        if (count > 0) {
+            // 查询数据
+            tokenDetailDTOs = orderTokenDetailService.findByManagerCondition(queryTokenDetailDTO);
+        }
+        
+        // 构建返回结果
+        PageModel<OrderTokenDetailModel> pageModel = new PageModel<>();
+        pageModel.setTotal(count);
+        pageModel.setItems(orderTokenWebConvert.toModels(tokenDetailDTOs));
+        
+        return WebResponse.success(pageModel);
+    }
+
+    @RequestMapping(value = "/token/bind", method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation(value = "绑定激活码", httpMethod = "POST")
+    @Auth(isIntercept = false)
+    public WebResponse<OrderTokenDetailModel> bindToken(@RequestBody TokenBindModel tokenBindModel) {
+        if (tokenBindModel == null || StringUtils.isEmpty(tokenBindModel.getToken())) {
+            return WebResponse.error("激活码不能为空");
+        }
+        
+        if (StringUtils.isEmpty(tokenBindModel.getTbShopName())) {
+            return WebResponse.error("店铺名称不能为空");
+        }
+        
+        if (StringUtils.isEmpty(tokenBindModel.getTbShopId())) {
+            return WebResponse.error("店铺ID不能为空");
+        }
+        
+        BindResult result = orderTokenDetailService.bindToken(
+            tokenBindModel.getToken(),
+            tokenBindModel.getTbShopName(),
+            tokenBindModel.getTbShopId()
+        );
+        
+        if (result.isSuccess()) {
+            return WebResponse.success(orderTokenWebConvert.toModel(result.getOrderTokenDetailDTO()));
+        } else {
+            return WebResponse.error(result.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/token/findActiveBinding", method = RequestMethod.GET)
+    @ResponseBody
+    @ApiOperation(value = "根据淘宝店铺ID查找当前生效的激活码绑定信息", httpMethod = "GET")
+    @Auth(isIntercept = false) // 根据需要决定是否需要登录拦截
+    public WebResponse<OrderTokenDetailModel> findActiveBindingByTbShopId(@RequestParam String tbShopId) {
+        if (tbShopId == null) {
+            return WebResponse.error("淘宝店铺ID不能为空");
+        }
+        
+        // 调用新的Service方法查找当前生效的绑定记录
+        OrderTokenDetailDTO tokenDetailDTO = orderTokenDetailService.findActiveBindingByTbShopId(tbShopId);
+        
+        // 将DTO转换为Model
+        OrderTokenDetailModel tokenDetailModel = orderTokenWebConvert.toModel(tokenDetailDTO);
+        
+        // 如果找不到生效的记录，tokenDetailModel会是null
+        return WebResponse.success(tokenDetailModel);
     }
 
 }

@@ -58,13 +58,19 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
     // if(validateTag){
     //     headerless = false;
     // }
-    const mbEngine = new MbEngine(resourceId);
+    let mbEngine = new MbEngine(resourceId);
     if(!validateTag){
         const headerData = mbEngine.getHeader();
         //TODO cookie失效 要做处理
         if(headerData){
             return headerData;
         }
+    }
+
+    const validateAutoTag = mbEngine.getValidateAutoTag();
+    log.info("upload image show page ", !validateAutoTag);
+    if(!validateAutoTag){
+        mbEngine = new MbEngine(resourceId, false);
     }
     let result;
     try{
@@ -82,7 +88,6 @@ async function getHeaderData(resourceId : number, validateTag : boolean, fileQue
             };
         }
         // if(validateTag){
-        log.info("upload image setHeaderData is ", result.getHeaderData());
         mbEngine.setHeader(result.getHeaderData());
         // }
         return result.getHeaderData();
@@ -184,6 +189,12 @@ async function uploadFileByFileApi(source : string, resourceId : number, skuItem
         if(!data || data.success == false){
             log.warn("MbFileUploadMonitor getResponseData error ", data);
             continue;
+        }
+        if('rgv587_flag' in data && data.rgv587_flag == 'sm'){
+            return {
+                validateUrl : data.url,
+                validateParams : {}
+            }
         }
         const fileData : FileData = data.object;
         if(!fileData){

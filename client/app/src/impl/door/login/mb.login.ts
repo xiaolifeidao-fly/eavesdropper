@@ -69,9 +69,13 @@ async function inputLoginInfo(page : Page, ...params : any[]){
     await page.waitForTimeout(2000);
     const username = params[0];
     const password = params[1];
+    const resourceId = params[2];
     const frame = await getFrame(page, "mini_login.htm");
     if(!frame){
         log.error("inputLoginInfo frame is null");
+        const engine = await getLoginEngine(resourceId);
+        await engine.saveContextState();
+        await clearHeader(engine);
         return new DoorEntity<{}>(true, {"result" : "1", "message" : "当前已经是登录状态,无需登录"});
     }
     await frame.locator("#fm-login-id").first().fill(username);
@@ -99,6 +103,12 @@ async function getFrame(page: Page, frameName: string) {
     }
     return undefined;
 }
+
+
+async function clearHeader(engine : MbEngine<{}>){
+    engine.clearHeader();
+}
+
 export class MbLoginApiImpl extends MbLoginApi {
 
 
@@ -117,7 +127,7 @@ export class MbLoginApiImpl extends MbLoginApi {
             }
             const monitor = new MdInputLoginInfoMonitor();
             monitor.setMonitorTimeout(60000);
-            const result = await engine.openWaitMonitor(page, "https://myseller.taobao.com/home.htm/QnworkbenchHome/", monitor, {}, inputLoginInfo, username, password);
+            const result = await engine.openWaitMonitor(page, "https://myseller.taobao.com/home.htm/QnworkbenchHome/", monitor, {}, inputLoginInfo, username, password, resourceId);
             log.info("inputLoginInfo result is ", result);
             if(!result.getCode() && result.validateUrl){
                 const validateResult = await validate(resourceId, result.getHeaderData(), result.validateUrl, result.validateParams);
@@ -132,7 +142,7 @@ export class MbLoginApiImpl extends MbLoginApi {
                 const resultData = result.getData();
                 if(resultData.result == "1"){
                     log.info("inputLoginInfo login success", result.getHeaderData());
-                    engine.clearHeader();
+                    clearHeader(engine);
                     await engine.saveContextState();
                     return new DoorEntity<{}>(true, resultData.message);
                 }
@@ -194,7 +204,7 @@ export class MbLoginApiImpl extends MbLoginApi {
     }
 
     async awaitByLoginResult(header : {[key : string] : any}, engine : MbEngine<{}>, page : Page){
-        engine.clearHeader();
+        clearHeader(engine);
         engine.saveContextState();
         setTimeout(async () => {
             try{

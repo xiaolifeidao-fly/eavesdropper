@@ -183,6 +183,7 @@ public class OrderService extends BaseService {
      * @param count 创建数量
      */
     private void createOrderTokenDetails(Long orderRecordId, Long userId, Long accountId, Long count) {
+        // TODO 这里创建token的过期时间默认为1个月
         for (int i = 0; i < count; i++) {
             OrderTokenDetailDTO tokenDetail = new OrderTokenDetailDTO();
             tokenDetail.setOrderRecordId(orderRecordId);
@@ -190,6 +191,8 @@ public class OrderService extends BaseService {
             tokenDetail.setAccountId(accountId);
             tokenDetail.setToken(generateUniqueToken());
             tokenDetail.setStatus(TokenBindStatus.UNBIND.name());
+            tokenDetail.setExpireUnit("day");
+            tokenDetail.setExpireValue("30");
             orderTokenDetailService.save(tokenDetail);
         }
     }

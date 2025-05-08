@@ -49,6 +49,30 @@ export class ShopPageResp {
   }
 }
 
+export class ShopInfoResp {
+  constructor(
+    public id: number,
+    public userId: number,
+    public resourceId: number,
+    public account: string,
+    public name: string,
+    public remark: string,
+    public updatedAt: string,
+    public status: string,
+    public expirationDate: string,
+  ) {
+    this.id = id
+    this.userId = userId
+    this.resourceId = resourceId
+    this.account = account
+    this.name = name
+    this.remark = remark
+    this.updatedAt = updatedAt
+    this.status = status
+    this.expirationDate = expirationDate
+  }
+}
+
 export class SyncShopReq {
   constructor(
     public resourceId: number,

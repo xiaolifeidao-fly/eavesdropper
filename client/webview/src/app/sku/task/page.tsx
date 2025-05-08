@@ -14,6 +14,7 @@ import { SkuTaskItemList, StatsTags } from './components'
 import { TaskApi } from '@eleapi/door/task/task';
 import SkuPushStepsForm from '../components/SkuPushSteps';
 import { SkuTaskOperationType } from '@model/sku/skuTask';
+import { ShopStatus } from '@model/shop/shop';
 
 const pollingTime = 20*1000
 
@@ -95,7 +96,19 @@ export default function SkuTaskManage() {
       dataIndex: 'shopName',
       search: false,
       key: 'shopName',
-      align: 'center'
+      align: 'center',
+      render: (_, record) => {
+        let shopName = record.shopName || '--'
+        if (record.resourceStatus === ShopStatus.LosEffective) {
+          shopName = shopName + '（已过期）'
+        }
+
+        return (
+          <div>
+            {shopName}
+          </div>
+        )
+      }
     },
     {
       title: '时间',
@@ -150,6 +163,30 @@ export default function SkuTaskManage() {
       align: 'center',
       key: 'operate',
       render: (_, record) => {
+        const disabled = record.resourceStatus === ShopStatus.LosEffective // 资源失效
+
+        const republishButStyle = {
+          color: '#ffa500', // 橘黄色
+          display: 'inline-block',
+          paddingLeft: '4px'
+        }
+        const continueButStyle = {
+          color: '#52c41a', // 绿色
+          display: 'inline-block',
+          paddingLeft: '4px'
+        }
+        const stopButStyle = {
+          color: '#f00', // 红色
+          display: 'inline-block',
+          paddingLeft: '4px'
+        }
+
+        if (disabled) {
+          // 修改按钮颜色
+          republishButStyle.color = '#ccc'
+          continueButStyle.color = '#ccc'
+        }
+
         return (
           <div style={{ display: 'flex', gap: '4px' }}> {/* 设置间距为 4px */}
             <Button
@@ -164,7 +201,8 @@ export default function SkuTaskManage() {
                 <Button
                   type='link'
                   // onClick={() => handleRepublish(record.id)} // 重新发布操作
-                  style={{ color: '#ffa500', display: 'inline-block', paddingLeft: '4px' }} // 橘黄色
+                  style={republishButStyle} // 橘黄色
+                  disabled={disabled}
                 >
                   重新发布
                 </Button>
@@ -175,7 +213,7 @@ export default function SkuTaskManage() {
                 <Button
                   type='link'
                   // onClick={() => handleStop(record.id)} // 停止操作
-                  style={{ color: '#f00', display: 'inline-block', paddingLeft: '4px' }} // 红色按钮
+                  style={stopButStyle} // 红色按钮
                 >
                 停止
                 </Button>
@@ -186,7 +224,8 @@ export default function SkuTaskManage() {
                 <Button
                   type="link"
                   // onClick={() => handleContinue(record.id)} // 重新发布操作
-                  style={{ color: '#52c41a', display: 'inline-block', paddingLeft: '4px' }} // 绿色按钮
+                  style={continueButStyle} // 绿色按钮
+                  disabled={disabled}
                 >
                   继续执行
                 </Button>

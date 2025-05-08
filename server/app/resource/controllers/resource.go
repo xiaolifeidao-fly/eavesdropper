@@ -12,7 +12,6 @@ import (
 	"server/internal/resource/services/dto"
 	shopServices "server/internal/shop/services"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -284,13 +283,13 @@ func getSyncResourceList(ctx *gin.Context) {
 
 	syncResources := make([]*dto.ResourceDTO, 0)
 	for _, mainResource := range mainResources {
-		if mainResource.ExpirationDate == nil {
-			continue
-		}
+		// if mainResource.ExpirationDate == nil {
+		// 	continue
+		// }
 
-		if mainResource.ExpirationDate.BeforeTime(time.Now()) {
-			continue
-		}
+		// if mainResource.ExpirationDate.BeforeTime(time.Now()) {
+		// 	continue
+		// }
 
 		shopDTO, err := shopServices.GetShopByResourceID(mainResource.ID)
 		if err != nil {

@@ -8,9 +8,9 @@ import { app, screen } from 'electron';
 import { Monitor, MonitorChain, MonitorRequest, MonitorResponse } from '../monitor/monitor';
 import log from 'electron-log';
 import { getDoorList, getDoorRecord, saveDoorRecord } from '@api/door/door.api';
-import { DoorRecord } from '@model/door/door';
-import { DoorEngine } from '../engine';
+import { DoorEngine, getPlatform, getRealChromePath } from '../engine';
 import { DoorEntity } from '../entity';
+import { DoorRecord } from '@model/door/door';
 const browserMap = new Map<string, Browser>();
 
 const contextMap = new Map<string, BrowserContext>();
@@ -220,7 +220,10 @@ export class PxxEngine<T> extends DoorEngine<T> {
             if(isFilter){
                 return;
             }
-            router.continue();
+            if(request.url().includes("127.0.0.1:8899")){
+                headers['authorization'] = "bf1d386390a29dcaec9bac3f631ee7ef0664e8f8";
+            }
+            router.continue({headers : headers});
         });
     }
 
@@ -270,7 +273,6 @@ export class PxxEngine<T> extends DoorEngine<T> {
                     const key = this.getKey();
                     const isNeedStoreContext = responseMonitor.needStoreContext(key, headerData);
                     if(isNeedStoreContext){
-                        this.setHeader(headerData);
                         responseMonitor.setStoreContext(key);
                         log.info("session reset save context state");
                         await this.saveContextState();
@@ -488,23 +490,6 @@ export class PxxEngine<T> extends DoorEngine<T> {
         await this.context.storageState({ path: sessionDir});
     }
 
-    public getHeaderKey(){
-        return `${this.resourceId}_door_header_${this.getKey()}`;
-    }
-
-    public setHeader(header : {[key : string] : any}){
-        if(!header || Object.keys(header).length == 0){
-            return;
-        }
-        const key = this.getHeaderKey();
-        set(key, header);
-    }
-
-    public getHeader(){
-        const key = this.getHeaderKey();
-        return get(key);
-    }
-
     public setParams(key : string, value : any){
         const paramsKey = this.getKey() + "_" + key;
         set(paramsKey, value);
@@ -554,25 +539,7 @@ export class PxxEngine<T> extends DoorEngine<T> {
     }
 
     async getRealChromePath(){
-        // if(this.chromePath && this.chromePath != ""){
-        //     return this.chromePath;
-        // }
-        // return get("browserPath");
-        const platform = process.platform;
-        // 判断是否是打包环境
-        if(platform != "darwin"){
-            const isPackaged = app.isPackaged;
-            if (isPackaged) {
-                // 打包后的路径 (在 resources/app.asar 或 resources/app 目录下)
-                const chromeBinPath = path.join(path.dirname(app.getAppPath()),'Chrome-bin','chrome.exe');
-                if(fs.existsSync(chromeBinPath)){
-                    return chromeBinPath;
-                }
-                // 如果不在 asar 中，则使用：
-                // return path.join(process.resourcesPath, 'app', 'Chrome-bin');
-            }
-        }
-        return this.chromePath;
+        return await getRealChromePath(this.headless);
     }
 
     getBrowserKey(){
@@ -615,55 +582,3 @@ function getSecChUa(platform : any){
     return result.join(", ");
 }
 
-export async function initPlatform(){
-    let browser : Browser | undefined = undefined;
-    try{
-        let platform = await getPlatform();
-        if(platform){
-            return platform;
-        }
-        browser = await chromium.launch({
-            headless: false,
-            args: [
-            '--disable-accelerated-2d-canvas', '--disable-webgl', '--disable-software-rasterizer',
-            '--no-sandbox', // 取消沙箱，某些网站可能会检测到沙箱模式
-            '--disable-setuid-sandbox',
-            '--disable-blink-features=AutomationControlled',  // 禁用浏览器自动化控制特性
-          ]
-         });
-        const context = await browser.newContext();
-        const page = await context.newPage();
-        await page.goto("https://www.baidu.com");
-        platform = await setPlatform(page);
-        log.info("login platform is ", JSON.stringify(platform));
-        return platform;
-    }catch(error){
-        log.error("initPlatform error", error);
-    }finally{
-        if(browser){
-            await browser.close();
-        }
-    }
-}
-
-export async function setPlatform(page : Page){
-    const platform = await page.evaluate(() => {
-        // @ts-ignore
-        const navigatorObj = navigator;
-        const result : any = {};
-        for(let key in navigatorObj){
-            result[key] = navigatorObj[key];
-        }
-        return result;
-    });
-    set("browserPlatform", JSON.stringify(platform));
-    return platform;
-}
-
-export async function getPlatform(){
-    const browserPlatform = await get("browserPlatform");
-    if(browserPlatform){
-        return JSON.parse(browserPlatform);
-    }
-    return undefined;
-}

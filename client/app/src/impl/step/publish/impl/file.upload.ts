@@ -38,7 +38,12 @@ export class SkuPublishFileUploadStep extends StepUnit{
         }
         this.setParams("skuItem", skuItem);
         this.setParams("imagePath", imagePath);
-        return new StepResult(true, "上传成功", [
+        const testFileUpload = process.env.TEST_FILE_UPLOAD;
+        let testResult = false;
+        if (testFileUpload && testFileUpload === "true"){
+            testResult = true;
+        }
+        return new StepResult(!testResult, "上传成功", [
             new StepResponse("imageFileList", imageFileList)
         ]);
     }

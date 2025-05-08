@@ -20,10 +20,10 @@ async function createDefaultWindow() {
   try {
     const store = new Store();
     init(store);
-    const mainWindow = await createWindow('main', process.env.WEBVIEW_URL || "");
+    const mainWindow = await createWindow('main', process.env.WEBVIEW_URL + "/sku/task" || "");
     checkUpdate(mainWindow);
     setMainWindow(mainWindow);
-    initPlatform();
+    
   } catch (e) {
     log.error("createDefaultWindow error", e);
   }
@@ -142,7 +142,6 @@ function checkUpdate(mainWindow: BrowserWindow){
 
 
 export const start = () => {
-  
     app.on('ready', async ()=> {
       try {
         registerRpc();

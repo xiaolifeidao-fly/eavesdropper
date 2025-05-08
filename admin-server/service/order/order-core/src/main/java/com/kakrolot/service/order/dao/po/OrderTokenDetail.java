@@ -20,13 +20,19 @@ public class OrderTokenDetail extends BasePO {
     
     private String token;
     
-    private Long tbExternalId;
+    private String tbExternalId;
     
     private String tbShopName;
     
-    private Long tbShopId;
+    private String tbShopId;
     
     private String status; // 绑定状态，参考TokenBindStatus枚举
     
     private Date bindTime; // 绑定成功的时间
+    
+    private Date expireTime; // Token 过期时间
+
+    private String expireUnit; // 过期单位：year month day hour minute 等
+    
+    private String expireValue; // 过期值
 }

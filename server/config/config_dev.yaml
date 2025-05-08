@@ -35,5 +35,6 @@ config:
     accessKeySecret: 
   ai:
     url: http://127.0.0.1:8888/chat
+admin_url: http://8.152.204.115:8009
 
     

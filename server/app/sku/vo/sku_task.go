@@ -62,6 +62,8 @@ type SkuTaskPageResp struct {
 	ID               uint64          `json:"id"`
 	ResourceID       uint64          `json:"resourceId"`
 	ResourceAccount  string          `json:"resourceAccount"`
+	ExpirationDate   *base.Time      `json:"expirationDate"`
+	ResourceStatus   string          `json:"resourceStatus"`
 	Status           string          `json:"status"`
 	StatusLableValue vo.LabelValueVO `json:"statusLableValue"`
 	Source           string          `json:"source"`

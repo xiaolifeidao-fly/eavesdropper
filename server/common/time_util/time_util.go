@@ -56,3 +56,7 @@ func IsAfter(t1, t2 time.Time) bool {
 func IsBefore(t1, t2 time.Time) bool {
 	return t1.Before(t2)
 }
+
+func AddSeconds(t time.Time, seconds int) time.Time {
+	return t.Add(time.Second * time.Duration(seconds))
+}
