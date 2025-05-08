@@ -1,6 +1,4 @@
 
-#!/bin/bash
-
 # 检查 resource/mac 目录下是否存在 @img 和 sharp 文件夹
 if [ -d "resource/mac/@img" ] && [ -d "resource/mac/sharp" ]; then
     echo "Found cached @img and sharp folders, copying to node_modules..."
@@ -27,8 +25,6 @@ else
     cp -r node_modules/@img resource/mac/
     cp -r node_modules/sharp resource/mac/
 fi
-
-# 继续执行打包过程
-sh package.sh
-cp .env ./dist/
-electron-builder --mac --x64
+cp -rf static/html ../resource/ 
+webpack --config webpack.config.js --mode development
+electron .

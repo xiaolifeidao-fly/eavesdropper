@@ -96,7 +96,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
     @InvokeType(Protocols.INVOKE)
     async goHome(){
         const webContents = getGatherWindow()?.webContents;
-        await webContents.loadURL("https://mobile.yangkeduo.com/");
+        webContents.loadURL("https://mobile.yangkeduo.com/");
     }
 
     async createGatherToolView(gatherBatchId : number){

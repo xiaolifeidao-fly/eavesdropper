@@ -83,7 +83,7 @@ export function setupAutoUpdater(win: BrowserWindow) {
   if (process.platform === 'win32') {
     autoUpdater.setFeedURL({
       provider: 'generic',
-      url: process.env.WEBVIEW_URL + "/installer",
+      url: "http://101.43.28.195/updates/",
       channel: 'latest',
       useMultipleRangeRequest: false
     });
