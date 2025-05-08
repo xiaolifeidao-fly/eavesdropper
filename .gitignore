@@ -31,6 +31,8 @@ webview/.next
 **/config.yaml
 
 client/resource/**/*
+client/app/resource/**/*
+
 client/images/**/*
 
 nohup.outout
@@ -49,16 +51,11 @@ client/app/static/Chrome-bin/*
 
 client/app/temp_upload
 
-<<<<<<< HEAD
-*/**/target
-*/**/application.properties
-*/**/logback.xml
 
-
-=======
 **/src/main/resources/application.properties
 **/src/main/resources/log4j2.xml
 **/src/main/resources/logback.xml
 target/
+
 bin/
->>>>>>> 5c37399 (admin-server init)
+
