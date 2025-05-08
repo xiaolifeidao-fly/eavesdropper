@@ -13,7 +13,7 @@ export class MonitorPxxSkuApi extends ElectronApi{
     }
 
     @InvokeType(Protocols.TRRIGER)
-    async onGatherSkuMessage(callback: (gatherSku: GatherSku) => void) {
+    async onGatherSkuMessage(callback: (gatherSku: GatherSku, updateSort: boolean) => void) {
       return await this.onMessage('onGatherSkuMessage', callback)
     }
 

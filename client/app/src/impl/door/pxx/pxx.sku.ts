@@ -378,7 +378,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
             const gatherSku = await addGatherSku(gatherSkuCreateReq);
             log.info('gatherSku: ', gatherSku);
-            this.send('onGatherSkuMessage', gatherSku);
+            this.send('onGatherSkuMessage', gatherSku, true);
         }finally{
             this.send('onGatherToolLoaded', false);
         }
@@ -527,12 +527,15 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
            // 检查文件是否存在
            if (fs.existsSync(filePath)) {
                 // this.createDetailWindow(filePath);
-                await getGatherWindow().webContents.loadFile(filePath);
-                const gatherSku = await getGatherSkuByID(id);
-                log.info('gatherSku: ', gatherSku);
-                this.send('onGatherSkuMessage', gatherSku);
-    
-                return true;
+                try{
+                    this.send('onGatherToolLoaded', true);
+                    await getGatherWindow().webContents.loadFile(filePath);
+                    const gatherSku = await getGatherSkuByID(id);
+                    this.send('onGatherSkuMessage', gatherSku, false);
+                    return true;
+                }finally{
+                    this.send('onGatherToolLoaded', false);
+                }
            }
            return false;
        } catch (error) {

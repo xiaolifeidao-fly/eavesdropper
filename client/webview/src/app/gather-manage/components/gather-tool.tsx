@@ -131,8 +131,8 @@ const GatherTool = () => {
 
       const monitor = new MonitorPxxSkuApi()
       // 监听PXX采集商品消息
-      monitor.onGatherSkuMessage((gatherSku: GatherSku) => {
-        gatherDoorSkuHandler(PDD, gatherSku)
+      monitor.onGatherSkuMessage((gatherSku: GatherSku, updateSort: boolean) => {
+        gatherDoorSkuHandler(PDD, gatherSku, updateSort)
       }).then(() => {
         // monitor.monitorSku(resourceId, gatherBatchId)
       })
@@ -146,7 +146,7 @@ const GatherTool = () => {
   }
 
   // 采集商品消息处理
-  const gatherDoorSkuHandler = (source: string, gatherSku: GatherSku) => {
+  const gatherDoorSkuHandler = (source: string, gatherSku: GatherSku, updateSort: boolean) => {
     // 将pxx当前查看的商品展示到当前展示商品信息列表
     const skuViewInfo: SkuViewInfoI = {
       id: gatherSku.id,
@@ -158,6 +158,9 @@ const GatherTool = () => {
       favorite: gatherSku.favorite
     }
     setSkuViewInfo(skuViewInfo)
+    if(!updateSort){
+       return;
+    }
 
     // 使用函数式更新来处理状态，确保访问最新的状态
     setGatherViewSkuList((prevList) => {
