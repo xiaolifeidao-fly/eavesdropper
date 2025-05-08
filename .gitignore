@@ -31,6 +31,8 @@ webview/.next
 **/config.yaml
 
 client/resource/**/*
+client/app/resource/**/*
+
 client/images/**/*
 
 nohup.outout
