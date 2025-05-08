@@ -7,21 +7,15 @@ qiniuyun_domain="http://eavesdropper.eaochat.com"
 
 echo "开始部署Electron应用更新文件..."
 
-# 读取.env.dev中的SERVER_TARGET环境变量
-if [ -f ./.env.dev ]; then
-    echo "正在读取.env.dev文件..."
+# 读取.env中的SERVER_TARGET环境变量
+if [ -f ./.env ]; then
+    echo "正在读取.env文件..."
     # 修改grep命令，排除注释行（以#开头的行）
-    SERVER_TARGET=$(grep -v "^#" ./.env.dev | grep SERVER_TARGET | cut -d '=' -f2 | tr -d ' "')
-    echo "从.env.dev获取SERVER_TARGET: $SERVER_TARGET"
+    SERVER_TARGET=$(grep -v "^#" ./.env | grep SERVER_TARGET | cut -d '=' -f2 | tr -d ' "')
+    echo "从.env获取SERVER_TARGET: $SERVER_TARGET"
     
-    # 确保SERVER_TARGET有值
-    if [ -z "$SERVER_TARGET" ]; then
-        echo "未从.env.dev中找到有效的SERVER_TARGET，将使用默认值"
-        SERVER_TARGET="http://101.43.28.195:8081"
-    fi
 else
-    echo "无法找到.env.dev文件，将使用默认SERVER_TARGET"
-    SERVER_TARGET="http://101.43.28.195:8081"
+    echo "无法找到.env文件，将使用默认SERVER_TARGET"
 fi
 
 # 显示将要使用的SERVER_TARGET
@@ -138,8 +132,6 @@ package_and_upload() {
         npm run package:mac
     elif [ "$platform" == "win" ]; then
         # 安装Windows平台特定的Sharp模块
-        echo "安装Windows平台特定的Sharp模块..."
-        npm install --os=win32 --cpu=x64 sharp
         npm run package:win
     else
         echo "不支持的平台: $platform"
