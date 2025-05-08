@@ -30,7 +30,7 @@ const monitorConfig : {[key : number] : any} = {};
 export class MonitorPddSku extends MonitorPxxSkuApi {
     
     private readonly width = 450;
-    private readonly borderWidth = 200;
+    private readonly borderWidth = 225;
 
     sendMessage(key : string, ...args: any){
         getGatherToolView()?.webContents.send(key, ...args);
