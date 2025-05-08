@@ -197,29 +197,29 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         const pddHomeUrl = "https://mobile.yangkeduo.com/";
         const sessionInstance = session.fromPartition(`persist:-${resourceId}-session`, { cache: true });
         
-        const platform = await getPlatform();
-        const secChUa = getSecChUa(platform);
-        sessionInstance.webRequest.onBeforeSendHeaders(async (details,callback) => {
-            const header = details.requestHeaders;
-            if(platform){
-                for(const key in header){
-                    const lowerKey = key.toLowerCase();
-                    if(lowerKey == "sec-ch-ua"){
-                        header[key] = secChUa;
-                    }
-                    if(lowerKey == "sec-ch-ua-mobile"){
-                        header[key] = "?0";
-                    }
-                    if(lowerKey == "sec-ch-ua-platform"){
-                        header[key] = `"${platform?.userAgentData?.platform}"`;
-                    }
-                    if(lowerKey == 'user-agent'){
-                        header[key] = platform?.userAgent;
-                    }
-                }
-            }
-            callback({requestHeaders: header});
-        });
+        // const platform = await getPlatform();
+        // const secChUa = getSecChUa(platform);
+        // sessionInstance.webRequest.onBeforeSendHeaders(async (details,callback) => {
+        //     const header = details.requestHeaders;
+        //     if(platform){
+        //         for(const key in header){
+        //             const lowerKey = key.toLowerCase();
+        //             if(lowerKey == "sec-ch-ua"){
+        //                 header[key] = secChUa;
+        //             }
+        //             if(lowerKey == "sec-ch-ua-mobile"){
+        //                 header[key] = "?0";
+        //             }
+        //             if(lowerKey == "sec-ch-ua-platform"){
+        //                 header[key] = `"${platform?.userAgentData?.platform}"`;
+        //             }
+        //             if(lowerKey == 'user-agent'){
+        //                 header[key] = platform?.userAgent;
+        //             }
+        //         }
+        //     }
+        //     callback({requestHeaders: header});
+        // });
 
 
         sessionInstance.webRequest.onCompleted(async (details) => {
