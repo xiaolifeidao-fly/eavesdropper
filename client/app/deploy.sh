@@ -273,8 +273,8 @@ qiniuyun_upload() {
     fi
 
     # 上传文件
-    echo "正在上传文件 $local_file 到七牛云空间 $bucket_name..."
-    qshell fput $bucket_name $remote_file $local_file --overwrite
+    echo "正在上传文件 \"$local_file\" 到七牛云空间 $bucket_name..."
+    qshell fput "$bucket_name" "$remote_file" "$local_file" --overwrite
 
     # 检查上传结果
     if [ $? -eq 0 ]; then
