@@ -244,30 +244,14 @@ package_and_upload() {
         local filename=$(basename "$file")
         echo "正在上传 $filename..."
         
-        # 创建一个没有空格的临时文件名
-        local safe_filename=$(echo "$filename" | tr ' ' '_')
-        local temp_safe_file="$TEMP_DIR/$safe_filename"
-        
-        # 复制到安全文件名
-        cp "$file" "$temp_safe_file"
-        
-        # 上传文件，使用没有空格的文件名
-        # echo "执行命令: scp $temp_safe_file $remote_server:$remote_path/$safe_filename"
-        # sshpass -p "$remote_password" scp $SSH_OPTS "$temp_safe_file" "$remote_server:$remote_path/$safe_filename"
-        qiniuyun_upload $temp_safe_file $remote_path/$safe_filename
+        # 直接使用原始文件名上传到七牛云
+        qiniuyun_upload "$file" "$remote_path/$filename"
         
         if [ $? -ne 0 ]; then
             echo "上传 $filename 失败"
             return 1
         fi
         
-        # 如果上传的是含空格的文件名，在服务器上重命名回原始文件名
-        if [ "$filename" != "$safe_filename" ]; then
-            echo "在服务器上重命名 $safe_filename 回 '$filename'"
-            # sshpass -p "$remote_password" ssh $SSH_OPTS "$remote_server" "cd $remote_path && mv $safe_filename \"$filename\""
-            qiniuyun_upload $temp_safe_file $remote_path/$filename
-        fi
-                
         echo "$filename 上传并验证成功"
     done
     
