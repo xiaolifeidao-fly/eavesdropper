@@ -26,7 +26,7 @@ const SkuViewInfo = ({ skuViewInfo, onFavorite }: { skuViewInfo: SkuViewInfoI | 
     if (skuViewInfo.source === PDD) {
 
       const monitor = new MonitorPxxSkuApi()
-      monitor.openSkuInfoPage(skuViewInfo.skuId)
+      monitor.openSkuInfoPage(skuViewInfo.id, skuViewInfo.skuId)
     } else {
       message.error(`暂未支持查看${skuViewInfo.source}商品详情`)
     }

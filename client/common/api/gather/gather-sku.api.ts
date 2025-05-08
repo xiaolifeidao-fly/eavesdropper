@@ -12,3 +12,8 @@ export const favoriteGatherSku = async (id: number, isFavorite: boolean) => {
   const result = await instance.put(`/gather-sku/${id}/favorite`, { isFavorite })
   return plainToClass(GatherSku, result)
 }
+
+export const getGatherSkuByID = async (id: number) => {
+  const result = await instance.get(`/gather-sku/${id}`)
+  return plainToClass(GatherSku, result)
+}

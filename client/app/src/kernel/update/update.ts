@@ -83,7 +83,7 @@ export function setupAutoUpdater(win: BrowserWindow) {
   if (process.platform === 'win32') {
     autoUpdater.setFeedURL({
       provider: 'generic',
-      url: process.env.UPDATE_URL || 'http://101.43.28.195/updates/',
+      url: process.env.WEBVIEW_URL + "/installer",
       channel: 'latest',
       useMultipleRangeRequest: false
     });
@@ -131,7 +131,7 @@ export function setupAutoUpdater(win: BrowserWindow) {
         ? releaseNotes.map(note => typeof note === 'string' ? note : note.note).join('\n')
         : '';
     setUpdateWindow(updateWindow);
-    const updateUrl = `${process.env.UPDATE_WEBVIEW_URL}?version=${newVersion}&releaseNotes=${encodeURIComponent(notesText)}&releaseName=${encodeURIComponent(releaseName)}&forceUpdate=${forceUpdate}&updateType=${updateType}`
+    const updateUrl = `${process.env.WEBVIEW_URL}/installer?version=${newVersion}&releaseNotes=${encodeURIComponent(notesText)}&releaseName=${encodeURIComponent(releaseName)}&forceUpdate=${forceUpdate}&updateType=${updateType}`
     updateWindow.loadURL(updateUrl);
     updateWindow.on('closed', () => {
        app.quit();
@@ -180,7 +180,7 @@ function checkExtUpdate(){
   });
 
   setUpdateWindow(updateWindow);
-  const updateUrl = `${process.env.UPDATE_EXT_WEBVIEW_URL}`
+  const updateUrl = `${process.env.WEBVIEW_URL}/installer/ext`
   updateWindow.loadURL(updateUrl);
 }
 

@@ -79,9 +79,33 @@ export const setUpdateWindow = (window: BrowserWindow)=>{
     updateWindow = window;
 }
 
+export let gatherToolView: BrowserView;
+
+export const setGatherToolView = (view: BrowserView) => {
+    gatherToolView = view
+}
+
+export const getGatherToolView = (): BrowserView => {
+    return gatherToolView;    
+}
+
+export let gatherPreviewView: BrowserView;
+
+export const setGatherPreviewView = (view: BrowserView) => {
+    gatherPreviewView = view
+}
+
+export const getGatherPreviewView = (): BrowserView => {
+    return gatherPreviewView;    
+}
+
+
 export const setGatherToolWindow = (window: BrowserWindow) => {
     gatherToolWindow = window
 }
+
+
+
 
 export const getGatherToolWindow = (): BrowserWindow => {
     return gatherToolWindow;    

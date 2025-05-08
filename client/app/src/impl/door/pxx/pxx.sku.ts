@@ -13,9 +13,9 @@ import { app, BrowserView, session } from 'electron';
 import fs from 'fs'
 import { shell } from 'electron';
 import { GatherSku, GatherSkuCreateReq } from "@model/gather/gather-sku";
-import { addGatherSku } from "@api/gather/gather-sku.api";
+import { addGatherSku, getGatherSkuByID } from "@api/gather/gather-sku.api";
 import { BrowserWindow } from 'electron';
-import { setGatherToolWindow, getGatherToolWindow, setGatherWindow, getGatherWindow, setPxxDetailWindow, getPxxDetailWindow } from '@src/kernel/windows'
+import { setGatherToolWindow, getGatherToolWindow, setGatherWindow, getGatherWindow, setPxxDetailWindow, getPxxDetailWindow, setGatherToolView, getGatherToolView, setGatherPreviewView, getGatherPreviewView } from '@src/kernel/windows'
 import { get } from "@utils/store/electron";
 import { getPlatform, getSecChUa } from "@src/door/engine";
 
@@ -30,9 +30,10 @@ const monitorConfig : {[key : number] : any} = {};
 export class MonitorPddSku extends MonitorPxxSkuApi {
     
     private readonly width = 450;
+    private readonly borderWidth = 200;
 
     sendMessage(key : string, ...args: any){
-        getGatherToolWindow()?.webContents.send(key, ...args);
+        getGatherToolView()?.webContents.send(key, ...args);
     }
 
     async getPxxCode(){
@@ -98,6 +99,43 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         await webContents.loadURL("https://mobile.yangkeduo.com/");
     }
 
+    async createGatherToolView(gatherBatchId : number){
+        const browserView = new BrowserView({
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js'),
+                contextIsolation: true,
+                webviewTag: true, // 启用 webview 标签
+                devTools: true,
+                webSecurity: false,
+                nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
+            },
+        });
+        const gatherToolUrl = `${process.env.WEBVIEW_URL}/gather-tool?gatherBatchId=${gatherBatchId}`
+        browserView.webContents.loadURL(gatherToolUrl)
+        browserView.setBounds({ x: 0, y: 0, width: this.width, height: 1080}); // 设置大小和位置
+        setGatherToolView(browserView);
+        return browserView;
+    }
+
+    async createGatherPreviewView(url : string){
+        const browserView = new BrowserView({
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js'),
+                contextIsolation: true,
+                webviewTag: true, // 启用 webview 标签
+                devTools: true,
+                webSecurity: false,
+                nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
+            },
+        });
+        browserView.webContents.loadURL(url);
+        const position = this.width * 2 + this.borderWidth + 20;
+        browserView.setBounds({ x: position, y: 0, width: 1920 - position, height: 1080}); // 设置大小和位置
+        // Add a title to the view by injecting CSS and HTML
+        setGatherPreviewView(browserView);
+        return browserView;
+    }
+
     async createGatherWindow(resourceId : number, gatherBatchId : number) {
         // 主窗口
         const windowInstance = new BrowserWindow({
@@ -107,17 +145,19 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             webviewTag: true, // 启用 webview 标签
-            // devTools: true,
+            devTools: true,
             webSecurity: false,
             nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
             }
         });
 
-        // windowInstance.addBrowserView(await this.createGatherToolView(gatherBatchId));
-        
-        const gatherToolUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
-        windowInstance.loadURL(gatherToolUrl)
         windowInstance.addBrowserView(await this.createPddView(resourceId, gatherBatchId));
+        windowInstance.addBrowserView(await this.createGatherToolView(gatherBatchId));
+        const gatherToolUrl = `${process.env.WEBVIEW_URL}/gather-manage/preview?gatherBatchId=${gatherBatchId}`
+        windowInstance.addBrowserView(await this.createGatherPreviewView(gatherToolUrl));
+        // const gatherToolUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
+        // windowInstance.loadURL(gatherToolUrl)
+        // windowInstance.webContents.openDevTools();
 
         setGatherToolWindow(windowInstance);
         windowInstance.on('closed', () => {
@@ -128,27 +168,28 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
     }
 
     async createDetailWindow(url : string) {
-        const pxxDetailWindow = getPxxDetailWindow();
-        if(pxxDetailWindow && !pxxDetailWindow.isDestroyed()){
-            pxxDetailWindow.show();
-            pxxDetailWindow.loadFile(url);
-            return;
-        }
-        // 主窗口
-        const windowInstance = new BrowserWindow({
-            width: 1090-this.width,
-            height: 1080,
-            webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
-            contextIsolation: true,
-            webviewTag: true, // 启用 webview 标签
-            // devTools: true,
-            webSecurity: false,
-            nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
-            }
-        });
-        setPxxDetailWindow(windowInstance);
-        windowInstance.loadFile(url);
+        // const pxxDetailWindow = getPxxDetailWindow();
+        // if(pxxDetailWindow && !pxxDetailWindow.isDestroyed()){
+        //     pxxDetailWindow.show();
+        //     pxxDetailWindow.loadFile(url);
+        //     return;
+        // }
+        // // 主窗口
+        // const windowInstance = new BrowserWindow({
+        //     width: 1090-this.width,
+        //     height: 1080,
+        //     webPreferences: {
+        //     preload: path.join(__dirname, 'preload.js'),
+        //     contextIsolation: true,
+        //     webviewTag: true, // 启用 webview 标签
+        //     // devTools: true,
+        //     webSecurity: false,
+        //     nodeIntegration: true // 启用Node.js集成，以便在渲染进程中使用Node.js模块
+        //     }
+        // });
+        // setPxxDetailWindow(windowInstance);
+        // windowInstance.loadFile(url);
+        await getGatherPreviewView().webContents.loadFile(url);
     }
 
 
@@ -199,6 +240,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                         await this.saveByJson(rawData, requestUrl, monitorKey, goodsId, PDD);
                         await this.saveGatherSku(gatherBatchId, goodsId, rawData);  // 保存采集商品
                     } else {
+                        this.send('onGatherToolLoaded', false);
                         log.info("row data not found");
                     }
                 }catch(error){
@@ -215,7 +257,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         });
 
         // 将 BrowserView 附加到主窗口
-        browserView.setBounds({ x: this.width, y: 0, width: 1920-this.width, height: 1080}); // 设置大小和位置
+        browserView.setBounds({ x: this.width, y: 0, width: this.width + this.borderWidth, height: 1080}); // 设置大小和位置
         browserView.webContents.loadURL(pddHomeUrl);
         setGatherWindow(browserView);
         return browserView;
@@ -456,10 +498,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
   @InvokeType(Protocols.INVOKE)
   async openGatherTool(resourceId: number, gatherBatchId : number): Promise<boolean> {
-    const windowInstance = await this.createGatherWindow(resourceId, gatherBatchId);
-    windowInstance.on('closed', () => {
-        windowInstance.destroy()
-    })
+    await this.createGatherWindow(resourceId, gatherBatchId);
     return true
   }
 
@@ -467,7 +506,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
      * 打开本地HTML文件
      */
    @InvokeType(Protocols.INVOKE)
-   async openLocalHtmlFile(source: string, itemKey: string): Promise<boolean> {
+   async openLocalHtmlFile(id: number, source: string, itemKey: string): Promise<boolean> {
        try {
            const userDataPath = app.getPath('userData');
            let fileName = '';
@@ -487,22 +526,14 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
            // 检查文件是否存在
            if (fs.existsSync(filePath)) {
-                    this.createDetailWindow(filePath);
-            //     const htmlWindow = getGatherWindow();
-            //     // 先加载空白页
-            //     htmlWindow.webContents.loadURL('about:blank');
-            //    // 使用系统默认应用打开文件
-            //    const htmlContent = fs.readFileSync(filePath, 'utf-8');
-            // //    htmlWindow.loadURL(`data:text/html;charset=utf-8,${htmlContent}`)
-            //     htmlWindow.webContents.on('did-finish-load', () => {
-            //         htmlWindow.webContents.executeJavaScript(`
-            //         document.open();
-            //         document.write(\`${htmlContent.replace(/`/g, '\\`')}\`);
-            //         document.close();
-            //         `);
-            //     });
+                // this.createDetailWindow(filePath);
+                await getGatherWindow().webContents.loadFile(filePath);
+                const gatherSku = await getGatherSkuByID(id);
+                log.info('gatherSku: ', gatherSku);
+                this.send('onGatherSkuMessage', gatherSku);
+    
+                return true;
            }
-
            return false;
        } catch (error) {
            log.error('Error opening local HTML file:', error);
@@ -511,7 +542,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
    }
 
   @InvokeType(Protocols.INVOKE)
-  async openSkuInfoPage(skuId: string): Promise<boolean> {
+  async openSkuInfoPage(id: number, skuId: string): Promise<boolean> {
     // 调用后端API查询本地HTML文件是否存在
     try {
         // 这里假设后端有一个checkLocalHtmlExists方法，如果没有的话需要在后端添加
@@ -520,18 +551,14 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         if (localFileExists) {
           // 如果本地文件存在，打开本地文件
           // 由于需要通过后端打开文件，可能需要新增一个openLocalFile方法
-          await this.openLocalHtmlFile(PDD, skuId)
-          return true;
-        } else {
-          // 如果本地文件不存在，使用在线链接
-        //   window.open(`${PDD_URL}${skuId}`, '_blank')
-          return true;
-        }
+          return await this.openLocalHtmlFile(id, PDD, skuId)
+        } 
+        return false;
       } catch (error) {
         console.error('Error checking local HTML file:', error)
         // 出错时回退到使用在线链接
         // window.open(`${PDD_URL}${skuId}`, '_blank')
-        return true;
+        return false;
       }
   }
 }

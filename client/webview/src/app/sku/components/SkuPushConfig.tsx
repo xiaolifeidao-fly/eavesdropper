@@ -59,21 +59,23 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
         overflow: 'auto',
       }}
     >
-      <Space size={16} style={{ marginBottom: 16 }}>
-        <Button
-          icon={<ArrowLeftOutlined />}
-          onClick={() => router.back()}
-        >
-          返回
-        </Button>
-        <Button
-          icon={<HomeOutlined />}
-          type="primary"
-          onClick={() => router.push('/')}
-        >
-          回首页
-        </Button>
-      </Space>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+        <Space size={16}>
+          <Button
+            icon={<ArrowLeftOutlined />}
+            onClick={() => router.back()}
+          >
+            返回
+          </Button>
+          <Button
+            icon={<HomeOutlined />}
+            type="primary"
+            onClick={() => router.push('/')}
+          >
+            回首页
+          </Button>
+        </Space>
+      </div>
       <ProFormSelect
         name="sourceAccoun"
         label="资源账号"

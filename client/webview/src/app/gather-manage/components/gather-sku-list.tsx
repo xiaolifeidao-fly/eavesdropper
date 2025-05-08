@@ -130,7 +130,12 @@ const GatherSkuList: React.FC<GatherSkuListProps> = ({
     if (skuViewInfo.source === PDD) {
       // 创建一个API实例来检查本地文件是否存在
       const monitor = new MonitorPxxSkuApi()
-      monitor.openSkuInfoPage(skuViewInfo.skuId)
+      const result = await monitor.openSkuInfoPage(skuViewInfo.id, skuViewInfo.skuId);
+      console.log('result', result)
+      if(!result){
+        message.error(`未找到详情数据`)
+        return;
+      }
     } else {
       message.error(`暂未支持查看${skuViewInfo.source}商品详情`)
     }

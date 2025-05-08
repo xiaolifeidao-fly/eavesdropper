@@ -1,6 +1,7 @@
 import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku'
-import { Button } from 'antd'
+import { Button, Space } from 'antd'
 import React from 'react'
+import { RollbackOutlined, HomeOutlined } from '@ant-design/icons'
 
 interface GatherInfo {
   id: number
@@ -27,19 +28,29 @@ const GaterToolInfo = ({ gaterInfo }: { gaterInfo: GatherInfo | null }) => {
         border: '1px solid #f0f0f0',
         fontSize: 13
       }}>
-      <div>
-        <Button type='primary' onClick={async () => {
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
+        <Space size={16}>
+          <Button 
+            type='primary' 
+            icon={<RollbackOutlined />}
+            onClick={async () => {
               const pxxApi = new MonitorPxxSkuApi()
               await pxxApi.goBack();
-         }}>
-           返回
-         </Button>
-         <Button type='primary' onClick={async () => {
+            }}
+          >
+            返回 
+          </Button>
+          <Button 
+            type='primary' 
+            icon={<HomeOutlined />}
+            onClick={async () => {
               const pxxApi = new MonitorPxxSkuApi()
               await pxxApi.goHome();
-         }}>
-           首页
-         </Button>
+            }}
+          >
+            首页
+          </Button>
+        </Space>
       </div>  
       <div
         className='batch-number'

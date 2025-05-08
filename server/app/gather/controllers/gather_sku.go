@@ -8,6 +8,7 @@ import (
 	"server/common/server/middleware"
 	"server/internal/gather/services"
 	"server/internal/gather/services/dto"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -18,7 +19,23 @@ func LoadGatherSkuRouter(router *gin.RouterGroup) {
 	{
 		r.Use(middleware.Authorization()).POST("", AddGatherSku)
 		r.Use(middleware.Authorization()).PUT("/:id/favorite", FavoriteGatherSku)
+		r.Use(middleware.Authorization()).GET("/:id", GetGatherSkuByID)
 	}
+}
+
+func GetGatherSkuByID(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	if err != nil {
+		controller.Error(ctx, "id 参数错误")
+		return
+	}
+
+	gatherSku, err := services.GetGatherSkuByID(id)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, gatherSku)
 }
 
 // AddGatherSku

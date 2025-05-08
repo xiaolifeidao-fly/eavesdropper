@@ -43,8 +43,8 @@ export class MonitorPxxSkuApi extends ElectronApi{
     }
 
     @InvokeType(Protocols.INVOKE)
-    async openLocalHtmlFile(source: string, itemKey: string): Promise<boolean> {
-        return await this.invokeApi('openLocalHtmlFile', source, itemKey);
+    async openLocalHtmlFile(id: number, source: string, itemKey: string): Promise<boolean> {
+        return await this.invokeApi('openLocalHtmlFile', id, source, itemKey);
     }
 
     @InvokeType(Protocols.INVOKE)
@@ -53,7 +53,7 @@ export class MonitorPxxSkuApi extends ElectronApi{
     }
 
     @InvokeType(Protocols.INVOKE)
-    async openSkuInfoPage(skuId: string): Promise<boolean> {
-        return await this.invokeApi('openSkuInfoPage', skuId);
+    async openSkuInfoPage(id: number, skuId: string): Promise<boolean> {
+        return await this.invokeApi('openSkuInfoPage', id, skuId);
     }
 }
