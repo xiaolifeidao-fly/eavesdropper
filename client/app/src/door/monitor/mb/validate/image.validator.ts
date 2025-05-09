@@ -16,7 +16,7 @@ export class ImageValidatorMonitor extends MbMonitorResponse<any>{
         const url = response.request().url();
         if(url.includes("seller_admin.htm")){
             const result = new DoorEntity<{}>(true, {} as {});
-            result.headerData = response.request().allHeaders();
+            result.headerData = await response.request().allHeaders();
             log.info("image validator seller_admin success", result.headerData);
             return result;
         }
