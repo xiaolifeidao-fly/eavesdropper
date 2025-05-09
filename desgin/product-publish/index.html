@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品发布系统</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">商品发布系统</h1>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>基础属性</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="title">标题</label>
+                    <input type="text" class="form-control" id="title" placeholder="请输入商品标题">
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>主图</h2>
+            </div>
+            <div class="card-body">
+                <div class="main-images" id="mainImages">
+                    <div class="image-upload-box">
+                        <input type="file" accept="image/*" class="image-input">
+                        <div class="upload-placeholder">
+                            <i class="plus-icon">+</i>
+                            <div>点击上传</div>
+                        </div>
+                        <img class="preview-image" style="display: none;">
+                    </div>
+                    <div class="image-upload-box">
+                        <input type="file" accept="image/*" class="image-input">
+                        <div class="upload-placeholder">
+                            <i class="plus-icon">+</i>
+                            <div>点击上传</div>
+                        </div>
+                        <img class="preview-image" style="display: none;">
+                    </div>
+                    <div class="image-upload-box">
+                        <input type="file" accept="image/*" class="image-input">
+                        <div class="upload-placeholder">
+                            <i class="plus-icon">+</i>
+                            <div>点击上传</div>
+                        </div>
+                        <img class="preview-image" style="display: none;">
+                    </div>
+                    <div class="image-upload-box">
+                        <input type="file" accept="image/*" class="image-input">
+                        <div class="upload-placeholder">
+                            <i class="plus-icon">+</i>
+                            <div>点击上传</div>
+                        </div>
+                        <img class="preview-image" style="display: none;">
+                    </div>
+                    <div class="image-upload-box">
+                        <input type="file" accept="image/*" class="image-input">
+                        <div class="upload-placeholder">
+                            <i class="plus-icon">+</i>
+                            <div>点击上传</div>
+                        </div>
+                        <img class="preview-image" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2>商品属性</h2>
+                <button class="btn btn-primary add-attribute" data-target="product-attributes">添加属性</button>
+            </div>
+            <div class="card-body">
+                <div id="product-attributes">
+                    <!-- 商品属性会通过JS动态添加 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2>销售属性</h2>
+                <button class="btn btn-primary add-attribute" data-target="sales-attributes">添加属性</button>
+            </div>
+            <div class="card-body">
+                <div id="sales-attributes">
+                    <!-- 销售属性会通过JS动态添加 -->
+                </div>
+                
+                <div class="table-responsive mt-4">
+                    <table class="table table-bordered table-striped" id="sales-table">
+                        <thead>
+                            <tr>
+                                <th>图片</th>
+                                <!-- 销售属性列会通过JS动态添加 -->
+                                <th>价格</th>
+                                <th>数量</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="table-image-upload">
+                                        <input type="file" accept="image/*" class="image-input">
+                                        <div class="upload-placeholder small">
+                                            <i class="plus-icon">+</i>
+                                        </div>
+                                        <img class="preview-image" style="display: none;">
+                                    </div>
+                                </td>
+                                <!-- 动态生成的销售属性单元格 -->
+                                <td><input type="number" class="form-control" placeholder="价格"></td>
+                                <td><input type="number" class="form-control" placeholder="数量"></td>
+                                <td><button class="btn btn-danger btn-sm delete-row">删除</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-success" id="add-row">添加规格</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>商品详情</h2>
+            </div>
+            <div class="card-body">
+                <div class="detail-images">
+                    <h3>详情图片</h3>
+                    <div class="d-flex flex-wrap" id="detailImages">
+                        <div class="detail-image-upload">
+                            <input type="file" accept="image/*" class="image-input">
+                            <div class="upload-placeholder">
+                                <i class="plus-icon">+</i>
+                                <div>点击上传</div>
+                            </div>
+                            <img class="preview-image" style="display: none;">
+                        </div>
+                        <button class="btn btn-outline-primary add-detail-image" id="add-detail-image">
+                            <i class="plus-icon">+</i> 添加图片
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mb-5">
+            <button class="btn btn-primary btn-lg mx-2" id="save-draft">保存草稿</button>
+            <button class="btn btn-success btn-lg mx-2" id="publish">发布商品</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
