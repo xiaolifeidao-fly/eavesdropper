@@ -30,7 +30,7 @@ export function enableUpdateInDev() {
   // 强制设置更新URL（如果package.json中的配置失效）
   autoUpdater.setFeedURL({
     provider: 'generic',
-    url: process.env.INSTALL_URL
+    url: `${process.env.QINIU_YUN_URL}/app/updates/`
   });
   
   return autoUpdater;
@@ -83,7 +83,7 @@ export function setupAutoUpdater(win: BrowserWindow) {
   if (process.platform === 'win32') {
     autoUpdater.setFeedURL({
       provider: 'generic',
-      url: process.env.INSTALL_URL || '',
+      url: `${process.env.QINIU_YUN_URL}/app/updates/`,
       channel: 'latest',
       useMultipleRangeRequest: false
     });
