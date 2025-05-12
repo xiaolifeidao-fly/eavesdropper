@@ -3,7 +3,7 @@ config:
     mode: dev # dev开发环境 test测试环境 prod线上环境
     name: lodge-server
     host: 127.0.0.1
-    port: 8080
+    port: 8081
     prefix: /api
   logger:
     encoding: json
