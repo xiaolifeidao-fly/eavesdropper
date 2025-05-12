@@ -14,9 +14,9 @@ config:
     cap: 10
   database:
     driver: mysql
-    username: xianglong
-    password: A4622511z3!
-    host: rm-uf643031x2y9u6765jo.mysql.rds.aliyuncs.com
+    username: tbk_eavesdropper
+    password: eavesdropperA4622511z3!
+    host: rm-2zevxff9o636gsy24co.mysql.rds.aliyuncs.com
     port: 3306
     database: eavesdropper
     maxOpen: 100
