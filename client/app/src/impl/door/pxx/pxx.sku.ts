@@ -158,7 +158,6 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         // const gatherToolUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
         // windowInstance.loadURL(gatherToolUrl)
         // windowInstance.webContents.openDevTools();
-
         setGatherToolWindow(windowInstance);
         windowInstance.on('closed', () => {
             const channel = this.buildKey("onGatherToolClosed");
@@ -254,6 +253,21 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
             webPreferences: {
                 session: sessionInstance
             },
+        });
+
+        browserView.webContents.on('context-menu', (event, params) => {
+            if (params.mediaType === 'image') {
+                const { clipboard } = require('electron');
+                const menu = require('electron').Menu.buildFromTemplate([
+                    {
+                        label: '复制图片地址',
+                        click: () => {
+                            clipboard.writeText(params.srcURL);
+                        }
+                    }
+                ]);
+                menu.popup();
+            }
         });
 
         // 将 BrowserView 附加到主窗口
