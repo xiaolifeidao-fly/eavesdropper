@@ -15,6 +15,10 @@ export default function FeedbackManage() {
   const [modalData, setModalData] = useState({})
 
   useEffect(() => {
+    initFeedbackTypeEnums()
+  }, [])
+
+  const initFeedbackTypeEnums = () => {
     getFeedbackStatusEnums().then((res) => {
       const valueEnums: Record<string, any> = {}
       res.forEach((item) => {
@@ -24,7 +28,7 @@ export default function FeedbackManage() {
       })
       setStatusEnums(valueEnums)
     })
-  }, [])
+  }
 
   const columns: ProColumns<any>[] = [
     {

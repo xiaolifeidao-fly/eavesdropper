@@ -28,6 +28,7 @@ func LoadFeedbackRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).PUT("/:id/mark/process", MarkFeedbackProcessing)
 		r.Use(middleware.Authorization()).PUT("/:id/resolved", ResolvedFeedback)
 		r.Use(middleware.Authorization()).GET("/status/enums", GetFeedbackStatusEnums)
+		r.Use(middleware.Authorization()).GET("/type/enums", GetFeedbackTypeEnums)
 	}
 }
 
@@ -217,6 +218,21 @@ func GetFeedbackStatusEnums(ctx *gin.Context) {
 		statusMap["value"] = status.String()
 		statusMap["label"] = status.ToLabel()
 		resp = append(resp, statusMap)
+	}
+	controller.OK(ctx, resp)
+}
+
+// GetFeedbackTypeEnums
+// @Description 获取反馈类型列表
+// @Router /feedback/type/enums [get]
+func GetFeedbackTypeEnums(ctx *gin.Context) {
+	feedbackTypeList := dto.GetAllFeedbackType()
+	resp := make([]map[string]any, 0)
+	for _, feedbackType := range feedbackTypeList {
+		feedbackTypeMap := make(map[string]any)
+		feedbackTypeMap["value"] = feedbackType.String()
+		feedbackTypeMap["label"] = feedbackType.ToLabel()
+		resp = append(resp, feedbackTypeMap)
 	}
 	controller.OK(ctx, resp)
 }

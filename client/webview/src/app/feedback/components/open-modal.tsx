@@ -4,7 +4,6 @@ import ModalCreate from './modal-create'
 
 const TARGET = {
   create: {
-    title: '创建反馈',
     width: 600,
     target: ModalCreate
   }
