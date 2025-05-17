@@ -553,14 +553,14 @@ async function getSlideContent(imageInfo : string) {
             if (isValidateSuccess(result)) {
               if(validateItem.validateUrl.includes("member/login.jhtml")){
                 await page.waitForTimeout(3000);
-                log.info("validate image set header", result.getHeaderData());
-                engine.setHeader(result.getHeaderData());
+                const headerData = result.getHeaderData();
+                log.info("validate image set header", headerData);
+                engine.setHeader(headerData);
                 await engine.saveContextState();
-                return;
               }
-                log.info(`验证成功，总共尝试 ${validateNum + 1} 次`);
+              log.info(`验证成功，总共尝试 ${validateNum + 1} 次`);
             } else {
-                log.info(`验证最终失败，尝试了 ${validateNum + 1} 次`);
+              log.info(`验证最终失败，尝试了 ${validateNum + 1} 次`);
             }
             return result;
         }

@@ -28,17 +28,20 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
             return undefined;
         }
         result = await mbEngine.openWaitMonitor(page, "https://item.upload.taobao.com/sell/ai/category.htm?type=category", new MbPublishSearchMonitor());
-        log.info("search result is ", result);
         if(!result || !result.getCode()){
             return undefined;
         }
         if(!result.code){
             return undefined;
         }
-        mbEngine.setHeader(result.getHeaderData());
-        mbEngine.setParams(searchStartTraceId, getSid(result.getResponseHeaderData()));
-        log.info("search category headerData", result.getHeaderData());
-        return result.getHeaderData();
+        const headerData = result.getHeaderData();
+        mbEngine.setHeader(headerData);
+        log.info("search category result headerData", headerData);
+        const sid = getSid(result.getResponseHeaderData());
+        log.info("search category sid", sid);
+        mbEngine.setParams(searchStartTraceId, sid);
+        log.info("search category success");
+        return headerData;
     }finally{
         if(result){
             await mbEngine.saveContextState();

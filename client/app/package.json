@@ -1,6 +1,6 @@
 {
   "name": "eavesdropper",
-  "version": "1.2.30",
+  "version": "1.2.31",
   "description": "",
   "main": "dist/main.js",
   "scripts": {
@@ -45,11 +45,11 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "http://101.43.28.195/updates/"
+        "url": "http://eavesdropper.eaochat.com/app/updates/"
       }
     ],
     "releaseInfo": {
-      "releaseNotes": "-1.采集账号登录优化"
+      "releaseNotes": "-1.优化更新速度"
     },
     "nsis": {
       "oneClick": false,

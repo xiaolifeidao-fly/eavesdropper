@@ -125,7 +125,7 @@ export class InstallerExtImpl extends InstallerExtApi {
     fs.mkdirSync(userDataDir, { recursive: true });
 
     // 下载URL
-    const downloadUrl = `http://101.43.28.195/updates/chrome/${chromeVersion}/${zipFilename}`;
+    const downloadUrl = `${process.env.QINIU_YUN_URL}/app/chrome/${chromeVersion}/${zipFilename}`;
 
     // 下载路径
     const downloadPath = path.join(app.getPath('temp'), zipFilename);

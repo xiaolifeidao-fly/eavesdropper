@@ -1,0 +1,330 @@
+:root {
+    --primary-color: #1890ff;
+    --secondary-color: #52c41a;
+    --border-color: #e8e8e8;
+    --box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --border-radius: 8px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px 0 60px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.main-title {
+    text-align: center;
+    color: var(--primary-color);
+    margin: 30px 0;
+    font-weight: 600;
+    font-size: 32px;
+}
+
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 20px;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.card-body {
+    padding: 24px;
+    background-color: #fff;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+    color: #333;
+}
+
+.form-control {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px 12px;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.btn {
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #40a9ff;
+    border-color: #40a9ff;
+}
+
+.btn-success {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-success:hover, .btn-success:focus {
+    background-color: #73d13d;
+    border-color: #73d13d;
+}
+
+.btn-danger {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+}
+
+.btn-danger:hover, .btn-danger:focus {
+    background-color: #ff7875;
+    border-color: #ff7875;
+}
+
+/* 主图上传样式 */
+.main-images {
+    display: flex;
+    gap: 15px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.image-upload-box {
+    width: 150px;
+    height: 150px;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.image-upload-box:hover {
+    border-color: var(--primary-color);
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #999;
+}
+
+.plus-icon {
+    font-size: 30px;
+    margin-bottom: 8px;
+    color: #999;
+}
+
+.image-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.preview-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 表格内图片上传样式 */
+.table-image-upload {
+    width: 60px;
+    height: 60px;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.upload-placeholder.small {
+    font-size: 12px;
+}
+
+/* 详情图片上传样式 */
+.detail-images {
+    margin-top: 20px;
+}
+
+.detail-image-upload {
+    width: 200px;
+    height: 200px;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.remove-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    border-radius: 50%;
+    font-size: 16px;
+    opacity: 0.8;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+}
+
+.remove-image:hover {
+    opacity: 1;
+    background-color: rgba(255, 0, 0, 0.7);
+}
+
+.add-detail-image {
+    height: 200px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0 20px;
+}
+
+.add-detail-image:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.add-detail-image .plus-icon {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+/* 属性设置样式 */
+.attribute-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: flex-end;
+}
+
+.attribute-field {
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.attribute-actions {
+    width: 100px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* 表格样式 */
+.table {
+    margin-top: 20px;
+    white-space: nowrap;
+}
+
+.table thead th {
+    background-color: #fafafa;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.table input.form-control,
+.table select.form-control {
+    min-width: 80px;
+    max-width: 120px;
+    margin: 0 auto;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .attribute-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .attribute-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .main-images {
+        flex-wrap: wrap;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.attribute-row, 
+.image-upload-box, 
+.table tbody tr,
+.detail-image-upload {
+    animation: fadeIn 0.3s ease-out;
+} 
