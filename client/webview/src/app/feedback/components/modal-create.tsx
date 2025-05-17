@@ -49,11 +49,10 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
   }
 
   const onFinish = async (values: any) => {
-    console.log(values)
-
-    // const attachments = fileList.map((file) => {
-    //   return new AddAttachmentReq(file.response.data, file.name, file.type, file.size)
-    // })
+    const attachments = fileList.map((file) => {
+      // return new AddAttachmentReq(file.response.data, file.name, file.type, file.size)
+      console.log(file)
+    })
   
     const addFeedbackReq = new AddFeedbackReq(values.title, values.feedbackType, values.content, values.contactInfo)
     const addFeedbackRes = await AddFeedback(addFeedbackReq)
