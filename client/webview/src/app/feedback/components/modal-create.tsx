@@ -75,38 +75,20 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
   }
 
   const onFinish = async (values: any) => {
-    // 打印文件信息
-    console.log('上传的文件列表：', fileList.map(file => ({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-    })))
-
-    // 获取所有文件的二进制数据
-    const binaryResults = await Promise.all(
-      fileList.map(async (file) => {
-        if (file.originFileObj) {
-          const buffer = await getFileBinary(file.originFileObj as File)
-          console.log('文件:', file.name, '二进制长度:', buffer.byteLength)
-          return buffer
-        }
-        return null
-      })
-    )
-
-    // 构建附件对象，将二进制数据转为 Blob 传入 data 字段
-    const attachments = fileList.map((file, idx) => {
-      const buffer = binaryResults[idx]
-      const data = buffer ? new Uint8Array(buffer) : new Uint8Array()
-      const name = file.name
-      const type = file.type || ''
-      const size = file.size || 0
-      return new AddAttachmentReq(data, name, type, size)
-    })
-  
-    const addFeedbackReq = new AddFeedbackReq(values.title, values.feedbackType, values.content, values.contactInfo)
-    addFeedbackReq.attachments = attachments
-    const addFeedbackRes = await AddFeedback(addFeedbackReq)
+    const formData = new FormData()
+    formData.append('title', values.title)
+    formData.append('feedbackType', values.feedbackType)
+    formData.append('content', values.content)
+    formData.append('contactInfo', values.contactInfo)
+    // formData.append('files', fileList)
+    // 遍历 fileList 并逐个添加文件
+    // fileList.forEach((file) => {
+    //   // 假设 file.originFileObj 是实际的 File 对象
+    //   if (file.originFileObj) {
+    //     formData.append('files', file.originFileObj)
+    //   }
+    // })
+    const addFeedbackRes = await AddFeedback(formData)
 
     if (addFeedbackRes) {
       message.success('感谢您的反馈！我们会尽快处理。')

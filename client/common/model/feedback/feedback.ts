@@ -35,12 +35,12 @@ export class AddFeedbackReq {
     public feedbackType: string,
     public content: string,
     public contactInfo?: string,
-    public attachments?: AddAttachmentReq[]
+    public files?: File[]
   ) {
     this.title = title
     this.feedbackType = feedbackType
     this.content = content
     this.contactInfo = contactInfo
-    this.attachments = attachments
+    this.files = files
   }
 }

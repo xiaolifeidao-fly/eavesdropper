@@ -9,8 +9,12 @@ export const getFeedbackPage = async (req: FeedbackPageReq) => {
   return plainToClass(BasePageResp<FeedbackPage>, result)
 }
 
-export const AddFeedback = async (req: AddFeedbackReq) => {
-  const result = await instance.post(`/feedback`, req)
+export const AddFeedback = async (req: FormData) => {
+  const result = await instance.post(`/feedback`, req, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
   return plainToClass(Number, result)
 }
 
