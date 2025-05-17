@@ -112,19 +112,22 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
         </Sider>
         <Layout>
           <Header style={{ padding: 0, ...getThemeBg(curTheme), display: 'flex' }}>
-            <div className="rightControl">
-              <span className="avatar" >
-              </span>
-            <div className="logo-text" style={{marginRight : 100}}>
-            <Spin spinning={pxxLoading} size="small">
-              <Button onClick={openPxx}>打开PXX</Button>
-            </Spin>
-          </div>
-              <span className="msg" >
-                <Dropdown menu={{ items }} placement="bottomLeft" arrow>
-                  <Avatar style={{ color: '#fff', backgroundColor: colorTextBase }}>
-                    {user?.nickname}
-                  </Avatar>
+            <div className='rightControl'>
+              <span className='avatar'></span>
+              <div
+                className='logo-text'
+                style={{ marginRight: 5 }}>
+                {/* <Spin spinning={pxxLoading} size="small">
+                  <Button onClick={openPxx}>打开PXX</Button>
+                  </Spin> */}
+                  <Button type='link' onClick={() => router.push('/feedback')}>意见反馈</Button>
+              </div>
+              <span className='msg'>
+                <Dropdown
+                  menu={{ items }}
+                  placement='bottomLeft'
+                  arrow>
+                  <Avatar style={{ color: '#fff', backgroundColor: colorTextBase }}>{user?.nickname}</Avatar>
                 </Dropdown>
               </span>
             </div>
@@ -134,9 +137,8 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
               style={{
                 ...getThemeBg(curTheme),
                 borderRadius: borderRadiusLG,
-                height: '100%',
-              }}
-            >
+                height: '100%'
+              }}>
               {children}
             </div>
           </Content>

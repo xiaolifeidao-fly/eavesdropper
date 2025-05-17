@@ -52,6 +52,11 @@ func PageFeedback(param *dto.FeedbackPageParamDTO) (*page.Page[dto.FeedbackPageD
 		return page.BuildEmptyPage[dto.FeedbackPageDTO](param.ToPageInfo(count)), nil
 	}
 
+	for _, feedback := range pageData {
+		feedback.FeedbackTypeLabel = dto.GetFeedbackTypeByCode(feedback.FeedbackType).ToLabel()
+		feedback.StatusLabel = dto.GetFeedbackStatusByCode(feedback.Status).ToLabel()
+	}
+
 	pageDTO := page.BuildPage(param.ToPageInfo(count), pageData)
 	return pageDTO, nil
 }

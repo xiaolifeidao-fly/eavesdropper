@@ -27,6 +27,7 @@ func LoadFeedbackRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).GET("/:id/info", GetFeedbackInfo)
 		r.Use(middleware.Authorization()).PUT("/:id/mark/process", MarkFeedbackProcessing)
 		r.Use(middleware.Authorization()).PUT("/:id/resolved", ResolvedFeedback)
+		r.Use(middleware.Authorization()).GET("/status/enums", GetFeedbackStatusEnums)
 	}
 }
 
@@ -203,4 +204,19 @@ func updateFeedbackStatus(feedbackID uint64, status string) (*dto.FeedbackDTO, e
 	}
 
 	return feedbackDTO, nil
+}
+
+// GetFeedbackStatusEnums
+// @Description 获取反馈状态列表
+// @Router /feedback/status/enums [put]
+func GetFeedbackStatusEnums(ctx *gin.Context) {
+	statusList := dto.GetAllStatuses()
+	resp := make([]map[string]any, 0)
+	for _, status := range statusList {
+		statusMap := make(map[string]any)
+		statusMap["value"] = status.String()
+		statusMap["label"] = status.ToLabel()
+		resp = append(resp, statusMap)
+	}
+	controller.OK(ctx, resp)
 }

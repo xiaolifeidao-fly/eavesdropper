@@ -24,8 +24,42 @@ const (
 	Other FeedbackType = "Other"
 )
 
-// 为FeedbackType实现String方法，方便打印和输出
+func GetFeedbackTypeByCode(code string) FeedbackType {
+	switch code {
+	case "FunctionalIssue":
+		return FunctionalIssue
+	case "ErrorReport":
+		return ErrorReport
+	case "FeatureSuggestion":
+		return FeatureSuggestion
+	case "Complaint":
+		return Complaint
+	case "Other":
+		return Other
+	default:
+		return Other
+	}
+}
+
 func (f FeedbackType) String() string {
+	switch f {
+	case FunctionalIssue:
+		return "FunctionalIssue"
+	case ErrorReport:
+		return "ErrorReport"
+	case FeatureSuggestion:
+		return "FeatureSuggestion"
+	case Complaint:
+		return "Complaint"
+	case Other:
+		return "Other"
+	default:
+		return "Other"
+	}
+}
+
+// 为FeedbackType实现ToLabel方法，方便打印和输出
+func (f FeedbackType) ToLabel() string {
 	switch f {
 	case FunctionalIssue:
 		return "功能问题"
@@ -38,7 +72,7 @@ func (f FeedbackType) String() string {
 	case Other:
 		return "其他"
 	default:
-		return "未知类型"
+		return "其他"
 	}
 }
 
@@ -63,17 +97,45 @@ const (
 	Processing FeedbackStatus = "Processing"
 	// Resolved 已解决
 	Resolved FeedbackStatus = "Resolved"
+	// Unknown 未知
+	Unknown FeedbackStatus = "Unknown"
 )
 
-// String 返回状态的字符串表示
+func GetFeedbackStatusByCode(code string) FeedbackStatus {
+	switch code {
+	case "Pending":
+		return Pending
+	case "Processing":
+		return Processing
+	case "Resolved":
+		return Resolved
+	default:
+		return Unknown
+	}
+}
+
 func (s FeedbackStatus) String() string {
 	switch s {
 	case Pending:
-		return "pending"
+		return "Pending"
 	case Processing:
-		return "processing"
+		return "Processing"
 	case Resolved:
-		return "resolved"
+		return "Resolved"
+	default:
+		return "unknown"
+	}
+}
+
+// ToLabel 返回状态的字符串表示
+func (s FeedbackStatus) ToLabel() string {
+	switch s {
+	case Pending:
+		return "待处理"
+	case Processing:
+		return "处理中"
+	case Resolved:
+		return "已解决"
 	default:
 		return "unknown"
 	}
@@ -121,12 +183,14 @@ type FeedbackPageParamDTO struct {
 }
 
 type FeedbackPageDTO struct {
-	ID           uint64    `json:"id" select:"table:feedback;column:id"`
-	UserID       uint64    `json:"userId" select:"table:feedback;column:user_id"`
-	Title        string    `json:"title" select:"table:feedback;column:title"`
-	FeedbackType string    `json:"feedbackType" select:"table:feedback;column:feedback_type"`
-	CreatedAt    base.Time `json:"createdAt" select:"table:feedback;column:created_at"`
-	Status       string    `json:"status" select:"table:feedback;column:status"`
+	ID                uint64    `json:"id" select:"table:feedback;column:id"`
+	UserID            uint64    `json:"userId" select:"table:feedback;column:user_id"`
+	Title             string    `json:"title" select:"table:feedback;column:title"`
+	FeedbackType      string    `json:"feedbackType" select:"table:feedback;column:feedback_type"`
+	CreatedAt         base.Time `json:"createdAt" select:"table:feedback;column:created_at"`
+	Status            string    `json:"status" select:"table:feedback;column:status"`
+	FeedbackTypeLabel string    `json:"feedbackTypeLabel"`
+	StatusLabel       string    `json:"statusLabel"`
 }
 
 type FeedbackInfoDTO struct {
