@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Input, Button, Select, Upload, message, Space } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
+import type { UploadFile, UploadProps } from 'antd/es/upload/interface'
 
 import { getFeedbackTypeEnums, AddFeedback } from '@api/feedback/feedback.api'
 import { AddFeedbackReq } from '@model/feedback/feedback'
+import { AddAttachmentReq } from '@model/feedback/attachment'
 
 const { TextArea } = Input
 
@@ -15,7 +17,7 @@ interface ModalCreateProps {
 const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
   const [form] = Form.useForm()
   const [titleCount, setTitleCount] = useState(0)
-  const [fileList, setFileList] = useState<any[]>([])
+  const [fileList, setFileList] = useState<UploadFile[]>([])
   const [typeEnums, setTypeEnums] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -40,21 +42,34 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
     setTitleCount(e.target.value.length)
   }
 
-  const handleUploadChange = ({ fileList }: any) => {
-    setFileList(fileList)
+  const handleUploadChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    setFileList(newFileList)
   }
 
-  const handleRemove = (file: any) => {
+  const handleRemove: UploadProps['onRemove'] = (file) => {
     setFileList((prev) => prev.filter((item) => item.uid !== file.uid))
+    return true
   }
 
   const onFinish = async (values: any) => {
+    // 打印文件信息
+    console.log('上传的文件列表：', fileList.map(file => ({
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    })))
+
     const attachments = fileList.map((file) => {
-      // return new AddAttachmentReq(file.response.data, file.name, file.type, file.size)
-      console.log(file)
+      const data = file.response.data
+      const name = file.name
+      const type = file.type || ''
+      const size = file.size || 0
+      return new AddAttachmentReq(data, name, type, size)
+      
     })
   
     const addFeedbackReq = new AddFeedbackReq(values.title, values.feedbackType, values.content, values.contactInfo)
+    addFeedbackReq.attachments = attachments
     const addFeedbackRes = await AddFeedback(addFeedbackReq)
 
     if (addFeedbackRes) {
