@@ -158,11 +158,11 @@ type FeedbackDTO struct {
 
 type AddFeedbackDTO struct {
 	UserID       uint64              `json:"userId"`
-	FeedbackType string              `json:"feedbackType"`
-	Title        string              `json:"title"`
-	Content      string              `json:"content"`
-	Status       string              `json:"status"`
-	ContactInfo  string              `json:"contactInfo"`
+	FeedbackType string              `json:"feedbackType" form:"feedbackType"`
+	Title        string              `json:"title" form:"title"`
+	Content      string              `json:"content" form:"content"`
+	Status       string              `json:"status" form:"status"`
+	ContactInfo  string              `json:"contactInfo" form:"contactInfo"`
 	Attachments  []*AddAttachmentDTO `json:"attachments"`
 }
 

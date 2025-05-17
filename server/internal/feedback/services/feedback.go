@@ -30,6 +30,7 @@ func AddFeedback(req *dto.AddFeedbackDTO) (*dto.FeedbackDTO, error) {
 
 	// 保存反馈附件
 	for _, attachment := range req.Attachments {
+		attachment.FeedbackID = feedbackDTO.ID
 		if _, err = AddAttachment(attachment); err != nil {
 			logger.Errorf("AddFeedback failed, with error is %v", err)
 		}

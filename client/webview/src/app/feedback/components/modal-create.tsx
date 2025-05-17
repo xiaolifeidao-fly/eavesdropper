@@ -14,6 +14,8 @@ interface ModalCreateProps {
   onSuccess?: () => void
 }
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+
 const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
   const [form] = Form.useForm()
   const [titleCount, setTitleCount] = useState(0)
@@ -51,6 +53,27 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
     return true
   }
 
+  // 文件大小校验
+  const beforeUpload = (file: File) => {
+    if (file.size > MAX_FILE_SIZE) {
+      message.error(`${file.name} 超过10MB，无法上传！`)
+      return Upload.LIST_IGNORE
+    }
+    return true
+  }
+
+  // 获取文件二进制数据
+  const getFileBinary = (file: File): Promise<ArrayBuffer> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        resolve(e.target?.result as ArrayBuffer)
+      }
+      reader.onerror = reject
+      reader.readAsArrayBuffer(file)
+    })
+  }
+
   const onFinish = async (values: any) => {
     // 打印文件信息
     console.log('上传的文件列表：', fileList.map(file => ({
@@ -59,13 +82,26 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
       size: file.size,
     })))
 
-    const attachments = fileList.map((file) => {
-      const data = file.response.data
+    // 获取所有文件的二进制数据
+    const binaryResults = await Promise.all(
+      fileList.map(async (file) => {
+        if (file.originFileObj) {
+          const buffer = await getFileBinary(file.originFileObj as File)
+          console.log('文件:', file.name, '二进制长度:', buffer.byteLength)
+          return buffer
+        }
+        return null
+      })
+    )
+
+    // 构建附件对象，将二进制数据转为 Blob 传入 data 字段
+    const attachments = fileList.map((file, idx) => {
+      const buffer = binaryResults[idx]
+      const data = buffer ? new Uint8Array(buffer) : new Uint8Array()
       const name = file.name
       const type = file.type || ''
       const size = file.size || 0
       return new AddAttachmentReq(data, name, type, size)
-      
     })
   
     const addFeedbackReq = new AddFeedbackReq(values.title, values.feedbackType, values.content, values.contactInfo)
@@ -161,7 +197,7 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
               onChange={handleUploadChange}
               onRemove={handleRemove}
               accept='image/*,video/*'
-              beforeUpload={() => false}
+              beforeUpload={beforeUpload}
               style={{ borderRadius: 4 }}>
               <p className='ant-upload-drag-icon'>
                 <InboxOutlined style={{ color: '#1890ff' }} />

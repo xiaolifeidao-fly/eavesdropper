@@ -6,13 +6,6 @@ import (
 	"server/common/converter"
 )
 
-type FileType int
-
-const (
-	ImageType FileType = iota + 1
-	VideoType
-)
-
 type AttachmentDTO struct {
 	dto.BaseDTO
 	FeedbackID uint64 `json:"feebackId"`
@@ -23,11 +16,11 @@ type AttachmentDTO struct {
 }
 
 type AddAttachmentDTO struct {
-	FeedbackID uint64 `json:"feedbackId"`
-	Data       []byte `json:"data"`
-	FileType   string `json:"fileType"`
-	FileName   string `json:"fileName"`
-	FileSize   int    `json:"fileSize"`
+	FeedbackID uint64  `json:"feedbackId"`
+	Data       []uint8 `json:"data"`
+	FileType   string  `json:"fileType"`
+	FileName   string  `json:"fileName"`
+	FileSize   int     `json:"fileSize"`
 }
 
 func (d *AddAttachmentDTO) ToAttachmentDTO() *AttachmentDTO {

@@ -3,6 +3,8 @@ package controllers
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"server/app/feedback/vo"
 	"server/common"
 	"server/common/base/page"
@@ -37,14 +39,58 @@ func LoadFeedbackRouter(router *gin.RouterGroup) {
 // @Router /feedback [post]
 func AddFeedback(ctx *gin.Context) {
 	var err error
+	form, err := ctx.MultipartForm()
+	if err != nil {
+		logger.Errorf("AddFeedback failed, with error is %v", err)
+		controller.Error(ctx, "参数错误")
+		return
+	}
+
+	attachments := make([]*dto.AddAttachmentDTO, 0)
+	files := form.File["files"]
+	for _, file := range files {
+		openedFile, err := file.Open()
+		if err != nil {
+			logger.Errorf("AddFeedback failed, with error is %v", err)
+			controller.Error(ctx, "参数错误")
+			return
+		}
+		defer openedFile.Close()
+
+		buffer := make([]byte, 512)
+		_, err = openedFile.Read(buffer)
+		if err != nil {
+			logger.Errorf("AddFeedback failed, with error is %v", err)
+			controller.Error(ctx, "参数错误")
+			return
+		}
+		mimeType := http.DetectContentType(buffer)
+
+		fileBytes, err := ioutil.ReadAll(openedFile)
+		if err != nil {
+			logger.Errorf("AddFeedback failed, with error is %v", err)
+			controller.Error(ctx, "参数错误")
+			return
+		}
+
+		attachment := &dto.AddAttachmentDTO{
+			Data:     fileBytes,
+			FileName: file.Filename,
+			FileSize: int(file.Size),
+			FileType: mimeType,
+		}
+
+		attachments = append(attachments, attachment)
+	}
 
 	var addReq dto.AddFeedbackDTO
-	if err = controller.Bind(ctx, &addReq, binding.JSON); err != nil {
+	if err = controller.Bind(ctx, &addReq, binding.Form); err != nil {
 		logger.Infof("AddFeedback Bind error: %v", err)
 		controller.Error(ctx, "参数错误")
 		return
 	}
 	addReq.Status = dto.Pending.String()
+	addReq.Attachments = attachments
 	addReq.UserID = common.GetLoginUserID()
 
 	var feedbackDTO *dto.FeedbackDTO
