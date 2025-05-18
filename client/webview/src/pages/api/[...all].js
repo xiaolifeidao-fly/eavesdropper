@@ -56,6 +56,14 @@ async function request(url, req){
   const menthd = req.method;
   const headers = req.headers;
   if(menthd === 'POST'){
+    const contentType = headers['content-type'];
+    console.log(contentType)
+    const isMultiPart = contentType.includes('multipart/form-data')
+    if (isMultiPart) {
+      console.log('----')
+      return axios.post(url, req, { headers});
+    }
+
      const response = await axios.post(url, req.body, { headers});
      return response;
   }

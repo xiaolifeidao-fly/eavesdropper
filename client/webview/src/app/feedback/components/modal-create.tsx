@@ -82,13 +82,20 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
     formData.append('contactInfo', values.contactInfo)
     // formData.append('files', fileList)
     // 遍历 fileList 并逐个添加文件
-    // fileList.forEach((file) => {
-    //   // 假设 file.originFileObj 是实际的 File 对象
-    //   if (file.originFileObj) {
-    //     formData.append('files', file.originFileObj)
-    //   }
-    // })
-    const addFeedbackRes = await AddFeedback(formData)
+    fileList.forEach((file) => {
+      // 假设 file.originFileObj 是实际的 File 对象
+      if (file.originFileObj) {
+        formData.append('files', file.originFileObj)
+      }
+    })
+    // 设置请求配置
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      timeout: 30000 // 30秒超时
+    }
+    const addFeedbackRes = await AddFeedback(formData, config)
 
     if (addFeedbackRes) {
       message.success('感谢您的反馈！我们会尽快处理。')
