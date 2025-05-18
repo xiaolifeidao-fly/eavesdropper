@@ -1,11 +1,16 @@
 import ShowModal from '@/components/ShowModal'
 
 import ModalCreate from './modal-create'
+import ModalView from './modal-view'
 
 const TARGET = {
   create: {
     width: 600,
     target: ModalCreate
+  },
+  view: {
+    width: 600,
+    target: ModalView
   }
 }
 

@@ -194,13 +194,16 @@ type FeedbackPageDTO struct {
 }
 
 type FeedbackInfoDTO struct {
-	ID           uint64           `json:"id"`
-	UserID       uint64           `json:"userId"`
-	FeedbackType string           `json:"feedbackType"`
-	Title        string           `json:"title"`
-	Content      string           `json:"content"`
-	Status       string           `json:"status"`
-	ContactInfo  string           `json:"contactInfo"`
-	Attachments  []*AttachmentDTO `json:"attachments"`
-	Processes    []*ProcessDTO    `json:"processes"`
+	ID                uint64           `json:"id"`
+	UserID            uint64           `json:"userId"`
+	FeedbackType      string           `json:"feedbackType"`
+	FeedbackTypeLabel string           `json:"feedbackTypeLabel"`
+	Title             string           `json:"title"`
+	Content           string           `json:"content"`
+	Status            string           `json:"status"`
+	StatusLabel       string           `json:"statusLabel"`
+	ContactInfo       string           `json:"contactInfo"`
+	CreatedAt         base.Time        `json:"createdAt"`
+	Attachments       []*AttachmentDTO `json:"attachments"`
+	Processes         []*ProcessDTO    `json:"processes"`
 }

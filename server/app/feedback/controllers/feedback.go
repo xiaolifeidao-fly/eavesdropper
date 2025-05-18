@@ -31,6 +31,7 @@ func LoadFeedbackRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).PUT("/:id/resolved", ResolvedFeedback)
 		r.Use(middleware.Authorization()).GET("/status/enums", GetFeedbackStatusEnums)
 		r.Use(middleware.Authorization()).GET("/type/enums", GetFeedbackTypeEnums)
+		r.Use(middleware.Authorization()).GET("/admin", UserIsAdmin)
 	}
 }
 
@@ -167,17 +168,6 @@ func GetFeedbackInfo(ctx *gin.Context) {
 		return
 	}
 
-	feedbackID := feedbackInfoDTO.ID
-	userID := common.GetLoginUserID()
-	if isAdmin(userID) {
-		var processes []*dto.ProcessDTO
-		if processes, err = services.GetProcessesByFeedbackID(feedbackID); err != nil {
-			controller.Error(ctx, err.Error())
-			return
-		}
-		feedbackInfoDTO.Processes = processes
-	}
-
 	controller.OK(ctx, feedbackInfoDTO)
 }
 
@@ -196,7 +186,7 @@ func MarkFeedbackProcessing(ctx *gin.Context) {
 
 	// 更新反馈状态
 	var feedbackDTO *dto.FeedbackDTO
-	if feedbackDTO, err = updateFeedbackStatus(req.ID, dto.Resolved.String()); err != nil {
+	if feedbackDTO, err = updateFeedbackStatus(req.ID, dto.Processing.String()); err != nil {
 		controller.Error(ctx, err.Error())
 		return
 	}
@@ -281,4 +271,16 @@ func GetFeedbackTypeEnums(ctx *gin.Context) {
 		resp = append(resp, feedbackTypeMap)
 	}
 	controller.OK(ctx, resp)
+}
+
+// UserIsAdmin
+// @Description 判断用户是否为管理员
+// @Router /feedback/admin [get]
+func UserIsAdmin(ctx *gin.Context) {
+	userID := common.GetLoginUserID()
+	if isAdmin(userID) {
+		controller.OK(ctx, true)
+	} else {
+		controller.OK(ctx, false)
+	}
 }

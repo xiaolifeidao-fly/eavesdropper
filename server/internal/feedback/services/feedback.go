@@ -78,11 +78,23 @@ func GetFeedbackInfo(ID uint64) (*dto.FeedbackInfoDTO, error) {
 
 	var feedbackInfoDTO = &dto.FeedbackInfoDTO{}
 	converter.Copy(feedbackInfoDTO, feedback)
+	feedbackInfoDTO.FeedbackTypeLabel = dto.GetFeedbackTypeByCode(feedbackInfoDTO.FeedbackType).ToLabel()
+	feedbackInfoDTO.StatusLabel = dto.GetFeedbackStatusByCode(feedbackInfoDTO.Status).ToLabel()
+
+	// 获取附件列表
 	var attachmentList []*dto.AttachmentDTO
 	if attachmentList, err = GetAttachmentByFeedbackID(feedbackID); err != nil {
 		return nil, err
 	}
 	feedbackInfoDTO.Attachments = attachmentList
+
+	// 获取处理记录
+	var processes []*dto.ProcessDTO
+	if processes, err = GetProcessesByFeedbackID(feedbackID); err != nil {
+		return nil, err
+	}
+	feedbackInfoDTO.Processes = processes
+
 	return feedbackInfoDTO, nil
 }
 

@@ -80,8 +80,8 @@ export default function FeedbackManage() {
           <div>
             <Button
               type='link'
-              // onClick={() => openModal('update', record)} // 修改操作
-              style={{ display: 'inline-block' }} // 缩小右边距
+              onClick={() => openModal('view', record)}
+              style={{ display: 'inline-block' }}
             >
               查看详情
             </Button>
