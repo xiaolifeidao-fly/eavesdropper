@@ -86,6 +86,11 @@ func GetFeedbackInfo(ID uint64) (*dto.FeedbackInfoDTO, error) {
 	if attachmentList, err = GetAttachmentByFeedbackID(feedbackID); err != nil {
 		return nil, err
 	}
+	for _, attachment := range attachmentList {
+		fileUrl := attachment.FileUrl
+		// 构建文件访问路径
+		attachment.FileUrl = fileUrl
+	}
 	feedbackInfoDTO.Attachments = attachmentList
 
 	// 获取处理记录

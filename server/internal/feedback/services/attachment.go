@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
+	"server/common/middleware/storage/oss"
 	"server/internal/feedback/models"
 	"server/internal/feedback/repositories"
 	"server/internal/feedback/services/dto"
@@ -20,11 +21,11 @@ func AddAttachment(req *dto.AddAttachmentDTO) (*dto.AttachmentDTO, error) {
 	attachmentDTO := req.ToAttachmentDTO()
 
 	// 调用AliyunOss上传文件
-	// fileUrl := getAttachmentFileUrl(req.FeedbackID, req.FileName)
-	// if err = oss.Put(fileUrl, req.Data); err != nil {
-	// 	logger.Errorf("AddAttachment failed, with error is %v, param: %v", err, req)
-	// }
-	attachmentDTO.FileUrl = "fileUrl"
+	fileUrl := getAttachmentFileUrl(req.FeedbackID, req.FileName)
+	if err = oss.Put(fileUrl, req.Data); err != nil {
+		logger.Errorf("AddAttachment failed, with error is %v, param: %v", err, req.FileName, req.FeedbackID)
+	}
+	attachmentDTO.FileUrl = fileUrl
 
 	attachment := database.ToPO[models.Attachment](attachmentDTO)
 	if attachment, err = attachmentRepository.SaveOrUpdate(attachment); err != nil {
@@ -36,7 +37,7 @@ func AddAttachment(req *dto.AddAttachmentDTO) (*dto.AttachmentDTO, error) {
 }
 
 func getAttachmentFileUrl(feedbackID uint64, fileName string) string {
-	return fmt.Sprintf("%s/%d/%s.json", AttachmentFilePrefix, feedbackID, fileName)
+	return fmt.Sprintf("%s/%d/%s", AttachmentFilePrefix, feedbackID, fileName)
 }
 
 func GetAttachmentByFeedbackID(feedbackID uint64) ([]*dto.AttachmentDTO, error) {
