@@ -59,6 +59,10 @@ const ModalView = ({ hideModal, onSuccess, data }: ModalCreateProps) => {
     if (feedback.status !== FeedbackStatus.PENDING) return
 
     await markFeedbackProcessing(feedback.id)
+
+    // 刷新数据
+    await fetchFeedbackInfo()
+
     message.info('修改成功')
   }
 
