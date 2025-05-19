@@ -9,6 +9,7 @@ import (
 	"server/internal/feedback/models"
 	"server/internal/feedback/repositories"
 	"server/internal/feedback/services/dto"
+	"time"
 )
 
 const (
@@ -37,7 +38,8 @@ func AddAttachment(req *dto.AddAttachmentDTO) (*dto.AttachmentDTO, error) {
 }
 
 func getAttachmentFileUrl(feedbackID uint64, fileName string) string {
-	return fmt.Sprintf("%s/%d/%s", AttachmentFilePrefix, feedbackID, fileName)
+	nowDate := time.Now().Format("2006-01-02")
+	return fmt.Sprintf("%s/%s/%d/%s", AttachmentFilePrefix, nowDate, feedbackID, fileName)
 }
 
 func GetAttachmentByFeedbackID(feedbackID uint64) ([]*dto.AttachmentDTO, error) {

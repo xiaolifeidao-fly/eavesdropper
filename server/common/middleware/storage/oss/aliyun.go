@@ -112,7 +112,9 @@ func (a *AliyunOss) GetUrl(path string, duration *time.Duration) (string, error)
 
 	key := a.BuildKey(path)
 	var url string
-	if url, err = bucket.SignURL(key, oss.HTTPGet, int64(*duration)); err != nil {
+
+	expiredInSec := int64((*duration).Seconds())
+	if url, err = bucket.SignURL(key, oss.HTTPGet, expiredInSec); err != nil {
 		return "", err
 	}
 	return url, nil

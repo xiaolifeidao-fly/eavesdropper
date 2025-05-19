@@ -3,7 +3,8 @@ package controllers
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
+	"mime/multipart"
 	"net/http"
 	"server/app/feedback/vo"
 	"server/common"
@@ -47,41 +48,11 @@ func AddFeedback(ctx *gin.Context) {
 		return
 	}
 
-	attachments := make([]*dto.AddAttachmentDTO, 0)
-	files := form.File["files"]
-	for _, file := range files {
-		openedFile, err := file.Open()
-		if err != nil {
-			logger.Errorf("AddFeedback failed, with error is %v", err)
-			controller.Error(ctx, "参数错误")
-			return
-		}
-		defer openedFile.Close()
-
-		buffer := make([]byte, 512)
-		_, err = openedFile.Read(buffer)
-		if err != nil {
-			logger.Errorf("AddFeedback failed, with error is %v", err)
-			controller.Error(ctx, "参数错误")
-			return
-		}
-		mimeType := http.DetectContentType(buffer)
-
-		fileBytes, err := ioutil.ReadAll(openedFile)
-		if err != nil {
-			logger.Errorf("AddFeedback failed, with error is %v", err)
-			controller.Error(ctx, "参数错误")
-			return
-		}
-
-		attachment := &dto.AddAttachmentDTO{
-			Data:     fileBytes,
-			FileName: file.Filename,
-			FileSize: int(file.Size),
-			FileType: mimeType,
-		}
-
-		attachments = append(attachments, attachment)
+	attachments, err := getAttachments(form.File["files"])
+	if err != nil {
+		logger.Errorf("AddFeedback failed, with error is %v", err)
+		controller.Error(ctx, "参数错误")
+		return
 	}
 
 	var addReq dto.AddFeedbackDTO
@@ -102,6 +73,48 @@ func AddFeedback(ctx *gin.Context) {
 	}
 
 	controller.OK(ctx, feedbackDTO.ID)
+}
+
+func getAttachments(files []*multipart.FileHeader) ([]*dto.AddAttachmentDTO, error) {
+	attachments := make([]*dto.AddAttachmentDTO, 0)
+
+	for _, file := range files {
+		openedFile, err := file.Open()
+		if err != nil {
+			return nil, err
+		}
+		defer openedFile.Close()
+
+		// 1. 读取前512字节检测MIME类型
+		buffer := make([]byte, 512)
+		n, err := openedFile.Read(buffer)
+		if err != nil && err != io.EOF {
+			return nil, err
+		}
+		mimeType := http.DetectContentType(buffer[:n])
+
+		// 2. 重置文件指针到开头
+		_, err = openedFile.Seek(0, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+
+		// 3. 完整读取文件内容
+		fileBytes, err := io.ReadAll(openedFile)
+		if err != nil {
+			return nil, err
+		}
+
+		attachment := &dto.AddAttachmentDTO{
+			Data:     fileBytes,
+			FileName: file.Filename,
+			FileSize: int(file.Size),
+			FileType: mimeType,
+		}
+		attachments = append(attachments, attachment)
+	}
+
+	return attachments, nil
 }
 
 // PageFeedback
