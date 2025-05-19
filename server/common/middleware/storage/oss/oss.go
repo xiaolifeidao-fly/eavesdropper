@@ -1,12 +1,16 @@
 package oss
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 var Oss *AliyunOss
 
 type AdapterOss interface {
 	Put(path string, data []byte) error
 	Get(path string) ([]byte, error)
+	GetUrl(path string, duration *time.Duration) (string, error)
 	BuildKey(path string) string
 }
 
@@ -22,4 +26,11 @@ func Get(path string) ([]byte, error) {
 		return nil, errors.New("oss not init")
 	}
 	return Oss.Get(path)
+}
+
+func GetUrl(path string, duration *time.Duration) (string, error) {
+	if Oss == nil {
+		return "", errors.New("oss not init")
+	}
+	return Oss.GetUrl(path, duration)
 }

@@ -49,5 +49,13 @@ func GetAttachmentByFeedbackID(feedbackID uint64) ([]*dto.AttachmentDTO, error) 
 		logger.Errorf("GetAttachmentByFeedbackID failed, with error is %v", err)
 		return nil, errors.New("操作数据库错误")
 	}
+
+	for _, attachment := range attachments {
+		attachment.FileUrl, err = oss.GetUrl(attachment.FileUrl, nil)
+		if err != nil {
+			logger.Errorf("GetAttachmentByFeedbackID failed, with error is %v", err)
+		}
+	}
+
 	return database.ToDTOs[dto.AttachmentDTO](attachments), nil
 }
