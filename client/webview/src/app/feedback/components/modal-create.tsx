@@ -22,6 +22,7 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
   const [fileList, setFileList] = useState<any[]>([])
   const [typeEnums, setTypeEnums] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
+  const [isUploadLimit, setIsUploadLimit] = useState(false);
 
   useEffect(() => {
     initFeedbackTypeEnums()
@@ -55,15 +56,25 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
 
   // 文件大小校验
   const beforeUpload = (file: File) => {
+    if (fileList && fileList.length >= 4) {
+      message.error("文件上传数量已上限")
+      return Upload.LIST_IGNORE
+    }
+
     if (file.size > MAX_FILE_SIZE) {
       message.error(`${file.name} 超过10MB，无法上传！`)
       return Upload.LIST_IGNORE
+    }
+
+    if (fileList.length === 3) {
+      setIsUploadLimit(true)
     }
     return true
   }
 
   const onFinish = async (values: any) => {
     try {
+      setLoading(true)
       const formData = new FormData()
       formData.append('title', values.title)
       formData.append('feedbackType', values.feedbackType)
@@ -77,16 +88,6 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
         }
       })
 
-      // 设置请求配置
-      // const config = {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //   },
-      //   timeout: 60000, // 增加超时时间到60秒
-      //   maxContentLength: Infinity,
-      //   maxBodyLength: Infinity
-      // }
-
       const addFeedbackRes = await AddFeedback(formData)
       if (addFeedbackRes) {
         message.success('反馈提交成功')
@@ -99,6 +100,8 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
     } catch (error: any) {
       console.error('Upload error:', error)
       message.error(`反馈提交失败: ${error.message || '未知错误'}`)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -180,6 +183,7 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
               onRemove={handleRemove}
               accept='image/*,video/*'
               beforeUpload={beforeUpload}
+              disabled={isUploadLimit}
               style={{ borderRadius: 4 }}>
               <p className='ant-upload-drag-icon'>
                 <InboxOutlined style={{ color: '#1890ff' }} />
@@ -188,7 +192,7 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
               <p
                 className='ant-upload-hint'
                 style={{ fontSize: 12, color: '#7f8c8d' }}>
-                支持JPG、PNG图片或MP4视频，单个文件不超过10MB
+                支持JPG、PNG图片或MP4视频，单个文件不超过10MB，总数不能超过4个。
               </p>
             </Upload.Dragger>
           </Form.Item>
@@ -207,6 +211,7 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
             <Button
               type='primary'
               htmlType='submit'
+              loading={loading}
               style={{ width: '100%', height: 40, fontSize: 16, borderRadius: 4 }}>
               提交反馈
             </Button>

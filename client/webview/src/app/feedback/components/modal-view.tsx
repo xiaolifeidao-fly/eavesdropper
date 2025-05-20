@@ -74,7 +74,7 @@ const ModalView = ({ hideModal, onSuccess, data }: ModalCreateProps) => {
         <Title level={5}>附件预览</Title>
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
           {feedback.attachments.map((attachment, idx) => {
-            if (attachment.fileType.endsWith('.mp4')) {
+            if (attachment.fileType.endsWith('video/mp4')) {
               return (
                 <video
                   key={idx}
