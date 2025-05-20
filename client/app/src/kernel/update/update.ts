@@ -39,18 +39,14 @@ export function enableUpdateInDev() {
 // 自动更新检查
 export async function checkForUpdates() {
   if (updateFlag || isUpdateAvailable) {
-    log.info('正在进行更新检查或已有新版本，不重复检查。')
     return
   }
 
   updateFlag = true // 锁定更新检查
-
   try {
-    log.info('开始检查更新...')
-    const result = await autoUpdater.checkForUpdates()
-    log.info(result)
+    await autoUpdater.checkForUpdates()
   } catch (error) {
-    log.info('更新检查失败:', error)
+    log.error('更新检查失败:', error)
   } finally {
     updateFlag = false // 解除更新锁
   }
@@ -91,7 +87,6 @@ export function setupAutoUpdater(win: BrowserWindow) {
 
   // 监听更新事件
   autoUpdater.on('checking-for-update', () => {
-    log.info('正在检查更新...');
   });
 
   autoUpdater.on('update-available', (info: UpdateInfo) => {
@@ -141,9 +136,7 @@ export function setupAutoUpdater(win: BrowserWindow) {
 
   autoUpdater.on('update-not-available', async () => {
     
-    log.info('当前已经是最新版本.');
     const needUpdateChrome = await InstallerExtImpl.needUpdateChrome();
-    log.info('当前更新组件结果为 ', needUpdateChrome);
     if(needUpdateChrome){
       checkExtUpdate();
     }

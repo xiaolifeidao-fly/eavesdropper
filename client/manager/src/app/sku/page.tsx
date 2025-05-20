@@ -1,196 +1,297 @@
-'use client'
-import { useRef, useState } from 'react';
-import { Button, message, Tag } from 'antd';
-import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Badge, Button, Input, Space, Table, Typography } from 'antd';
+import type { TableColumnsType } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { getSkuTaskPage, SkuTaskPageReq, SkuTaskPageResp, SkuTaskItemResp, getSkuTaskItemByTaskId } from '@/api/sku/sku.task';
+import { BasePageResp } from '@/common/base';
 import Layout from '@/components/layout';
-import styles from './index.module.less';
 
-import useRefreshPage from '@/components/RefreshPage';
-import { getSkuPage as getSkuPageApi } from '@api/sku/sku.api';
-import type { SkuPageResp } from '@model/sku/sku';
-import { SkuPushStepsForm } from './components';
 
-function copyToClipboard(inputText: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const textarea = document.createElement('textarea')
-    textarea.value = inputText
-    textarea.style.position = 'fixed' // 避免滚动到底部
-    document.body.appendChild(textarea)
-    textarea.select()
+const { Title } = Typography;
 
+// Constants for task status, could be replaced with actual enum if available
+const STATUS_COLORS: Record<string, "warning" | "processing" | "success" | "error" | "default"> = {
+  pending: 'warning',
+  running: 'processing',
+  done: 'success',
+  failed: 'error',
+  stop: 'default',
+};
+
+export default function SkuListPage() {
+  const [loading, setLoading] = useState(false);
+  const [skuData, setSkuData] = useState<SkuTaskPageResp[]>([]);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
+  const [searchParams, setSearchParams] = useState({
+    shopName: '',
+    skuName: '',
+  });
+  const [taskItemsMap, setTaskItemsMap] = useState<Record<number, SkuTaskItemResp[]>>({});
+
+  // Load SKU task data
+  const loadData = async (page = pagination.current, pageSize = pagination.pageSize) => {
+    setLoading(true);
     try {
-      const successful = document.execCommand('copy')
-      if (successful) {
-        resolve()
-      } else {
-        reject(new Error('无法复制文本'))
-      }
-    } catch (err) {
-      reject(err)
+      const req = new SkuTaskPageReq(
+        page,
+        pageSize,
+        searchParams.shopName || undefined,
+        searchParams.skuName || undefined
+      );
+      const resp = await getSkuTaskPage(req);
+      setSkuData(resp.data || []);
+      setPagination({
+        ...pagination,
+        current: page,
+        total: resp.pageInfo.total,
+      });
+    } catch (error) {
+      console.error('Failed to load SKU data:', error);
     } finally {
-      document.body.removeChild(textarea)
+      setLoading(false);
     }
-  })
-}
+  };
 
-type DataType = {
-  id: number;
-  sourceAccount: string;
-  shopName: string;
-  skuName: string;
-  publishTime: string;
-  publishStatus: number;
-  url: string;
-  publishUrl: string;
-}
-
-const baseColumns: ProColumns<DataType>[] = [
-  {
-    title: '所属资源账号',
-    dataIndex: 'sourceAccount',
-    search: false,
-    key: 'sourceAccount',
-    align: 'center',
-    width: 150,
-  },
-  {
-    title: '店铺名称',
-    dataIndex: 'shopName',
-    key : "shopName",
-    align: 'center',
-  },
-  {
-    title: '商品名称',
-    dataIndex: 'skuName',
-    key : "skuName",
-    align: 'center',
-    render: (_, record) => {
-      return <a href={record.publishUrl} target="_blank">{record.skuName}</a>
-    }
-  },
-  {
-    title: '发布时间',
-    dataIndex: 'publishTime',
-    key : "publishTime",
-    search: false,
-    align: 'center',
-    width: 200,
-  },
-  {
-    title: '发布状态',
-    dataIndex: 'publishStatus',
-    key : "publishStatus",
-    search: false,
-    align: 'center',
-    width: 80,
-    render: (_, record) => {
-      return record.publishStatus === 0 ? <Tag color="volcano">未发布</Tag> : <Tag color="green">已发布</Tag>
-    }
-  },
-]
-
-function skuPageRespConvertDataType(resp: SkuPageResp[]): DataType[] {
-  const data: DataType[] = []
-  for (const item of resp) {
-
-    let status = 0;
-    if (item.status === 'success') {
-      status = 1;
+  // Load task items when expanding a row
+  const handleExpand = async (expanded: boolean, record: SkuTaskPageResp) => {
+    const key = record.id;
+    
+    if (expanded) {
+      // Only fetch if we don't already have the data
+      if (!taskItemsMap[record.id]) {
+        try {
+          setLoading(true);
+          const items = await getSkuTaskItemByTaskId(record.id);
+          
+          console.log('Fetched items for task ID', record.id, items);
+          
+          setTaskItemsMap(prev => ({
+            ...prev,
+            [record.id]: items
+          }));
+        } catch (error) {
+          console.error('Failed to load task items:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+      setExpandedRowKeys(prev => [...prev, key]);
     } else {
-      status = 0;
+      setExpandedRowKeys(prev => prev.filter(k => k !== key));
     }
+  };
 
-    data.push({
-      id: item.id,
-      sourceAccount: item.resourceAccount,
-      shopName: item.shopName,
-      skuName: item.skuName,
-      publishTime: item.publishTime,
-      publishStatus: status,
-      url: item.url,
-      publishUrl: item.publishUrl,
-    })
-  }
-  return data
-}
+  useEffect(() => {
+    loadData();
+  }, []);
 
-export default function SkuManage() {
+  // 用于调试
+  useEffect(() => {
+    console.log('Current expandedRowKeys:', expandedRowKeys);
+    console.log('Current taskItemsMap:', taskItemsMap);
+  }, [expandedRowKeys, taskItemsMap]);
 
-  const actionRef = useRef<ActionType>();
-  const [visible, setVisible] = useState(false);
-
-  const { refreshPage } = useRefreshPage();
-
-  const columns: ProColumns<DataType>[] = [
-    ...baseColumns,
+  // Main table columns
+  const columns: TableColumnsType<SkuTaskPageResp> = [
+    {
+      title: '商品ID',
+      dataIndex: 'resourceId',
+      key: 'resourceId',
+      width: 100,
+    },
+    {
+      title: '资源账号',
+      dataIndex: 'resourceAccount',
+      key: 'resourceAccount',
+      width: 150,
+    },
+    {
+      title: '店铺名称',
+      dataIndex: 'shopName',
+      key: 'shopName',
+      width: 200,
+      filterDropdown: () => (
+        <div style={{ padding: 8 }}>
+          <Input
+            placeholder="搜索店铺名称"
+            value={searchParams.shopName}
+            onChange={e => setSearchParams({ ...searchParams, shopName: e.target.value })}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          />
+          <Button
+            type="primary"
+            onClick={() => loadData()}
+            size="small"
+            style={{ width: 90, marginRight: 8 }}
+          >
+            搜索
+          </Button>
+          <Button 
+            onClick={() => {
+              setSearchParams({ ...searchParams, shopName: '' });
+              loadData();
+            }} 
+            size="small" 
+            style={{ width: 90 }}
+          >
+            重置
+          </Button>
+        </div>
+      ),
+      filterIcon: filtered => (
+        <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+      ),
+    },
+    {
+      title: '发布时间',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      width: 180,
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      width: 120,
+      render: (status, record) => (
+        <Badge 
+          status={STATUS_COLORS[status] || 'default'} 
+          text={record.statusLableValue?.label || status} 
+        />
+      ),
+    },
     {
       title: '操作',
-      key: 'option',
-      valueType: 'option',
-      align: 'center',
+      key: 'action',
       width: 150,
-      render: (_, record) => [
-        <Button key="edit" type="link" style={{ paddingRight: 0 }} onClick={() => { window.open(record.url, '_blank'); }}>打开上家商品</Button>,
-        <Button key="copy" type="link"style={{ paddingLeft: 0 }}  onClick={async () => { 
-          try {
-            await copyToClipboard(record.url || '')
-            message.success('复制成功')
-          } catch (error) {
-            console.error(error)
-            message.error('复制失败')
-          }
-        }}>
-          复制上家链接
-        </Button>
-        // <Button key="delete" type="link" danger style={{ paddingLeft: 0 }} onClick={async () => {
-        //   message.success('删除成功');
-        //   refreshPage(actionRef, true, 1);
-        // }}>删除</Button>,
-      ],
-    }
-  ]
+      render: (_, record) => (
+        <Space size="middle">
+          <a>查看</a>
+          <a>编辑</a>
+          {record.status === 'pending' && <a>启动</a>}
+          {record.status === 'running' && <a>停止</a>}
+        </Space>
+      ),
+    },
+  ];
+
+  // Nested table columns for task items
+  const expandedRowRender = (record: SkuTaskPageResp) => {
+    const taskItems = taskItemsMap[record.id] || [];
+    
+    console.log('Rendering expanded row for record ID:', record.id, 'Items:', taskItems);
+    
+    const columns: TableColumnsType<SkuTaskItemResp> = [
+      { 
+        title: '任务ID', 
+        dataIndex: 'id', 
+        key: 'id',
+        width: 80,
+      },
+      { 
+        title: '任务步骤', 
+        dataIndex: 'title', 
+        key: 'title',
+        width: 200,
+      },
+      { 
+        title: '执行时间', 
+        dataIndex: 'createdAt', 
+        key: 'createdAt',
+        width: 180,
+      },
+      { 
+        title: '任务状态', 
+        dataIndex: 'status', 
+        key: 'status',
+        width: 120,
+        render: (status) => {
+          const statusObj = {
+            pending: { color: 'warning' as const, text: '待处理' },
+            success: { color: 'success' as const, text: '成功' },
+            failed: { color: 'error' as const, text: '失败' },
+            cancel: { color: 'default' as const, text: '取消' },
+            existence: { color: 'processing' as const, text: '存在' },
+          };
+          
+          const currentStatus = status as keyof typeof statusObj;
+          return (
+            <Badge 
+              status={statusObj[currentStatus]?.color || 'default'} 
+              text={statusObj[currentStatus]?.text || status} 
+            />
+          );
+        }
+      },
+      { 
+        title: '操作', 
+        key: 'operation',
+        width: 150, 
+        render: (_, item) => (
+          <Space size="middle">
+            <a>详情</a>
+            {item.status === 'failed' && <a>重试</a>}
+            {item.status === 'pending' && <a>取消</a>}
+          </Space>
+        ),
+      },
+    ];
+
+    return (
+      <Table 
+        columns={columns} 
+        dataSource={taskItems}
+        pagination={false}
+        rowKey="id"
+        size="small"
+      />
+    );
+  };
 
   return (
     <Layout curActive='/sku'>
-      <main className={styles.userWrap}>
-        <div className={styles.content}>
-          <ProTable<DataType>
-            rowKey="id"
-            headerTitle="商品管理"
-            columns={columns}
-            actionRef={actionRef}
-            options={false}
-            // toolBarRender={() => [
-            //   <Button key="export" onClick={() => {
-            //     setVisible(true);
-            //   }}>
-            //     发布商品
-            //   </Button>,
-            // ]}
-            request={async (params) => {
-              const { data: list, pageInfo } = await getSkuPageApi({
-                ...params,
-                current: params.current ?? 1,
-                pageSize: params.pageSize ?? 10,
-              })
-              const data = skuPageRespConvertDataType(list);
-              return {
-                data: data,
-                success: true,
-                total: pageInfo.total,
-              };
-            }}
-            pagination={{
-              pageSize: 10,
-            }}
-          />
-
-          {/* 发布商品 */}
-          {/* <SkuPushStepsForm visible={visible} setVisible={setVisible} onClose={() => {
-            refreshPage(actionRef, false);
-          }} /> */}
+      <div style={{ padding: '20px' }}>
+        <Title level={4}>商品列表</Title>
+        
+        <div style={{ marginBottom: 16 }}>
+          <Space>
+            <Input
+              placeholder="商品名称"
+              value={searchParams.skuName}
+              onChange={e => setSearchParams({ ...searchParams, skuName: e.target.value })}
+              style={{ width: 200 }}
+            />
+            <Button type="primary" onClick={() => loadData()}>搜索</Button>
+            <Button onClick={() => {
+              setSearchParams({ shopName: '', skuName: '' });
+              loadData();
+            }}>重置</Button>
+          </Space>
         </div>
-      </main>
+        
+        <Table
+          columns={columns}
+          rowKey="id"
+          dataSource={skuData}
+          pagination={pagination}
+          loading={loading}
+          expandable={{
+            expandedRowRender,
+            onExpand: handleExpand,
+            expandedRowKeys: expandedRowKeys,
+          }}
+          onChange={(pagination) => {
+            loadData(pagination.current, pagination.pageSize);
+          }}
+        />
+      </div>
     </Layout>
   );
 }

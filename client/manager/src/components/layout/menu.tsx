@@ -31,35 +31,10 @@ const getNavList = () => {
         //     ]
         // },
         {
-            key: '/resource',
-            icon: <LayoutOutlined />,
-            label: '资源管理'
-        },
-        {
-            key: '/shop',
-            icon: <LayoutOutlined />,
-            label: '店铺管理'
-        },
-        {
             key: '/sku',
             icon: <LayoutOutlined />,
-            label: '商品管理',
-        },
-        {
-            key: '/sku/task',
-            icon: <LayoutOutlined />,
-            label: '任务管理'
-        },
-        {
-            key: '/gather-manage',
-            icon: <LayoutOutlined />,
-            label: '采集管理'
+            label: '云端商品管理'
         }
-        // {
-        //     key: '/shop2',
-        //     icon: <LayoutOutlined />,
-        //     label: '店铺管理2'
-        // },
     ]
 }
 
