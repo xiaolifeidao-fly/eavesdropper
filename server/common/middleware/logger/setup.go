@@ -62,9 +62,12 @@ func Setup(entity *LoggerEntity) {
 }
 
 func buildConsoleCore(entity *LoggerEntity, encoderConfig zapcore.EncoderConfig) zapcore.Core {
+	// 添加彩色日志支持
+	encoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder // 带颜色的大写日志级别
+
 	consoleWriter := zapcore.Lock(zapcore.AddSync(os.Stdout))
 	consoleCore := zapcore.NewCore(
-		zapcore.NewJSONEncoder(encoderConfig), // 控制台使用 JSON 格式
+		zapcore.NewConsoleEncoder(encoderConfig), // 控制台使用带颜色的格式
 		consoleWriter,
 		level(entity.Level), // 日志级别：Debug 及以上
 	)
