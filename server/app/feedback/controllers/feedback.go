@@ -65,25 +65,24 @@ func AddFeedback(ctx *gin.Context) {
 
 	logger.Infof("title: %s, feedbackType: %s, content: %s, contactInfo: %s", title, feedbackType, content, contactInfo)
 
-	// var addReq dto.AddFeedbackDTO
-	// if err = controller.Bind(ctx, &addReq, binding.Form); err != nil {
-	// 	logger.Infof("AddFeedback Bind error: %v", err)
-	// 	controller.Error(ctx, "参数错误")
-	// 	return
-	// }
-	// addReq.Status = dto.Pending.String()
-	// // addReq.Attachments = attachments
-	// addReq.UserID = common.GetLoginUserID()
+	var addReq dto.AddFeedbackDTO
+	if err = controller.Bind(ctx, &addReq, binding.Form); err != nil {
+		logger.Infof("AddFeedback Bind error: %v", err)
+		controller.Error(ctx, "参数错误")
+		return
+	}
+	addReq.Status = dto.Pending.String()
+	addReq.Attachments = attachments
+	addReq.UserID = common.GetLoginUserID()
 
-	// var feedbackDTO *dto.FeedbackDTO
-	// if feedbackDTO, err = services.AddFeedback(&addReq); err != nil {
-	// 	logger.Infof("AddFeedback Bind error: %v", err)
-	// 	controller.Error(ctx, err.Error())
-	// 	return
-	// }
+	var feedbackDTO *dto.FeedbackDTO
+	if feedbackDTO, err = services.AddFeedback(&addReq); err != nil {
+		logger.Infof("AddFeedback Bind error: %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
 
-	// controller.OK(ctx, feedbackDTO.ID)
-	controller.OK(ctx, 1)
+	controller.OK(ctx, feedbackDTO.ID)
 }
 
 func getAttachments(files []*multipart.FileHeader) ([]*dto.AddAttachmentDTO, error) {
