@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户意见反馈</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .feedback-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        select, textarea, input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .file-upload {
+            margin-top: 10px;
+        }
+        
+        .file-preview {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px dashed #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .preview-item img, .preview-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .remove-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .submit-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .optional {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            font-weight: normal;
+        }
+        
+        .file-type-hint {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .character-count {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            text-align: right;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-container">
+        <h1>用户意见反馈</h1>
+        
+        <form id="feedbackForm">
+            <div class="form-group">
+                <label for="feedbackType">反馈类型 <span class="optional">(必选)</span></label>
+                <select id="feedbackType" required>
+                    <option value="">请选择反馈类型</option>
+                    <option value="bug">功能问题/错误报告</option>
+                    <option value="suggestion">功能建议</option>
+                    <option value="complaint">投诉</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="feedbackTitle">反馈标题 <span class="optional">(必填)</span></label>
+                <input type="text" id="feedbackTitle" placeholder="请用一句话概括您的反馈" required maxlength="50">
+                <div class="character-count"><span id="titleCount">0</span>/50</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="feedbackContent">反馈内容 <span class="optional">(必填)</span></label>
+                <textarea id="feedbackContent" placeholder="请详细描述您的意见或问题..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="mediaUpload">上传图片/视频 <span class="optional">(可选)</span></label>
+                <input type="file" id="mediaUpload" class="file-upload" accept="image/*,video/*" multiple>
+                <div class="file-type-hint">支持上传JPG、PNG图片或MP4视频文件，单个文件不超过10MB</div>
+                <div class="file-preview" id="filePreview"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="contact">联系方式 <span class="optional">(可选)</span></label>
+                <input type="text" id="contact" placeholder="邮箱/手机号(方便我们回复您)">
+            </div>
+            
+            <button type="submit" class="submit-btn">提交反馈</button>
+        </form>
+    </div>
+
+    <script>
+        // 标题字数统计
+        const titleInput = document.getElementById('feedbackTitle');
+        const titleCount = document.getElementById('titleCount');
+        
+        titleInput.addEventListener('input', function() {
+            titleCount.textContent = this.value.length;
+        });
+
+        // 文件上传预览
+        document.getElementById('mediaUpload').addEventListener('change', function(e) {
+            const previewContainer = document.getElementById('filePreview');
+            previewContainer.innerHTML = '';
+            
+            if (this.files) {
+                Array.from(this.files).forEach(file => {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        
+                        if (file.type.startsWith('image/')) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            previewItem.appendChild(img);
+                        } else if (file.type.startsWith('video/')) {
+                            const video = document.createElement('video');
+                            video.src = e.target.result;
+                            video.controls = true;
+                            previewItem.appendChild(video);
+                        }
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-btn';
+                        removeBtn.innerHTML = '×';
+                        removeBtn.onclick = function() {
+                            previewItem.remove();
+                            // 这里可以添加从文件列表中移除的逻辑
+                        };
+                        
+                        previewItem.appendChild(removeBtn);
+                        previewContainer.appendChild(previewItem);
+                    }
+                    
+                    reader.readAsDataURL(file);
+                });
+            }
+        });
+        
+        // 表单提交
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // 这里可以添加表单验证和提交逻辑
+            alert('感谢您的反馈！我们会尽快处理。');
+            this.reset();
+            document.getElementById('filePreview').innerHTML = '';
+            titleCount.textContent = '0';
+        });
+    </script>
+</body>
+</html>

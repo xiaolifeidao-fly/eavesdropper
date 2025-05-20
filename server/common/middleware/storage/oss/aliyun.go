@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"io"
+	"time"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 )
@@ -90,4 +91,31 @@ func (a *AliyunOss) Get(path string) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	io.Copy(buf, body)
 	return buf.Bytes(), nil
+}
+
+// 获取有效期的URL
+func (a *AliyunOss) GetUrl(path string, duration *time.Duration) (string, error) {
+	if len(path) == 0 {
+		return "", errors.New("file path is nil")
+	}
+
+	if duration == nil {
+		duration = new(time.Duration)
+		*duration = time.Hour * 1
+	}
+
+	var err error
+	var bucket *oss.Bucket
+	if bucket, err = a.ossClient.Bucket(a.BucketName); err != nil {
+		return "", err
+	}
+
+	key := a.BuildKey(path)
+	var url string
+
+	expiredInSec := int64((*duration).Seconds())
+	if url, err = bucket.SignURL(key, oss.HTTPGet, expiredInSec); err != nil {
+		return "", err
+	}
+	return url, nil
 }

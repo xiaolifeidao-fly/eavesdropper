@@ -21,6 +21,7 @@ func Setup(entity *ServerEntity) {
 
 	// 路由
 	router := gin.New()
+	router.MaxMultipartMemory = 100 << 20 // 100MB
 	Router = router
 
 }
