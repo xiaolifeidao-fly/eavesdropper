@@ -49,8 +49,8 @@ func AddFeedback(ctx *gin.Context) {
 		controller.Error(ctx, "参数错误")
 		return
 	}
-
-	attachments, err := getAttachments(form.File["files"])
+	files := form.File["files"]
+	attachments, err := getAttachments(files)
 	if err != nil {
 		logger.Errorf("AddFeedback failed, with error is %v", err)
 		controller.Error(ctx, "参数错误")

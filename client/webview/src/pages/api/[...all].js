@@ -4,6 +4,8 @@ import { constants } from "buffer";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import { headers } from "next/headers";
 import formidable from 'formidable';
+import FormData from 'form-data';
+import fs from 'fs';
 
 require('dotenv').config();
 
@@ -59,18 +61,15 @@ export default async function handler(req, res) {
 }
 
 async function request(url, req){
-  const menthd = req.method;
+  const method = req.method;
   const headers = req.headers;
-  if(menthd === 'POST'){
+  if(method === 'POST'){
     const contentType = headers['content-type'];
-
-
-    const isMultiPart = contentType?.includes('multipart/form-data')
+    const isMultiPart = contentType?.includes('multipart/form-data');
     
     if (isMultiPart) {
-      // 使用 formidable 处理文件上传
+      // formidable 解析
       const form = formidable({ multiples: true });
-      
       const [fields, files] = await new Promise((resolve, reject) => {
         form.parse(req, (err, fields, files) => {
           if (err) reject(err);
@@ -78,38 +77,49 @@ async function request(url, req){
         });
       });
 
-      // 创建 FormData 对象
+      // 用 form-data 组装
       const formData = new FormData();
-      
-      // 添加文件到 FormData
+
+      // 添加文件
       for (const [key, value] of Object.entries(files)) {
-        // 如果是单个文件
-        if (!Array.isArray(value)) {
-          formData.append(key, value);
-        } else {
-          // 如果是多个文件
+        if (Array.isArray(value)) {
           value.forEach(file => {
-            formData.append(key, file);
+            formData.append(key, fs.createReadStream(file.filepath), file.originalFilename);
           });
+        } else {
+          formData.append(key, fs.createReadStream(value.filepath), value.originalFilename);
         }
       }
-      
-      // 添加其他字段到 FormData
+
+      // 添加其他字段
       for (const [key, value] of Object.entries(fields)) {
-        formData.append(key, value);
+        // formidable 解析出来的 value 可能是数组
+        if (Array.isArray(value)) {
+          value.forEach(v => formData.append(key, v));
+        } else {
+          formData.append(key, value);
+        }
       }
-      // 使用 axios 发送文件
-      const response = await axios.postForm(url, formData, { headers });
+
+      // 合并 headers
+      const formHeaders = formData.getHeaders();
+      const mergedHeaders = { ...headers, ...formHeaders };
+      // 去掉 content-length，form-data 会自动处理
+      delete mergedHeaders['content-length'];
+
+      // 发送
+      const response = await axios.post(url, formData, { headers: mergedHeaders });
       return response;
     }
 
+    // 普通 POST
     const response = await axios.post(url, req.body, { headers });
     return response;
   }
-  if(menthd === 'PUT'){
+  if(method === 'PUT'){
     return await axios.put(url, req.body, {  headers});
   }
-  if(menthd === 'DELETE'){
+  if(method === 'DELETE'){
     return await axios.delete(url, { params: req.body, headers});
   }
   return null;
