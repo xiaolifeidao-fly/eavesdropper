@@ -3,11 +3,9 @@ import React, { useState } from 'react';
 import { Layout, message, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps, Spin, Button } from 'antd';
 import getNavList from '@/components/layout/menu';
 import { useRouter } from 'next/navigation';
-import { getThemeBg } from '@utils/index';
 import './index_module.css';
+import { getThemeBg } from '@/utils';
 
-import { useAuth } from '@/context/AuthContext';
-import { MonitorPxxSkuApi } from '@eleapi/door/sku/pxx.sku';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -25,7 +23,6 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
   const router = useRouter();
   const navList = getNavList();
 
-  const { user, logout } = useAuth();
 
   const [curTheme, setCurTheme] = useState<boolean>(false);
 
@@ -33,11 +30,6 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     setCurTheme(prev => !prev);
   }
 
-  const handleLogout = async () => {
-    await logout();
-    message.success('退出登录成功');
-    router.push('/auth/login');
-  }
 
   const handleUserCenter = () => {
     router.push('/auth/center');
@@ -51,15 +43,7 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
           个人中心
         </a>
       ),
-    },
-    {
-      key: '2',
-      label: (
-        <a target="_blank" rel="noopener noreferrer" onClick={handleLogout}>
-          退出登录
-        </a>
-      ),
-    },
+    }
   ];
 
   const handleSelect = (row: { key: string }) => {
@@ -99,7 +83,7 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
         >
-          <span className={"logo"} style={getThemeBg(curTheme)}>鲲鹏上传-淘宝版</span>
+          <span className={"logo"} style={getThemeBg(curTheme)}>鲲鹏上传-管理端</span>
           <Menu
             theme={curTheme ? "dark" : "light"}
             mode="inline"
@@ -115,15 +99,10 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
             <div className="rightControl">
               <span className="avatar" >
               </span>
-            <div className="logo-text" style={{marginRight : 100}}>
-            <Spin spinning={pxxLoading} size="small">
-              <Button onClick={openPxx}>打开PXX</Button>
-            </Spin>
-          </div>
               <span className="msg" >
                 <Dropdown menu={{ items }} placement="bottomLeft" arrow>
                   <Avatar style={{ color: '#fff', backgroundColor: colorTextBase }}>
-                    {user?.nickname}
+                    {'admin'}
                   </Avatar>
                 </Dropdown>
               </span>

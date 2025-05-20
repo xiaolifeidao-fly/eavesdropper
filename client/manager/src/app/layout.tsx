@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-import { AuthProvider } from "@/context/AuthContext";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -29,9 +28,7 @@ export default function BasicLayout({ children, params: { locale } }: Readonly<P
       </head>
       <body className={inter.className}>
         <AntdRegistry>
-          <AuthProvider>
             {children}
-          </AuthProvider>
         </AntdRegistry>
       </body>
     </html>
