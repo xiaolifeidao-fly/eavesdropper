@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Descriptions, Typography, Image, Button, Input, message } from 'antd'
 
-import { getFeedbackInfo, markFeedbackProcessing, resolvedFeedback, userIsAdmin } from '@api/feedback/feedback.api'
+import { getFeedbackInfo, markFeedbackProcessing, resolvedFeedback } from '@api/feedback/feedback.api'
 import { FeedbackInfo, FeedbackStatus } from '@model/feedback/feedback'
 
 const { Title, Paragraph } = Typography
@@ -14,16 +14,16 @@ interface ModalCreateProps {
 }
 
 const ModalView = ({ hideModal, onSuccess, data }: ModalCreateProps) => {
-  const [isAdmin, setIsAdmin] = useState<Boolean>(false)
-  const [result, setResult] = useState('')
-  const [submitting, setSubmitting] = useState(false)
+  // const [isAdmin, setIsAdmin] = useState<Boolean>(false)
+  // const [result, setResult] = useState('')
+  // const [submitting, setSubmitting] = useState(false)
   const [feedback, setFeedback] = useState<FeedbackInfo>()
 
   useEffect(() => {
-    userIsAdmin().then((res) => {
-      setIsAdmin(res)
-      fetchFeedbackInfo()
-    })
+    // userIsAdmin().then((res) => {
+    //   setIsAdmin(res)
+    // })
+    fetchFeedbackInfo()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -34,37 +34,37 @@ const ModalView = ({ hideModal, onSuccess, data }: ModalCreateProps) => {
     setFeedback(feedbackInfo)
   }
 
-  const handleSubmit = async () => {
-    if (!result.trim()) {
-      message.warning('请输入处理结果')
-      return
-    }
+  // const handleSubmit = async () => {
+  //   if (!result.trim()) {
+  //     message.warning('请输入处理结果')
+  //     return
+  //   }
 
-    if (!feedback) {
-      message.warning('反馈信息不存在')
-      return
-    }
+  //   if (!feedback) {
+  //     message.warning('反馈信息不存在')
+  //     return
+  //   }
 
-    setSubmitting(true)
-    await resolvedFeedback(feedback.id, result.trim())
-    setSubmitting(false)
-    message.success('处理结果已提交')
-    onSuccess?.()
-    hideModal()
-  }
+  //   setSubmitting(true)
+  //   await resolvedFeedback(feedback.id, result.trim())
+  //   setSubmitting(false)
+  //   message.success('处理结果已提交')
+  //   onSuccess?.()
+  //   hideModal()
+  // }
 
-  const handleMarkProcessing = async () => {
-    if (!feedback) return
+  // const handleMarkProcessing = async () => {
+  //   if (!feedback) return
 
-    if (feedback.status !== FeedbackStatus.PENDING) return
+  //   if (feedback.status !== FeedbackStatus.PENDING) return
 
-    await markFeedbackProcessing(feedback.id)
+  //   await markFeedbackProcessing(feedback.id)
 
-    // 刷新数据
-    await fetchFeedbackInfo()
+  //   // 刷新数据
+  //   await fetchFeedbackInfo()
 
-    message.info('修改成功')
-  }
+  //   message.info('修改成功')
+  // }
 
   // 附件预览
   const renderMedia = () => {
@@ -130,7 +130,19 @@ const ModalView = ({ hideModal, onSuccess, data }: ModalCreateProps) => {
       {renderMedia()}
 
       <div style={{ marginTop: 24 }}>
-        {isAdmin && feedback?.status !== FeedbackStatus.RESOLVED ? (
+        {feedback?.processes?.[0]?.result && (
+          <>
+            <Title level={5}>处理结果</Title>
+            <Paragraph>{feedback?.processes?.[0]?.result}</Paragraph>
+          </>
+        )}
+        {/* <Button
+          onClick={hideModal}
+          style={{ marginTop: 12 }}>
+          关闭
+        </Button> */}
+
+        {/* {isAdmin && feedback?.status !== FeedbackStatus.RESOLVED && (
           <>
             <Title level={5}>处理反馈</Title>
             <TextArea
@@ -160,17 +172,7 @@ const ModalView = ({ hideModal, onSuccess, data }: ModalCreateProps) => {
               </Button>
             </div>
           </>
-        ) : (
-          <>
-            <Title level={5}>处理结果</Title>
-            <Paragraph>{feedback?.processes?.[0]?.result}</Paragraph>
-            <Button
-              onClick={hideModal}
-              style={{ marginTop: 12 }}>
-              关闭
-            </Button>
-          </>
-        )}
+        )} */}
       </div>
     </div>
   )
