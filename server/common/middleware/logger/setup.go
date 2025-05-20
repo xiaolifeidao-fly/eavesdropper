@@ -2,11 +2,26 @@ package logger
 
 import (
 	"os"
+	"path/filepath"
 	"server/common"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
+
+// 自定义日志级别过滤器
+type levelFilter struct {
+	level zapcore.Level
+	exact bool
+}
+
+// Enabled 实现 zapcore.LevelEnabler 接口
+func (l levelFilter) Enabled(lvl zapcore.Level) bool {
+	if l.exact {
+		return lvl == l.level
+	}
+	return lvl >= l.level
+}
 
 func Setup(entity *LoggerEntity) {
 	if entity == nil {
@@ -57,21 +72,104 @@ func buildConsoleCore(entity *LoggerEntity, encoderConfig zapcore.EncoderConfig)
 }
 
 func buildFileCore(entity *LoggerEntity, encoderConfig zapcore.EncoderConfig) zapcore.Core {
-
-	writerFile := NewFileWriter(
-		entity.Path, // 基础文件路径
+	// 创建主日志文件写入器
+	mainWriter := NewFileWriter(
+		entity.Path, // 主日志路径
 		entity.Cap,  // 切割文件大小,MB
 	)
 
-	fileCore := zapcore.NewCore(
-		zapcore.NewJSONEncoder(encoderConfig), // 文件使用 JSON 格式
-		writerFile,
-		level(entity.Level), // 日志级别
+	// 为每个日志级别创建不同的文件写入器
+	debugWriter := NewFileWriter(
+		filepath.Join(entity.Path, "debug"), // debug日志路径
+		entity.Cap,                          // 切割文件大小,MB
 	)
-	return fileCore
+	infoWriter := NewFileWriter(
+		filepath.Join(entity.Path, "info"), // info日志路径
+		entity.Cap,                         // 切割文件大小,MB
+	)
+	warnWriter := NewFileWriter(
+		filepath.Join(entity.Path, "warn"), // warn日志路径
+		entity.Cap,                         // 切割文件大小,MB
+	)
+	errorWriter := NewFileWriter(
+		filepath.Join(entity.Path, "error"), // error日志路径
+		entity.Cap,                          // 切割文件大小,MB
+	)
+
+	// 创建级别过滤器
+	debugLevel := levelFilter{level: zapcore.DebugLevel, exact: true}
+	infoLevel := levelFilter{level: zapcore.InfoLevel, exact: true}
+	warnLevel := levelFilter{level: zapcore.WarnLevel, exact: true}
+	errorLevel := levelFilter{level: zapcore.ErrorLevel, exact: false}
+
+	// 创建主日志Core，使用配置中的级别
+	mainCore := zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderConfig),
+		mainWriter,
+		level(entity.Level),
+	)
+
+	// 创建单独级别的Core
+	// Debug级别的日志只写入debug目录
+	debugCore := zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderConfig),
+		debugWriter,
+		debugLevel,
+	)
+
+	// Info级别的日志只写入info目录
+	infoCore := zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderConfig),
+		infoWriter,
+		infoLevel,
+	)
+
+	// Warn级别的日志只写入warn目录
+	warnCore := zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderConfig),
+		warnWriter,
+		warnLevel,
+	)
+
+	// Error及以上级别的日志写入error目录
+	errorCore := zapcore.NewCore(
+		zapcore.NewJSONEncoder(encoderConfig),
+		errorWriter,
+		errorLevel,
+	)
+
+	// 创建不同级别的日志器
+	debugLogger := zap.New(debugCore, zap.WithCaller(true))
+	infoLogger := zap.New(infoCore, zap.WithCaller(true))
+	warnLogger := zap.New(warnCore, zap.WithCaller(true))
+	errorLogger := zap.New(errorCore, zap.WithCaller(true))
+
+	// 创建主日志器
+	mainLogger := zap.New(mainCore, zap.WithCaller(true))
+
+	// 创建自定义的日志器，同时更新Logger结构体的字段
+	customLogger := &Logger{
+		logger:      mainLogger,
+		debugLogger: debugLogger,
+		infoLogger:  infoLogger,
+		warnLogger:  warnLogger,
+		errorLogger: errorLogger,
+		contextFieldsFunc: func() map[string]interface{} {
+			traceID := common.GetRequestID()
+			return map[string]interface{}{
+				"traceID": traceID,
+			}
+		},
+	}
+
+	// 设置全局日志器
+	logger = customLogger
+
+	return zapcore.NewTee(mainCore, debugCore, infoCore, warnCore, errorCore)
 }
 
-func level(level string) zapcore.Level {
+// 修改level函数，使其返回一个zapcore.LevelEnabler
+func level(level string) zapcore.LevelEnabler {
 	switch level {
 	case "debug":
 		return zapcore.DebugLevel

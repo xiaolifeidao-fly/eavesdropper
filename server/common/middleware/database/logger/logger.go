@@ -74,7 +74,7 @@ func (l *gormLogger) Trace(ctx context.Context, begin time.Time, fc func() (sql 
 		slowLog := fmt.Sprintf("SLOW SQL >= %vms", l.SlowThreshold)
 		l.logger.Warn(slowLog, fields)
 	case l.LogLevel == logger.Info:
-		l.logger.Info("", fields)
+		l.logger.Debug("", fields)
 	}
 }
 
