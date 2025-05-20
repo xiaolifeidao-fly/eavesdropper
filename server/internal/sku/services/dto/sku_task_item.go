@@ -103,3 +103,9 @@ type SkuTaskItemStatusCountDTO struct {
 	Status string `json:"status"`
 	Count  int    `json:"count"`
 }
+
+type SkuTaskStepLogDTO struct {
+	dto.BaseDTO
+	SkuTaskStepId uint64 `json:"skuTaskStepId"`
+	Content       string `json:"content"`
+}

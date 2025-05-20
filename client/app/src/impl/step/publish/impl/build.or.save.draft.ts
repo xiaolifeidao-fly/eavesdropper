@@ -49,12 +49,15 @@ export class SkuBuildDraftStep extends AbsPublishStep{
             log.info("publish url is ", url);
             const result = await mbEngine.openWaitMonitor(page, url, new MbSkuPublishDraffMonitor(), {}, doAction, imageFileList, skuDraftId);
             if (!result) {
+                this.stepLogMessage.appendErrorMessage(`添加草稿失败 door result is null`);
                 return new StepResult(false, "添加草稿失败") ;
             }
             skuDraftId = this.getSkuDraftIdFromData(skuDraftId, result);
 
             const draftData = await this.buildDraftData(imageFileList, resourceId, skuDraftId, skuItem, result, page);
+            
             if(!draftData.draftData){
+                this.stepLogMessage.appendErrorMessage(`添加草稿失败 ${draftData.draftData}`);
                 if(skuDraftId){
                     await this.releaseDraftData(skuDraftId, resourceId);
                 }
@@ -96,6 +99,7 @@ export class SkuBuildDraftStep extends AbsPublishStep{
                 message : "commonData not found"
             };
         }
+        this.stepLogMessage.appendErrorMessage(`buildDraftData common data is ${JSON.stringify(commonData)}`);
         const startTraceId = this.getStartTraceId(commonData);
         log.info("startTraceId is  ", startTraceId);
         if (!startTraceId) {

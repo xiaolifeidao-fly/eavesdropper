@@ -40,3 +40,13 @@ type SkuTaskStep struct {
 func (s *SkuTaskStep) TableName() string {
 	return "sku_task_step"
 }
+
+type SkuTaskStepLog struct {
+	database.BaseEntity
+	SkuTaskStepId uint64 `json:"sku_task_step_id"`
+	LogPath       string `json:"log_path"`
+}
+
+func (s *SkuTaskStepLog) TableName() string {
+	return "sku_task_step_log"
+}

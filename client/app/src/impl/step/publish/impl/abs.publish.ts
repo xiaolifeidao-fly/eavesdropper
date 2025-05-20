@@ -134,11 +134,14 @@ export abstract class AbsPublishStep extends StepUnit{
             const res = await axios.post(url, data, {
                 headers: header
             })
-            if (!res.data || (typeof (res.data) == 'string' && res.data == '')) {
-                log.info("updateDraftData res is empty", res.data);
+            this.stepLogMessage.appendErrorMessage(`UpdateDraftStep jsonBody is ${JSON.stringify(draftData)}`);
+            const resData = res.data;
+            this.stepLogMessage.appendErrorMessage(`UpdateDraftStep res is ${JSON.stringify(resData)}`);
+            if (!resData || (typeof (resData) == 'string' && resData == '')) {
+                log.info("updateDraftData res is empty", resData);
                 return false;
             }
-            if (!res.data.success) {
+            if (!resData.success) {
                 log.info("updateDraftData res is not success ");
                 return false;
             }

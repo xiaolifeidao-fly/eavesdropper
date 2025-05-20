@@ -57,11 +57,18 @@ export abstract class StepHandler {
         for (let i = 0; i < stepCodes.length; i++) {
             const stepCode = stepCodes[i];
             const step = new SkuTaskStep(undefined, this.key, this.resourceId, stepCode, undefined, STEP_INIT, this.getGroupCode())
+            await this.saveStep(step);
             const stepUnit = this.stepConfig.buildStepUnit(taskId, step, this.context, i);
-            await stepUnit.init(true);
             steps.push(stepUnit);
         }
         return steps;
+    }
+
+    public async saveStep(step : SkuTaskStep){
+        const stepResult = await saveSkuTaskStep(step);
+        if(stepResult){
+            step.id = stepResult.id;
+        }
     }
 
     getStoreKey(key : string) : string{
@@ -110,10 +117,13 @@ export abstract class StepHandler {
             if(!stepResult.result){
                 const validateResult = await this.validateAndRetry(stepUnit, stepResult);
                 validateResult.stepIndex = i;
+                stepUnit.stepLogMessage.sendLog();
                 if(!validateResult.result){
+                    stepUnit.stepLogMessage.clearLog();
                     return validateResult;
                 }
             }
+            stepUnit.stepLogMessage.clearLog();
             result = stepResult;
         }
         return result;
