@@ -1,15 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Badge, Button, Input, Space, Table, Typography } from 'antd';
+import { Badge, Button, Input, Space, Table, Typography, Modal, Select, Tooltip } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { getSkuTaskPage, SkuTaskPageReq, SkuTaskPageResp, SkuTaskItemResp, getSkuTaskItemByTaskId } from '@/api/sku/sku.task';
 import { BasePageResp } from '@/common/base';
 import Layout from '@/components/layout';
 
-
 const { Title } = Typography;
+const { Option } = Select;
 
 // Constants for task status, could be replaced with actual enum if available
 const STATUS_COLORS: Record<string, "warning" | "processing" | "success" | "error" | "default"> = {
@@ -22,6 +22,7 @@ const STATUS_COLORS: Record<string, "warning" | "processing" | "success" | "erro
 
 export default function SkuListPage() {
   const [loading, setLoading] = useState(false);
+  const [expandLoading, setExpandLoading] = useState<Record<number, boolean>>({});
   const [skuData, setSkuData] = useState<SkuTaskPageResp[]>([]);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -32,8 +33,11 @@ export default function SkuListPage() {
   const [searchParams, setSearchParams] = useState({
     shopName: '',
     skuName: '',
+    status: '',
   });
   const [taskItemsMap, setTaskItemsMap] = useState<Record<number, SkuTaskItemResp[]>>({});
+  const [logModalVisible, setLogModalVisible] = useState(false);
+  const [currentLog, setCurrentLog] = useState('');
 
   // Load SKU task data
   const loadData = async (page = pagination.current, pageSize = pagination.pageSize) => {
@@ -45,6 +49,12 @@ export default function SkuListPage() {
         searchParams.shopName || undefined,
         searchParams.skuName || undefined
       );
+      
+      // Add status to request if provided
+      if (searchParams.status) {
+        (req as any).status = searchParams.status;
+      }
+      
       const resp = await getSkuTaskPage(req);
       setSkuData(resp.data || []);
       setPagination({
@@ -67,7 +77,7 @@ export default function SkuListPage() {
       // Only fetch if we don't already have the data
       if (!taskItemsMap[record.id]) {
         try {
-          setLoading(true);
+          setExpandLoading(prev => ({ ...prev, [record.id]: true }));
           const items = await getSkuTaskItemByTaskId(record.id);
           
           console.log('Fetched items for task ID', record.id, items);
@@ -79,13 +89,19 @@ export default function SkuListPage() {
         } catch (error) {
           console.error('Failed to load task items:', error);
         } finally {
-          setLoading(false);
+          setExpandLoading(prev => ({ ...prev, [record.id]: false }));
         }
       }
       setExpandedRowKeys(prev => [...prev, key]);
     } else {
       setExpandedRowKeys(prev => prev.filter(k => k !== key));
     }
+  };
+
+  // Show log details
+  const showLogDetails = (log: string | undefined) => {
+    setCurrentLog(log || 'No log data available');
+    setLogModalVisible(true);
   };
 
   useEffect(() => {
@@ -150,6 +166,20 @@ export default function SkuListPage() {
       ),
     },
     {
+      title: '商品名称',
+      dataIndex: 'skuName',
+      key: 'skuName',
+      width: 200,
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (skuName) => (
+        <Tooltip placement="topLeft" title={skuName}>
+          <span>{skuName}</span>
+        </Tooltip>
+      ),
+    },
+    {
       title: '发布时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
@@ -170,13 +200,11 @@ export default function SkuListPage() {
     {
       title: '操作',
       key: 'action',
-      width: 150,
+      width: 250,
       render: (_, record) => (
         <Space size="middle">
-          <a>查看</a>
-          <a>编辑</a>
-          {record.status === 'pending' && <a>启动</a>}
-          {record.status === 'running' && <a>停止</a>}
+          <a>复制上家链接</a>
+          <a>复制本家链接</a>
         </Space>
       ),
     },
@@ -185,6 +213,7 @@ export default function SkuListPage() {
   // Nested table columns for task items
   const expandedRowRender = (record: SkuTaskPageResp) => {
     const taskItems = taskItemsMap[record.id] || [];
+    const isLoading = expandLoading[record.id] || false;
     
     console.log('Rendering expanded row for record ID:', record.id, 'Items:', taskItems);
     
@@ -230,15 +259,29 @@ export default function SkuListPage() {
           );
         }
       },
+      {
+        title: '失败原因',
+        dataIndex: 'remark',
+        key: 'failReason',
+        width: 200,
+        ellipsis: {
+          showTitle: false,
+        },
+        render: (text, record) => (
+          record.status === 'failed' && text ? (
+            <Tooltip placement="topLeft" title={text}>
+              <span style={{ color: '#ff4d4f' }}>{text}</span>
+            </Tooltip>
+          ) : ''
+        )
+      },
       { 
         title: '操作', 
         key: 'operation',
-        width: 150, 
+        width: 100, 
         render: (_, item) => (
           <Space size="middle">
-            <a>详情</a>
-            {item.status === 'failed' && <a>重试</a>}
-            {item.status === 'pending' && <a>取消</a>}
+            <a onClick={() => showLogDetails(item.remark)}>详情</a>
           </Space>
         ),
       },
@@ -251,6 +294,7 @@ export default function SkuListPage() {
         pagination={false}
         rowKey="id"
         size="small"
+        loading={isLoading}
       />
     );
   };
@@ -263,14 +307,33 @@ export default function SkuListPage() {
         <div style={{ marginBottom: 16 }}>
           <Space>
             <Input
+              placeholder="店铺名称"
+              value={searchParams.shopName}
+              onChange={e => setSearchParams({ ...searchParams, shopName: e.target.value })}
+              style={{ width: 200 }}
+            />
+            <Input
               placeholder="商品名称"
               value={searchParams.skuName}
               onChange={e => setSearchParams({ ...searchParams, skuName: e.target.value })}
               style={{ width: 200 }}
             />
+            <Select
+              placeholder="状态"
+              value={searchParams.status}
+              onChange={value => setSearchParams({ ...searchParams, status: value })}
+              style={{ width: 120 }}
+              allowClear
+            >
+              <Option value="pending">待处理</Option>
+              <Option value="running">运行中</Option>
+              <Option value="done">完成</Option>
+              <Option value="failed">失败</Option>
+              <Option value="stop">停止</Option>
+            </Select>
             <Button type="primary" onClick={() => loadData()}>搜索</Button>
             <Button onClick={() => {
-              setSearchParams({ shopName: '', skuName: '' });
+              setSearchParams({ shopName: '', skuName: '', status: '' });
               loadData();
             }}>重置</Button>
           </Space>
@@ -291,6 +354,35 @@ export default function SkuListPage() {
             loadData(pagination.current, pagination.pageSize);
           }}
         />
+        
+        <Modal
+          title="日志详情"
+          open={logModalVisible}
+          onCancel={() => setLogModalVisible(false)}
+          footer={[
+            <Button key="close" onClick={() => setLogModalVisible(false)}>
+              关闭
+            </Button>
+          ]}
+          width={800}
+        >
+          <pre style={{ 
+            backgroundColor: '#f5f5f5', 
+            padding: '16px', 
+            borderRadius: '4px',
+            maxHeight: '500px',
+            overflow: 'auto',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-all'
+          }}>
+            <code dangerouslySetInnerHTML={{ 
+              __html: currentLog.replace(/\[ERROR\].*$/gm, match => `<span style="color: red">${match}</span>`)
+                               .replace(/\[WARN\].*$/gm, match => `<span style="color: orange">${match}</span>`)
+                               .replace(/\[INFO\].*$/gm, match => `<span style="color: green">${match}</span>`)
+                               .replace(/\[DEBUG\].*$/gm, match => `<span style="color: blue">${match}</span>`)
+            }} />
+          </pre>
+        </Modal>
       </div>
     </Layout>
   );

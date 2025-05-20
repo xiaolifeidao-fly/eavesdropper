@@ -205,7 +205,7 @@ const mockTaskItemsMap: Record<number, SkuTaskItemResp[]> = {
     new SkuTaskItemResp(203, 2, 'https://example.com/item5', 'failed', '处理失败', 505, '商品5', 'SKU005', 'jd', {label: '京东', value: 'jd', color: 'red'}, '2023-05-16 10:27:00', 'https://example.com/newsku5', '商品重发任务'),
   ],
   3: [
-    new SkuTaskItemResp(301, 3, 'https://example.com/item6', 'success', '处理成功', 506, '商品6', 'SKU006', 'tmall', {label: '天猫', value: 'tmall', color: 'red'}, '2023-05-14 14:50:00', 'https://example.com/newsku6', '商品发布任务'),
+    new SkuTaskItemResp(301, 3, 'https://example.com/item6', 'success', '处理成功\n 123 \n 333', 506, '商品6', 'SKU006', 'tmall', {label: '天猫', value: 'tmall', color: 'red'}, '2023-05-14 14:50:00', 'https://example.com/newsku6', '商品发布任务'),
     new SkuTaskItemResp(302, 3, 'https://example.com/item7', 'success', '处理成功', 507, '商品7', 'SKU007', 'tmall', {label: '天猫', value: 'tmall', color: 'red'}, '2023-05-14 14:51:00', 'https://example.com/newsku7', '商品更新任务'),
   ],
   4: [
