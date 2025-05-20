@@ -65,10 +65,10 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
   const onFinish = async (values: any) => {
     try {
       const formData = new FormData()
-      // formData.append('title', values.title)
-      // formData.append('feedbackType', values.feedbackType)
-      // formData.append('content', values.content)
-      // formData.append('contactInfo', values.contactInfo)
+      formData.append('title', values.title)
+      formData.append('feedbackType', values.feedbackType)
+      formData.append('content', values.content)
+      formData.append('contactInfo', values.contactInfo)
 
       // 添加文件到 FormData
       fileList.forEach((file) => {

@@ -3,6 +3,7 @@ import axios from "axios";
 import { constants } from "buffer";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import { headers } from "next/headers";
+import formidable from 'formidable';
 
 require('dotenv').config();
 
@@ -11,13 +12,12 @@ const target = process.env.SERVER_TARGET;
 
 // Next.js API 路由处理函数
 
-
-// export const config = {
-//   api: {
-//     bodyParser: false
-//   }
-// }
-
+// 添加这个配置来禁用默认的 body 解析
+export const config = {
+  api: {
+    bodyParser: false
+  }
+}
 
 export default async function handler(req, res) {
   // 创建代理中间件
@@ -64,18 +64,47 @@ async function request(url, req){
   if(menthd === 'POST'){
     const contentType = headers['content-type'];
 
-    console.log(typeof req.body)
-    // console.log(contentType)
-    const isMultiPart = contentType.includes('multipart/form-data')
+
+    const isMultiPart = contentType?.includes('multipart/form-data')
+    
     if (isMultiPart) {
-      // delete headers['content-type'];
-      headers["x-requested-with"] = "XMLHttpRequest";
-      // console.log(headers);
-      return axios.post(url, req.body, { headers});
+      // 使用 formidable 处理文件上传
+      const form = formidable({ multiples: true });
+      
+      const [fields, files] = await new Promise((resolve, reject) => {
+        form.parse(req, (err, fields, files) => {
+          if (err) reject(err);
+          resolve([fields, files]);
+        });
+      });
+
+      // 创建 FormData 对象
+      const formData = new FormData();
+      
+      // 添加文件到 FormData
+      for (const [key, value] of Object.entries(files)) {
+        // 如果是单个文件
+        if (!Array.isArray(value)) {
+          formData.append(key, value);
+        } else {
+          // 如果是多个文件
+          value.forEach(file => {
+            formData.append(key, file);
+          });
+        }
+      }
+      
+      // 添加其他字段到 FormData
+      for (const [key, value] of Object.entries(fields)) {
+        formData.append(key, value);
+      }
+      // 使用 axios 发送文件
+      const response = await axios.postForm(url, formData, { headers });
+      return response;
     }
 
-     const response = await axios.post(url, req.body, { headers});
-     return response;
+    const response = await axios.post(url, req.body, { headers });
+    return response;
   }
   if(menthd === 'PUT'){
     return await axios.put(url, req.body, {  headers});
