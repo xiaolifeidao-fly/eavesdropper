@@ -11,7 +11,7 @@ export const getFeedbackPage = async (req: FeedbackPageReq) => {
 
 export const AddFeedback = async (req: FormData) => {
 
-  const result = await instance.postForm(`/feedback`, req)
+  const result = await instance.postForm(`/file/feedback`, req)
 
   // const result = await instance.post(`/feedback`, req)
   return plainToClass(Number, result)
