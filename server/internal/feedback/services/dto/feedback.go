@@ -175,11 +175,13 @@ func (d *AddFeedbackDTO) ToFeedbackDTO() *FeedbackDTO {
 }
 
 type FeedbackPageParamDTO struct {
-	page.Query `search:"-"`
-	UserID     uint64 `search:"type:eq;table:feedback;column:user_id"`
-	Status     string `form:"status" search:"type:eq;table:feedback;column:status"`
-	_          any    `search:"type:order;table:feedback;column:id;default:desc"`
-	_          any    `search:"type:isNull;table:feedback;column:deleted_at"`
+	page.Query     `search:"-"`
+	UserID         uint64 `search:"type:eq;table:feedback;column:user_id"`
+	Status         string `form:"status" search:"type:eq;table:feedback;column:status"`
+	StartCreatedAt string `form:"startCreatedAt" search:"type:gte;table:feedback;column:created_at"`
+	EndCreatedAt   string `form:"endCreatedAt" search:"type:lte;table:feedback;column:created_at"`
+	_              any    `search:"type:order;table:feedback;column:id;default:desc"`
+	_              any    `search:"type:isNull;table:feedback;column:deleted_at"`
 }
 
 type FeedbackPageDTO struct {

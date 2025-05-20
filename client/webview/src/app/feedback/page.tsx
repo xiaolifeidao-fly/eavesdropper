@@ -69,6 +69,20 @@ export default function FeedbackManage() {
       valueEnum: statusEnums
     },
     {
+      title: '提交时间',
+      valueType: 'dateTimeRange',
+      hideInTable: true,
+      width: 200,
+      search: {
+        transform: (value) => {
+          return {
+            startCreatedAt: value[0],
+            endCreatedAt: value[1],
+          };
+        },
+      },
+    },
+    {
       title: '操作',
       dataIndex: 'action',
       search: false,

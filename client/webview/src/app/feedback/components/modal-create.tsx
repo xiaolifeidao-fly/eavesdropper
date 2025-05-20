@@ -4,8 +4,6 @@ import { InboxOutlined } from '@ant-design/icons'
 import type { UploadFile, UploadProps } from 'antd/es/upload/interface'
 
 import { getFeedbackTypeEnums, AddFeedback } from '@api/feedback/feedback.api'
-import { AddFeedbackReq } from '@model/feedback/feedback'
-import { AddAttachmentReq } from '@model/feedback/attachment'
 
 const { TextArea } = Input
 
