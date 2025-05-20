@@ -19,7 +19,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
   const [form] = Form.useForm()
   const [titleCount, setTitleCount] = useState(0)
-  const [fileList, setFileList] = useState<UploadFile[]>([])
+  const [fileList, setFileList] = useState<any[]>([])
   const [typeEnums, setTypeEnums] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -62,50 +62,43 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
     return true
   }
 
-  // 获取文件二进制数据
-  const getFileBinary = (file: File): Promise<ArrayBuffer> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        resolve(e.target?.result as ArrayBuffer)
-      }
-      reader.onerror = reject
-      reader.readAsArrayBuffer(file)
-    })
-  }
-
   const onFinish = async (values: any) => {
-    const formData = new FormData()
-    formData.append('title', values.title)
-    formData.append('feedbackType', values.feedbackType)
-    formData.append('content', values.content)
-    formData.append('contactInfo', values.contactInfo)
-    // formData.append('files', fileList)
-    // 遍历 fileList 并逐个添加文件
-    fileList.forEach((file) => {
-      // 假设 file.originFileObj 是实际的 File 对象
-      if (file.originFileObj) {
-        formData.append('files', file.originFileObj)
-      }
-    })
-    // 设置请求配置
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      timeout: 30000 // 30秒超时
-    }
-    const addFeedbackRes = await AddFeedback(formData, config)
+    try {
+      const formData = new FormData()
+      // formData.append('title', values.title)
+      // formData.append('feedbackType', values.feedbackType)
+      // formData.append('content', values.content)
+      // formData.append('contactInfo', values.contactInfo)
 
-    if (addFeedbackRes) {
-      message.success('感谢您的反馈！我们会尽快处理。')
-      form.resetFields()
-      setFileList([])
-      setTitleCount(0)
-      onSuccess && onSuccess()
-      hideModal()
-    } else {
-      message.error('提交失败，请稍后再试。')
+      // 添加文件到 FormData
+      fileList.forEach((file) => {
+        if (file.originFileObj) {
+          formData.append('files', file.originFileObj)
+        }
+      })
+
+      // 设置请求配置
+      // const config = {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      //   timeout: 60000, // 增加超时时间到60秒
+      //   maxContentLength: Infinity,
+      //   maxBodyLength: Infinity
+      // }
+
+      const addFeedbackRes = await AddFeedback(formData)
+      if (addFeedbackRes) {
+        message.success('反馈提交成功')
+        form.resetFields()
+        setFileList([])
+        setTitleCount(0)
+        onSuccess?.()
+        hideModal()
+      }
+    } catch (error: any) {
+      console.error('Upload error:', error)
+      message.error(`反馈提交失败: ${error.message || '未知错误'}`)
     }
   }
 

@@ -60,8 +60,10 @@ async function request(url, req){
     console.log(contentType)
     const isMultiPart = contentType.includes('multipart/form-data')
     if (isMultiPart) {
-      console.log('----')
-      return axios.post(url, req, { headers});
+      // delete headers['content-type'];
+      headers["x-requested-with"] = "XMLHttpRequest";
+      console.log(headers);
+      return axios.post(url, req.body, { headers});
     }
 
      const response = await axios.post(url, req.body, { headers});
