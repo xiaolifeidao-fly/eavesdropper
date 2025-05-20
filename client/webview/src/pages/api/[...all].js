@@ -12,11 +12,11 @@ const target = process.env.SERVER_TARGET;
 // Next.js API 路由处理函数
 
 
-export const config = {
-  api: {
-    bodyParser: false
-  }
-}
+// export const config = {
+//   api: {
+//     bodyParser: false
+//   }
+// }
 
 
 export default async function handler(req, res) {
