@@ -12,6 +12,12 @@ const target = process.env.SERVER_TARGET;
 // Next.js API 路由处理函数
 
 
+export const config = {
+  api: {
+    bodyParser: false
+  }
+}
+
 
 export default async function handler(req, res) {
   // 创建代理中间件
@@ -57,12 +63,14 @@ async function request(url, req){
   const headers = req.headers;
   if(menthd === 'POST'){
     const contentType = headers['content-type'];
-    console.log(contentType)
+
+    console.log(typeof req.body)
+    // console.log(contentType)
     const isMultiPart = contentType.includes('multipart/form-data')
     if (isMultiPart) {
       // delete headers['content-type'];
       headers["x-requested-with"] = "XMLHttpRequest";
-      console.log(headers);
+      // console.log(headers);
       return axios.post(url, req.body, { headers});
     }
 
