@@ -3,6 +3,7 @@ import { SkuTaskStep, STEP_DONE, STEP_ERROR, STEP_PENDING, STEP_ROLLBACK } from 
 import { get, set } from "@utils/store/electron";
 import log from "electron-log";
 import { StepContext } from "./step.context";
+import { StepLog, StepLogMessage } from "./step.log";
 
 export class StepResponse {
     private key : string;
@@ -57,6 +58,7 @@ export class StepResult {
     }
 }
 
+
 export abstract class StepUnit {
     private taskId : number;
     public step: SkuTaskStep;
@@ -66,6 +68,7 @@ export abstract class StepUnit {
     private validateTag : boolean = false;
     private skip : boolean;
     private stepIndex : number;
+    public stepLogMessage : StepLogMessage;
     
     constructor(taskId : number, step : SkuTaskStep, context : StepContext, stepIndex : number){
         this.taskId = taskId;
@@ -73,6 +76,11 @@ export abstract class StepUnit {
         this.context = context;
         this.skip = false;
         this.stepIndex = stepIndex;
+        let stepId = this.step.id;
+        if(!stepId){
+            stepId = 0;
+        }
+        this.stepLogMessage = new StepLogMessage(stepId);
     }
 
     public getStepIndex() : number{
@@ -101,7 +109,10 @@ export abstract class StepUnit {
             if(!this.step.taskId){
                 this.step.taskId = this.taskId;
             }
-            await saveSkuTaskStep(this.step);
+            const stepResult = await saveSkuTaskStep(this.step);
+            if(stepResult){
+                this.step.id = stepResult.id;
+            }
         }
     }
 

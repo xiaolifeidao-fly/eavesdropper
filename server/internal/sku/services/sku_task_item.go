@@ -2,13 +2,17 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"server/common"
+	"server/common/base"
 	"server/common/converter"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
+	"server/common/middleware/storage/oss"
 	"server/internal/sku/models"
 	"server/internal/sku/repositories"
 	"server/internal/sku/services/dto"
+	"strconv"
 )
 
 func BatchAddSkuTaskItem(addSkuTaskItemDTOs []*dto.AddSkuTaskItemDTO) ([]*dto.SkuTaskItemDTO, error) {
@@ -104,6 +108,7 @@ func GetSkuTaskItemByID(id uint64) (*dto.SkuTaskItemDTO, error) {
 }
 
 var skuTaskStepRepository = database.NewRepository[repositories.SkuTaskStepRepository]()
+var skuTaskStepLogRepository = database.NewRepository[repositories.SkuTaskStepLogRepository]()
 
 func SaveSkuTaskStep(stepDTO *dto.SkuTaskStepDTO) (*dto.SkuTaskStepDTO, error) {
 	dbStep, err := skuTaskStepRepository.FindByKeyAndResourceIdAndCode(stepDTO.TaskId, stepDTO.StepKey, stepDTO.ResourceId, stepDTO.Code)
@@ -159,4 +164,68 @@ func GetSkuTaskItemListByTaskID(taskID uint64) ([]*dto.SkuTaskItemDTO, error) {
 		return nil, errors.New("数据库操作失败")
 	}
 	return database.ToDTOs[dto.SkuTaskItemDTO](itemList), nil
+}
+
+func SaveSkuTaskStepLog(stepLogDTO *dto.SkuTaskStepLogDTO) (*dto.SkuTaskStepLogDTO, error) {
+	stepLog := database.ToPO[models.SkuTaskStepLog](stepLogDTO)
+	if stepLogDTO.Content != "" {
+		path, err := storeJsonData(stepLogDTO)
+		logger.Infof("SaveSkuTaskStepLog, with path is %s", path)
+		if err != nil {
+			return nil, err
+		}
+		stepLog.LogPath = path
+	}
+	dbStepLog, err := skuTaskStepLogRepository.GetBySkuTaskStepId(stepLog.SkuTaskStepId)
+	if err != nil {
+		return nil, err
+	}
+	if dbStepLog != nil {
+		dbStepLog.LogPath = stepLog.LogPath
+	} else {
+		dbStepLog = stepLog
+	}
+	saveStepLog, err := skuTaskStepLogRepository.SaveOrUpdate(dbStepLog)
+	if err != nil {
+		return nil, err
+	}
+	return database.ToDTO[dto.SkuTaskStepLogDTO](saveStepLog), nil
+}
+
+func GetSkuTaskStepLogListBySkuTaskStepId(skuTaskStepId uint64) (*dto.SkuTaskStepLogDTO, error) {
+	stepLog, err := skuTaskStepLogRepository.GetBySkuTaskStepId(skuTaskStepId)
+	if err != nil {
+		return nil, err
+	}
+	stepLogDTO := database.ToDTO[dto.SkuTaskStepLogDTO](stepLog)
+	if stepLog.LogPath != "" {
+		jsonData, err := convertToJsonData(stepLog.LogPath)
+		if err != nil {
+			return nil, err
+		}
+		stepLogDTO.Content = jsonData
+	}
+	return stepLogDTO, nil
+}
+
+func convertToJsonData(path string) (string, error) {
+	bytes, err := oss.Get(path)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
+}
+
+func getPath(skuTaskStepId uint64) string {
+	now := base.Now()
+	// 20250519 这样的格式
+	nowStr := now.ToTime().Format("20060102")
+	skuTaskStepIdStr := strconv.FormatUint(skuTaskStepId, 10)
+	return fmt.Sprintf("client/log/%s/%s.log", nowStr, skuTaskStepIdStr)
+
+}
+
+func storeJsonData(stepLogDTO *dto.SkuTaskStepLogDTO) (string, error) {
+	path := getPath(stepLogDTO.SkuTaskStepId)
+	return path, oss.Put(path, []byte(stepLogDTO.Content))
 }

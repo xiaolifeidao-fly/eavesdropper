@@ -7,7 +7,8 @@ import {
   UpdateSkuTaskReq,
   SkuTaskPageReq,
   SkuTaskPageResp,
-  SkuTask
+  SkuTask,
+  SkuTaskStepLog
 } from '@model/sku/skuTask'
 import { BasePageResp, LabelValue } from '@model/base/base'
 
@@ -36,7 +37,8 @@ export const getSkuTaskSteps = async (taskId: number, stepKey: string, resourceI
 
 // 保存任务步骤
 export const saveSkuTaskStep = async (req: SkuTaskStep) => {
-  return instance.post('/sku/task/steps/save', req)
+  const result = await instance.post('/sku/task/steps/save', req)
+  return plainToClass(SkuTaskStep, result)
 }
 
 export const initSkuStep = async (taskId: number, stepKey: string, resourceId: number, groupCode: string) => {
@@ -53,4 +55,16 @@ export const getSkuTaskPage = async (req: SkuTaskPageReq) => {
 export const GetSkuTaskStatusLabelValue = async () => {
   const result = await instance.get('/sku/task/status/enums')
   return plainToClass(Array<LabelValue>, result)
+}
+
+// 创建任务步骤日志
+export const createSkuTaskStepLog = async (req: SkuTaskStepLog) => {
+  const result = await instance.post('/sku/task/steps/log', req)
+  return plainToClass(SkuTaskStepLog, result)
+}
+
+// 获取任务步骤日志
+export const getSkuTaskStepLog = async (skuTaskStepId: number) => {
+  const result = await instance.get(`/sku/task/steps/log/${skuTaskStepId}`)
+  return plainToClass(SkuTaskStepLog, result)
 }

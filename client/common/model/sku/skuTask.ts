@@ -131,6 +131,18 @@ export class SkuTaskStep {
   }
 }
 
+export class SkuTaskStepLog {
+  constructor(
+    public id: number|undefined,
+    public skuTaskStepId: number,
+    public content: string,
+  ) {
+    this.id = id
+    this.skuTaskStepId = skuTaskStepId
+    this.content = content
+  }
+}
+
 export class SkuTaskPageReq {
   constructor(
     public current: number,

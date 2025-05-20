@@ -31,6 +31,8 @@ func LoadSkuTaskRouter(router *gin.RouterGroup) {
 		r.Use(middleware.Authorization()).POST("/steps/save", SaveSkuTaskStep)
 		r.Use(middleware.Authorization()).GET("/page", PageSkuTask)
 		r.Use(middleware.Authorization()).GET("/status/enums", GetSkuTaskStatusLabelValue)
+		r.Use(middleware.Authorization()).POST("/steps/log", CreateSkuTaskStepLog)
+		r.Use(middleware.Authorization()).GET("/steps/log/:skuTaskStepId", GetSkuTaskStepLog)
 	}
 }
 
@@ -213,4 +215,28 @@ func PageSkuTask(ctx *gin.Context) {
 // @Router /sku/task/status/enums [get]
 func GetSkuTaskStatusLabelValue(ctx *gin.Context) {
 	controller.OK(ctx, dto.GetSkuTaskStatusEnums())
+}
+
+func CreateSkuTaskStepLog(ctx *gin.Context) {
+	var req dto.SkuTaskStepLogDTO
+	if err := controller.Bind(ctx, &req, binding.JSON); err != nil {
+		controller.Error(ctx, "参数错误")
+		return
+	}
+	services.SaveSkuTaskStepLog(&req)
+	controller.OK(ctx, "创建成功")
+}
+
+func GetSkuTaskStepLog(ctx *gin.Context) {
+	skuTaskStepId, err := strconv.ParseUint(ctx.Param("skuTaskStepId"), 10, 64)
+	if err != nil {
+		controller.Error(ctx, "skuTaskStepId 参数错误")
+		return
+	}
+	stepLog, err := services.GetSkuTaskStepLogListBySkuTaskStepId(skuTaskStepId)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+	controller.OK(ctx, stepLog)
 }

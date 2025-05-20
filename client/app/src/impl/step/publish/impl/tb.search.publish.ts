@@ -42,13 +42,14 @@ export class TbPublishSearchStep extends AbsPublishStep{
         }
         log.info("标题为：", title);
         const validateTag = this.getValidateTag();
-        const result = await searchCategory(resourceId, title, validateTag);
+        const result = await searchCategory(resourceId, title, validateTag, this.stepLogMessage);
         if(!result || !result.getCode()){
             if(result?.getValidateUrl()){
                 return new StepResult(false, "搜索商品信息失败出现验证码", [
                     new StepResponse("validateUrl", result.validateUrl)
                 ], result.getHeaderData(), result.validateUrl, result.getValidateParams());            
             }
+            this.stepLogMessage.sendLog();
             return new StepResult(true, "搜索商品分类失败");
         }
         log.info("搜索商品分类成功", result);

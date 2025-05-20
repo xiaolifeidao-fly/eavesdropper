@@ -77,6 +77,7 @@ export class UpdateDraftStep extends AbsPublishStep {
                 return new StepResult(false, "获取更新草稿新页面失败");
             }
             const commonData = await this.getCommonData(page);
+            this.stepLogMessage.appendErrorMessage(`UpdateDraftStep common data is ${JSON.stringify(commonData)}`);
             await this.fillCategory(commonData);
             const requestHeader = this.getHeader(); 
             if(!requestHeader){
@@ -105,7 +106,7 @@ export class UpdateDraftStep extends AbsPublishStep {
             }
             this.setParams("updateDraftData", draftData);
             this.setParams("draftHeader", requestHeader);
-            
+            this.setParams("commonData", commonData);
             return new StepResult(true, "更新草稿成功");
         } catch (error) {
             await this.releaseDraftData(draftId, resourceId);

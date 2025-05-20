@@ -1,6 +1,6 @@
 {
   "name": "eavesdropper",
-  "version": "1.2.31",
+  "version": "1.2.32",
   "description": "",
   "main": "dist/main.js",
   "scripts": {
@@ -49,7 +49,7 @@
       }
     ],
     "releaseInfo": {
-      "releaseNotes": "-1.优化更新速度"
+      "releaseNotes": "-1.采集提供右键复制图片"
     },
     "nsis": {
       "oneClick": false,

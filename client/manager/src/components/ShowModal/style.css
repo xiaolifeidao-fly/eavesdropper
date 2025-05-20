@@ -1,0 +1,89 @@
+/* 采集工具弹窗定位到屏幕左侧 */
+.gather-tool-modal-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 2147483647 !important; /* 使用JS允许的最大整数值为z-index */
+}
+
+.gather-tool-modal-root .ant-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  height: 100vh; /* 使用100vh占满整个视口高度 */
+}
+
+.gather-tool-modal-root .ant-modal-content {
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  padding: 0 !important; /* 覆盖默认的padding: 20px 24px */
+  z-index: 2147483647 !important; /* 使用JS允许的最大整数值为z-index */
+}
+
+.gather-tool-modal-root .ant-modal-body {
+  padding: 0;
+  height: 100%;
+  z-index: 2147483647 !important; /* 使用JS允许的最大整数值为z-index */
+}
+
+.gather-tool-modal-root .ant-modal-header {
+  display: none;
+}
+
+.gather-tool-modal-root .ant-modal-close {
+  display: none;
+}
+
+/* 调整蒙层的样式 */
+.gather-tool-modal-root .ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.45);
+  z-index: 2147483646 !important; /* 比modal稍低但仍很高的z-index */
+}
+
+/* 确保Modal的包装元素也有高z-index */
+.gather-tool-modal-root.ant-modal-wrap,
+.gather-tool-modal-root .ant-modal-wrap {
+  z-index: 2147483647 !important;
+}
+
+/* 防止其他元素覆盖 - 通用组件 */
+.ant-menu,
+.ant-menu-submenu,
+.ant-dropdown,
+.ant-dropdown-menu,
+.ant-popover,
+.ant-tooltip {
+  z-index: 999 !important; /* 降低这些组件的z-index */
+}
+
+/* 特别针对侧边栏及其折叠按钮 */
+.ant-layout-sider,
+.ant-layout-sider-children,
+.ant-layout-sider-trigger,
+.ant-layout-sider-zero-width-trigger,
+.ant-layout-sider-collapsed {
+  z-index: 999 !important; /* 降低侧边栏相关元素的z-index */
+}
+
+/* 当GatherTool模态框打开时，进一步限制其他元素 */
+body:has(.gather-tool-modal-root) * {
+  z-index: auto; /* 重置所有元素的z-index */
+}
+
+body:has(.gather-tool-modal-root) .gather-tool-modal-root,
+body:has(.gather-tool-modal-root) .gather-tool-modal-root * {
+  z-index: 2147483647 !important; /* 保持模态框及其子元素的高z-index */
+}
+
+body:has(.gather-tool-modal-root) .ant-layout-sider,
+body:has(.gather-tool-modal-root) .ant-layout-sider-children,
+body:has(.gather-tool-modal-root) .ant-layout-sider-trigger,
+body:has(.gather-tool-modal-root) .ant-layout-sider-zero-width-trigger {
+  z-index: 900 !important; /* 当模态框打开时强制降低侧边栏相关元素的z-index */
+} 

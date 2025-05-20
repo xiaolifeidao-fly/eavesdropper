@@ -4,6 +4,7 @@ import axios from "axios";
 import log from "electron-log";
 import { DoorEntity } from "@src/door/entity";
 import { buildValidateDoorEntity } from "@src/door/monitor/mb/mb.monitor";
+import { StepLogMessage } from "@src/impl/step/step.log";
 
 async function getHeaderData(resourceId : number, validateTag : boolean){
     const searchStartTraceId = "searchStartTraceId";
@@ -36,11 +37,8 @@ async function getHeaderData(resourceId : number, validateTag : boolean){
         }
         const headerData = result.getHeaderData();
         mbEngine.setHeader(headerData);
-        log.info("search category result headerData", headerData);
         const sid = getSid(result.getResponseHeaderData());
-        log.info("search category sid", sid);
         mbEngine.setParams(searchStartTraceId, sid);
-        log.info("search category success");
         return headerData;
     }finally{
         if(result){
@@ -67,16 +65,16 @@ function getSid(headerData : { [key: string]: any }){
 }
 
 
-export async function searchCategory(publishResourceId : number, title : string, validateTag : boolean){
+export async function searchCategory(publishResourceId : number, title : string, validateTag : boolean, stepLogMessage : StepLogMessage){
     const headerData =  await getHeaderData(publishResourceId, validateTag);
     if(!headerData){
         return new DoorEntity<{}>(false, {});
     }
     const {header, startTraceId} = headerData;
-    return await getCategoryInfo(header,startTraceId, title);
+    return await getCategoryInfo(header,startTraceId, title, stepLogMessage);
 }
 
-async function getCategoryInfo(requestHeader : { [key: string]: any }, startTraceId: string, categoryKeyword: string) {
+async function getCategoryInfo(requestHeader : { [key: string]: any }, startTraceId: string, categoryKeyword: string, stepLogMessage : StepLogMessage) {
     requestHeader['origin'] = "https://item.upload.taobao.com";
     requestHeader['referer'] = "https://item.upload.taobao.com/sell/ai/category.htm?type=category";
     requestHeader['accept'] = "application/json, text/plain, */*";
@@ -113,6 +111,7 @@ async function getCategoryInfo(requestHeader : { [key: string]: any }, startTrac
             return doorEntity;
         }
         log.error("搜索商品分类失败", data);
+        stepLogMessage.appendErrorMessage(`搜索商品分类失败 ${data}`);
         return new DoorEntity<{}>(false, {});
     }
 
@@ -127,6 +126,7 @@ async function getCategoryInfo(requestHeader : { [key: string]: any }, startTrac
     const categories = data.data?.category;
     if (!categories || categories.length == 0) {
         log.error("搜索商品分类失败", data);
+        stepLogMessage.appendErrorMessage(`搜索商品分类失败 ${data}`);
         return new DoorEntity<{}>(false, {});
     }
     const category = categories[0];

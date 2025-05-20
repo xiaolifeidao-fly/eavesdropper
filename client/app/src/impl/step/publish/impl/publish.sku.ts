@@ -138,6 +138,7 @@ export class PublishSkuStep extends AbsPublishStep {
             const updateDraftData = this.getParams("updateDraftData");
             const draftHeader = this.getParams("draftHeader");
             const stepResult = await this.submit(catId, startTraceId, updateDraftData, draftHeader, draftId);
+            this.stepLogMessage.sendLog();
             if(stepResult.result){
                 await this.saveSkuCategory(this.getParams("skuItem"));
             }
@@ -185,7 +186,13 @@ export class PublishSkuStep extends AbsPublishStep {
             const res = await axios.post(url, data, {
                 headers: draftHeader
             })
+            const commonData = this.getParams("commonData");
+            if(commonData){
+                this.stepLogMessage.appendErrorMessage(`PublishSkuStep page data is ${JSON.stringify(commonData)}`);
+            }
+            this.stepLogMessage.appendErrorMessage(`PublishSkuStep submit jsonBody is ${JSON.stringify(updateDraftData)}`);
             const responseData = res.data;
+            this.stepLogMessage.appendErrorMessage(`PublishSkuStep submit res is ${JSON.stringify(responseData)}`);
             log.info("responseData is ", responseData);
             const type = responseData.models?.globalMessage?.type;
             if(!type){

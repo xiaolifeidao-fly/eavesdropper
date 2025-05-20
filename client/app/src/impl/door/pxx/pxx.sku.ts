@@ -260,6 +260,12 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                 const { clipboard } = require('electron');
                 const menu = require('electron').Menu.buildFromTemplate([
                     {
+                        label: '复制图片',
+                        click: () => {
+                            browserView.webContents.copyImageAt(params.x, params.y);
+                        }
+                    },
+                    {
                         label: '复制图片地址',
                         click: () => {
                             clipboard.writeText(params.srcURL);
