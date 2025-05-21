@@ -1,0 +1,221 @@
+{
+    "requestId": "809188da-a6e5-4546-8cbb-48b27e54a110",
+    "success": true,
+    "errorMessage": "",
+    "data": {
+        "baseInfo": {
+            "catId": "6803",
+            "itemId": "720259418561",
+            "skuType": "5",
+            "mainImages": [
+                "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
+                "https://img.pddpic.com/mms-material-img/2025-03-21/055ddfdd-043f-4f9f-9c46-7b1ac3324f99.jpeg"
+            ],
+            "title": "正品免疫球蛋白原装进口牛初乳原料宝宝儿童成人老年人免疫力低",
+            "guideTitle": "正品免疫球蛋白原装进口牛初乳原料宝宝儿童成人老年人免疫力低",
+            "skuItems": [
+                {
+                    "text": [
+                        "普通膳食营养食品"
+                    ],
+                    "value": "营养食品类型"
+                },
+                {
+                    "text": [
+                        "常温贮藏"
+                    ],
+                    "value": "储藏方法"
+                },
+                {
+                    "text": [
+                        "通用"
+                    ],
+                    "value": "适用性别"
+                },
+                {
+                    "text": [
+                        "2025-02-28"
+                    ],
+                    "value": "生产日期"
+                },
+                {
+                    "text": [
+                        "730天"
+                    ],
+                    "value": "保质期"
+                },
+                {
+                    "text": [
+                        "SC11334160332709"
+                    ],
+                    "value": "食品生产许可证编号"
+                },
+                {
+                    "text": [
+                        "中国大陆"
+                    ],
+                    "value": "产地"
+                },
+                {
+                    "text": [
+                        "广东省"
+                    ],
+                    "value": "发货地"
+                }
+            ],
+            "procurementLocation": "globalStock_1"
+        },
+        "doorSkuSaleInfo": {
+            "salesAttr": {
+                "p-1218": {
+                    "hasImage": "true",
+                    "comboProperty": "",
+                    "label": "款式",
+                    "packPro": "",
+                    "pid": "1218",
+                    "values": [
+                        {
+                            "text": "新店钜惠【300片/瓶】*增强免疫",
+                            "value": "26286113681",
+                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
+                            "sortOrder": ""
+                        },
+                        {
+                            "text": "厂家钜惠【300片/瓶】*增强免疫.",
+                            "value": "26706540298",
+                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
+                            "sortOrder": ""
+                        },
+                        {
+                            "text": "特效款【300片/瓶】*强健体免疫",
+                            "value": "26286164513",
+                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
+                            "sortOrder": ""
+                        },
+                        {
+                            "text": "30%人选择【150片/瓶】*中度调理",
+                            "value": "26286114553",
+                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
+                            "sortOrder": ""
+                        },
+                        {
+                            "text": "9%人选择【50片/瓶】轻度调理",
+                            "value": "26706524861",
+                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
+                            "sortOrder": ""
+                        },
+                        {
+                            "text": "【宣传/指南】卟/单/髪",
+                            "value": "26153225173",
+                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
+                            "sortOrder": ""
+                        }
+                    ]
+                }
+            },
+            "salesSkus": [
+                {
+                    "salePropPath": "1218:26286113681",
+                    "price": "1.99",
+                    "quantity": "0"
+                },
+                {
+                    "salePropPath": "1218:26706540298",
+                    "price": "4.2",
+                    "quantity": "0"
+                },
+                {
+                    "salePropPath": "1218:26286164513",
+                    "price": "5.99",
+                    "quantity": "1000"
+                },
+                {
+                    "salePropPath": "1218:26286114553",
+                    "price": "5.5",
+                    "quantity": "1000"
+                },
+                {
+                    "salePropPath": "1218:26706524861",
+                    "price": "4.99",
+                    "quantity": "1000"
+                },
+                {
+                    "salePropPath": "1218:26153225173",
+                    "price": "1.01",
+                    "quantity": "8"
+                }
+            ],
+            "price": "1.01",
+            "quantity": "3008",
+            "purchaseTips": "",
+            "outerId": "",
+            "barcode": "",
+            "subStock": "1",
+            "shelfTime": {
+                "type": 0,
+                "shelfTime": null
+            },
+            "reviewNum": "155",
+            "saleNum": "832"
+        },
+        "doorSkuLogisticsInfo": {
+            "deliveryFromAddr": "广东省",
+            "isFreeShipping": true
+        },
+        "doorSkuImageInfo": {
+            "images": null,
+            "videos": null,
+            "longImages": null,
+            "doorSkuImageInfos": [
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/a9bdf18f-da9f-4663-a874-ba8aa5fae001.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/37206cac-5dc4-4569-a197-a1098c4fd7e5.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/a8a9b09f-ac2e-48be-90a3-d9e88728189d.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/d6dfd17c-3ccb-4356-a68a-a522a9a7f95e.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/cb2725d3-ca34-49aa-85c4-b7e4186d2acf.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/abfbf266-ca45-482b-b4b5-a0bc3004c6aa.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/90999ebe-64da-4d37-9b16-d7319096ebb5.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/6a0a5907-700b-43a9-af91-2af466183126.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/1220d3f7-d137-49aa-ae88-6feb975ea334.jpeg"
+                },
+                {
+                    "type": "image",
+                    "content": "https://img.pddpic.com/mms-material-img/2025-03-21/055ddfdd-043f-4f9f-9c46-7b1ac3324f99.jpeg"
+                }
+            ]
+        }
+    }
+}
