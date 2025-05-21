@@ -77,7 +77,9 @@ const ModalCreate = ({ hideModal, onSuccess }: ModalCreateProps) => {
       formData.append('title', values.title)
       formData.append('feedbackType', values.feedbackType)
       formData.append('content', values.content)
-      formData.append('contactInfo', values.contactInfo)
+      if (values.contactInfo) {
+        formData.append('contactInfo', values.contactInfo)
+      }
 
       // 添加文件到 FormData
       fileList.forEach((file) => {
