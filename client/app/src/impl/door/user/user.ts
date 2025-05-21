@@ -67,6 +67,7 @@ export class MbUserApiImpl extends MbUserApi {
             accountStatueMap = new Map()
         }
 
+        // log.info("accountStatueMap", accountStatueMap)
         const today = getTodayDateString()
         if (accountStatueMap.has(resourceId)) {
             const onlineDate = accountStatueMap.get(resourceId)

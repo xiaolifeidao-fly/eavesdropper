@@ -38,6 +38,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
   const [uploadUrlList, setUploadUrlList] = useState<LinkInfo[]>([]); // 链接列表
   const [urls, setUrls] = useState<SkuUrl[]>([]);
   const [onPublishFinish, setOnPublishFinish] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const store = new StoreApi();
 
@@ -118,6 +119,7 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
             buttons.push(<Button key={`cancel-${step}`} onClick={() => { onCancel() }}>取消</Button>);
             buttons.push(
               <Button
+                loading={loading}
                 type="primary" key={`submit-${step}`}
                 onClick={() => props.onSubmit?.()} disabled={step === lastStep && !onPublishFinish}>
                 {buttonNextText}
@@ -182,56 +184,64 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           title="发布配置"
           style={{ height: '400px' }}
           onFinish={async () => {
-            if (!sourceAccount || sourceAccount === 0) {
-              message.error('请选择资源账号');
-              return false;
-            }
-
-            // 检验资源账号是否在线
-            const mbUserApi = new MbUserApi();
-            const online = await mbUserApi.getUserOnlineStatus(sourceAccount)
-            if (!online) {
-              message.error('资源账号登录已失效，请至资源管理里面重新登录');
-              return false;
-            }
-
-            // 加价区间数据校验
-            let isValid = true;
-            const data = priceRangeConfigFormRef.current?.getFieldsFormatValue?.();
-            const priceRangeList = data.priceRangeList;
-
-            if (Array.isArray(priceRangeList)) {
-              // 遍历 priceRangeList 中的每个元素
-              priceRangeList.forEach((item, index) => {
-                if (
-                  item.minPrice === undefined ||
-                  item.maxPrice === undefined ||
-                  item.priceMultiplier === undefined ||
-                  item.fixedAddition === undefined ||
-                  item.roundTo === undefined
-                ) {
-                  isValid = false;
-                  console.error(`第 ${index + 1} 项数据不完整`, item);
-                }
-              })
-            }
-
-            if (!isValid) {
-              message.error('请确保所有加价区间数据都已填写完整');
-              return;
-            }
-
-            if (pushSkuFlag) {
+            setLoading(true);
+            try {
+              if (!sourceAccount || sourceAccount === 0) {
+                message.error('请选择资源账号');
+                return false;
+              }
+  
+              // 检验资源账号是否在线
+              const mbUserApi = new MbUserApi();
+              const online = await mbUserApi.getUserOnlineStatus(sourceAccount)
+              if (!online) {
+                message.error('资源账号登录已失效，请至资源管理里面重新登录');
+                return false;
+              }
+  
+              // 加价区间数据校验
+              let isValid = true;
+              const data = priceRangeConfigFormRef.current?.getFieldsFormatValue?.();
+              const priceRangeList = data.priceRangeList;
+  
+              if (Array.isArray(priceRangeList)) {
+                // 遍历 priceRangeList 中的每个元素
+                priceRangeList.forEach((item, index) => {
+                  if (
+                    item.minPrice === undefined ||
+                    item.maxPrice === undefined ||
+                    item.priceMultiplier === undefined ||
+                    item.fixedAddition === undefined ||
+                    item.roundTo === undefined
+                  ) {
+                    isValid = false;
+                    console.error(`第 ${index + 1} 项数据不完整`, item);
+                  }
+                })
+              }
+  
+              if (!isValid) {
+                message.error('请确保所有加价区间数据都已填写完整');
+                return;
+              }
+  
+              if (pushSkuFlag) {
+                return true;
+              }
+              setPushSkuFlag(true);
+  
+              pushConfig.priceRate = priceRangeList;
+              setPushConfig(pushConfig);
+  
+              // 保存配置
+              store.setItem(`sku_publish_config`, pushConfig);
               return true;
+            } catch (error) {
+              message.error('发布失败');
+              return false;
+            } finally {
+              setLoading(false);
             }
-            setPushSkuFlag(true);
-
-            pushConfig.priceRate = priceRangeList;
-            setPushConfig(pushConfig);
-
-            // 保存配置
-            store.setItem(`sku_publish_config`, pushConfig);
-            return true;
           }}
         >
           <SukPushConfig
