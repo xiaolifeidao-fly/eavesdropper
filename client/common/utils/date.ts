@@ -8,3 +8,10 @@ export function formatDate(date: Date) {
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
+
+// 返回当天的日期字符串 格式：2025-05-21
+export function getTodayDateString() {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    return today.toISOString().split('T')[0]
+}

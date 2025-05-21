@@ -15,6 +15,7 @@ import { TaskApi } from '@eleapi/door/task/task';
 import SkuPushStepsForm from '../components/SkuPushSteps';
 import { SkuTaskOperationType } from '@model/sku/skuTask';
 import { ShopStatus } from '@model/shop/shop';
+import { MbUserApi } from '@eleapi/door/user/user';
 
 const pollingTime = 20*1000
 
@@ -70,19 +71,36 @@ export default function SkuTaskManage() {
   }
 
   // 重新发布
-  const handleRepublish = (taksId: number) => {
+  const handleRepublish = (taksId: number, resourceId: number) => {
+    if (!checkResourceOnline(resourceId)) {
+      return
+    }
+
     setTaskId(taksId)
     setVisible(true)
     setOperationType(SkuTaskOperationType.REPUBLISH)
   }
 
   // 继续发布
-  const handleContinue = (taksId: number) => {
+  const handleContinue = (taksId: number, resourceId: number) => {
+    if (!checkResourceOnline(resourceId)) {
+      return
+    }
+
     setTaskId(taksId)
     setVisible(true)
     setOperationType(SkuTaskOperationType.CONTINUE)
   }
 
+  const checkResourceOnline = async (resourceId: number) => {
+    const mbUserApi = new MbUserApi()
+    const online = await mbUserApi.getUserOnlineStatus(resourceId)
+    if (!online) {
+      message.error('资源账号登录已失效，请至资源管理里面重新登录');
+      return false
+    }
+    return true
+  }
   const columns: ProColumns[] = [
     {
       title: '发布批次',
@@ -197,7 +215,7 @@ export default function SkuTaskManage() {
               查看
             </Button>
             {(record.status === SkuTaskStatus.DONE || record.status === SkuTaskStatus.ERROR || record.status === SkuTaskStatus.PENDING) && (
-              <Popconfirm title="确定重新发布任务吗？" onConfirm={() => handleRepublish(record.id)}>
+              <Popconfirm title="确定重新发布任务吗？" onConfirm={() => handleRepublish(record.id, record.resourceId)}>
                 <Button
                   type='link'
                   // onClick={() => handleRepublish(record.id)} // 重新发布操作
@@ -220,7 +238,7 @@ export default function SkuTaskManage() {
               </Popconfirm>
             )}
             {(record.status === SkuTaskStatus.STOP && (
-              <Popconfirm title="确定继续执行任务吗？" onConfirm={() => handleContinue(record.id)}>
+              <Popconfirm title="确定继续执行任务吗？" onConfirm={() => handleContinue(record.id, record.resourceId)}>
                 <Button
                   type="link"
                   // onClick={() => handleContinue(record.id)} // 重新发布操作

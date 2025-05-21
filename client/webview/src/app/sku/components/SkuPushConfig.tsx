@@ -91,14 +91,16 @@ const SukPushConfig: React.FC<SukPushConfigProp> = (props) => {
           const sourceList: { value: number, label: string, disabled: boolean }[] = [];
           for (const shop of shopList) {
             let label = shop.name;
+            let disabled = false
             // 禁用选择已失效的账号
             if (shop.status === ShopStatus.LosEffective) {
               label = `${label}（已失效）`
+              disabled = true
             }
             sourceList.push({
               value: shop.resourceId,
               label: label,
-              disabled: shop.status === ShopStatus.LosEffective
+              disabled: disabled
             })
           }
           // 获取上次选择的账号

@@ -17,4 +17,8 @@ export class MbUserApi extends ElectronApi {
         return await this.invokeApi("openUserInfo", resourceId);
     }
 
+    @InvokeType(Protocols.INVOKE)
+    async getUserOnlineStatus(resourceId: number) {
+        return await this.invokeApi("getUserOnlineStatus", resourceId)
+    }
 }

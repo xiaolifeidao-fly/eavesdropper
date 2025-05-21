@@ -12,6 +12,7 @@ import { getResourceSourceList as getResourceSourceListApi } from '@api/resource
 import SukPushConfig from './SkuPushConfig';
 import { StoreApi } from '@eleapi/store/store';
 import { SkuPublishConfig, PriceRangeConfig, SkuTaskOperationType } from "@model/sku/skuTask";
+import { MbUserApi } from '@eleapi/door/user/user';
 
 interface PushSkuStepsFormProps {
   taskId?: number;
@@ -183,6 +184,14 @@ const SkuPushStepsForm: React.FC<PushSkuStepsFormProps> = (props) => {
           onFinish={async () => {
             if (!sourceAccount || sourceAccount === 0) {
               message.error('请选择资源账号');
+              return false;
+            }
+
+            // 检验资源账号是否在线
+            const mbUserApi = new MbUserApi();
+            const online = await mbUserApi.getUserOnlineStatus(sourceAccount)
+            if (!online) {
+              message.error('资源账号登录已失效，请至资源管理里面重新登录');
               return false;
             }
 

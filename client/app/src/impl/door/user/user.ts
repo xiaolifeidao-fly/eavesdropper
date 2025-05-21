@@ -7,7 +7,8 @@ import { MbEngine } from "@src/door/mb/mb.engine";
 import { MbUserInfoMonitor } from "@src/door/monitor/mb/user/md.user.monitor";
 import log from "electron-log";
 import { MdLoginMonitor } from "@src/door/monitor/mb/login/md.login.monitor";
-
+import { StoreApiImpl } from "@src/impl/store/store";
+import { getTodayDateString } from "@utils/date";
 
 export class MbUserApiImpl extends MbUserApi {
 
@@ -54,6 +55,39 @@ export class MbUserApiImpl extends MbUserApi {
         }catch(error){
             log.error("login error", error);
         }
+    }
+
+    @InvokeType(Protocols.INVOKE)
+    async getUserOnlineStatus(resourceId: number) {
+        const key = `resource_online_status`
+        const storeApi = new StoreApiImpl()
+        // 先从缓存中获取
+        let accountStatueMap = await storeApi.getItem(key)
+        if (!accountStatueMap) {
+            accountStatueMap = new Map()
+        }
+
+        const today = getTodayDateString()
+        if (accountStatueMap.has(resourceId)) {
+            const onlineDate = accountStatueMap.get(resourceId)
+            if (onlineDate) {
+                // 判断在线日期是否为当天
+                if (onlineDate === today) {
+                    return true
+                }
+            }
+        }
+
+        // 获取资源账号在线状态
+        const result = await this.getUserInfo(resourceId)
+        const online = result && result.code ? true : false
+
+        // 缓存资源账号在线状态
+        if (online) {
+            accountStatueMap.set(resourceId, today)
+        }
+        await storeApi.setItem(key, accountStatueMap)
+        return online
     }
 
 }
