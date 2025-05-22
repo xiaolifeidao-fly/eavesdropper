@@ -14,17 +14,12 @@ interface ModalCreateProps {
 }
 
 const ModalView = ({ hideModal, onSuccess, data }: ModalCreateProps) => {
-  const [isAdmin, setIsAdmin] = useState<Boolean>(false)
   const [result, setResult] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [feedback, setFeedback] = useState<FeedbackInfo>()
 
   useEffect(() => {
-    userIsAdmin().then((res) => {
-      setIsAdmin(res)
-      fetchFeedbackInfo()
-    })
-
+    fetchFeedbackInfo()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -130,7 +125,7 @@ const ModalView = ({ hideModal, onSuccess, data }: ModalCreateProps) => {
       {renderMedia()}
 
       <div style={{ marginTop: 24 }}>
-        {isAdmin && feedback?.status !== FeedbackStatus.RESOLVED ? (
+        {feedback?.status !== FeedbackStatus.RESOLVED ? (
           <>
             <Title level={5}>处理反馈</Title>
             <TextArea

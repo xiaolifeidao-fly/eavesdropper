@@ -5,7 +5,7 @@ import { BasePageResp, LabelValue } from '@/model/base/base'
 import { FeedbackPage, FeedbackPageReq, AddFeedbackReq, FeedbackInfo } from '@/model/feedback/feedback'
 
 export const getFeedbackPage = async (req: FeedbackPageReq) => {
-  const result = await instance.get(`/feedback/page`, { params: req })
+  const result = await instance.get(`/feedback/admin/page`, { params: req })
   return plainToClass(BasePageResp<FeedbackPage>, result)
 }
 

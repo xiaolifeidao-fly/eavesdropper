@@ -27,6 +27,7 @@ func LoadFeedbackRouter(router *gin.RouterGroup) {
 	{
 		r.Use(middleware.Authorization()).POST("", AddFeedback)
 		r.Use(middleware.Authorization()).GET("/page", PageFeedback)
+		r.Use(middleware.Authorization()).GET("/admin/page", AdminPageFeedback)
 		r.Use(middleware.Authorization()).GET("/:id/info", GetFeedbackInfo)
 		r.Use(middleware.Authorization()).PUT("/:id/mark/process", MarkFeedbackProcessing)
 		r.Use(middleware.Authorization()).PUT("/:id/resolved", ResolvedFeedback)
@@ -141,14 +142,34 @@ func PageFeedback(ctx *gin.Context) {
 	}
 
 	userID := common.GetLoginUserID()
-	if !isAdmin(userID) {
-		// 非管理员用户只能看到自己提交的反馈数据
-		pageReq.UserID = userID
-	}
+	pageReq.UserID = userID
 
 	var pageDTO *page.Page[dto.FeedbackPageDTO]
 	if pageDTO, err = services.PageFeedback(&pageReq); err != nil {
 		logger.Errorf("PageFeedback failed, with error is %v", err)
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	controller.OK(ctx, pageDTO)
+}
+
+// AdminPageFeedback
+// @Description 管理员分页获取反馈
+// @Router /feedback/admin/page [get]
+func AdminPageFeedback(ctx *gin.Context) {
+	var err error
+
+	var pageReq dto.FeedbackPageParamDTO
+	if err = controller.Bind(ctx, &pageReq, binding.Form); err != nil {
+		logger.Infof("AdminPageFeedback Bind error: %v", err)
+		controller.Error(ctx, "参数错误")
+		return
+	}
+
+	var pageDTO *page.Page[dto.FeedbackPageDTO]
+	if pageDTO, err = services.PageFeedback(&pageReq); err != nil {
+		logger.Errorf("AdminPageFeedback failed, with error is %v", err)
 		controller.Error(ctx, err.Error())
 		return
 	}
