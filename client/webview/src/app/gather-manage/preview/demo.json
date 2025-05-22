@@ -1,221 +1,317 @@
 {
-    "requestId": "809188da-a6e5-4546-8cbb-48b27e54a110",
-    "success": true,
-    "errorMessage": "",
-    "data": {
-        "baseInfo": {
-            "catId": "6803",
-            "itemId": "720259418561",
-            "skuType": "5",
-            "mainImages": [
-                "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
-                "https://img.pddpic.com/mms-material-img/2025-03-21/055ddfdd-043f-4f9f-9c46-7b1ac3324f99.jpeg"
-            ],
-            "title": "正品免疫球蛋白原装进口牛初乳原料宝宝儿童成人老年人免疫力低",
-            "guideTitle": "正品免疫球蛋白原装进口牛初乳原料宝宝儿童成人老年人免疫力低",
-            "skuItems": [
-                {
-                    "text": [
-                        "普通膳食营养食品"
-                    ],
-                    "value": "营养食品类型"
-                },
-                {
-                    "text": [
-                        "常温贮藏"
-                    ],
-                    "value": "储藏方法"
-                },
-                {
-                    "text": [
-                        "通用"
-                    ],
-                    "value": "适用性别"
-                },
-                {
-                    "text": [
-                        "2025-02-28"
-                    ],
-                    "value": "生产日期"
-                },
-                {
-                    "text": [
-                        "730天"
-                    ],
-                    "value": "保质期"
-                },
-                {
-                    "text": [
-                        "SC11334160332709"
-                    ],
-                    "value": "食品生产许可证编号"
-                },
-                {
-                    "text": [
-                        "中国大陆"
-                    ],
-                    "value": "产地"
-                },
-                {
-                    "text": [
-                        "广东省"
-                    ],
-                    "value": "发货地"
-                }
-            ],
-            "procurementLocation": "globalStock_1"
-        },
-        "doorSkuSaleInfo": {
-            "salesAttr": {
-                "p-1218": {
-                    "hasImage": "true",
-                    "comboProperty": "",
-                    "label": "款式",
-                    "packPro": "",
-                    "pid": "1218",
-                    "values": [
-                        {
-                            "text": "新店钜惠【300片/瓶】*增强免疫",
-                            "value": "26286113681",
-                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
-                            "sortOrder": ""
-                        },
-                        {
-                            "text": "厂家钜惠【300片/瓶】*增强免疫.",
-                            "value": "26706540298",
-                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
-                            "sortOrder": ""
-                        },
-                        {
-                            "text": "特效款【300片/瓶】*强健体免疫",
-                            "value": "26286164513",
-                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
-                            "sortOrder": ""
-                        },
-                        {
-                            "text": "30%人选择【150片/瓶】*中度调理",
-                            "value": "26286114553",
-                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
-                            "sortOrder": ""
-                        },
-                        {
-                            "text": "9%人选择【50片/瓶】轻度调理",
-                            "value": "26706524861",
-                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
-                            "sortOrder": ""
-                        },
-                        {
-                            "text": "【宣传/指南】卟/单/髪",
-                            "value": "26153225173",
-                            "image": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg",
-                            "sortOrder": ""
-                        }
-                    ]
-                }
+    "baseInfo": {
+        "catId": "23511",
+        "itemId": "743000341902",
+        "skuType": "5",
+        "mainImages": [
+            "https://img.pddpic.com/mms-material-img/2025-05-05/df84c339-342e-4c6b-8ac1-479eff4a942e.jpeg",
+            "https://img.pddpic.com/mms-material-img/2025-05-05/2df16618-e417-4b1a-bb6a-31edcd563e06.jpeg",
+            "https://img.pddpic.com/mms-material-img/2025-05-05/d01673b6-53dc-449d-afa8-3696064b7cf3.jpeg",
+            "https://img.pddpic.com/mms-material-img/2025-05-05/1042369e-9481-443c-9617-eb77db2098e9.jpeg",
+            "https://img.pddpic.com/mms-material-img/2025-05-05/dcffd761-a528-4078-8168-aa65222fdd91.jpeg"
+        ],
+        "title": "脆升升薯条原味蜂蜜黄油小包薯条脆生生网红休闲小零食番茄味",
+        "guideTitle": "脆升升薯条原味蜂蜜黄油小包薯条脆生生网红休闲小零食番茄味",
+        "skuItems": [
+            {
+                "text": [
+                    "脆升升"
+                ],
+                "value": "品牌"
             },
-            "salesSkus": [
-                {
-                    "salePropPath": "1218:26286113681",
-                    "price": "1.99",
-                    "quantity": "0"
-                },
-                {
-                    "salePropPath": "1218:26706540298",
-                    "price": "4.2",
-                    "quantity": "0"
-                },
-                {
-                    "salePropPath": "1218:26286164513",
-                    "price": "5.99",
-                    "quantity": "1000"
-                },
-                {
-                    "salePropPath": "1218:26286114553",
-                    "price": "5.5",
-                    "quantity": "1000"
-                },
-                {
-                    "salePropPath": "1218:26706524861",
-                    "price": "4.99",
-                    "quantity": "1000"
-                },
-                {
-                    "salePropPath": "1218:26153225173",
-                    "price": "1.01",
-                    "quantity": "8"
-                }
-            ],
-            "price": "1.01",
-            "quantity": "3008",
-            "purchaseTips": "",
-            "outerId": "",
-            "barcode": "",
-            "subStock": "1",
-            "shelfTime": {
-                "type": 0,
-                "shelfTime": null
+            {
+                "text": [
+                    "2025-05-01"
+                ],
+                "value": "生产日期"
             },
-            "reviewNum": "155",
-            "saleNum": "832"
+            {
+                "text": [
+                    "300天"
+                ],
+                "value": "保质期"
+            },
+            {
+                "text": [
+                    "SC11612011304542"
+                ],
+                "value": "食品生产许可证编号"
+            },
+            {
+                "text": [
+                    "常温贮藏"
+                ],
+                "value": "贮藏条件"
+            },
+            {
+                "text": [
+                    "海皇食品(天津)有限公司"
+                ],
+                "value": "厂名"
+            },
+            {
+                "text": [
+                    "北辰区经济开发区双辰中路15号"
+                ],
+                "value": "厂址"
+            },
+            {
+                "text": [
+                    "否"
+                ],
+                "value": "是否短保商品"
+            }
+        ],
+        "procurementLocation": "globalStock_1"
+    },
+    "doorSkuSaleInfo": {
+        "salesAttr": {
+            "p-1218": {
+                "hasImage": "true",
+                "comboProperty": "",
+                "label": "款式",
+                "packPro": "",
+                "pid": "1218",
+                "values": [
+                    {
+                        "text": "【实发21包】18包薯条+3包零食",
+                        "value": "27167882111",
+                        "image": "https://img.pddpic.com/mms-material-img/2025-05-05/dcffd761-a528-4078-8168-aa65222fdd91.jpeg",
+                        "sortOrder": ""
+                    },
+                    {
+                        "text": "【实发31包】26包薯条+5包零食",
+                        "value": "27167869391",
+                        "image": "https://img.pddpic.com/mms-material-img/2025-05-05/dcffd761-a528-4078-8168-aa65222fdd91.jpeg",
+                        "sortOrder": ""
+                    },
+                    {
+                        "text": "【实发11包】9包薯条+2包零食",
+                        "value": "27167866364",
+                        "image": "https://img.pddpic.com/mms-material-img/2025-05-05/dcffd761-a528-4078-8168-aa65222fdd91.jpeg",
+                        "sortOrder": ""
+                    }
+                ]
+            },
+            "p-1473": {
+                "hasImage": "true",
+                "comboProperty": "",
+                "label": "型号",
+                "packPro": "",
+                "pid": "1473",
+                "values": [
+                    {
+                        "text": "原味+蜂蜜黄油味",
+                        "value": "11714008818",
+                        "image": "https://img.pddpic.com/mms-material-img/2025-05-05/dcffd761-a528-4078-8168-aa65222fdd91.jpeg",
+                        "sortOrder": ""
+                    },
+                    {
+                        "text": "蜂蜜黄油味",
+                        "value": "417542481",
+                        "image": "https://img.pddpic.com/mms-material-img/2025-05-05/dcffd761-a528-4078-8168-aa65222fdd91.jpeg",
+                        "sortOrder": ""
+                    },
+                    {
+                        "text": "薯条原味",
+                        "value": "19034564122",
+                        "image": "https://img.pddpic.com/mms-material-img/2025-05-05/dcffd761-a528-4078-8168-aa65222fdd91.jpeg",
+                        "sortOrder": ""
+                    },
+                    {
+                        "text": "炭烤和牛味",
+                        "value": "17365668900",
+                        "image": "https://img.pddpic.com/mms-material-img/2025-05-05/dcffd761-a528-4078-8168-aa65222fdd91.jpeg",
+                        "sortOrder": ""
+                    },
+                    {
+                        "text": "番茄味",
+                        "value": "172500265",
+                        "image": "https://img.pddpic.com/mms-material-img/2025-05-05/dcffd761-a528-4078-8168-aa65222fdd91.jpeg",
+                        "sortOrder": ""
+                    }
+                ]
+            }
         },
-        "doorSkuLogisticsInfo": {
-            "deliveryFromAddr": "广东省",
-            "isFreeShipping": true
+        "salesSkus": [
+            {
+                "salePropPath": "1473:417542481;1218:27167882111",
+                "price": "25.7",
+                "quantity": "987"
+            },
+            {
+                "salePropPath": "1473:417542481;1218:27167869391",
+                "price": "37.1",
+                "quantity": "996"
+            },
+            {
+                "salePropPath": "1473:417542481;1218:27167866364",
+                "price": "14.2",
+                "quantity": "990"
+            },
+            {
+                "salePropPath": "1473:19034564122;1218:27167882111",
+                "price": "25.7",
+                "quantity": "998"
+            },
+            {
+                "salePropPath": "1473:19034564122;1218:27167869391",
+                "price": "37.1",
+                "quantity": "998"
+            },
+            {
+                "salePropPath": "1473:19034564122;1218:27167866364",
+                "price": "14.2",
+                "quantity": "997"
+            },
+            {
+                "salePropPath": "1473:17365668900;1218:27167882111",
+                "price": "25.7",
+                "quantity": "997"
+            },
+            {
+                "salePropPath": "1473:17365668900;1218:27167869391",
+                "price": "37.1",
+                "quantity": "1000"
+            },
+            {
+                "salePropPath": "1473:17365668900;1218:27167866364",
+                "price": "14.2",
+                "quantity": "997"
+            },
+            {
+                "salePropPath": "1473:172500265;1218:27167882111",
+                "price": "25.7",
+                "quantity": "998"
+            },
+            {
+                "salePropPath": "1473:172500265;1218:27167869391",
+                "price": "37.1",
+                "quantity": "998"
+            },
+            {
+                "salePropPath": "1473:172500265;1218:27167866364",
+                "price": "14.2",
+                "quantity": "998"
+            },
+            {
+                "salePropPath": "1473:11714008818;1218:27167882111",
+                "price": "25.7",
+                "quantity": "991"
+            },
+            {
+                "salePropPath": "1473:11714008818;1218:27167869391",
+                "price": "37.1",
+                "quantity": "994"
+            },
+            {
+                "salePropPath": "1473:11714008818;1218:27167866364",
+                "price": "14.2",
+                "quantity": "991"
+            }
+        ],
+        "price": "14.2",
+        "quantity": "14930",
+        "purchaseTips": "",
+        "outerId": "",
+        "barcode": "",
+        "subStock": "1",
+        "shelfTime": {
+            "type": 0,
+            "shelfTime": null
         },
-        "doorSkuImageInfo": {
-            "images": null,
-            "videos": null,
-            "longImages": null,
-            "doorSkuImageInfos": [
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-21/fc08bdae-66fc-464d-8f57-68c64d96f48d.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/a9bdf18f-da9f-4663-a874-ba8aa5fae001.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/37206cac-5dc4-4569-a197-a1098c4fd7e5.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/a8a9b09f-ac2e-48be-90a3-d9e88728189d.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/d6dfd17c-3ccb-4356-a68a-a522a9a7f95e.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/cb2725d3-ca34-49aa-85c4-b7e4186d2acf.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/abfbf266-ca45-482b-b4b5-a0bc3004c6aa.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/90999ebe-64da-4d37-9b16-d7319096ebb5.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/6a0a5907-700b-43a9-af91-2af466183126.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-12/1220d3f7-d137-49aa-ae88-6feb975ea334.jpeg"
-                },
-                {
-                    "type": "image",
-                    "content": "https://img.pddpic.com/mms-material-img/2025-03-21/055ddfdd-043f-4f9f-9c46-7b1ac3324f99.jpeg"
-                }
-            ]
-        }
+        "reviewNum": "160",
+        "saleNum": "1340"
+    },
+    "doorSkuLogisticsInfo": {
+        "deliveryFromAddr": "",
+        "isFreeShipping": true
+    },
+    "doorSkuImageInfo": {
+        "images": null,
+        "videos": null,
+        "longImages": null,
+        "doorSkuImageInfos": [
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/df84c339-342e-4c6b-8ac1-479eff4a942e.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/75b479b0-eac7-4d8e-a877-73dfb353ab3d.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/90266a76-9007-40a8-8624-0a07b837d25d.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/ec5ae157-31ea-46cb-890c-5bb73f22382e.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/77c2738c-6100-4fc7-b60b-3bb095e16ad0.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/3258384c-75c5-4fec-ad58-38eeb72a0aeb.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/fa08d3c7-0835-4f6e-9c81-1ea928958f96.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/fdefc346-b82f-4ebf-9765-0434a696fd64.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/1abb7856-6faf-470f-9843-ea40e0bde216.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/41f199b8-2ec9-4c4f-9956-b0c0e50d1c87.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/9f2c8d91-d800-46bb-8faf-4e1e6d16ee53.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/3850debe-c262-47bb-bd05-0a2cb9e59175.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/3cdc891a-6169-4849-a5a8-cf1977bbced6.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/658b8d32-9c7e-46e4-9005-abc77282b4c7.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/bbe1e0ba-e1f6-47a8-ab77-2a9aa5ea40ca.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/2376832c-05c9-4934-93d6-29ae7a91062f.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/30d01979-f763-4d6d-ab0c-9242768dbd19.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/667fe5d9-a1f8-4311-9cd0-a81e44ab1f23.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/8803e35f-ba52-4774-a812-cc1a92836a45.jpeg.a.jpeg"
+            },
+            {
+                "type": "image",
+                "content": "https://img.pddpic.com/mms-material-img/2025-05-05/824728e8-c960-4042-9dd0-b9a092c7f8e3.jpeg.a.jpeg"
+            }
+        ]
     }
 }

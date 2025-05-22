@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Form, Modal, message, Button, Space } from 'antd';
 import { PlusOutlined, DeleteOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import { DragDropContext, Droppable, Draggable, DroppableProvided, DraggableProvided, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DroppableProvided, DraggableProvided, DropResult } from '@hello-pangea/dnd';
 
 interface ImageInfo {
   type: string;

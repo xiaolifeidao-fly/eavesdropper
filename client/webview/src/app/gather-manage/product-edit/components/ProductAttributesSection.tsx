@@ -1,37 +1,55 @@
-import React from 'react';
-import { Card, Form, Table } from 'antd';
+import React, { useState } from 'react';
+import { Card, Form, Select } from 'antd';
+import { SkuItem } from '@model/door/sku';
 
 interface ProductAttributesSectionProps {
-  data: any[];
+  data: SkuItem[];
+  onChange?: (data: SkuItem[]) => void;
 }
 
-const ProductAttributesSection: React.FC<ProductAttributesSectionProps> = ({ data = [] }) => {
-  const columns = [
-    {
-      title: '属性名称',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: '属性值',
-      dataIndex: 'value',
-      key: 'value',
-    },
-  ];
+const ProductAttributesSection: React.FC<ProductAttributesSectionProps> = ({ 
+  data = [], 
+  onChange 
+}) => {
+  const [selectedValues, setSelectedValues] = useState<Record<string, string[]>>({});
+  
+  const handleValueChange = (value: string, newValues: string[]) => {
+    setSelectedValues(prev => ({ ...prev, [value]: newValues }));
+    
+    if (onChange) {
+      const newData = data.map(item => {
+        if (item.value === value) {
+          return new SkuItem(item.value, newValues);
+        }
+        return item;
+      });
+      onChange(newData);
+    }
+  };
 
   return (
     <Card title="商品属性" style={{ marginBottom: 16 }}>
       <Form.Item 
         name={['baseInfo', 'skuItems']} 
-        label="商品属性列表"
       >
-        <Table 
-          dataSource={data} 
-          columns={columns} 
-          rowKey="name"
-          pagination={false}
-          bordered
-        />
+        <div>
+          {data.map(item => (
+            <Form.Item 
+              key={item.value}
+              label={item.value + "："} 
+              style={{ marginBottom: 16 }}
+            >
+              <Select
+                mode="tags"
+                style={{ width: '100%' }}
+                placeholder="输入值后按回车添加"
+                value={selectedValues[item.value] || item.text}
+                onChange={(newValues) => handleValueChange(item.value, newValues)}
+                tokenSeparators={[',']}
+              />
+            </Form.Item>
+          ))}
+        </div>
       </Form.Item>
     </Card>
   );

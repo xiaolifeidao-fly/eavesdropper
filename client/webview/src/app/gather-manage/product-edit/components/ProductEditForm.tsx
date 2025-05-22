@@ -5,21 +5,14 @@ import { Form, Button, message, Space } from 'antd';
 import BasicInfoSection from './BasicInfoSection';
 import ProductAttributesSection from './ProductAttributesSection';
 import MainImagesSection from './MainImagesSection';
-import SalesAttributesSection from './SalesAttributesSection';
 import SalesAttributeDetailsSection from './SalesAttributeDetailsSection';
 import ProductDetailsImagesSection from './ProductDetailsImagesSection';
+import { DoorSkuDTO } from '@model/door/sku';
 
 
-interface ProductData {
-  data: {
-    baseInfo: any;
-    doorSkuSaleInfo: any;
-    doorSkuImageInfo: any;
-  }
-}
 
 interface ProductEditFormProps {
-  productData: ProductData;
+  productData: DoorSkuDTO;
 }
 
 const ProductEditForm: React.FC<ProductEditFormProps> = ({ productData }) => {
@@ -28,11 +21,11 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({ productData }) => {
 
   // Initialize form with product data
   React.useEffect(() => {
-    if (productData?.data) {
+    if (productData) {
       form.setFieldsValue({
-        baseInfo: productData.data.baseInfo,
-        doorSkuSaleInfo: productData.data.doorSkuSaleInfo,
-        doorSkuImageInfo: productData.data.doorSkuImageInfo,
+        baseInfo: productData.baseInfo,
+        doorSkuSaleInfo: productData.doorSkuSaleInfo,
+        doorSkuImageInfo: productData.doorSkuImageInfo,
       });
     }
   }, [productData, form]);
@@ -52,7 +45,7 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({ productData }) => {
     }
   };
 
-  if (!productData?.data) {
+  if (!productData) {
     return <div>No product data available</div>;
   }
 
@@ -62,30 +55,43 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({ productData }) => {
       layout="vertical"
       onFinish={handleSubmit}
       initialValues={{
-        baseInfo: productData.data.baseInfo,
-        doorSkuSaleInfo: productData.data.doorSkuSaleInfo,
-        doorSkuImageInfo: productData.data.doorSkuImageInfo,
+        baseInfo: productData.baseInfo,
+        doorSkuSaleInfo: productData.doorSkuSaleInfo,
+        doorSkuImageInfo: productData.doorSkuImageInfo,
       }}
     >
-      <BasicInfoSection data={productData.data.baseInfo} />
+      <BasicInfoSection data={productData.baseInfo} />
       
-      <ProductAttributesSection data={productData.data.baseInfo.skuItems} />
+      <MainImagesSection images={productData.baseInfo.mainImages} />
       
-      <MainImagesSection images={productData.data.baseInfo.mainImages} />
       
-      <SalesAttributesSection 
-        salesAttr={productData.data.doorSkuSaleInfo.salesAttr}
-        price={productData.data.doorSkuSaleInfo.price}
-        quantity={productData.data.doorSkuSaleInfo.quantity}
-      />
+      <ProductAttributesSection data={productData.baseInfo.skuItems} />
       
       <SalesAttributeDetailsSection 
-        salesAttr={productData.data.doorSkuSaleInfo.salesAttr}
-        salesSkus={productData.data.doorSkuSaleInfo.salesSkus}
+        salesAttr={productData.doorSkuSaleInfo.salesAttr}
+        salesSkus={productData.doorSkuSaleInfo.salesSkus}
+        onUpdateSalesAttr={(updatedSalesAttr) => {
+          console.log("Updating sales attributes:", updatedSalesAttr);
+          form.setFieldsValue({
+            doorSkuSaleInfo: {
+              ...form.getFieldValue('doorSkuSaleInfo'),
+              salesAttr: updatedSalesAttr
+            }
+          });
+        }}
+        onUpdateSalesSkus={(updatedSalesSkus) => {
+          console.log("Updating sales SKUs:", updatedSalesSkus);
+          form.setFieldsValue({
+            doorSkuSaleInfo: {
+              ...form.getFieldValue('doorSkuSaleInfo'),
+              salesSkus: updatedSalesSkus
+            }
+          });
+        }}
       />
       
       <ProductDetailsImagesSection 
-        imageInfos={productData.data.doorSkuImageInfo.doorSkuImageInfos}
+        imageInfos={productData.doorSkuImageInfo.doorSkuImageInfos}
       />
       
       <Form.Item>

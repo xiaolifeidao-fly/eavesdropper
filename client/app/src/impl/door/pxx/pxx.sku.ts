@@ -153,7 +153,7 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
 
         windowInstance.addBrowserView(await this.createPddView(resourceId, gatherBatchId));
         windowInstance.addBrowserView(await this.createGatherToolView(gatherBatchId));
-        const gatherToolUrl = `${process.env.WEBVIEW_URL}/gather-manage/preview?gatherBatchId=${gatherBatchId}`
+        const gatherToolUrl = `${process.env.WEBVIEW_URL}/gather-manage/product-edit?gatherBatchId=${gatherBatchId}`
         windowInstance.addBrowserView(await this.createGatherPreviewView(gatherToolUrl));
         // const gatherToolUrl = `${process.env.GATHER_WEBVIEW_URL}?gatherBatchId=${gatherBatchId}`
         // windowInstance.loadURL(gatherToolUrl)
