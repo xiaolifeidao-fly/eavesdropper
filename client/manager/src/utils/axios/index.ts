@@ -25,8 +25,8 @@ function rejectHttpError(message: string, code?: any): Promise<never> {
 }
 
 function getBaseUrl() {
-    //@ts-ignore
-    return process.env.SERVER_TARGET + process.env.APP_URL_PREFIX;
+    const result = (process.env.SERVER_TARGET ? process.env.SERVER_TARGET : "") + (process.env.APP_URL_PREFIX ? process.env.APP_URL_PREFIX : "");
+    return process.env.APP_URL_PREFIX ? process.env.APP_URL_PREFIX : "";
 }
 
 const instance: AxiosInstance = axios.create({
@@ -35,9 +35,9 @@ const instance: AxiosInstance = axios.create({
   baseURL: getBaseUrl(),
   withCredentials: true,
   // 登录成功后，设置请求头 Authorization
-  // headers: {
-  //   Authorization: ""
-  // },
+  headers: {
+    Authorization: "7c3b7a5440d99e3ef493efeb203eec9595d67781"
+  },
 });
 
 

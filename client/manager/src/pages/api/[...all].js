@@ -12,7 +12,6 @@ const target = process.env.SERVER_TARGET;
 // Next.js API 路由处理函数
 
 
-
 export default async function handler(req, res) {
   // 创建代理中间件
   if(req.method == 'GET'){
@@ -37,10 +36,13 @@ export default async function handler(req, res) {
         res.status(500).send('Proxy error');
       },
     });
-    return proxy(req, res);
+    const result = await proxy(req, res);
+    console.log("result", result);
+    return result;
   }
   try {
     const url = getTargetUrl(req.url);
+    console.log("request url", url);
     const response = await request(url, req)
     // 获取目标服务器的响应
     const data = response.data;
