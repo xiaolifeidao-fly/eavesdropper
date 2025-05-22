@@ -67,16 +67,11 @@ export class MbUserApiImpl extends MbUserApi {
             accountStatueMap = new Map()
         }
 
-        // log.info("accountStatueMap", accountStatueMap)
+        // 获取当前日期
         const today = getTodayDateString()
-        if (accountStatueMap.has(resourceId)) {
-            const onlineDate = accountStatueMap.get(resourceId)
-            if (onlineDate) {
-                // 判断在线日期是否为当天
-                if (onlineDate === today) {
-                    return true
-                }
-            }
+        const onlineDate = accountStatueMap[resourceId]
+        if (onlineDate && onlineDate === today) {
+            return true
         }
 
         // 获取资源账号在线状态
@@ -85,9 +80,9 @@ export class MbUserApiImpl extends MbUserApi {
 
         // 缓存资源账号在线状态
         if (online) {
-            accountStatueMap.set(resourceId, today)
+            accountStatueMap[resourceId] = today
+            await storeApi.setItem(key, accountStatueMap)
         }
-        await storeApi.setItem(key, accountStatueMap)
         return online
     }
 
