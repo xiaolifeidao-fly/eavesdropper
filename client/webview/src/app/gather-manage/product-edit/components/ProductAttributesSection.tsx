@@ -28,7 +28,7 @@ const ProductAttributesSection: React.FC<ProductAttributesSectionProps> = ({
   };
 
   return (
-    <Card title="商品属性" style={{ marginBottom: 16 }}>
+    <Card title="商品属性" style={{ marginBottom: 16, maxHeight: 400, overflow: 'auto' }}>
       <Form.Item 
         name={['baseInfo', 'skuItems']} 
       >

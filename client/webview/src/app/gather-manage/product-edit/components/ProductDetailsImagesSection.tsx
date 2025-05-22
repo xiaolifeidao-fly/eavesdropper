@@ -82,6 +82,13 @@ const ProductDetailsImagesSection: React.FC<ProductDetailsImagesSectionProps> = 
       <Form.Item 
         name={['doorSkuImageInfo', 'doorSkuImageInfos']}
         label="商品详情图片"
+        style={{ 
+          zIndex: 100,
+          width: 'calc(100% - 48px)', // Adjust width as needed
+          maxHeight: 500,
+          overflow: 'auto',
+          marginBottom: 16 
+        }}
       >
         <DragDropContext onDragEnd={handleReorder}>
           <Droppable droppableId="droppable" direction="vertical">
