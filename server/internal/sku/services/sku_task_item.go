@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"server/common"
 	"server/common/base"
+	"server/common/base/page"
 	"server/common/converter"
 	"server/common/middleware/database"
 	"server/common/middleware/logger"
@@ -197,6 +198,11 @@ func GetSkuTaskStepLogListBySkuTaskStepId(skuTaskStepId uint64) (*dto.SkuTaskSte
 	if err != nil {
 		return nil, err
 	}
+
+	if stepLog == nil {
+		return nil, nil
+	}
+
 	stepLogDTO := database.ToDTO[dto.SkuTaskStepLogDTO](stepLog)
 	if stepLog.LogPath != "" {
 		jsonData, err := convertToJsonData(stepLog.LogPath)
@@ -228,4 +234,47 @@ func getPath(skuTaskStepId uint64) string {
 func storeJsonData(stepLogDTO *dto.SkuTaskStepLogDTO) (string, error) {
 	path := getPath(stepLogDTO.SkuTaskStepId)
 	return path, oss.Put(path, []byte(stepLogDTO.Content))
+}
+
+func PageSkuTaskItem(param *dto.SkuTaskItemPageParamDTO) (*page.Page[dto.SkuTaskItemPageDTO], error) {
+	var err error
+	skuTaskItemRepository := repositories.SkuTaskItemRepository
+
+	var count int64
+	var pageData = make([]*dto.SkuTaskItemPageDTO, 0)
+	if err = skuTaskItemRepository.Page(&models.SkuTaskItem{}, *param, param.Query, &pageData, &count); err != nil {
+		return nil, err
+	}
+
+	if count <= 0 {
+		return page.BuildEmptyPage[dto.SkuTaskItemPageDTO](param.ToPageInfo(count)), nil
+	}
+
+	pageDTO := page.BuildPage(param.ToPageInfo(count), pageData)
+	return pageDTO, nil
+}
+
+func GetSkuTaskItemStep(id uint64) ([]*dto.SkuTaskItemStepDTO, error) {
+	var err error
+	skuTaskItemRepository := repositories.SkuTaskItemRepository
+
+	var item *models.SkuTaskItem
+	if item, err = skuTaskItemRepository.GetByID(id); err != nil {
+		return nil, err
+	}
+	if item == nil || item.ID == 0 {
+		return nil, nil
+	}
+
+	var skuTaskSteps []*models.SkuTaskStep
+	if skuTaskSteps, err = skuTaskStepRepository.FindByTaskIdAndStepKey(item.TaskId, item.SourceSkuId); err != nil {
+		return nil, err
+	}
+
+	if len(skuTaskSteps) == 0 {
+		return nil, nil
+	}
+
+	skuTaskStepDTOs := database.ToDTOs[dto.SkuTaskItemStepDTO](skuTaskSteps)
+	return skuTaskStepDTOs, nil
 }

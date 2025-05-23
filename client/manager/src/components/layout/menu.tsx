@@ -33,7 +33,7 @@ const getNavList = () => {
         {
             key: '/sku',
             icon: <LayoutOutlined />,
-            label: '云端商品管理'
+            label: '商品发布日志管理'
         },
         {
             key: '/feedback',

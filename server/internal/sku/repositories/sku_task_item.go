@@ -66,6 +66,11 @@ func (s *SkuTaskStepRepository) DeleteByKeyAndResourceIdAndGroupCode(taskId uint
 	return s.Execute(sql, taskId, key, resourceId, groupCode)
 }
 
+func (s *SkuTaskStepRepository) FindByTaskIdAndStepKey(taskId uint64, stepKey string) ([]*models.SkuTaskStep, error) {
+	sql := "SELECT * FROM sku_task_step WHERE task_id = ? AND step_key = ?"
+	return s.GetList(sql, taskId, stepKey)
+}
+
 type SkuTaskStepLogRepository struct {
 	database.Repository[*models.SkuTaskStepLog]
 }

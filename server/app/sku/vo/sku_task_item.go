@@ -39,3 +39,7 @@ type AddSkuTaskItemReq struct {
 	SourceSkuId string `json:"sourceSkuId"`
 	Title       string `json:"title"`
 }
+
+type GetSkuTaskItemStepReq struct {
+	ID uint64 `uri:"id"`
+}

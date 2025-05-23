@@ -10,12 +10,15 @@ import (
 	"server/internal/sku/services/dto"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 func LoadSkuTaskItemRouter(router *gin.RouterGroup) {
-	r := router.Group("/sku/task/:id/item")
+	r := router.Group("/sku")
 	{
-		r.GET("", GetSkuTaskItemList)
+		r.GET("/task/:id/item", GetSkuTaskItemList)
+		r.GET("/task/item/page", PageSkuTaskItem)
+		r.GET("/task/item/:id/step", GetSkuTaskItemStep)
 	}
 }
 
@@ -78,4 +81,46 @@ func GetSkuTaskItemList(ctx *gin.Context) {
 		itemResp.NewSkuUrl = services.GetSkuSourceUrl(skuDTO.Source, skuDTO.PublishSkuID)
 	}
 	controller.OK(ctx, resp)
+}
+
+// PageSkuTaskItem
+// @Router /sku/task/item/page [get]
+// @Description 获取商品任务项列表
+func PageSkuTaskItem(ctx *gin.Context) {
+	var err error
+
+	var pageReq dto.SkuTaskItemPageParamDTO
+	if err = controller.Bind(ctx, &pageReq, binding.Form); err != nil {
+		controller.Error(ctx, "参数错误")
+		return
+	}
+
+	pageDTO, err := services.PageSkuTaskItem(&pageReq)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	controller.OK(ctx, pageDTO)
+}
+
+// GetSkuTaskItemStep
+// @Router /sku/task/item/{id}/step [get]
+// @Description 获取商品任务项步骤
+func GetSkuTaskItemStep(ctx *gin.Context) {
+	var err error
+
+	var req vo.GetSkuTaskItemStepReq
+	if err = controller.Bind(ctx, &req, nil); err != nil {
+		controller.Error(ctx, "参数错误")
+		return
+	}
+
+	skuTaskStepDTOs, err := services.GetSkuTaskItemStep(req.ID)
+	if err != nil {
+		controller.Error(ctx, err.Error())
+		return
+	}
+
+	controller.OK(ctx, skuTaskStepDTOs)
 }
