@@ -12,9 +12,8 @@ const { Title } = Typography;
 
 export default function ProductEditPage() {
   const [loading, setLoading] = useState(false);
-  const [productData, setProductData] = useState<DoorSkuDTO | null>(null);
+  const [productData, setProductData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     const fetchProductData = async () => {
       try {
@@ -28,14 +27,11 @@ export default function ProductEditPage() {
         const source = 'pdd';
         const doorKey = "PxxSkuMonitor";
         const type = source;
-        console.log("doorKey", doorKey);
         const skuResult = await getDoorRecord(doorKey, itemKey, type);
-        console.log("skuResult", skuResult);
         if(!skuResult){
           return;
         }
         const result = await parseSku(source, JSON.parse(skuResult.data));
-        console.log("sku result", result);
         if (result) {
           // Transform DoorSkuDTO to match ProductData interface
           setProductData(result);
@@ -49,7 +45,7 @@ export default function ProductEditPage() {
         setLoading(false);
       }
     };
-
+    console.log("productData", productData)
     fetchProductData();
   }, []);
 

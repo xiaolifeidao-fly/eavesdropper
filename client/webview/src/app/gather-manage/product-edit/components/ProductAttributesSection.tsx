@@ -15,7 +15,7 @@ const ProductAttributesSection: React.FC<ProductAttributesSectionProps> = ({
   const form = Form.useFormInstance();
   // Ensure data is always an array
   const safeData = Array.isArray(data) ? data : [];
-  const [skuItems, setSkuItems] = useState<SkuItem[]>(safeData);
+  const [skuItems, setSkuItems] = useState<any[]>(safeData);
 
   // Update local state when data prop changes
   useEffect(() => {
