@@ -1,14 +1,12 @@
 'use client'
+import { Spin } from 'antd'
 import React, { useRef, useState, useEffect } from 'react'
 
 export default function GatherManage() {
 
   return (
     <div>
-      <h1>发布微调</h1>
-      <div>
-          加急开发中,敬请期待
-      </div>
+      <Spin spinning={true} tip="加载中..."> </Spin>
     </div>
   )
 }
