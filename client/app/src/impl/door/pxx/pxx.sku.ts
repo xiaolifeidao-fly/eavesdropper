@@ -191,6 +191,16 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
         await getGatherPreviewView().webContents.loadFile(url);
     }
 
+    async loadPreviewView(itemId : string){
+        const gatherToolUrl = `${process.env.WEBVIEW_URL}/gather-manage/product-edit?itemId=${itemId}`
+        await getGatherPreviewView()?.webContents.loadURL(gatherToolUrl);
+    }
+
+    async loaddingPreviewPage(itemId : string){
+        const gatherToolUrl = `${process.env.WEBVIEW_URL}/gather-manage/preview?itemId=${itemId}`
+        await getGatherPreviewView()?.webContents.loadURL(gatherToolUrl);
+    }
+
 
     async createPddView(resourceId : number, gatherBatchId : number){
         const pddHomeUrl = "https://mobile.yangkeduo.com/";
@@ -232,12 +242,14 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
                         this.send('onGatherToolLoaded', false);
                         return;
                     }
+                    this.loaddingPreviewPage(goodsId);
                     const code = await this.getPxxCode();
                     const rawData = await getGatherWindow()?.webContents.executeJavaScript(code);
                     const monitorKey = "PxxSkuMonitor";
                     if(rawData){
                         await this.saveByJson(rawData, requestUrl, monitorKey, goodsId, PDD);
                         await this.saveGatherSku(gatherBatchId, goodsId, rawData);  // 保存采集商品
+                        await this.loadPreviewView(goodsId);
                     } else {
                         this.send('onGatherToolLoaded', false);
                         log.info("row data not found");
@@ -548,9 +560,11 @@ export class MonitorPddSku extends MonitorPxxSkuApi {
            if (fs.existsSync(filePath)) {
                 // this.createDetailWindow(filePath);
                 try{
+                    this.loaddingPreviewPage(itemKey);
                     this.send('onGatherToolLoaded', true);
                     await getGatherWindow().webContents.loadFile(filePath);
                     const gatherSku = await getGatherSkuByID(id);
+                    await this.loadPreviewView(itemKey);
                     this.send('onGatherSkuMessage', gatherSku, false);
                     return true;
                 }finally{

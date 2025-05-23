@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Typography, Card, Spin } from 'antd';
+import { Typography, Card, Spin, message } from 'antd';
 import ProductEditForm from './components/ProductEditForm';
 import { getDoorRecord, parseSku } from '@api/door/door.api';
 import { DoorSkuDTO } from '@model/door/sku';
@@ -18,11 +18,15 @@ export default function ProductEditPage() {
   useEffect(() => {
     const fetchProductData = async () => {
       try {
+        const params = new URLSearchParams(window.location.search);
+        const itemKey = params.get('itemId');
+        if(!itemKey){
+          return;
+        }
         setLoading(true);
         // This is just for demo purposes - in a real app, you'd get the source and params from query params or context
         const source = 'pdd';
         const doorKey = "PxxSkuMonitor";
-        const itemKey = "743000341902";
         const type = source;
         console.log("doorKey", doorKey);
         const skuResult = await getDoorRecord(doorKey, itemKey, type);

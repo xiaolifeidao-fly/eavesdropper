@@ -223,16 +223,19 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
   };
   
   // Generate all possible combinations of attribute values
-  const generateAttributeCombinations = useCallback(() => {
+  const generateAttributeCombinations = useCallback((salesAttrToUse?: { [key: string]: SalesAttr }) => {
     console.log("Generating attribute combinations");
     
+    // Use provided salesAttr or fallback to localSalesAttr
+    const salesAttrSource = salesAttrToUse || localSalesAttr;
+    
     // Find all valid attribute keys (those starting with 'p-')
-    const attrKeys = Object.keys(localSalesAttr).filter(key => key.startsWith('p-'));
+    const attrKeys = Object.keys(salesAttrSource).filter(key => key.startsWith('p-'));
     if (attrKeys.length === 0) return [];
     
     // Extract all attributes and their values
     const attributesWithValues = attrKeys.map(key => {
-      const attr = localSalesAttr[key];
+      const attr = salesAttrSource[key];
       return {
         pid: attr.pid,
         values: attr.values || []
@@ -291,31 +294,52 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
     
     // Store the original salesSkus for reference
     const originalSkus = [...localSalesSkus];
+    console.log(`Original SKUs before regeneration:`, originalSkus.map(sku => ({
+      salePropPath: sku.salePropPath,
+      price: sku.price,
+      quantity: sku.quantity
+    })));
     
-    // Generate new SKUs based on the updated attributes
-    const combinations = generateAttributeCombinations();
+    // Generate new SKUs based on the updated attributes - use updatedSalesAttr instead of localSalesAttr
+    const combinations = generateAttributeCombinations(updatedSalesAttr);
+    console.log(`Generated ${combinations.length} combinations:`, combinations);
+    
     const updatedSkus = combinations.map(combination => {
-      // Create salePropPath from combination
+      // Create salePropPath from combination with consistent ordering
+      // Sort by pid to ensure consistent order like in demo data
       const salePropPath = Object.keys(combination)
+        .sort() // Sort pids to ensure consistent order
         .map(pid => `${pid}:${combination[pid]}`)
         .join(';');
       
-      // Try to find existing SKU with the same salePropPath
-      const existingSku = originalSkus.find(sku => sku.salePropPath === salePropPath);
+      // Use the improved function to find existing SKU
+      const existingSku = findExistingSku(combination, originalSkus);
       
       if (existingSku) {
-        // Return existing SKU with preserved price and quantity
-        return existingSku;
+        // Return existing SKU with preserved price and quantity, but update salePropPath to new format
+        console.log(`✓ Found existing SKU for ${salePropPath}, preserving price: ${existingSku.price}, quantity: ${existingSku.quantity}`);
+        return {
+          ...existingSku,
+          salePropPath // Update to normalized format
+        };
       } else {
         // Create new SKU with default values
+        console.log(`✗ Creating new SKU for ${salePropPath} - no existing match found`);
         return {
           skuId: `sku_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
           salePropPath,
-          price: "0", // Default price for new SKUs
+          price: "0.00", // Default price for new SKUs with proper decimal format
           quantity: "0" // Default quantity for new SKUs
         };
       }
     });
+    
+    console.log(`Final updated SKUs:`, updatedSkus.map(sku => ({
+      salePropPath: sku.salePropPath,
+      price: sku.price,
+      quantity: sku.quantity,
+      isNew: sku.price === "0.00" && sku.quantity === "0"
+    })));
     
     setLocalSalesSkus(updatedSkus);
     
@@ -380,11 +404,19 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
       
       console.log(`Found ${newValues.length} new values`, newValues);
       
-      // Ensure all values have a proper value field
+      // Ensure all values have a proper value field with unique identifiers
       const updatedValues = currentAttr.values?.map((val, index) => {
+        // If value doesn't exist or is just a simple index, generate a proper unique ID
+        let valueId = val.value;
+        if (!valueId || /^\d+$/.test(valueId) && valueId.length <= 3) {
+          // Generate a unique timestamp-based ID similar to the demo data format
+          valueId = `${Date.now()}${Math.floor(Math.random() * 100000)}`;
+        }
+        
         return {
           ...val,
-          value: val.value || `${index}`, // Ensure each value has a unique identifier
+          value: valueId,
+          sortOrder: val.sortOrder || String(index)
         };
       });
       
@@ -431,21 +463,39 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
       
       setLocalSalesAttr(updatedSalesAttr);
       
-      // Re-generate SKUs after attribute deletion
-      const combinations = generateAttributeCombinations();
+      // Store the original salesSkus for reference before regenerating
+      const originalSkus = [...localSalesSkus];
+      
+      // Re-generate SKUs after attribute deletion - use updatedSalesAttr
+      const combinations = generateAttributeCombinations(updatedSalesAttr);
       const updatedSkus = combinations.map(combination => {
-        // Create salePropPath from combination
+        // Create salePropPath from combination with consistent ordering
+        // Sort by pid to ensure consistent order like in demo data
         const salePropPath = Object.keys(combination)
+          .sort() // Sort pids to ensure consistent order
           .map(pid => `${pid}:${combination[pid]}`)
           .join(';');
         
-        // Create new SKU with default values
-        return {
-          skuId: `sku_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
-          salePropPath,
-          price: "0", // Default price for new SKUs
-          quantity: "0" // Default quantity for new SKUs
-        };
+        // Use the improved function to find existing SKU
+        const existingSku = findExistingSku(combination, originalSkus);
+        
+        if (existingSku) {
+          // Return existing SKU with preserved price and quantity, but update salePropPath to new format
+          console.log(`Found existing SKU for ${salePropPath} after deletion, preserving price: ${existingSku.price}, quantity: ${existingSku.quantity}`);
+          return {
+            ...existingSku,
+            salePropPath // Update to normalized format
+          };
+        } else {
+          // Create new SKU with default values
+          console.log(`Creating new SKU for ${salePropPath} after deletion`);
+          return {
+            skuId: `sku_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+            salePropPath,
+            price: "0.00", // Default price for new SKUs with proper decimal format
+            quantity: "0" // Default quantity for new SKUs
+          };
+        }
       });
       setLocalSalesSkus(updatedSkus);
       
@@ -494,16 +544,21 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
 
   // Handle image upload
   const handleImageUpload = (index: number, info: any) => {
-    if (info.file.status === 'done') {
-      // Assuming the server returns the URL in response.url
-      const imageUrl = info.file.response.url;
+    console.log(info);
+    
+    // 处理本地文件选择
+    if (info.file.status !== 'removed') {
+      const file = info.file.originFileObj || info.file;
+      
+      // 创建本地预览URL
+      const localImageUrl = URL.createObjectURL(file);
       
       // Update the current attribute value with new image
       if (currentAttr && currentAttr.values) {
         const newValues = [...currentAttr.values];
         newValues[index] = {
           ...newValues[index],
-          image: imageUrl
+          image: localImageUrl
         };
         
         const updatedAttr = {
@@ -529,10 +584,27 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
         }
       }
       
-      message.success(`${info.file.name} 上传成功`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} 上传失败`);
+      message.success(`${info.file.name} 文件选择成功`);
     }
+  };
+
+  // 阻止自动上传的函数
+  const beforeUpload = (file: File) => {
+    // 可以在这里添加文件验证逻辑
+    const isImage = file.type.startsWith('image/');
+    if (!isImage) {
+      message.error('只能上传图片文件!');
+      return false;
+    }
+    
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('图片大小不能超过 2MB!');
+      return false;
+    }
+    
+    // 返回 false 阻止自动上传
+    return false;
   };
 
   // Add index to salesSkus for form reference and sort to put new items on top
@@ -549,6 +621,81 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
       if (!a.isNew && b.isNew) return 1;
       return 0;
     });
+
+  // Helper function to normalize salePropPath for consistent comparison
+  const normalizeSalePropPath = (salePropPath: string): string => {
+    if (!salePropPath) return '';
+    
+    // Split into individual pid:value pairs, sort them, and rejoin
+    return salePropPath
+      .split(';')
+      .map(pair => pair.trim())
+      .filter(pair => pair.length > 0)
+      .sort() // Sort the pairs to ensure consistent order
+      .join(';');
+  };
+
+  // Helper function to find existing SKU by comparing attribute combinations
+  const findExistingSku = (combination: any, originalSkus: SalesSku[]): SalesSku | undefined => {
+    // Create normalized salePropPath from combination
+    const targetSalePropPath = Object.keys(combination)
+      .sort()
+      .map(pid => `${pid}:${combination[pid]}`)
+      .join(';');
+    
+    console.log(`Looking for existing SKU with combination:`, combination, `-> salePropPath: ${targetSalePropPath}`);
+    
+    // Try to find SKU with exact match first
+    let existingSku = originalSkus.find(sku => sku.salePropPath === targetSalePropPath);
+    
+    if (existingSku) {
+      console.log(`Found exact match for ${targetSalePropPath}`);
+      return existingSku;
+    }
+    
+    // If no exact match, try normalized comparison
+    const normalizedTarget = normalizeSalePropPath(targetSalePropPath);
+    existingSku = originalSkus.find(sku => {
+      const normalizedExisting = normalizeSalePropPath(sku.salePropPath || '');
+      return normalizedExisting === normalizedTarget;
+    });
+    
+    if (existingSku) {
+      console.log(`Found normalized match for ${targetSalePropPath} -> ${existingSku.salePropPath}`);
+      return existingSku;
+    }
+    
+    // If still no match, try component-wise comparison (most robust)
+    existingSku = originalSkus.find(sku => {
+      if (!sku.salePropPath) return false;
+      
+      const existingPairs = sku.salePropPath.split(';');
+      const targetPairs = targetSalePropPath.split(';');
+      
+      if (existingPairs.length !== targetPairs.length) return false;
+      
+      // Convert to sets for comparison
+      const existingSet = new Set(existingPairs.map(p => p.trim()).filter(p => p.length > 0));
+      const targetSet = new Set(targetPairs.map(p => p.trim()).filter(p => p.length > 0));
+      
+      if (existingSet.size !== targetSet.size) return false;
+      
+      // Check if all pairs match
+      for (const pair of Array.from(targetSet)) {
+        if (!existingSet.has(pair)) return false;
+      }
+      
+      return true;
+    });
+    
+    if (existingSku) {
+      console.log(`Found component-wise match for ${targetSalePropPath} -> ${existingSku.salePropPath}`);
+      return existingSku;
+    }
+    
+    console.log(`No existing SKU found for combination:`, combination);
+    return undefined;
+  };
 
   return (
     <>
@@ -570,7 +717,6 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
       
       {/* Edit Attribute Modal */}
       <Modal
-        title={currentAttrKey && currentAttr?.label ? `编辑属性: ${currentAttr.label}` : "添加属性"}
         visible={editModalVisible}
         onOk={handleAttrUpdate}
         onCancel={() => {
@@ -579,8 +725,7 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
           setLocalSalesAttr(salesAttr);
           setEditModalVisible(false);
         }}
-        width={700}
-        style={{ top: 20 }}
+        width={580}
         bodyStyle={{ 
           maxHeight: 'calc(80vh - 200px)', 
           overflow: 'auto', 
@@ -616,7 +761,7 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
       >
         {currentAttr && (
           <Form layout="vertical">
-            <Form.Item label="属性名称">
+            <Form.Item >
               {/* Make attribute name non-editable */}
               {currentAttr.label ? (
                 <Typography.Text strong>{currentAttr.label}</Typography.Text>
@@ -662,8 +807,19 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
               <Space direction="vertical" style={{ width: '100%' }}>
                 {currentAttr.values?.map((value, index) => (
                   <Space key={index} align="start">
+                     {value.image ? (
+                     <Space direction="vertical" align="center">
+                            <Image 
+                              src={value.image} 
+                              width={30} 
+                              height={30} 
+                              style={{ objectFit: 'cover' }} 
+                            />
+                      </Space>
+                     ) :(<></>)}
                     <Input 
                       value={value.text}
+                      style={{minWidth: 350}}
                       onChange={(e) => {
                         const newValues = [...(currentAttr.values || [])];
                         newValues[index] = {...newValues[index], text: e.target.value};
@@ -682,31 +838,25 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
                       placeholder="属性值文本"
                     />
                     {currentAttr.hasImage === "true" && (
-                      <Space>
+                      <div>
                         {value.image ? (
-                          <Space direction="vertical" align="center">
-                            <Image 
-                              src={value.image} 
-                              width={60} 
-                              height={60} 
-                              style={{ objectFit: 'cover' }} 
-                            />
+                           (
                             <Upload
-                              name="file"
-                              action="/api/upload" // 替换为实际的上传API
-                              showUploadList={false}
-                              onChange={(info) => handleImageUpload(index, info)}
-                            >
-                              <Button size="small" icon={<UploadOutlined />}>
-                                更换图片
-                              </Button>
-                            </Upload>
-                          </Space>
+                                     name="file"
+                                     showUploadList={false}
+                                     beforeUpload={beforeUpload}
+                                     onChange={(info) => handleImageUpload(index, info)}
+                                   >
+                                     <Button size="small" icon={<UploadOutlined />}>
+                                       更换图片
+                                     </Button>
+                                   </Upload>
+                            )
                         ) : (
                           <Upload
                             name="file"
-                            action="/api/upload" // 替换为实际的上传API
                             showUploadList={false}
+                            beforeUpload={beforeUpload}
                             onChange={(info) => handleImageUpload(index, info)}
                           >
                             <Button icon={<UploadOutlined />}>
@@ -714,7 +864,7 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
                             </Button>
                           </Upload>
                         )}
-                      </Space>
+                      </div>
                     )}
                     <Button 
                       icon={<DeleteOutlined />} 
@@ -741,9 +891,11 @@ const SalesAttributeDetailsSection: React.FC<SalesAttributeDetailsSectionProps> 
                   icon={<PlusOutlined />} 
                   onClick={() => {
                     const newValues = [...(currentAttr.values || [])];
+                    // Generate a unique ID for the new value (similar to demo data format)
+                    const uniqueId = `${Date.now()}${Math.floor(Math.random() * 100000)}`;
                     newValues.push({ 
                       text: '', 
-                      value: `${newValues.length}`, 
+                      value: uniqueId, // Use unique timestamp-based ID
                       image: '',
                       sortOrder: String(newValues.length)
                     });

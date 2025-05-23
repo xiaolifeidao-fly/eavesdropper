@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card, Form, Modal, message, Button, Space } from 'antd';
-import { PlusOutlined, DeleteOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, ArrowUpOutlined, ArrowDownOutlined, SwapOutlined } from '@ant-design/icons';
 import { DragDropContext, Droppable, Draggable, DroppableProvided, DraggableProvided, DropResult } from '@hello-pangea/dnd';
 
 interface ImageInfo {
@@ -30,10 +30,99 @@ const ProductDetailsImagesSection: React.FC<ProductDetailsImagesSectionProps> = 
     imageInfos.filter(img => img.type === 'image') || []
   );
   const [form] = Form.useForm();
+  const formInstance = Form.useFormInstance();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const addFileInputRef = useRef<HTMLInputElement>(null);
+  const [replaceIndex, setReplaceIndex] = useState<number | null>(null);
+
+  // Update form whenever images change
+  const updateFormImages = (newImages: ImageInfo[]) => {
+    setImages(newImages);
+    formInstance.setFieldsValue({
+      doorSkuImageInfo: {
+        ...formInstance.getFieldValue('doorSkuImageInfo'),
+        doorSkuImageInfos: newImages
+      }
+    });
+  };
 
   const handlePreview = (image: string) => {
     setPreviewImage(image);
     setPreviewVisible(true);
+  };
+
+  const handleReplace = (index: number) => {
+    setReplaceIndex(index);
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && replaceIndex !== null) {
+      // 检查文件类型
+      if (!file.type.startsWith('image/')) {
+        message.error('请选择图片文件');
+        return;
+      }
+
+      // 创建本地URL
+      const localUrl = URL.createObjectURL(file);
+      
+      // 更新图片
+      const newImages = [...images];
+      newImages[replaceIndex] = {
+        ...newImages[replaceIndex],
+        content: localUrl
+      };
+      updateFormImages(newImages);
+      
+      message.success('图片替换成功');
+      console.log('Replaced image at index:', replaceIndex, 'with:', localUrl);
+    }
+    
+    // 重置
+    setReplaceIndex(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleAddImage = () => {
+    if (addFileInputRef.current) {
+      addFileInputRef.current.click();
+    }
+  };
+
+  const handleAddFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // 检查文件类型
+      if (!file.type.startsWith('image/')) {
+        message.error('请选择图片文件');
+        return;
+      }
+
+      // 创建本地URL
+      const localUrl = URL.createObjectURL(file);
+      
+      // 添加新图片到数组
+      const newImage: ImageInfo = {
+        type: 'image',
+        content: localUrl
+      };
+      
+      updateFormImages([...images, newImage]);
+      
+      message.success('图片添加成功');
+      console.log('Added new image:', localUrl);
+    }
+    
+    // 清理文件输入框
+    if (addFileInputRef.current) {
+      addFileInputRef.current.value = '';
+    }
   };
 
   const handleReorder = (result: DropResult) => {
@@ -49,7 +138,7 @@ const ProductDetailsImagesSection: React.FC<ProductDetailsImagesSectionProps> = 
     const [removed] = newImages.splice(startIndex, 1);
     newImages.splice(endIndex, 0, removed);
     
-    setImages(newImages);
+    updateFormImages(newImages);
     
     // We'd update the form here but since form is not in context, we just log
     console.log('Reordered images:', newImages);
@@ -58,7 +147,7 @@ const ProductDetailsImagesSection: React.FC<ProductDetailsImagesSectionProps> = 
   const handleDelete = (index: number) => {
     const newImages = [...images];
     newImages.splice(index, 1);
-    setImages(newImages);
+    updateFormImages(newImages);
   };
 
   const handleMove = (index: number, direction: 'up' | 'down') => {
@@ -74,7 +163,7 @@ const ProductDetailsImagesSection: React.FC<ProductDetailsImagesSectionProps> = 
     
     // Swap positions
     [newImages[index], newImages[targetIndex]] = [newImages[targetIndex], newImages[index]];
-    setImages(newImages);
+    updateFormImages(newImages);
   };
 
   return (
@@ -132,16 +221,24 @@ const ProductDetailsImagesSection: React.FC<ProductDetailsImagesSectionProps> = 
                                 icon={<ArrowUpOutlined />}
                                 disabled={index === 0}
                                 onClick={() => handleMove(index, 'up')}
+                                title="上移"
                               />
                               <Button
                                 icon={<ArrowDownOutlined />}
                                 disabled={index === images.length - 1}
                                 onClick={() => handleMove(index, 'down')}
+                                title="下移"
+                              />
+                              <Button
+                                icon={<SwapOutlined />}
+                                onClick={() => handleReplace(index)}
+                                title="替换图片"
                               />
                               <Button 
                                 danger 
                                 icon={<DeleteOutlined />}
                                 onClick={() => handleDelete(index)}
+                                title="删除"
                               />
                             </Space>
                           </div>
@@ -160,13 +257,29 @@ const ProductDetailsImagesSection: React.FC<ProductDetailsImagesSectionProps> = 
           type="dashed" 
           style={{ width: '100%', marginTop: 16 }} 
           icon={<PlusOutlined />}
-          onClick={() => {
-            message.info('Add image functionality would be implemented here');
-          }}
+          onClick={handleAddImage}
         >
           添加详情图
         </Button>
       </Form.Item>
+
+      {/* 隐藏的文件输入框 - 替换用 */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
+
+      {/* 隐藏的文件输入框 - 添加用 */}
+      <input
+        ref={addFileInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={handleAddFileChange}
+      />
 
       <Modal
         open={previewVisible}

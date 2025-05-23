@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Modal, Button } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import type { RcFile } from 'antd/es/upload/interface';
 
 interface MainImagesSectionProps {
   images: string[];
@@ -12,6 +10,8 @@ const MainImagesSection: React.FC<MainImagesSectionProps> = ({ images = [] }) =>
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [imageList, setImageList] = useState<(string | null)[]>([null, null, null, null, null]);
+  
+  const form = Form.useFormInstance();
 
   // Initialize image list with provided images
   useEffect(() => {
@@ -43,6 +43,15 @@ const MainImagesSection: React.FC<MainImagesSectionProps> = ({ images = [] }) =>
           const newImages = [...imageList];
           newImages[index] = reader.result.toString();
           setImageList(newImages);
+          
+          // Update form values
+          const validImages = newImages.filter(img => img !== null);
+          form.setFieldsValue({
+            baseInfo: {
+              ...form.getFieldValue('baseInfo'),
+              mainImages: validImages
+            }
+          });
         }
       };
       
