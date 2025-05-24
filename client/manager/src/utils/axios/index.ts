@@ -25,13 +25,14 @@ function rejectHttpError(message: string, code?: any): Promise<never> {
 }
 
 function getBaseUrl() {
+    
     //@ts-ignore
     return process.env.SERVER_TARGET + process.env.APP_URL_PREFIX;
 }
 
 const instance: AxiosInstance = axios.create({
   timeout: 60000,
-  // baseURL: '',
+  // baseURL: ''
   baseURL: getBaseUrl(),
   withCredentials: true,
   // 登录成功后，设置请求头 Authorization
